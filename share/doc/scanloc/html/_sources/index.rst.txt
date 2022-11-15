@@ -1,0 +1,55 @@
+|appname| documentation
+=======================
+
+This is the documentation for the |appname| package in version |version|.
+
+.. raw:: html
+
+   <div class="four column layout">
+
+.. image:: apps/media/scolv-location-tab.png
+   :alt: scolv with P and S picks
+
+.. image:: apps/media/cluster-reference-traveltime.png
+   :alt: fake events
+
+.. image:: apps/media/zeroweight_pipeline.png
+   :alt: 0-weight pipeline
+
+.. image:: base/media/s-picker-debugger.png
+   :alt: debugger for S picker
+
+scanloc accociates P and S phases and locates the event
+
+Phase association is based on advanced cluster search
+
+Phase picks accross pipelines can be associated
+
+A graphical debugger supports tuning for accurate S-phase picks
+
+.. raw:: html
+
+   </div>
+
+About
+#####
+
+.. toctree::
+   :maxdepth: 2
+
+   /base/introduction
+   /apps/scanloc
+   /base/auxiliary
+   /base/locsat-tables
+   /base/sphase-detector
+   /base/glossary
+   /base/references
+
+
+Software History
+################
+
+.. toctree::
+   :maxdepth: 1
+
+   /base/changelog

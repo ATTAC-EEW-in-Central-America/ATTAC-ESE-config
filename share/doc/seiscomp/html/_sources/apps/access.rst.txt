@@ -1,0 +1,60 @@
+.. highlight:: rst
+
+.. _access:
+
+######
+access
+######
+
+**Access module for FDSNWS.**
+
+
+Bindings
+========
+
+
+Configuration
+-------------
+
+
+.. note::
+   **access.\***
+   *Defines access to restricted data. When defined it will add the listed users to the list of authorized users to access certain restricted data give the parameters on this binding.*
+
+
+
+.. confval:: access.users
+
+   Type: *list:string*
+
+   List of users \(e\-mail addresses\) allowed to access the restricted data.
+
+
+.. confval:: access.disableStationCode
+
+   Type: *boolean*
+
+   When disableStationCode option is set to true the access entries will be generated only for the network level \(and optionally stream level\), no station code will be filled \(this can potentially reduce the number of entries on the access table, and save memory on the request handler when used\).
+   Default is ``false``.
+
+.. confval:: access.streams
+
+   Type: *list:string*
+
+   List of locations.streams this access rule applies to. The location code is optional \(optional, allow wildcards\).
+
+
+.. confval:: access.start
+
+   Type: *datetime*
+
+   Start of validity \(optional\).
+
+
+.. confval:: access.end
+
+   Type: *datetime*
+
+   End of validity \(optional\).
+
+

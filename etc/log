@@ -1,0 +1,256 @@
+13:53:11 [debug] Adding plugin path: .
+13:53:11 [debug] Adding plugin path: /home/insivumeh/.seiscomp/plugins
+13:53:11 [debug] Adding plugin path: /opt/seiscomp/lib/plugins
+13:53:11 [debug] Adding plugin path: /opt/seiscomp/lib
+13:53:11 [debug] Adding plugin path: /opt/seiscomp/share/plugins
+13:53:11 [debug] Adding plugin path: /opt/seiscomp/share/plugins/scvsmag
+13:53:11 [debug] Trying to open plugin at /opt/seiscomp/share/plugins/dbmysql.so
+13:53:11 [info] Plugin dbmysql registered
+13:53:11 [debug] Trying to open plugin at /opt/seiscomp/share/plugins/fdsnxml.so
+13:53:12 [info] Plugin fdsnxml registered
+13:53:12 [debug] Trying to open plugin at /opt/seiscomp/share/plugins/locnll.so
+13:53:12 [info] Plugin locnll registered
+13:53:12 [debug] Trying to open plugin at /opt/seiscomp/share/plugins/hypo71.so
+13:53:12 [info] Plugin hypo71 registered
+13:53:12 [debug] Trying to open plugin at /opt/seiscomp/share/plugins/dmvs.so
+13:53:12 [info] Plugin dmvs registered
+13:53:12 [debug] Trying to open plugin at /opt/seiscomp/share/plugins/dmsm.so
+13:53:12 [info] Plugin dmsm registered
+13:53:12 [debug] Trying to open plugin at /opt/seiscomp/share/plugins/mlh.so
+13:53:12 [info] Plugin mlh registered
+13:53:12 [info] 
+Plugins:
+--------
+ [1]
+  description: MySQL database driver
+       author: GFZ Potsdam <seiscomp-devel@gfz-potsdam.de>
+      version: 0.9.2
+          API: 15.0.0
+ [2]
+  description: FDSN StationXML import/export plugin
+       author: gempa GmbH <info@gempa.de>
+      version: 3.0.0
+          API: 15.0.0
+ [3]
+  description: Locator implementation using NonLinLoc by Anthony Lomax (http://alomax.free.fr/nlloc/)
+       author: Jan Becker, gempa GmbH
+      version: 0.7.2
+          API: 15.0.0
+ [4]
+  description: HYPO71 seismic hypocenter locator plugin
+       author: IPGP <www.ipgp.fr>
+      version: 0.2.0
+          API: 15.0.0
+ [5]
+  description: Data model extension for Virtual Seismologist
+       author: ETHZ/SED, gempa GmbH <jabe@gempa.de>
+      version: 0.1.0
+          API: 15.0.0
+ [6]
+  description: Data model extension for strong motion parameters
+       author: ETHZ/SED, gempa GmbH <jabe@gempa.de>
+      version: 1.0.0
+          API: 15.0.0
+ [7]
+  description: MLh magnitude method (max of both horizontal compontents)
+       author: gempa GmbH, modified by Stefan Heimers at the SED
+      version: 0.0.8
+          API: 15.0.0
+
+13:53:12 [info] Connect to messaging
+13:53:12 [debug] Trying to connect to test@localhost with primary group = MAGNITUDE
+13:53:12 [debug] Attempt to connect to localhost:18180/production
+13:53:12 [debug] Registered clientname: test
+13:53:12 [info] Outgoing messages are encoded to match schema version 0.12
+13:53:12 [info] Want to flush 0 backlog messages
+13:53:12 [debug] Subscribed to group AMPLITUDE
+13:53:12 [debug] Subscribed to group EVENT
+13:53:12 [debug] Subscribed to group LOCATION
+13:53:12 [debug] Subscribed to group LOCATIONN
+13:53:12 [debug] Subscribed to group PICK
+13:53:12 [debug] Subscribed to group PICKN
+13:53:12 [info] Loading complete inventory from mysql://sysop:sysop@172.20.9.11/seiscomp
+13:53:12 [info] Trying to connect to mysql://sysop:sysop@172.20.9.11/seiscomp
+13:53:12 [debug] Connected to sysop:******@172.20.9.11:3306/seiscomp (172.20.9.11 via TCP/IP)
+13:53:12 [info] Connected successfully
+13:53:12 [debug] Found database version v0.11
+13:53:12 [info] Disconnecting from database
+13:53:12 [info] Finished loading complete inventory
+13:53:12 [info] siteEffect is turned off
+13:53:12 [processing/info/VsMagnitude] scvsmag module started at 2022-01-07T13:53:12.236715Z
+13:53:12 [info] Starting message thread
+13:53:12 [debug] create new station entry for GI.CMSM
+13:53:12 [error] GI.CMSM..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new station entry for GI.SROR
+13:53:12 [error] GI.SROR..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new station entry for GI.SUCU
+13:53:12 [error] GI.SUCU..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new station entry for GI.AVPA
+13:53:12 [debug] create new buffer for GI.AVPA.00.HN with size 6065/6065
+13:53:12 [debug] create new station entry for GI.JAMO
+13:53:12 [debug] create new buffer for GI.JAMO..HN with size 6065/6065
+13:53:12 [debug] create new station entry for GI.RECH
+13:53:12 [error] GI.RECH.00.EH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new station entry for GI.GCG4
+13:53:12 [error] GI.GCG4.00.EH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.GCG4.00.EH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new station entry for GI.GUSP
+13:53:12 [error] GI.GUSP..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.GUSP..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.GUSP..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new buffer for GI.GUSP..HN with size 6065/6065
+13:53:12 [debug] create new station entry for GI.ESTQ
+13:53:12 [error] GI.ESTQ..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.ESTQ..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new buffer for GI.SROR..HN with size 6065/6065
+13:53:12 [debug] create new station entry for AM.R1F53
+13:53:12 [error] AM.R1F53.00.EH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] AM.R1F53.00.EH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] AM.R1F53.00.EH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new station entry for AM.REF82
+13:53:12 [debug] create new buffer for AM.REF82.00.EH with size 6065/6065
+13:53:12 [debug] create new buffer for GI.RECH.00.EH with size 6065/6065
+13:53:12 [debug] create new station entry for GI.JUT2
+13:53:12 [error] GI.JUT2..HH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new station entry for GI.STG8
+13:53:12 [error] GI.STG8..HH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.JUT2..HH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.JUT2..HH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new buffer for GI.GCG4.00.EH with size 6065/6065
+13:53:12 [debug] create new station entry for SV.ACAJ
+13:53:12 [debug] create new buffer for SV.ACAJ.00.HN with size 6065/6065
+13:53:12 [debug] create new station entry for SV.AERO
+13:53:12 [debug] create new buffer for SV.AERO.00.HN with size 6065/6065
+13:53:12 [debug] create new station entry for GI.GUMI
+13:53:12 [error] GI.GUMI..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.GUMI..HN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.GUMI..HH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new station entry for GI.IZLV
+13:53:12 [error] GI.IZLV..HH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.IZLV..HH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.GUSP..HH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.GUSP..HH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.GCG4.00.EN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new buffer for GI.GCG4.00.EN with size 6065/6065
+13:53:12 [debug] create new station entry for GI.SONA
+13:53:12 [error] GI.SONA.00.EN: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [debug] create new buffer for GI.SONA.00.EN with size 6065/6065
+13:53:12 [error] GI.SONA.00.EH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.SONA.00.EH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:12 [error] GI.SONA.00.EH: unable to retrieve stream from inventory
+13:53:12 [warning] ignored incoming envelope
+13:53:13 [debug] create new station entry for GI.QTQT
+13:53:13 [error] GI.QTQT.00.SH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.QTQT.00.SH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [debug] create new buffer for GI.QTQT.00.SH with size 6065/6065
+13:53:13 [debug] create new station entry for SV.MTO3
+13:53:13 [debug] create new buffer for SV.MTO3..HH with size 6065/6065
+13:53:13 [error] GI.IZLV..HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.SUCU..HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.CMSM..HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [debug] create new buffer for GI.IZLV..HN with size 6065/6065
+13:53:13 [debug] create new buffer for GI.JUT2..HH with size 6065/6065
+13:53:13 [debug] create new buffer for GI.SUCU..HN with size 6065/6065
+13:53:13 [debug] create new buffer for GI.CMSM..HN with size 6065/6065
+13:53:13 [debug] create new buffer for GI.ESTQ..HN with size 6065/6065
+13:53:13 [debug] create new station entry for GI.JUT0
+13:53:13 [error] GI.JUT0..HH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.JUT0..HH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.QTQT.00.HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.QTQT.00.HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [debug] create new buffer for GI.QTQT.00.HN with size 6065/6065
+13:53:13 [debug] create new station entry for GI.ESSJ
+13:53:13 [debug] create new buffer for GI.ESSJ.00.HN with size 6065/6065
+13:53:13 [error] GI.SONA.00.EH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.SONA.00.EH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [debug] create new buffer for GI.SONA.00.EH with size 6065/6065
+13:53:13 [debug] create new station entry for GI.QCIX
+13:53:13 [error] GI.QCIX..HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.QCIX..HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [debug] create new buffer for GI.QCIX..HN with size 6065/6065
+13:53:13 [debug] create new buffer for AM.R1F53.00.EH with size 6065/6065
+13:53:13 [debug] create new buffer for GI.GUMI..HN with size 6065/6065
+13:53:13 [debug] create new station entry for GI.GUVC
+13:53:13 [debug] create new buffer for GI.GUVC..HH with size 6065/6065
+13:53:13 [error] GI.GUMI..HH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.SROR..HH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.SROR..HH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.GUVC..HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [debug] create new buffer for GI.IZLV..HH with size 6065/6065
+13:53:13 [debug] create new buffer for GI.SUCU..HH with size 6065/6065
+13:53:13 [debug] create new buffer for GI.CMSM..HH with size 6065/6065
+13:53:13 [debug] create new buffer for GI.JAMO..HH with size 6065/6065
+13:53:13 [error] GI.ESTQ..HH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.ESTQ..HH: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [debug] create new buffer for GI.QCIX..HH with size 6065/6065
+13:53:13 [debug] create new station entry for GI.PCG2
+13:53:13 [error] GI.PCG2.00.SN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.PCG2.00.SN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.PCG2.00.SN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.PCG2.00.SN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.PCG2.00.SN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.GUVC..HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [error] GI.GUVC..HN: unable to retrieve stream from inventory
+13:53:13 [warning] ignored incoming envelope
+13:53:13 [info] Leaving message thread
+13:53:13 [info] Queue has been closed, returning
+13:53:13 [debug] Shutdown gracefully
+13:53:13 [info] Keep 0 messages in the backlog
+13:53:13 [info] Disable timer
+13:53:13 [info] Waiting for message thread
+13:53:13 [info] Message thread finished
+13:53:13 [debug] Leaving ::done

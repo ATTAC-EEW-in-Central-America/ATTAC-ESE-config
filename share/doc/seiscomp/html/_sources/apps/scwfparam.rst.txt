@@ -1,0 +1,1213 @@
+.. highlight:: rst
+
+.. _scwfparam:
+
+#########
+scwfparam
+#########
+
+**Waveform parametrization module.**
+
+
+Description
+===========
+
+scwfparam is a SeisComP module that computes
+
+- peak ground acceleration (PGA)
+- peak ground velocity (PGV)
+- relative displacement elastic response spectrum (DRS)
+- pseudo absolute acceleration elastic response spectrum (PSA)
+
+in real-time or offline. It includes a process scheduler and handles
+reprocessing of data in a smart way. It supports ShakeMap XML output as
+documented in the
+`ShakeMap manual <http://pubs.usgs.gov/tm/2005/12A01/pdf/508TM12-A1.pdf>`_ each
+time a new set of data is available.
+
+Scheduling
+==========
+
+When the module is not started in offline mode, the processing of events is
+scheduled following the configured rules. Parameters that influence the
+scheduling are:
+
+- :confval:`wfparam.cron.wakeupInterval`
+- :confval:`wfparam.cron.updateDelay`
+- :confval:`wfparam.cron.delayTimes`
+
+The wake-up interval specifies when the scheduler is called to check if a
+process is about to be started or stopped. The default is 10 seconds.
+
+The scheduler checks then all scheduled jobs, adds a job to the processing queue
+if the next run time is not in the future and removes all scheduled jobs with
+timestamps in the past. The process queue contains all jobs that are about to
+be executed. Because waveform acquisition is a time- and memory-costly operation
+only one process can run at a time. Once a process finished, the next process in
+the queue is executed (if any). When a process is started, it fetches the latest
+event parameters (origin time, magnitude, location).
+
+To add processes to the scheduler, the module distinguishes two cases:
+
+1. Process creation (new event or updated event seen the first time)
+2. Process update (event updates after an process has been created)
+
+
+Process creation
+----------------
+
+When a new event or an event update is received which does not have an
+associated process yet, a new process is created. The event
+time (Origin[Event.preferredOriginID].time) is used to build the default
+schedule according to :confval:`wfparam.cron.delayTimes`.
+
+.. code-block:: py
+
+   for each time in wfparam.cron.delayTimes:
+     add_cron_job(process, Origin[Event.preferredOriginID].time + time)
+
+
+Process update
+--------------
+
+If a process for an event already exists, the next run time is the current time
+plus wfparam.cron.updateDelay. Before adding this job to the scheduler the
+application checks if the next scheduled runtime is at least
+:confval:`wfparam.cron.updateDelay` seconds after the new run time. If not, a
+new job is not addded to the scheduler. Pseudo code to illustrate the strategy
+is given below.
+
+.. code-block:: py
+
+   event_updated(event):
+     p = process_for_event(event)
+     # The schedule for process p could be {T1,T2,T3,T4}
+     now = get_current_time()
+     next_run = now + wfparam.cron.updateDelay
+     # Process currently suspended?
+     if isEmpty(p.schedule):
+       p.schedule.add(next_run)
+     elif (p.schedule[0] - next_run) > wfparam.cron.updateDelay:
+       p.schedule.prepend(next_run)
+     else:
+       # Do nothing, ignore the event update
+       pass
+
+
+Processing
+==========
+
+The processing can be divided into the following steps:
+
+- Collect all stations within the configured maximum distance
+  (:confval:`wfparam.maximumEpicentralDistance` or
+  :confval:`wfparam.magnitudeDistanceTable`)
+- Remove already processed channels
+- Find the velocity and acceleration stream with the highest sampling frequency
+
+  - The sensor unit is used to distinguish between velocity and acceleration
+    streams (M/S, M/S**2)
+
+- Use all allowed components (:confval:`wfparam.streams.whitelist`,
+  :confval:`wfparam.streams.blacklist`) of each stream
+- Compute expected P arrival time if no pick is available
+- Start waveform acquisition
+- If the configured time window for one stream is complete, do (optional steps
+  are written italic)
+
+  - Check saturation depending on :confval:`wfparam.saturationThreshold`
+  - Search maximum raw value (in counts)
+  - Apply gain
+  - Check STA/LTA threshold 5 seconds around P
+  - *If velocity, differentiate data to acceleration*
+  - *Compute pre-event cut-off if enabled*
+  - Compute offset of pre-event time window
+  - *Compute signal duration and check for aftershocks*
+  - *Deconvolution using spectral division of FFT spectrum and transfer function*
+  - *Apply optional sensitivity correction filter (lo-, hi- or bandpass)*
+  - *Apply optional lo-pass, hi-pass or band-pass filter*
+  - Compute PGA/PGV
+  - Calculate response spectra
+
+- If acquisition finished
+
+  - Collect all values (also recently processed values)
+
+    - Results from velocity streams are always preferred over acceleration
+      streams if both are available (eg. co-located stations)
+
+  - Generate ShakeMap event and station XML
+
+    - Unless :confval:`wfparam.output.shakeMap.maximumOfHorizontals` is set
+      to true all processed streams are included in XML
+
+  - Call ShakeMap script and pass eventID and event ID path
+
+The channel is considered to be processed if the last step succeeded.
+
+
+Waveform archival
+=================
+
+If :confval:`wfparam.output.waveforms.enable` is set to true all processed
+waveforms are stored in the configured output directory
+:confval:`wfparam.output.waveforms.path`. The naming convention of a channel
+miniSEED file is:
+
+[EventDateTime]_[net]_[sta]_[loc][cha]_[filter][order]_[freqs].mseed
+
+If :confval:`wfparam.output.waveforms.withEventDirectory` is set to true, an
+event directory with the eventID is created additionally where the channel
+files are stored under.
+
+Either:
+
+.. code-block:: sh
+
+   /path/to/waveforms/file1.mseed
+   /path/to/waveforms/file2.mseed
+   ...
+
+or
+
+.. code-block:: sh
+
+   /path/to/waveforms/eventid/file1.mseed
+   /path/to/waveforms/eventid/file2.mseed
+   ...
+
+The miniSEED file contains uncompressed float 4096 byte records.
+
+Example:
+
+================== ==============================================
+Event time         2011-11-21 08:30:00 Network: CH
+Station            SNIB
+Location           _ _
+Channel            HGZ
+Filter             hi-pass
+Order              2
+Corner frequencies 0.025
+Filename           **20111121083000_CH_SNIB_HGZ_HP2_0.025.mseed**
+================== ==============================================
+
+
+Database
+========
+
+scwfparam can make use of the database schema extension for strong motion
+parameters.
+
+In order to prepare the database the extension schema must be applied. The
+database schema is installed in :file:`share/db/wfparam/*.sql`. Login into the
+database backend and source the .sql file corresponding to the used database
+backend.
+
+In order to enable :ref:`scmaster` to handle messages containing objects for
+strong motion parameters load the dmsm (data model strong motion) plugin as
+follows in scmaster.cfg:
+
+.. code-block:: sh
+
+   plugins = ${plugins}, dmsm
+
+
+:ref:`scmaster` must be restarted to activate the plugin.
+
+To activate scwfparam to send messages with strong motion objects, set
+
+.. code-block:: sh
+
+   wfparam.output.messaging = true
+
+in scwfparam.cfg.
+
+
+ShakeMaps
+=========
+
+The ShakeMap XML is generated according the documentation of version 3.5 if
+:confval:`wfparam.output.shakeMap.enable` is set to true.
+
+Below an example is given of an event XML and a station XML. The data was
+generated from a playback and does **not** describe a **real event**.
+
+
+Event XML
+---------
+
+.. code-block:: xml
+
+   <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+   <!DOCTYPE earthquake SYSTEM "earthquake.dtd">
+   <earthquake id="gfz2011oasp" lat="38.916" lon="40.0711"
+               depth="10.3249" mag="5.80361" year="2011"
+               month="7" day="19" hour="14" minute="54"
+               second="21" timezone="GMT"
+               locstring="tst2011oasp / 38.916 / 40.0711"
+   />
+
+
+Station XML
+-----------
+
+.. code-block:: xml
+
+   <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+   <!DOCTYPE earthquake SYSTEM "stationlist.dtd">
+   <stationlist created="" xmlns="ch.ethz.sed.shakemap.usgs.xml">
+     <station code="JMB" name="JMB" lat="42.467" lon="26.583">
+       <comp name="BHZ">
+         <acc value="0.0175823522" flag="0"/>
+         <vel value="0.0265134476" flag="0"/>
+         <psa03 value="0.0177551343" flag="0"/>
+         <psa10 value="0.0179450342" flag="0"/>
+         <psa30 value="0.0507100318" flag="0"/>
+       </comp>
+     </station>
+     <station code="BUD" name="BUD" insttype="STS-2/N"
+              lat="47.4836" lon="19.0239">
+       <comp name="BHZ">
+         <acc value="0.0018418704" flag="0"/>
+         <vel value="0.0012123935" flag="0"/>
+         <psa03 value="0.0019287320" flag="0"/>
+         <psa10 value="0.0033152716" flag="0"/>
+         <psa30 value="0.0027636448" flag="0"/>
+       </comp>
+     </station>
+     <station code="ANTO" name="ANTO" lat="39.868" lon="32.7934">
+       <comp name="BHZ">
+         <acc value="0.0322238962" flag="0"/>
+         <vel value="0.0250842840" flag="0"/>
+         <psa03 value="0.0326696355" flag="0"/>
+         <psa10 value="0.0621788884" flag="0"/>
+         <psa30 value="0.0903777107" flag="0"/>
+       </comp>
+     </station>
+     <station code="GNI" name="GNI" lat="40.148" lon="44.741">
+       <comp name="BHZ">
+         <acc value="0.0760558909" flag="0"/>
+         <vel value="0.0273735691" flag="0"/>
+         <psa03 value="0.0818660133" flag="0"/>
+         <psa10 value="0.1230812588" flag="0"/>
+         <psa30 value="0.1682284546" flag="0"/>
+       </comp>
+     </station>
+   </stationlist>
+
+
+Examples
+========
+
+#. Running scwfparam offline with a multiplexed miniseed volume, an event xml
+   and an inventory xml file. A hi-pass filter of 0.1hz (10secs) is used.
+   Processing starts immediately and the application finishes when processing
+   is done. The scheduler is disabled in offline mode.
+
+   .. code-block:: sh
+
+      scwfparam --offline -I vallorcine.mseed \
+                --inventory-db vallorcine_inv.xml \
+                --ep vallorcine.xml -E "Vallorcine.2005.09.08" \
+                --lo-filter 0.1 --hi-filter 0
+
+#. Running for a given event with scheduling enabled. Only the given event will
+   be processed.
+
+   .. code-block:: sh
+
+      scwfparam -I arclink://localhost:18001 -E gfz2011oeej \
+                -d mysql://sysop:sysop@localhost/seiscomp
+
+#. For running in real-time it is enough to add the module to the client list
+   of the trunk package in seiscomp config.
+
+#. Running with remote Arclink server
+
+   To use a remote Arclink server it is
+   enough to configure the record stream with -I:
+
+   .. code-block:: sh
+
+      scwfparam --offline -I vallorcine.mseed \
+                --inventory-db vallorcine_inv.xml \
+                --ep vallorcine.xml -E "Vallorcine.2005.09.08" \
+                -I "arclink://arclink.ethz.ch:18002"
+
+   Note that the default acquisition timeout of 30 seconds might not be enough
+   to get all the requested data. If necessary, increase the value with
+   parameter :confval:`wfparam.acquisition.initialTimeout`. This can also be
+   reached on command line:
+
+   .. code-block:: sh
+
+      scwfparam --offline -I vallorcine.mseed \
+                --inventory-db vallorcine_inv.xml \
+                --ep vallorcine.xml -E "Vallorcine.2005.09.08" \
+                -I "arclink://arclink.ethz.ch:18002" \
+                --wfparam.acquisition.initialTimeout=300
+
+#. Running with remote Seedlink server
+
+   To use a remote Seedlink server it is enough to configure the record stream with -I:
+
+   .. code-block:: sh
+
+      scwfparam --offline -I vallorcine.mseed \
+                --inventory-db vallorcine_inv.xml \
+                --ep vallorcine.xml -E "Vallorcine.2005.09.08" \
+                -I "slink://geofon.gfz-potsdam.de:18000"
+
+
+.. _scwfparam_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scwfparam.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scwfparam.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scwfparam.cfg`
+
+scwfparam inherits :ref:`global options<global-configuration>`.
+
+
+
+.. confval:: wfparam.logfile
+
+   Type: *path*
+
+   The path to the processing info logfile.
+   Default is ``@LOGDIR@/scwfparam-processing-info.log``.
+
+.. confval:: wfparam.totalTimeWindowLength
+
+   Type: *int*
+
+   Unit: *s*
+
+   Default value of total time window length in seconds if
+   wfparam.magnitudeTimeWindowTable is not specified. This times window
+   includes wfparam.preEventWindowLength.
+   Default is ``360``.
+
+.. confval:: wfparam.magnitudeTimeWindowTable
+
+   Type: *list:string*
+
+   Magnitude dependent time window table. The format is
+   \"mag1:secs1, mag2:secs2, mag3:secs3\". If a magnitude falls
+   between two configured magnitudes the time window of the lower
+   magnitude is used then. No interpolation is performed. Magnitude
+   outside the configured range are clipped to the lowest\/highest value.
+   Example: \"3:100, 4:200, 5:300\"
+
+
+.. confval:: wfparam.preEventWindowLength
+
+   Type: *int*
+
+   Unit: *s*
+
+   The pre event time window length in seconds.
+   Default is ``60``.
+
+.. confval:: wfparam.maximumEpicentralDistance
+
+   Type: *int*
+
+   Unit: *km*
+
+   The maximum epicentral distance in km of a station being considered
+   for processing. This value is used if wfparam.magnitudeDistanceTable
+   is not specified.
+   Default is ``400``.
+
+.. confval:: wfparam.magnitudeDistanceTable
+
+   Type: *list:string*
+
+   Analogue to wfparam.magnitudeTimeWindowTable but instead giving a
+   time window, the distance in km is specified.
+   Example: \"3:400, 4:450, 5:500\"
+
+
+.. confval:: wfparam.saturationThreshold
+
+   Type: *double*
+
+   Unit: *%*
+
+   Relative saturation threshold in percent. If the absolute raw amplitude
+   exceeds X% of 2\*\*23 counts the station will be excluded from
+   processing. This assumes a 24bit datalogger.
+   Default is ``80``.
+
+.. confval:: wfparam.STAlength
+
+   Type: *double*
+
+   Unit: *s*
+
+   Specifies the STA length in seconds of the applied STA\/LTA check.
+   Default is ``1``.
+
+.. confval:: wfparam.LTAlength
+
+   Type: *double*
+
+   Unit: *s*
+
+   Specifies the LTA length in seconds of the applied STA\/LTA check.
+   Default is ``60``.
+
+.. confval:: wfparam.STALTAratio
+
+   Type: *double*
+
+   Specifies the minimum STALTA ratio to be reached to further process
+   a station.
+   Default is ``3``.
+
+.. confval:: wfparam.STALTAmargin
+
+   Type: *double*
+
+   Unit: *s*
+
+   Specifies the number of seconds around P to be used to check the STA\/LTA ratio.
+   Default is ``5``.
+
+.. confval:: wfparam.durationScale
+
+   Type: *double*
+
+   Defines the factor applied to the signigicant duration to define the
+   processing spetra time window. If that value is <\= 0 the totalTimeWindowLength
+   is used.
+   Default is ``1.5``.
+
+.. confval:: wfparam.dampings
+
+   Type: *list:double*
+
+   Unit: *%*
+
+   Specifies a list of damping values \(in percent\) for computation of
+   the relative displacement elastic response spectrum.
+   Example: \"5,10,15\"
+   Default is ``5``.
+
+.. confval:: wfparam.naturalPeriods
+
+   Type: *int*
+
+   Specifies the number of natural periods for computation of the
+   relative displacement elastic response spectrum between Tmin and Tmax.
+   If fixed is given then a fixed list of periods is used.
+   Default is ``100``.
+
+.. confval:: wfparam.Tmin
+
+   Type: *double*
+
+   Unit: *s*
+
+   Specifies the minimum period \(Tmin\) in seconds for computation of the
+   relative displacement elastic response spectrum.
+   Default is ``0``.
+
+.. confval:: wfparam.Tmax
+
+   Type: *double*
+
+   Unit: *s*
+
+   Specifies the maximum period \(Tmax\) in seconds for computation of the
+   relative displacement elastic response spectrum.
+   Default is ``5``.
+
+.. confval:: wfparam.clipTmax
+
+   Type: *boolean*
+
+   Should the maximum period \(Tmax\) clipped against the
+   configured filter lower corner frequency, the maximum of
+   pd.loFreq or filter.loFreq.
+   Default is ``true``.
+
+.. confval:: wfparam.afterShockRemoval
+
+   Type: *boolean*
+
+   Enables\/disables aftershock removal \(Figini, 2006; Paolucci et al., 2008\)
+   Default is ``true``.
+
+.. confval:: wfparam.eventCutOff
+
+   Type: *boolean*
+
+   Enables\/disables pre\-event cut\-off. A hardcoded sta\/lta algorithm
+   \(with sta\=0.1s, lta\=2s, sta\/lta threshold\=1.2\) is run on the time
+   window defined by \(expected_P_arrival_time \- 15 s\). The pre\-event
+   window is hence defined as
+   [t\(sta\/lta \=1.2\) \- 15.5s, t\(sta\/lta \=1.2\) \- 0.5s].
+   Default is ``true``.
+
+.. confval:: wfparam.magnitudeFilterTable
+
+   Type: *list:string*
+
+   Default is ``0:0.2;0.8fNyquist,3:0.1;0.8fNyquist,5:0.05;0.8fNyquist,7:0.025;0.8fNyquist``.
+
+.. confval:: wfparam.deconvolution
+
+   Type: *boolean*
+
+   Enables\/disables deconvolution. If a channel does not provide full
+   response information it is not used for processing.
+   Default is ``true``.
+
+.. confval:: wfparam.magnitudeTolerance
+
+   Type: *double*
+
+   Defines the magnitude tolerance to completely reprocess an event with
+   respect to the last state.
+   Default is ``0.5``.
+
+.. note::
+   **wfparam.streams.\***
+   *Defines the white- and blacklist of data streams to be used. The*
+   *rules to decide if a stream is used or not are the following:*
+   **
+   *1. if whitelist is not empty and the stream is not on the whitelist,*
+   *don't use it, ok otherwise*
+   **
+   *2. if blacklist is not empty and the stream is on the blacklist,*
+   *don't use it, ok otherwise*
+   **
+   *Both checks are made and combined with AND. Either whitelist or*
+   *blacklist contains a list of patterns (wildcard allowed as * and ?),*
+   *eg GE.*.*.*, *, GE.MORC.*.BH? Each stream id (NET.STA.LOC.CHA) will*
+   *be checked against the defined patterns.*
+
+
+
+.. confval:: wfparam.streams.whitelist
+
+   Type: *list:string*
+
+   The stream whitelist
+
+
+.. confval:: wfparam.streams.blacklist
+
+   Type: *list:string*
+
+   The stream blacklist
+
+
+.. confval:: wfparam.naturalPeriods.log
+
+   Type: *boolean*
+
+   Defines if a linear spacing or logarithmic spacing between Tmin and
+   Tmax is used. The default is a linear spacing. The logarithmic
+   spacing will fail if either Tmin or Tmax is 0.
+   Default is ``false``.
+
+.. note::
+   **wfparam.filter.\***
+   *Parameters of the 1st stage filter.*
+
+
+
+.. confval:: wfparam.filter.order
+
+   Type: *int*
+
+   Specifies the order of the 1st stage filter.
+   Default is ``4``.
+
+.. confval:: wfparam.filter.loFreq
+
+   Type: *double*
+
+   Specifies the frequency of the 1st stage hi\-pass filter. If this
+   parameter is equal to 0 the hi\-pass filter is not used.
+   If suffix \"fNyquist\" is used then the value is multiplied
+   by the Nyquist frequency of the data to get the final corner
+   frequency of the filter.
+   Default is ``0.025``.
+
+.. confval:: wfparam.filter.hiFreq
+
+   Type: *double*
+
+   Specifies the frequency of the 1st stage lo\-pass filter. If this
+   parameter is equal to 0 the lo\-pass filter is not used.
+   If suffix \"fNyquist\" is used then the value is multiplied
+   by the Nyquist frequency of the data to get the final corner
+   frequency of the filter.
+   Default is ``40``.
+
+.. note::
+   **wfparam.pd.\***
+   *Parameters of the post-deconvolution filter applied in the*
+   *frequency domain.*
+
+
+
+.. confval:: wfparam.pd.order
+
+   Type: *int*
+
+   Specifies the order of the 2nd stage filter.
+   Default is ``4``.
+
+.. confval:: wfparam.pd.loFreq
+
+   Type: *double*
+
+   Specifies the frequency of the 2nd stage hi\-pass filter. If this
+   parameter is equal to 0 the hi\-pass filter is not used.
+   If suffix \"fNyquist\" is used then the value is multiplied
+   by the Nyquist frequency of the data to get the final corner
+   frequency of the filter.
+   Default is ``0``.
+
+.. confval:: wfparam.pd.hiFreq
+
+   Type: *double*
+
+   Specifies the frequency of the 2nd stage lo\-pass filter. If this
+   parameter is equal to 0 the lo\-pass filter is not used.
+   If suffix \"fNyquist\" is used then the value is multiplied
+   by the Nyquist frequency of the data to get the final corner
+   frequency of the filter.
+   Default is ``0``.
+
+.. confval:: wfparam.filtering.noncausal
+
+   Type: *boolean*
+
+   Enables non\-causal filtering in the frequency domain.
+   Default is ``false``.
+
+.. confval:: wfparam.filtering.taperLength
+
+   Type: *double*
+
+   Unit: *s*
+
+   Defines the cosine taper length in seconds if non\-causal filters
+   are activated applied on either side of the waveform. If a
+   negative length is given 10 percent of the pre\-event window length
+   is used on either side of the waveform.
+   Default is ``-1``.
+
+.. confval:: wfparam.filtering.padLength
+
+   Type: *double*
+
+   Unit: *s*
+
+   The length of the zero padding window in seconds applied on either
+   side of the waveform if non\-causal filters are activated. If
+   negative, it is computed following Boore \(2005\) as
+   1.5\*order\/corner_freq and applied half at the beginning and half at
+   the end of the waveform.
+   Default is ``-1``.
+
+.. confval:: wfparam.cron.wakeupInterval
+
+   Type: *int*
+
+   Unit: *s*
+
+   Specifies the interval in seconds to check\/start scheduled operations.
+   Default is ``10``.
+
+.. confval:: wfparam.cron.eventMaxIdleTime
+
+   Type: *int*
+
+   Unit: *s*
+
+   Specifies the maximum allowed idle time of a process before removed.
+   The idle time is calculated if no further processing is scheduled
+   and computes as: [now]\-lastRun.
+   Default is ``3600``.
+
+.. confval:: wfparam.cron.logging
+
+   Type: *boolean*
+
+   Enables\/disables updating of a cron log file. This file will be
+   created at \~\/.seiscomp\/log\/[appname].sched
+   and contains information about the scheduled events and the
+   processing queue. The file is updated each n seconds,
+   where n \= wfparam.cron.wakeupInterval.
+   Default is ``true``.
+
+.. confval:: wfparam.cron.updateDelay
+
+   Type: *int*
+
+   Specifies the delay in seconds to delay processing if a new
+   authoritative origin arrives for an event.
+   Default is ``60``.
+
+.. confval:: wfparam.cron.delayTimes
+
+   Type: *list:int*
+
+   Specifies a list of delay times in seconds relative to event time
+   to trigger the processing. When the first origin of an event arrives
+   this list is used to construct the crontab for this event.
+   Example: \"60, 120, 300, 3600\"
+
+
+.. confval:: wfparam.acquisition.initialTimeout
+
+   Type: *int*
+
+   Unit: *s*
+
+   Specifies the initial acquisition timeout. If the acquisition
+   source \(e.g. Arclink\) does not respond within this threshold with
+   waveforms, the request is discarded.
+   Default is ``30``.
+
+.. confval:: wfparam.acquisition.runningTimeout
+
+   Type: *int*
+
+   Unit: *s*
+
+   Specifies the acquisition timeout when waveforms are being
+   transfered. If no new waveforms arrive within this threshold, the
+   request is aborted. This is important if a Seedlink connection is
+   configured which can block the application for a very long time if
+   at least one requested channel has no data. Seedlink does not
+   finished the request until all data has been sent. When data will
+   arrive for a particular channel is not known.
+   Default is ``2``.
+
+.. confval:: wfparam.output.messaging
+
+   Type: *boolean*
+
+   Enables messaging output which creates objects of the
+   StrongMotionParameters data model extension \(defined by SED\) and
+   sends them to scmaster. In order to save the objects to the database,
+   scmaster needs to load the dmsm plugin and the corresponding database
+   schema must be applied.
+   The default message group is AMPLITUDE. To change this group redefine
+   connection.primaryGroup.
+   Default is ``false``.
+
+.. confval:: wfparam.output.shortEventID
+
+   Type: *boolean*
+
+   Uses short event ids when an event output directory needs to be
+   created. The default pattern is [eventtime]_[mag]_[lat]_[lon]_[updatetime].
+   The short format just contains the first part, namely [eventtime] in
+   the format YEARmmddHHMMSS.
+   Default is ``false``.
+
+.. confval:: wfparam.output.waveforms.enable
+
+   Type: *boolean*
+
+   Enables\/disables the output of processed waveforms.
+   Default is ``false``.
+
+.. confval:: wfparam.output.waveforms.path
+
+   Type: *string*
+
+   Specifies the waveform output path. This parameter is only used if
+   wfparam.output.waveforms.enable is true.
+   Default is ``@LOGDIR@/shakemaps/waveforms``.
+
+.. confval:: wfparam.output.waveforms.withEventDirectory
+
+   Type: *boolean*
+
+   Enables\/disables the creation of an event directory \(named with
+   eventID\) when storing the processed waveforms. This parameter is
+   only used if wfparam.output.waveforms.enable is true.
+   Default is ``false``.
+
+.. confval:: wfparam.output.spectra.enable
+
+   Type: *boolean*
+
+   Enables\/disables the output of spectra \(psa, drs\). The output
+   format is a simple ASCII file where the first column is the
+   period and the second column the corresponding value.
+   Default is ``false``.
+
+.. confval:: wfparam.output.spectra.path
+
+   Type: *string*
+
+   Specifies the spectra output path. This parameter is only used if
+   wfparam.output.spectra.enable is true.
+   Default is ``@LOGDIR@/shakemaps/spectra``.
+
+.. confval:: wfparam.output.spectra.withEventDirectory
+
+   Type: *boolean*
+
+   Enables\/disables the creation of an event directory \(named with
+   eventID\) when storing the spectra. This parameter is only used if
+   wfparam.output.spectra.enable is true.
+   Default is ``false``.
+
+.. confval:: wfparam.output.shakeMap.enable
+
+   Type: *boolean*
+
+   Enables\/disables ShakeMap XML output.
+   Default is ``true``.
+
+.. confval:: wfparam.output.shakeMap.path
+
+   Type: *string*
+
+   Specifies the ShakeMap XML output path. This is only used if
+   wfparam.output.shakeMap.enable is set to true.
+   Default is ``@LOGDIR@/shakemaps``.
+
+.. confval:: wfparam.output.shakeMap.script
+
+   Type: *string*
+
+   Specifies the path to a script that is called whenever a new
+   ShakeMap XML is available. The script is called with 3 parameters:
+   EventID, modified ShakeMap eventID, path to event directory \(where
+   input\/event.xml and input\/event_dat.xml lives\).
+   The event files are not deleted by the application. The ownership
+   goes to the called script.
+
+
+.. confval:: wfparam.output.shakeMap.synchronous
+
+   Type: *boolean*
+
+   Enables\/disables synchronous or asynchronous script calls. If
+   enabled, be careful to not spend too much time in the script.
+   The application is blocked while the script is running.
+   Default is ``true``.
+
+.. confval:: wfparam.output.shakeMap.maximumOfHorizontals
+
+   Type: *boolean*
+
+   If enabled the maximum PGV, PGA, PSA03, PSA10 and PSA30 of both
+   horizontal components is used in the final output. Otherwise each
+   component is saved.
+   Default is ``false``.
+
+.. confval:: wfparam.output.shakeMap.SC3EventID
+
+   Type: *boolean*
+
+   Uses the SeisComP event publicID as id attribute of the
+   earthquake tag, a generated ShakeMapID otherwise.
+   Default is ``false``.
+
+.. confval:: wfparam.output.shakeMap.regionName
+
+   Type: *boolean*
+
+   Uses the event region name \(if available\) for the locstring
+   attribute, the publicID, lat, lon otherwise.
+   Default is ``false``.
+
+.. confval:: wfparam.output.shakeMap.encoding
+
+   Type: *string*
+
+   The XML encoding string written to the Shakemap XML file.
+   Default is ``UTF-8``.
+
+.. confval:: wfparam.output.shakeMap.version
+
+   Type: *int*
+
+   The target version of the Shakemap input files.
+   Default is ``3``.
+
+
+Bindings
+========
+
+
+Configuration
+-------------
+
+
+.. confval:: amplitudes.PGAV.saturationThreshold
+
+   Type: *string*
+
+   Defines the saturation threshold for the optional saturation check.
+   By default the saturation check is configured for all stations
+   as module parameter. This parameters overrides the threshold
+   per station.
+   
+   This value can either be an absolute value such as \"100000\"
+   or a relative value \(optionally in percent\) with respect to
+   the number of effective bits, e.g. \"0.8\@23\" or
+   \"80%\@23\". The first version uses 1\*\*23 \* 0.8
+   whereas the latter uses 1\*\*23 \* 80\/100.
+   
+   The special value \"false\" explicitly disables
+   the check.
+
+
+
+
+Command-line
+============
+
+.. program:: scwfparam
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+.. option:: -x, --expiry hours
+
+   Time span in hours after which objects expire
+
+.. option:: -E, --event-id arg
+
+   EventID to calculate amplitudes for
+
+.. option:: --ep arg
+
+   EventParameters \(XML\) to load
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Messaging
+---------
+
+.. option:: -u, --user arg
+
+   Overrides configuration parameter :confval:`connection.username`.
+
+.. option:: -H, --host arg
+
+   Overrides configuration parameter :confval:`connection.server`.
+
+.. option:: -t, --timeout arg
+
+   Overrides configuration parameter :confval:`connection.timeout`.
+
+.. option:: -g, --primary-group arg
+
+   Overrides configuration parameter :confval:`connection.primaryGroup`.
+
+.. option:: -S, --subscribe-group arg
+
+   A group to subscribe to. This option can be given more than once.
+
+.. option:: --content-type arg
+
+   Overrides configuration parameter :confval:`connection.contentType`.
+
+.. option:: --start-stop-msg arg
+
+   Sets sending of a start\- and a stop message.
+
+.. option:: --test
+
+   Test mode, no messages are sent
+
+
+Database
+--------
+
+.. option:: --db-driver-list
+
+   List all supported database drivers.
+
+.. option:: -d, --database arg
+
+   The database connection string, format: service:\/\/user:pwd\@host\/database.
+   \"service\" is the name of the database driver which can be
+   queried with \"\-\-db\-driver\-list\".
+
+.. option:: --config-module arg
+
+   The configmodule to use.
+
+.. option:: --inventory-db arg
+
+   Load the inventory from the given database or file, format: [service:\/\/]location
+
+.. option:: --db-disable
+
+   Do not use the database at all
+
+
+Records
+-------
+
+.. option:: --record-driver-list
+
+   List all supported record stream drivers
+
+.. option:: -I, --record-url arg
+
+   The recordstream source URL, format: [service:\/\/]location[#type].
+   \"service\" is the name of the recordstream driver which can be
+   queried with \"\-\-record\-driver\-list\". If \"service\"
+   is not given \"file:\/\/\" is used.
+
+.. option:: --record-file arg
+
+   Specify a file as record source.
+
+.. option:: --record-type arg
+
+   Specify a type for the records being read.
+
+
+Mode
+----
+
+.. option:: --order arg
+
+   Filter order
+
+.. option:: --lo-filter freq
+
+   High\-pass filter frequency
+
+.. option:: --hi-filter freq
+
+   Low\-pass filter frequency
+
+.. option:: --sc-order arg
+
+   Sensitivity correction filter order
+
+.. option:: --sc-lo-filter freq
+
+   Sensitivity correction high\-pass filter frequency
+
+.. option:: --sc-hi-filter freq
+
+   Sensitivity correction low\-pass filter frequency
+
+.. option:: --offline
+
+   Do not connect to the messaging and  and disable the database in combination with \-\-inventory\-db and \-\-ep
+
+.. option:: --force
+
+   Force event processing even if a journal entry exists that processing has completed
+
+.. option:: --force-shakemap
+
+   Force ShakeMap script to be run even if no station has contributed data
+
+.. option:: --dump-config
+
+   Dump the configuration and exit
+
+.. option:: --dump-records
+
+   Dumps all received records \(binary\) to [eventd].recs
+

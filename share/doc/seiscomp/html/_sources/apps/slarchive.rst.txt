@@ -1,0 +1,465 @@
+.. highlight:: rst
+
+.. _slarchive:
+
+#########
+slarchive
+#########
+
+**SeedLink client for data stream archiving**
+
+
+Description
+===========
+
+slarchive connects to a SeedLink server, requests data streams and writes received
+packets into directory/file structures (archives). The precise layout
+of the directories and files is defined in a format string.
+
+The implemented layouts are:
+
+- :ref:`SDS <slarchive-section-sds>`: The SeisComP Data Structure, default in |scname|
+- BUD: Buffer of Uniform Data structure
+- DLOG: The old SeisComP/datalog structure for backwards compatibility
+
+The duration for which the data are kept in archive is controlled by the bindings
+parameter :confval:`keep`. slarchive itself does not clean the archive. For removing
+old data execute :file:`$SEISCOMP_ROOT/var/lib/slarchive/purge_datafiles`. A
+regular clean-up is suggested by ::
+
+   seiscomp print crontab
+
+The resulting line, e.g. ::
+
+   20 3 * * * /home/sysop/seiscomp/var/lib/slarchive/purge_datafiles >/dev/null 2>&1
+
+can be adjusted and added to crontab.
+
+
+Background Execution
+====================
+
+When starting slarchive in |scname| as a daemon module in the background SDS is
+considered and the packets are written without modification: ::
+
+   $ seiscomp start slarchive
+
+
+Command-Line Execution
+======================
+
+Writing to **other layouts** or to **multiple archives** and other options are
+supported when executing slarchive on the command line.
+E.g. to write to more than one archive simply specify multiple format definitions
+(or presets).
+
+For more command-line option read the help: ::
+
+   $ slarchive -h
+
+
+Multiple Instances
+==================
+
+slarchive allows generating aliases, e.g. for running in multiple instances with
+different module and bindings configurations. For creating/removing aliases use the
+:ref:`seiscomp script <sec-management-commands>`, e.g. ::
+
+   $ seiscomp alias create slarchive2 slarchive
+
+
+.. _slarchive-section-sds:
+
+SDS definition
+==============
+
+SDS is the basic directory and file layout in |scname| for waveform archives. The
+archive base directory is defined by :confval:`archive`. The SDS layout is defined
+as:
+
+.. code-block:: sh
+
+   <SDSdir>
+     + year
+       + network code
+         + station code
+           + channel code
+             + one file per day and location, e.g. NET.STA.LOC.CHAN.D.YEAR.DOY
+
+File example: :file:`<SDSdir>/Year/NET/STA/CHAN.TYPE/NET.STA.LOC.CHAN.TYPE.YEAR.DAY`.
+
++-----------+-----------------------------------------------+
+| Field     | Description                                   |
++===========+===============================================+
+| SDSdir    | Arbitrary base directory                      |
++-----------+-----------------------------------------------+
+| YEAR      | 4 digit YEAR                                  |
++-----------+-----------------------------------------------+
+| NET       | Network code/identifier, 1-8 characters,      |
+|           | no spaces                                     |
++-----------+-----------------------------------------------+
+| STA       | Station code/identifier, 1-8 characters,      |
+|           | no spaces                                     |
++-----------+-----------------------------------------------+
+| CHAN      | Channel code/identifier, 1-8 characters,      |
+|           | no spaces                                     |
++-----------+-----------------------------------------------+
+| TYPE      | 1 character, indicating the data type,        |
+|           | provided types are:                           |
+|           |                                               |
+|           | | **D** Waveform data                         |
+|           | | **E** Detection data                        |
+|           | | **L** Log data                              |
+|           | | **T** Timing data                           |
+|           | | **C** Calibration data                      |
+|           | | **R** Response data                         |
+|           | | **O** Opaque data                           |
+|           |                                               |
++-----------+-----------------------------------------------+
+| LOC       | Location identifier, 1-8 characters,          |
+|           | no spaces                                     |
++-----------+-----------------------------------------------+
+| DAY       | 3 digit day of year, padded with zeros        |
++-----------+-----------------------------------------------+
+
+
+.. _slarchive_configuration:
+
+Configuration
+=============
+
+
+.. note::
+
+   slarchive is a :term:`standalone module` and does not inherit :ref:`global options <global-configuration>`.
+
+
+| :file:`etc/defaults/slarchive.cfg`
+| :file:`etc/slarchive.cfg`
+| :file:`~/.seiscomp/slarchive.cfg`
+
+
+
+.. confval:: address
+
+   Type: *string*
+
+   Host of the Seedlink server to connect to. If the acquisition
+   is running on one system nothing needs to be changed.
+   Default is ``127.0.0.1``.
+
+.. confval:: port
+
+   Type: *int*
+
+   The port of the Seedlink server to connect to. If the acquisition
+   is running on one system this port must match the configured
+   local Seedlink port.
+   Default is ``18000``.
+
+.. confval:: archive
+
+   Type: *string*
+
+   Path to waveform archive where all data is stored. Relative paths
+   \(as the default\) are treated relative to the installation
+   directory \(\$SEISCOMP_ROOT\).
+   Default is ``var/lib/archive``.
+
+.. confval:: buffer
+
+   Type: *int*
+
+   Number of records \(512 byte units\) to buffer before flushing to
+   disk.
+   Default is ``1000``.
+
+.. confval:: delay
+
+   Type: *int*
+
+   Unit: *s*
+
+   The network reconnect delay \(in seconds\) for the connection
+   to the SeedLink server. If the connection breaks for any
+   reason this will govern how soon a reconnection should be
+   attempted. The default value is 30 seconds.
+   Default is ``30``.
+
+.. confval:: networkTimeout
+
+   Type: *int*
+
+   Unit: *s*
+
+   The network timeout \(in seconds\) for the connection to the
+   SeedLink server. If no data [or keep alive packets?] are received
+   in this time range the connection is closed and re\-established
+   \(after the reconnect delay has expired\). The default value is
+   600 seconds. A value of 0 disables the timeout.
+   Default is ``900``.
+
+.. confval:: idleTimeout
+
+   Type: *int*
+
+   Unit: *s*
+
+   Timeout for closing idle data stream files in seconds. The idle
+   time of the data streams is only checked when some packets has
+   arrived. If no packets arrived no idle stream files will be
+   closed. There is no reason to change this parameter except for
+   the unusual cases where the process is running against an open
+   file number limit. Default is 300 seconds.
+   Default is ``300``.
+
+.. confval:: keepalive
+
+   Type: *int*
+
+   Unit: *s*
+
+   Interval \(in seconds\) at which keepalive \(heartbeat\) packets
+   are sent to the server. Keepalive packets are only sent if
+   nothing is received within the interval. This requires a
+   Seedlink version >\= 3.
+   Default is ``0``.
+
+.. confval:: validation.certs
+
+   Type: *string*
+
+   Path to cerificate store where all certificates and CRLs are stored. Relative
+   paths\(as the default\) are treated relative to the installation
+   directory \(\$SEISCOMP_ROOT\).
+   If the signature check is enabled slarchive loads all files at start. The store
+   uses the OpenSSl store format. From the offical OpenSSL documentation:
+   \"The directory should contain one certificate or CRL per file in PEM format,
+   with a file name of the form hash.N for a certificate, or hash.rN for a CRL.
+   The .N or .rN suffix is a sequence number that starts at zero, and is incremented
+   consecutively for each certificate or CRL with the same hash value. Gaps in the
+   sequence numbers are not supported, it is assumed that there are no more objects
+   with the same hash beyond the first missing number in the sequence.The .N or .rN suffix
+   is a sequence number that starts at zero, and is incremented consecutively for
+   each certificate or CRL with the same hash value. Gaps in the sequence numbers
+   are not supported, it is assumed that there are no more objects with the same
+   hash beyond the first missing number in the sequence.\"
+   The hash value can be obtained as follows:
+   
+   openssl x509 \-hash \-noout \-in <file>
+   Default is ``var/lib/certs``.
+
+.. confval:: validation.mode
+
+   Type: *string*
+
+   Signatures are expected to be carried in blockette 2000
+   as opaque data. Modes:
+   
+   ignore : Signatures will be ignored and no further actions
+   will be taken.
+   warning: Signatures will be checked and all received records
+   which do not carry a valid signature or no signature
+   at all will be logged with at warning level.
+   skip   : All received records without a valid signature
+   will be ignored and will not be processed.
+   Default is ``ignore``.
+
+
+Bindings
+========
+
+
+Configuration
+-------------
+
+
+.. confval:: selectors
+
+   Type: *list:string*
+
+   List of stream selectors. If left empty all available
+   streams will be requested. See slarchive manpage for
+   more information.
+
+
+.. confval:: keep
+
+   Type: *int*
+
+   Unit: *day*
+
+   Number of days the data is kept in the archive. This
+   requires purge_datafile to be run as cronjob.
+   Default is ``30``.
+
+
+
+Command-line
+============
+
+.. program:: slarchive
+
+:program:`slarchive [OPTION]... [host][:][port]`
+
+Address \([host][:][port]\) is a required argument. It specifies the address
+of the SeedLink server in host:port format. Either the host, port or both
+can be omitted. If host is omitted then localhost is assumed,
+i.e. ':18000' implies 'localhost:18000'. If the port is omitted
+then 18000 is assumed, i.e. 'localhost' implies 'localhost:18000'.
+If only ':' is specified 'localhost:18000' is assumed.
+
+.. option:: -V
+
+   Print program version and exit.
+
+.. option:: -h
+
+   Print program usage and exit.
+
+.. option:: -v
+
+   Be more verbose. This flag can be used multiple times \(\"\-v \-v\" or \"\-vv\"\)
+   for more verbosity. One flag: report basic handshaking \(link configuration\) details and
+   briefly report each packet received. Two flags: report the details of the handshaking,
+   each packet received and detailed connection diagnostics.
+
+.. option:: -p
+
+   Print details of received Mini\-SEED data records. This flag can be used multiple times
+   \(\"\-p \-p\" or \"\-pp\"\) for more detail. One flag: a single summary line
+   for each data packet received. Two flags: details of the Mini\-SEED data records received,
+   including information from fixed header and 100\/1000\/1001 blockettes.
+
+.. option:: -nd delay
+
+   The network reconnect delay \(in seconds\) for the connection to the SeedLink server.
+   If the connection breaks for any reason this will govern how soon a reconnection should
+   be attempted. The default value is 30 seconds.
+
+.. option:: -nt timeout
+
+   The network timeout \(in seconds\) for the connection to the SeedLink server. If no data
+   [or keep alive packets?] are received in this time range the connection is closed and
+   re\-established \(after the reconnect delay has expired\). The default value is 600 seconds.
+   A value of 0 disables the timeout.
+
+.. option:: -k keepalive
+
+   Interval \(in seconds\) at which keepalive \(heartbeat\) packets are sent to the server.
+   Keepalive packets are only sent if nothing is received within the interval. Requires SeedLink
+   version >\= 3.
+
+.. option:: -x statefile[:interval]
+
+   During client shutdown the last received sequence numbers and time stamps \(start times\)
+   for each data stream will be saved in this file. If this file exists upon startup the information
+   will be used to resume the data streams from the point at which they were stopped. In this way the
+   client can be stopped and started without data loss, assuming the data are still available on the
+   server. If an interval is specified the state will be saved every interval in that packets are
+   received. Otherwise the state will be saved only on normal program termination.
+
+.. option:: -i timeout
+
+   Timeout for closing idle data stream files in seconds. The idle time of the data streams is
+   only checked when some packets has arrived. If no packets arrived no idle stream files will be
+   closed. There is no reason to change this parameter except for the unusual cases where the
+   process is running against an open file number limit. Default is 300 seconds.
+
+.. option:: -d
+
+   Configure the connection in \"dial\-up\" mode. The remote server will close the connection when
+   it has sent all of the data in its buffers for the selected data streams. This is opposed to
+   the normal behavior of waiting indefinitely for data.
+
+.. option:: -b
+
+   Configure the connection in \"batch\" mode.
+
+.. option:: -Fi[:overlap]
+
+   Future check initially. Check the last Mini\-SEED data record in an existing archive file
+   and do not write new data to that file if it is older than a certain overlap. The default
+   overlap limit is 2 seconds; the overlap can be specified by appending a colon and the desired
+   overlap limit in seconds to the option. If the overlap is exceeded an error message will be
+   logged once for each time the file is opened. This option makes sense only for archive formats
+   where each unique data stream is written to a unique file \(e.g. SDS format\). If a data stream
+   is closed due to timeout \(see option \-i\) the initial future check will be preformed when the
+   file is re\-opened.
+
+.. option:: -Fc[:overlap]
+
+   Future check continuously. Available only for archive Mini\-SEED data records. Check if the
+   first sample of the record is older than the last sample of the previous record for a given
+   archive file, within a certain overlap. The default overlap limit is 2 seconds; the overlap
+   can be specified by appending a colon and the desired overlap limit in seconds to the option.
+   If the overlap is exceeded an error message will be logged once until either a non\-overlapping
+   packet is received or a new archive file is used. This option only makes sense for archive
+   formats where each unique data stream is written to a unique file \(e.g. SDS format\).
+
+.. option:: -A format
+
+   If specified, all received packets \(Mini\-SEED records\) will be appended to a directory\/file
+   structure defined by format. All directories implied in the format string will be created if
+   necessary. The option may be used multiple times to write received packets to multiple archives.
+   See the section \"archiving data\".
+
+.. option:: -SDS path
+
+   If specified, all received packets \(Mini\-SEED records\) will be saved into a Simple Data
+   Structure \(SDS\) dir\/file structure starting at the specified directory. This directory and
+   all subdirectories will be created if necessary. This option is a preset of the '\-A' option.
+   The SDS dir\/file structure is:
+   
+   <SDSdir>\/<YEAR>\/<NET>\/<STA>\/<CHAN.TYPE>\/NET.STA.LOC.CHAN.TYPE.YEAR.DAY
+   
+   Details are mentioned later on.
+
+.. option:: -BUD path
+
+   If specified, all received waveform data packets \(Mini\-SEED data records\) will be saved into
+   a Buffer of Uniform Data \(BUD\) dir\/file structure starting at the specified directory.
+   This directory and all subdirectories will be created if necessary. This option is a preset
+   of the '\-A' option. The BUD dir\/file structure is:
+   
+   <BUDdir>\/<NET>\/<STA>\/STA.NET.LOC.CHAN.YEAR.DAY
+
+.. option:: -DLOG DLOGdir
+
+   If specified, all received packets \(Mini\-SEED data records\) will be saved into an old style
+   SeisComP\/datalog dir\/file structure starting at the specified directory. This directory and
+   all subdirectories will be created if necessary. This option is a preset of the '\-A' option.
+   The DLOG dir\/file structure is:
+   
+   <DLOGdir>\/<STA>\/[LOC.]<CHAN>.<TYPE>\/STA.NET.CHAN.TYPE.YEAR.DAY.HHMM
+
+.. option:: -l streamfile
+
+   The given file contains a list of streams. This option implies multi\-station mode.
+   The format of the stream list file is given below in the section \"stream list file\".
+
+.. option:: -s selectors
+
+   Defining default selectors. If no multi\-station data streams are configured these selectors
+   will be used for uni\-station mode. Otherwise these selectors will be used when no selectors
+   are specified for a given stream with the '\-S' or '\-l' options.
+
+.. option:: -S stream[:selectors]
+
+   The connection will be configured in multi\-station mode with optional SeedLink selectors
+   for each station, see examples below. Stream should be provided in NET_STA format. If no
+   selectors are provided for a given stream, the default selectors will be used, if defined.
+   
+   Requires SeedLink >\= 2.5.
+
+.. option:: -tw start:[end]
+
+   Specifying a time window for the data streams that is applied by the server. The format
+   for both times is year,month,day,hour,min,sec; for example: \"2002,08,05,14,00:2002,08,05,14,15,00\".
+   The end time is optional but the colon must be present. If no end time is specified the
+   server will send data indefinitely. This option will override any saved state information.
+   
+   Warning: time windowing might be disabled on the remote server.
+   
+   Requires SeedLink >\= 3.
+

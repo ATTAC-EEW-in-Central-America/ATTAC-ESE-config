@@ -1,0 +1,192 @@
+.. highlight:: rst
+
+.. _bindings2cfg:
+
+############
+bindings2cfg
+############
+
+**Dump global and module bindings configurations.**
+
+
+Description
+===========
+
+bindings2cfg dumps the bindings configuration from a specific key directory
+to the given database or a configuration XML. In this way, the bindings parameters
+can be configured in a directory different from $SEISCOMP_ROOT/etc/. From this
+non-standard directory the configuration XML can be created without
+prior writing the bindings to a database and reading from there using e.g.
+:ref:`scxmldump`.
+
+This utility is useful for repeating parameter tuning.
+
+Examples
+========
+
+#. Write the bindings configuration from some key directory to a configuration
+   XML file:
+
+   .. code-block:: sh
+
+     bindings2cfg --key-dir ./etc/key -o config.xml
+
+
+#. Write the bindings configuration from some key directory to the seiscomp
+   database on localhost
+
+   .. code-block:: sh
+
+      bindings2cfg --key-dir ./etc/key -d mysql://sysop:sysop@localhost/seiscomp
+
+
+.. _bindings2cfg_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/bindings2cfg.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/bindings2cfg.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/bindings2cfg.cfg`
+
+bindings2cfg inherits :ref:`global options<global-configuration>`.
+
+
+
+
+Command-line
+============
+
+.. program:: bindings2cfg
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Database
+--------
+
+.. option:: --db-driver-list
+
+   List all supported database drivers.
+
+.. option:: -d, --database arg
+
+   The database connection string, format: service:\/\/user:pwd\@host\/database.
+   \"service\" is the name of the database driver which can be
+   queried with \"\-\-db\-driver\-list\".
+
+.. option:: --config-module arg
+
+   The configmodule to use.
+
+.. option:: --inventory-db arg
+
+   Load the inventory from the given database or file, format: [service:\/\/]location
+
+.. option:: --config-db arg
+
+   Load the configuration from the given database or file, format: [service:\/\/]location
+
+
+Input
+-----
+
+.. option:: --key-dir arg
+
+   Overrides the location of the default key directory \(\$SEISCOMP_ROOT\/etc\/key\).
+
+
+Output
+------
+
+.. option:: -o, --output arg
+
+   If given, an output XML file is generated
+

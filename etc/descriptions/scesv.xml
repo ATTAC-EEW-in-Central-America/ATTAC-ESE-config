@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<seiscomp>
+	<module name="scesv" category="GUI">
+		<description>Event summary view</description>
+		<configuration>
+			<parameter name="loadEventDB" type="double" unit="days" default="1">
+				<description>
+					Number of days to preload if scesv is started.
+				</description>
+			</parameter>
+			<parameter name="showLastAutomaticSolution" type="boolean" default="false">
+				<description>
+					If enabled, the last automatic solution is displayed next to the
+					current solution in the summary panel. If the last automatic
+					solution differs from the current solution it is displayed
+					in red. If both solutions match it is displayed in gray.
+				</description>
+			</parameter>
+			<parameter name="showOnlyMostRecentEvent" type="boolean" default="true">
+				<description>
+					If enabled only the most recent event is shown even if an update of
+					an older event is being received.
+				</description>
+			</parameter>
+			<parameter name="recenterMap" type="boolean" default="true">
+				<description>
+					If enabled, the map is centered around the most recent event event.
+				</description>
+			</parameter>
+			<parameter name="enableFixAutomaticSolutions" type="boolean" default="false">
+				<description>
+					If enabled, an additional button is displayed which allows to switch back
+					the latest automatic solution. This button triggers an command for
+					scevent to prioritize automatic solutions until the next manual
+					solution is available.
+				</description>
+			</parameter>
+			<parameter name="visibleMagnitudes" type="list:string" default="M,MLv,mb,mB,Mw(mB)">
+				<description>
+					A list of magnitude types to be displayed.
+				</description>
+			</parameter>
+			<parameter name="button0" type="string">
+				<description>
+					Label of button0 which triggers script0.
+				</description>
+			</parameter>
+			<parameter name="button1" type="string">
+				<description>
+					Label of button1 which triggers script1.
+				</description>
+			</parameter>
+			<group name="scripts">
+				<parameter name="script0" type="string">
+					<description>
+						Path to a script if button0 is clicked.
+					</description>
+				</parameter>
+				<group name="script0">
+					<parameter name="exportMap" type="boolean" default="false">
+						<description>
+							If enabled, the current map is exported to file. The filename is appened to the parameter list of script0. The script has to take ownership of the file.
+						</description>
+					</parameter>
+					<parameter name="oldStyle" type="boolean" default="true">
+						<description>
+							If enabled, the parameter list of script0 is eventID, arrivalCount,
+							magnitude, description.
+
+							If disabled, the parameter list of script0 is eventID, preferredOriginID,
+							preferredMagnitudeID, preferredFocalMechanismID.
+						</description>
+					</parameter>
+				</group>
+				<parameter name="script1" type="string">
+					<description>
+						Path to a script if button1 is clicked.
+					</description>
+				</parameter>
+				<group name="script1">
+					<parameter name="exportMap" type="boolean" default="false">
+						<description>
+							If enabled, the current map is exported to file. The filename is appened to the parameter list of script1. The script has to take ownership of the file.
+						</description>
+					</parameter>
+					<parameter name="oldStyle" type="boolean" default="true">
+						<description>
+						If enabled, the parameter list of script1 is eventID, arrivalCount,
+						magnitude, description.
+
+						If disabled, the parameter list of script1 is eventID, preferredOriginID,
+						preferredMagnitudeID, preferredFocalMechanismID.
+						</description>
+					</parameter>
+				</group>
+			</group>
+			<group name="summary">
+				<parameter name="borders" type="boolean" default="false">
+					<description>
+						Draw borders in the summary panel.
+					</description>
+				</parameter>
+			</group>
+			<parameter name="ignoreOtherEvents" type="boolean" default="true">
+				<description>
+					If the event type is either &quot;other&quot; or &quot;not existing&quot;
+					and this flag is true then the event will not be shown.
+				</description>
+			</parameter>
+			<group name="display">
+				<description>
+				Adjust content or display custom information in the Summary tab.
+				</description>
+				<parameter name="lonmin" type="double" unit="deg" default="-180">
+					<description>
+						Minimum longitude of initially displayed map region.
+					</description>
+				</parameter>
+				<parameter name="lonmax" type="double" unit="deg" default="180">
+					<description>
+						Maximum longitude of initially displayed map region.
+					</description>
+				</parameter>
+				<parameter name="latmin" type="double" unit="deg" default="-90">
+					<description>
+						Minimum latitude of initially displayed map region.
+					</description>
+				</parameter>
+				<parameter name="latmax" type="double" unit="deg" default="90">
+					<description>
+						Maximum latitude of initially displayed map region.
+					</description>
+				</parameter>
+				<group name="event">
+					<description>
+						Event information
+					</description>
+					<group name="comment">
+						<parameter name="id" type="string">
+							<description>
+							ID of the event comment to be considered.
+							</description>
+						</parameter>
+						<parameter name="default" type="string">
+							<description>
+							Value to be shown in case no valid event comment is found.
+							</description>
+						</parameter>
+						<parameter name="label" type="string">
+							<description>
+							Label of the value to be shown.
+							</description>
+						</parameter>
+					</group>
+				</group>
+				<group name="origin">
+					<description>
+						Origin information
+					</description>
+					<group name="comment">
+						<description>
+						Display origin comments.
+						</description>
+						<parameter name="id" type="string">
+							<description>
+							ID of the origin comment to be considered.
+							</description>
+						</parameter>
+						<parameter name="default" type="string">
+							<description>
+							Value to be shown in case no valid origin comment is found.
+							</description>
+						</parameter>
+						<parameter name="label" type="string">
+							<description>
+							Label of the value to be shown.
+							</description>
+						</parameter>
+					</group>
+				</group>
+			</group>
+			<group name="poi">
+				<description>
+					Display information related to a point of interest (POI)
+					read from the cities XML file.
+				</description>
+				<parameter name="maxDist" type="double" unit="deg" default="20">
+					<description>
+						Maximum distance in degrees of a POI to be taken into account.
+					</description>
+				</parameter>
+				<parameter name="minPopulation" type="double">
+					<description>
+						The minimum population of a POI to be taken into account.
+					</description>
+				</parameter>
+				<parameter name="message" type="string">
+					<description>
+						Message conversion string that converts a POI into the text
+						displayed under the region label. There are different placeholders
+						that can be used: @dist@, @dir@, @poi@ and @region@.
+					</description>
+				</parameter>
+			</group>
+		</configuration>
+		<command-line>
+			<synopsis>
+			scesv [options]
+			</synopsis>
+
+			<group name="Generic">
+				<optionReference>generic#help</optionReference>
+				<optionReference>generic#version</optionReference>
+				<optionReference>generic#config-file</optionReference>
+				<optionReference>generic#plugins</optionReference>
+				<optionReference>generic#auto-shutdown</optionReference>
+				<optionReference>generic#shutdown-master-module</optionReference>
+				<optionReference>generic#shutdown-master-username</optionReference>
+			</group>
+
+			<group name="Verbosity">
+				<optionReference>verbosity#verbosity</optionReference>
+				<optionReference>verbosity#v</optionReference>
+				<optionReference>verbosity#quiet</optionReference>
+				<optionReference>verbosity#component</optionReference>
+				<optionReference>verbosity#syslog</optionReference>
+				<optionReference>verbosity#lockfile</optionReference>
+				<optionReference>verbosity#console</optionReference>
+				<optionReference>verbosity#debug</optionReference>
+				<optionReference>verbosity#log-file</optionReference>
+			</group>
+
+			<group name="Messaging">
+				<optionReference>messaging#user</optionReference>
+				<optionReference>messaging#host</optionReference>
+				<optionReference>messaging#timeout</optionReference>
+				<optionReference>messaging#primary-group</optionReference>
+				<optionReference>messaging#subscribe-group</optionReference>
+				<optionReference>messaging#content-type</optionReference>
+				<optionReference>messaging#start-stop-msg</optionReference>
+			</group>
+
+			<group name="Database">
+				<optionReference>database#db-driver-list</optionReference>
+				<optionReference>database#database</optionReference>
+				<optionReference>database#config-module</optionReference>
+				<optionReference>database#inventory-db</optionReference>
+			</group>
+
+			<group name="Cities">
+				<optionReference>cities#city-xml</optionReference>
+			</group>
+
+			<group name="User interface">
+				<optionReference>gui#full-screen</optionReference>
+				<optionReference>gui#non-interactive</optionReference>
+			</group>
+		</command-line>
+	</module>
+</seiscomp>

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<seiscomp>
+	<module name="fdsnws2ql" category="gempa">
+		<description>
+			Imports event information from FDSN Web services into a QuakeLink server.
+		</description>
+		<configuration>
+			<parameter name="server" type="string" default="localhost:18011">
+				<description>
+					Host name and optional port of QuakeLink server to push data
+					to.
+				</description>
+			</parameter>
+			<parameter name="ssl" type="boolean" default="false">
+				<description>
+					Use secure socket layer (SSL) for server connection.
+				</description>
+			</parameter>
+			<parameter name="backlog" type="double" default="1.0" unit="d">
+				<description>
+					Maximum event age given by origin time in days. Events older
+					than the specified
+					value are neither fetched nor processed and are removed from
+					the host specific event journal.
+				</description>
+			</parameter>
+			<parameter name="interval" type="int" unit="s" default="60">
+				<description>
+					Interval in seconds to request event updates from FDSNWS source.
+				</description>
+			</parameter>
+			<parameter name="requestTimeout" type="double" unit="s" default="10.0">
+				<description>
+					HTTP request timeout. Abort the request if no bytes have
+					been received for the specified number of seconds.
+				</description>
+			</parameter>
+			<parameter name="hosts" type="list:string">
+				<description>
+					Registration of FDSNWS host profiles.
+				</description>
+			</parameter>
+			<group name="significantChange">
+				<description>
+					Parameters defining a significant event change which
+					triggers an event update.
+				</description>
+				<parameter name="time" type="boolean" default="true"/>
+				<parameter name="coordinates" type="boolean" default="true"/>
+				<parameter name="depth" type="boolean" default="true"/>
+				<parameter name="author" type="boolean" default="true"/>
+				<parameter name="catalog" type="boolean" default="true"/>
+				<parameter name="contributor" type="boolean" default="true"/>
+				<parameter name="contributorID" type="boolean" default="true"/>
+				<parameter name="magType" type="boolean" default="true"/>
+				<parameter name="magnitude" type="boolean" default="true"/>
+				<parameter name="magAuthor" type="boolean" default="true"/>
+				<parameter name="locationName" type="boolean" default="true"/>
+				<parameter name="eventType" type="boolean" default="true"/>
+				<group name="precision">
+					<description>
+						Numerical differences in source parameters defining a
+						significant event change. The corresponding significant
+						change flag must be enabled for a parameter change to
+						be considered.
+					</description>
+					<parameter name="time" type="float" unit="s" default="1e-02">
+						<description>
+							Origin time
+						</description>
+					</parameter>
+					<parameter name="coordinates" type="float" unit="deg" default="1e-06">
+						<description>
+							Epicenter
+						</description>
+					</parameter>
+					<parameter name="depth" type="float" unit="km" default="1e-03">
+						<description>
+							Hypocenter depth
+						</description>
+					</parameter>
+					<parameter name="magnitude" type="float" default="1e-02">
+						<description>
+							Event magnitude
+						</description>
+					</parameter>
+				</group>
+			</group>
+			<group name="host">
+				<description>
+					Add host profiles defining connections to FDSNWS
+					servers. For considering a profile add its name to the
+					parameter &quot;hosts&quot;.
+				</description>
+				<struct type="FDSNWS server profile" link="hosts">
+					<description>
+						Configure profile parameters depending on the FDSNWS server.
+					</description>
+					<parameter name="url" type="string" default="http://localhost">
+						<description>
+							URL of the FDSNWS service.
+
+							Format: [http[s]://][user:pwd@][host][:port][path].
+
+							If the path is empty the default path /fdsnws/event/1/query will be added automatically.
+						</description>
+					</parameter>
+					<parameter name="updatedAfter" type="boolean" default="false">
+						<description>
+							Defines whether updatedAfter requests are supported
+							by this service. If this parameter is set to true,
+							all subsequent requests will use the previous
+							request time to filter for new event solutions since
+							the last request.
+						</description>
+					</parameter>
+					<parameter name="requestHandler" type="string" default="fdsnws2ql.plugins.fdsnws.FDSNWS">
+						<description>
+							Plugin implementing custom request and response handling.
+							The last component of the path is interpreted as a class
+							name which must be derived from
+							fdsnws2ql.plugin.RequestHandler in
+							$SEISCOMP_ROOT/lib/python/fdsnws2ql/plugin.py
+						</description>
+					</parameter>
+					<group name="filter">
+						<description>
+							Defines filter parameters for events to import.
+						</description>
+						<parameter name="eventTypes" type="list:string">
+							<description>
+								Limit to events with a specified eventType. The
+								parameter value can be a single item, a
+								comma-separated list of items. Allowed values
+								are from SCML or 'unknown' if eventType
+								is not given. The SeisComPML event types are
+								converted to QuakeML event types before sending
+								the request and are converted back to SeisComP
+								ML types when the response is evaluated.
+							</description>
+						</parameter>
+						<parameter name="catalog" type="string">
+							<description>
+								Limit to events from a specified catalog.
+							</description>
+						</parameter>
+						<parameter name="contributor" type="string">
+							<description>
+								Limit to events contributed by a specified contributor.
+							</description>
+						</parameter>
+						<group name="boundingBox">
+							<description>
+								The bounding box limiting the epicentral area.
+								Do not use along with boundingCircle.
+							</description>
+							<parameter name="minLatitude" type="float" unit="deg">
+								<description>
+									Minimum latitude.
+								</description>
+							</parameter>
+							<parameter name="maxLatitude" type="float" unit="deg">
+								<description>
+									Maximum latitude.
+								</description>
+							</parameter>
+							<parameter name="minLongitude" type="float" unit="deg">
+								<description>
+									Minimum longitude.
+								</description>
+							</parameter>
+							<parameter name="maxLongitude" type="float" unit="deg">
+								<description>
+									Maximum longitude.
+								</description>
+							</parameter>
+						</group>
+						<group name="boundingCircle">
+							<description>
+								The bounding circle limiting the epicentral area.
+								Depending on the definition of
+								minRadius and maxRadius the region described
+								here might be included or excluded by a circle
+								or bound by two concentric circles.
+
+								Do not use along with boundingBox.
+							</description>
+							<parameter name="latitude" type="float" unit="deg">
+								<description>
+									Center latitude
+								</description>
+							</parameter>
+							<parameter name="longitude" type="float" unit="deg">
+								<description>
+									Center longitude
+								</description>
+							</parameter>
+							<parameter name="minRadius" type="float" unit="deg">
+								<description>
+									Minimum epicentral distance from center
+								</description>
+							</parameter>
+							<parameter name="maxRadius" type="float" unit="deg">
+								<description>
+									Maximum epicentral distance from center
+								</description>
+							</parameter>
+						</group>
+						<group name="depth">
+							<description>
+								Limits request by hypocenter depth.
+							</description>
+							<parameter name="min" type="float" unit="km">
+								<description>
+									Minimum depth
+								</description>
+							</parameter>
+							<parameter name="max" type="float" unit="km">
+								<description>
+									Maximum depth
+								</description>
+							</parameter>
+						</group>
+						<group name="magnitude">
+							<description>
+								Limits request by event magnitude.
+							</description>
+							<parameter name="min" type="float">
+								<description>
+									Minimum magnitude
+								</description>
+							</parameter>
+							<parameter name="max" type="float">
+								<description>
+									Maximum magnitude
+								</description>
+							</parameter>
+							<parameter name="type" type="string">
+								<description>
+									Specifies a magnitude type to use for testing
+									the minimum and maximum limits.
+								</description>
+							</parameter>
+						</group>
+					</group>
+					<group name="content">
+						<description>
+							Defines the details for the event content to generate
+							or to fetch.
+						</description>
+						<parameter name="fetchXML" type="boolean" default="false">
+							<description>
+								If set to true, an additional request for XML
+								data is made for each updated event. Otherwise a
+								minimal SCML
+								is constructed from the key event parameters
+								present in the text format.
+
+								Activate this option only if the complete event
+								data set including all origins, etc. is required
+								by your processing modules.
+							</description>
+						</parameter>
+						<group name="text">
+							<description>
+								Parameters controlling the event construction
+								from the text format summary parameters.
+								The parameters are ignored if the parameter
+								&quot;fetchXML&quot; is true (active).
+							</description>
+							<parameter name="agencyID" type="string">
+								<description>
+									By default the agency of the event and origin
+									is set to the value of the contributor column.
+									This parameter allows to set a custom agency ID.
+								</description>
+							</parameter>
+							<parameter name="evaluationMode" type="string" default="manual">
+								<description>
+									Origin evaluation mode.
+								</description>
+							</parameter>
+							<parameter name="evaluationStatus" type="string" default="confirmed">
+								<description>
+									Origin evaluation status.
+								</description>
+							</parameter>
+						</group>
+						<group name="xml">
+							<description>
+								Defines the details for XML content to fetch.
+								This section requires the parameter
+								&quot;fetchXML&quot; to be enabled.
+							</description>
+							<parameter name="sc3ml" type="boolean" default="false">
+								<description>
+									Some FDSNWS services allow to query event
+									information in the native SCML format.
+									Activate this option to save the conversion
+									step between QuakeML and SCML if sc3ml is
+									supported by the server.
+								</description>
+							</parameter>
+							<group name="include">
+								<description>
+									Defines SCML structures to include in requests.
+								</description>
+								<parameter name="allOrigins" type="boolean" default="false">
+									<description>
+										Request all origins for events.
+										Default is data center
+										dependent but is suggested to be the
+										preferred origin only.
+									</description>
+								</parameter>
+								<parameter name="allMagnitudes" type="boolean" default="false">
+									<description>
+										Request all magnitudes for events.
+										Default is data center
+										dependent but is suggested to be the
+										preferred magnitude only.
+									</description>
+								</parameter>
+								<parameter name="arrivals" type="boolean" default="false">
+									<description>
+										Request all phase arrivals.
+									</description>
+								</parameter>
+							</group>
+							<group name="xslt">
+								<description>
+									Parameters controlling the QuakeML to SCML conversion
+									using a XSLT script shipped with the SeisComP installation.
+								</description>
+								<parameter name="version" type="string">
+									<description>
+										SCML schema version used during export.
+										If not specified, the largest version
+										available under @DATADIR@/xml/ is used.
+									</description>
+								</parameter>
+								<parameter name="idPrefix" type="string">
+									<description>
+										ID prefix to remove from publicID attributes
+										and references thereof. The QuakeML schema enforces
+										a strict ID schema which causes problems in SeisComP
+										applications during processing and visualization.
+										E.g., when fetching events from service.iris.edu
+										you might want to set this parameter to
+										'smi:service.iris.edu/fdsnws/event/1/query?'
+									</description>
+								</parameter>
+								<parameter name="custom" type="string">
+									<description>
+										Path of a custom XSLT conversion script.
+									</description>
+								</parameter>
+							</group>
+						</group>
+					</group>
+				</struct>
+			</group>
+		</configuration>
+		<command-line>
+			<group name="Generic">
+				<optionReference>generic#help</optionReference>
+				<optionReference>generic#version</optionReference>
+				<optionReference>generic#config-file</optionReference>
+				<optionReference>generic#plugins</optionReference>
+				<optionReference>generic#daemon</optionReference>
+			</group>
+			<group name="Verbosity">
+				<optionReference>verbosity#verbosity</optionReference>
+				<optionReference>verbosity#v</optionReference>
+				<optionReference>verbosity#quiet</optionReference>
+				<optionReference>verbosity#print-component</optionReference>
+				<optionReference>verbosity#print-context</optionReference>
+				<optionReference>verbosity#component</optionReference>
+				<optionReference>verbosity#syslog</optionReference>
+				<optionReference>verbosity#lockfile</optionReference>
+				<optionReference>verbosity#console</optionReference>
+				<optionReference>verbosity#debug</optionReference>
+				<optionReference>verbosity#trace</optionReference>
+				<optionReference>verbosity#log-file</optionReference>
+			</group>
+		</command-line>
+	</module>
+</seiscomp>

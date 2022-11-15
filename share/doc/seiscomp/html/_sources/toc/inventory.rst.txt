@@ -1,0 +1,15 @@
+#########
+Inventory
+#########
+
+.. toctree::
+   :maxdepth: 1
+
+   /apps/dlsv2inv
+   /apps/fdsnxml2inv
+   /apps/import_inv
+   /apps/inv2dlsv
+   /apps/invextr
+   /apps/scinv
+   /apps/tab2inv
+   /apps/tabinvmodifier

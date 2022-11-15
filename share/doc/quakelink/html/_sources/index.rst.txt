@@ -1,0 +1,64 @@
+|appname| documentation
+=======================
+
+This is the documentation for the |appname| server and tool suite in version |version|.
+
+.. raw:: html
+
+   <div class="four column layout">
+
+.. figure:: base/media/quakelink_3systems_s.png
+   :alt: architecture
+
+   QuakeLink connects 2 or more SeisComP systems in real time.
+
+.. figure:: base/media/quakelink-browser-calendar.png
+   :alt: web interface with event calendar
+
+   Browse events in the calender view of the QuakeLink  Web interface.
+
+.. figure:: base/media/quakelink-events.png
+   :alt: web interface with events
+
+   The Web interface shows event information and allows downloading.
+
+.. figure:: base/media/quakelink-stations.png
+   :alt: web interface with station API
+
+   The API to fetch station and event information supports interactions.
+
+.. raw:: html
+
+   </div>
+
+About
+=====
+
+.. toctree::
+   :maxdepth: 2
+
+   /base/introduction
+   /base/glossary
+   /base/references
+.. toctree::
+   :maxdepth: 1
+
+   /base/CHANGELOG-server.md
+
+Server and Plugins for Parameter Exchange
+=========================================
+
+.. toctree::
+   :maxdepth: 2
+
+   /base/plugins
+
+Example Applications and Setups
+===============================
+
+.. toctree::
+   :maxdepth: 2
+
+   /base/examples
+
+   Generic SeisComP Configuration </apps/global>

@@ -1,0 +1,45 @@
+.. _scanloc-ttt:
+
+Dense Travel-Time Tables
+========================
+
+The default travel time tables of SeisComP for
+`LOCSAT <https://docs.gempa.de/seiscomp/current/apps/global_locsat.html>`_
+provide the times in
+intervals of 1 degree epicentral distance. Thus, the curvature of the travel-time
+curve at closer distance is not well imaged potentially resulting in wrong
+locations or missing event solutions. Therefore, the LOCSAT tables,
+*iasp91_scanloc*, based on the IASP91 model with higher spacial sampling are
+added. The tables are located in :file:`$SEISCOMP_ROOT/share/locsat/tables`.
+
+.. _fig-ttt-scanloc:
+
+.. figure:: ../apps/media/ttt_scanloc_P_5km.png
+   :align: center
+   :width: 18cm
+
+   Differences between P-wave travel times in the standard iasp91 tables for LOCSAT
+   and the iasp91_scanloc tables provided with scanloc for an event at 5 km depth.
+
+
+Configuration
+-------------
+
+Configure :confval:`association.table` and :confval:`locator.profile` with
+*iasp91_scanloc* for making use of the provided LOCSAT tables.
+
+.. code-block:: sh
+
+   # Type of travel-time tables for phase association. May be different from locator.
+   # Use e.g. libtau or LOCSAT.
+   association.tableType = LOCSAT
+
+   # Name of travel-time table used for phase association. May be different from locator
+   # profile.
+   association.table = iasp91_scanloc
+
+   # The locator type to use
+   locator.type = LOCSAT
+
+   # The locator profile to use
+   locator.profile = iasp91_scanloc

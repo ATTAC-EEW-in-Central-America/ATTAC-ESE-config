@@ -1,0 +1,178 @@
+.. highlight:: rst
+
+.. _scart:
+
+#####
+scart
+#####
+
+**Import/export MiniSEED data to/from SDS archives.**
+
+
+Description
+===========
+
+The archive tool scart creates playback files (multiplexed miniSEED files) from
+:term:`SDS` structured data (e.g. created by slarchive) or from data passed from
+another record source such as :ref:`Arclink <rs-arclink>`. It can also playback
+records directly out of an SDS structure. Furthermore it can be used to import
+multiplexed miniSEED files into a local SDS structure.
+So it is possible to save event based waveform data in combination with
+scevtstreams into another archive.
+
+
+.. _scart-config:
+
+Configuration
+=============
+
+scart can make use of :ref:`global_recordstream`
+implementations which are provided by additional plugins.
+For loading additional plugins, e.g. the *xyz* plugin create and configure :file:`scart.cfg`:
+
+.. code-block:: sh
+
+   plugins = xyz
+
+
+Examples
+========
+
+#. Extract data from the default :term:`SDS` archive in :file:`$SEISCOMP_ROOT/var/lib/archive`
+   or from a local :term:`SDS` archive [SDS archive] into a miniSEED file :file:`file.mseed`
+   and sort by end time of the records:
+
+   .. code-block:: sh
+
+      scart -dsvE -t '[start-time]~[end-time]' > file.mseed
+	  scart -dsvE -t '[start-time]~[end-time]' [SDS archive] > [file.mseed]
+
+   .. note::
+
+      Sorting data is computational expensive but required for waveform playbacks.
+
+#. Push miniSEED data from file :file:`file.mseed` into a local :term:`SDS` archive:
+
+   .. code-block:: sh
+
+      scart  -I file://[file.mseed] [SDS archive]
+
+#. Collect data from an FDSNWS server using the :ref:`global_recordstream`
+   interface and write to a miniSEED file. The data streams and the time spans are
+   defined in a list file using the option ``list``. The list can be generated e.g.
+   by :ref:`scevtstreams`.
+
+   .. code-block:: sh
+
+      scart  -I fdsnws://[server]:80 --list list.file --stdout > file.mseed
+
+.. note::
+
+   Repeated pushing of miniSEED data into an archive will duplicate the data.
+
+
+
+Command-line
+============
+
+.. program:: scart
+
+:program:`scart [options] {archive-dir}`
+
+The last option has to be the archive directory when dump mode is enabled.
+When no archive directory is explicitly given,
+\$SEISCOMP_ROOT\/var\/lib\/archive or the current directory
+is used depending on whether \$SEISCOMP_ROOT has been set or not.
+The default operation mode is import. That means that a multiplexed
+MiniSEED file or another record source such as ArcLink is used to import
+records into a SDS structure.
+
+
+Verbosity
+---------
+
+.. option:: -v, --verbose
+
+   Verbose mode.
+
+.. option:: -h, --help
+
+   Display a help message.
+
+
+Mode
+----
+
+.. option:: -d, --dump
+
+   Set export \(dump\) mode. Records are retrieved from an archive and
+   written to standard output.
+
+.. option:: -I
+
+   Import mode: Specify the recordstream URL when in import mode.
+   When using another recordstream than a file \(like ArcLink\) a stream
+   list file is required. Default: file:\/\/\- \(stdin\).
+
+
+Output
+------
+
+.. option:: -t timewindow
+
+   Specify the time window \(as one properly quoted string\) to dump
+   records for. Times are UTC and separated by a tilde \"\~\".
+   To dump one hour of waveform data between 2008\/01\/01 00:00:00 and
+   2008\/01\/01 01:00:00 use
+   <\-t \"2008\-01\-01 00:00:00\~2008\-01\-01 01:00:00\">.
+
+.. option:: -l, --list file
+
+   Uses a stream list file instead of defined networks and channels
+   \(\-n and \-c are ignored\). The list can be generated from events
+   by scevetstreams. Line format: starttime;endtime;streamID.
+   The time format is the same as described in option '\-t'.
+   
+   Example:
+   
+   2019\-07\-17 02:00:00;2019\-07\-17 02:10:00;GR.CLL..BHZ
+
+.. option:: -s, --sort
+
+   Sort records by [start\-]time. To sort records by their endtime use \-E.
+
+.. option:: -E
+
+   Sort records according to their end time. Default: start time.
+
+.. option:: -m, --modify
+
+   Modify the record time for real time playback when in export mode.
+   The first record time is NOW. The relative time of successive records
+   to the first one are kept.
+
+.. option:: --speed
+
+   Specify the speed to dump the records. A value of 0 means no delay
+   otherwise speed is a multiplier of the real time difference between
+   the records. When feeding the records directly into the replay pipe
+   a value of 1 \(real time\) is recommended.
+
+.. option:: -n networks
+
+   List of network codes to dump \(comma separated\). Default: \*.
+
+.. option:: -c channels
+
+   Specify the channel filter for the dumped streams as regular
+   expression. Default: \(B\|S\|M\|H\)\(L\|H\)\(Z\|N\|E\). To dump only
+   BHZ, BHN and BHE streams use BH\(Z\|N\|E\).
+
+.. option:: --files count
+
+   Specify the number of file handles to cache. Default: 100.
+
+.. option:: --test
+
+   Test mode, no record output. This switch is useful for debugging.
+

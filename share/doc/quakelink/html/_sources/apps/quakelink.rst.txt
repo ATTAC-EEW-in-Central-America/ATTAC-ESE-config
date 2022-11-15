@@ -1,0 +1,495 @@
+.. highlight:: rst
+
+.. _quakelink:
+
+#########
+quakelink
+#########
+
+**Earthquake distribution server**
+
+
+Description
+===========
+
+quakelink is an event and metadata server by gempa.  quakelink is part of the
+QuakeLink suite.
+
+.. _quakelink-architecture:
+
+Architecture:
+=============
+
+quakelink is a server that collects data from SeisComP systems using plugins.
+The data is stored in the database and provided to clients. The clients may be
+other SeisComP systems, web browsers or other applications such as `EQInfo`.
+
+.. _fig-ql_architecture:
+
+.. figure:: media/quakelink.png
+   :align: center
+   :width: 16cm
+
+   QuakeLink architecture.
+
+.. _quakelink-configuration-setup:
+
+Examples
+========
+
+See the :ref:`examples<quakelink-examples>` for examples applications and setups.
+
+
+
+Module Configuration
+====================
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/quakelink.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/quakelink.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/quakelink.cfg`
+
+quakelink inherits :ref:`global options<global-configuration>`.
+
+.. note::
+
+   Modules/plugins may require a license file. The default path to license
+   files is :file:`@DATADIR@/licenses/` which can be overridden by global
+   configuration of the parameter :confval:`gempa.licensePath`. Example: ::
+
+      gempa.licensePath = @CONFIGDIR@/licenses
+
+
+
+.. confval:: QL.port
+
+   Type: *int*
+
+   Port to listen for data requests
+   Default is ``18010``.
+
+.. confval:: QL.pluginPort
+
+   Type: *int*
+
+   Port to listen for plugin data feeds
+   Default is ``18011``.
+
+.. confval:: QL.filebase
+
+   Type: *path*
+
+   Base path of the data storage
+   Default is ``@ROOTDIR@/var/lib/quakelink/archive``.
+
+.. confval:: QL.maxConnections
+
+   Type: *int*
+
+   Maximum number of simultaneous data connections. Note:
+   In addition to this configuration parameter an upper
+   limit may be enforced by the license you obtained.
+   Default is ``-1``.
+
+.. confval:: QL.maxRequestLines
+
+   Type: *int*
+
+   Maximum number of lines per request
+   Default is ``-1``.
+
+.. confval:: QL.cacheLifeTime
+
+   Type: *double*
+
+   Unit: *h*
+
+   Time span in hours after which objects expire
+   Default is ``1.0``.
+
+.. confval:: QL.database
+
+   Type: *path*
+
+   Path to the SQLite database
+   Default is ``@ROOTDIR@/var/lib/quakelink/archive/events.db``.
+
+.. confval:: QL.runAsUser
+
+   Type: *string*
+
+   Drop privileges to specified user
+
+
+.. confval:: QL.users
+
+   Type: *path*
+
+   Path to the users database \(same format Apache users
+   file\).  The tool htpasswd can be used with switch
+   \"\-d\" to force usage of crypt\(\) function. MD5
+   is currently not implemented.
+
+
+.. confval:: QL.access-list
+
+   Type: *path*
+
+   Path to the access control file. Format: Multiples lines
+   of form 'KEY \= VALUE'.
+   
+   KEY: '[DOMAIN].ALLOW\|DENY'.
+   VALUE: comma\-separated list of IP addresses or network masks.
+   DOMAIN: Allowed values: 'PLUGINS, COMMANDS, URLS'.
+   PLUGINS: Access control of plugin data connections.
+   COMMANDS: Allowed values: 'SET, FORMAT::[NATIVE, GZNATIVE, SUMMARY, XML, GZXML], INFO::[CLIENTS, EVENTS, OPTIONS]'.
+   Default is ``@ROOTDIR@/etc/quakelink-access.cfg``.
+
+.. confval:: QL.keepAliveInterval
+
+   Type: *int*
+
+   Unit: *s*
+
+   Interval to send out keep alive messages to connected clients. The purpose of these
+   messages is to prevent TCP connections from being silently shutdown by intermediate
+   communication infrastructure because of inactivity. A client still needs to request
+   keep alive messages up on connection.
+   Default is ``30``.
+
+.. confval:: QL.enableKeepAlive
+
+   Type: *boolean*
+
+   By default clients need to request keep alive messages up on connection. Set
+   this flag to true to enable the sending of keep alive messages for the native
+   QuakeLink protocol by default.
+   Default is ``false``.
+
+.. confval:: QL.maxRevisionsPerEvent
+
+   Type: *int*
+
+   The maximum number of event revisions. All later revisions
+   will be discarded silently.
+   Default is ``1000``.
+
+.. confval:: QL.logStats
+
+   Type: *int*
+
+   Log performance statistics to file ql\-stats. The interval
+   is in seconds. Use \-1 to disable the logging.
+   Default is ``-1``.
+
+.. confval:: QL.plugins
+
+   Type: *list:string*
+
+   Registration of plugins
+
+
+.. confval:: QL.SSL.port
+
+   Type: *int*
+
+   Port to listen for data requests with SSL
+   Default is ``-1``.
+
+.. confval:: QL.SSL.pluginPort
+
+   Type: *int*
+
+   Port to listen for plugin data feeds with SSL
+   Default is ``-1``.
+
+.. confval:: QL.SSL.certificate
+
+   Type: *path*
+
+   Path to SSL certificate file
+
+
+.. confval:: QL.SSL.key
+
+   Type: *path*
+
+   Path to SSL private key file
+
+
+.. confval:: QL.SSL.users
+
+   Type: *path*
+
+   Path to the SSL users database \(same format Apache
+   users file\).  The tool htpasswd can be used with
+   switch \"\-d\" to force usage of crypt\(\)
+   function. MD5 is currently not implemented.
+
+
+.. note::
+
+   **QL.plugin.$name.\***
+   $name is a placeholder for the name to be used and needs to be added to :confval:`QL.plugins` to become active.
+
+   .. code-block:: sh
+
+      QL.plugins = a,b
+      QL.plugin.a.value1 = ...
+      QL.plugin.b.value1 = ...
+      # c is not active because it has not been added
+      # to the list of QL.plugins
+      QL.plugin.c.value1 = ...
+
+
+.. confval:: QL.plugin.$name.cmd
+
+   Type: *string*
+
+   Plugin command to execute
+
+
+.. confval:: QL.http.port
+
+   Type: *int*
+
+   Port to listen for HTTP request
+   Default is ``-1``.
+
+.. confval:: QL.http.maxWorkers
+
+   Type: *int*
+
+   Number of workers processing requests in parallel
+   Default is ``4``.
+
+.. confval:: QL.http.logAccess
+
+   Type: *boolean*
+
+   Number of workers processing requests in parallel
+   Default is ``true``.
+
+.. confval:: QL.http.timeout
+
+   Type: *integer*
+
+   Unit: *s*
+
+   QuakeLink uses long polling for POST event requests. To
+   allow returning an empty document \(HTTP 204\) rather than
+   waiting forever this parameter can be used. It applies
+   a no\-data timeout in seconds. This setting might be useful
+   if QuakeLink is being ran behind a proxy.
+   Default is ``-1``.
+
+.. confval:: QL.http.rootURL
+
+   Type: *string*
+
+   Defines the root URL used to generate links. That option is
+   only important if e.g. Apache with reverse proxy is used to
+   forward QuakeLinks webpages.
+
+
+.. confval:: QL.http.allowNativeAttributes
+
+   Type: *boolean*
+
+   Expose sensitive information like author name
+   Default is ``false``.
+
+.. confval:: QL.http.path.media
+
+   Type: *path*
+
+   Path to HTTP media files
+   Default is ``@DATADIR@/quakelink/www``.
+
+.. confval:: QL.http.path.templates
+
+   Type: *path*
+
+   Path to HTTP templates
+   Default is ``@DATADIR@/quakelink/templates``.
+
+.. confval:: QL.https.port
+
+   Type: *int*
+
+   Port to listen for HTTPS request
+   Default is ``-1``.
+
+.. confval:: QL.dyfi.database
+
+   Type: *string*
+
+   Defines the database connection used to store DYFI information.
+   If no database connection is configured the DYFI service will be
+   disabled. Supported database backends:
+   MySQL and SQLite3.
+   
+   Example: mysql:\/\/sysop:sysop\@localhost\/dyfi
+
+
+.. note::
+   **QL.dyfi.auth.\***
+   *Access to DYFI information is restricted by username*
+   *and password. For querying and pushing data the access can be*
+   *defined independently in separate files. The DYFI GET and PUT*
+   *user databases are in the extended Apache configuration format.*
+   *The tool htpasswd can be used with the switch "-d"*
+   *(forces the usage of the crypt() function) to fill up the*
+   *database with users. MD5 is not yet implemented. Optionally a*
+   *path to a BNA file may be given to limit the result set to one*
+   *or more regions.*
+   *Anonymous access can be granted by adding a new line with the*
+   *content 'guest'.*
+
+
+
+.. confval:: QL.dyfi.auth.get
+
+   Type: *path*
+
+   Path to the DYFI GET user database in an extended Apache
+   configuration format.
+
+
+.. confval:: QL.dyfi.auth.put
+
+   Type: *path*
+
+   Path to the DYFI PUT user database in an extended Apache
+   configuration format.
+
+
+
+Command-Line Options
+====================
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: -x, --expiry arg
+
+   Time span in hours after which objects expire
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --print-component arg
+
+   For each log entry print the component right after the
+   log level. By default the component output is enabled
+   for file output but disabled for console output.
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --trace
+
+   Trace mode: \-\-verbosity\=4 \-\-console\=1 \-\-print\-component\=1 \-\-print\-context\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+server
+------
+
+.. option:: -p, --server-port arg
+
+   Overrides configuration parameter :confval:`QL.port`.
+
+.. option:: --server-ssl-port arg
+
+   Overrides configuration parameter :confval:`QL.SSL.port`.
+
+.. option:: -P, --plugin-port arg
+
+   Overrides configuration parameter :confval:`QL.pluginPort`.
+
+.. option:: --plugin-ssl-port arg
+
+   Overrides configuration parameter :confval:`QL.SSL.pluginPort`.
+
+.. option:: --http-port arg
+
+   Overrides configuration parameter :confval:`QL.http.port`.
+
+.. option:: --https-port arg
+
+   Overrides configuration parameter :confval:`QL.https.port`.
+
+.. option:: ----sync-db
+
+   Synchronize database with archive
+
+.. option:: --update-log
+
+   When synchronizing the database the log file will be
+   updated as well
+
+.. option:: --check-archive
+
+   Check archive
+

@@ -1,0 +1,10 @@
+##########
+Extensions
+##########
+
+.. toctree::
+   :maxdepth: 2
+
+   /toc/extensions/global
+   /toc/extensions/scevent
+   /toc/extensions/scm

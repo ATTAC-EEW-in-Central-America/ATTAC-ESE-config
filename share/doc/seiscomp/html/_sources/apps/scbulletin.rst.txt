@@ -1,0 +1,256 @@
+.. highlight:: rst
+
+.. _scbulletin:
+
+##########
+scbulletin
+##########
+
+**Create bulletins from SC3ML.**
+
+
+Description
+===========
+
+scbulletin transforms the parameters of an event or an origin either to autoloc1
+or to autoloc3 format.
+
+Input Modes
+-----------
+
+Two modes of parameter input are possible:
+
+1. Either one can fetch all necessary information from database directly
+#. or one can provide a representation of the origin as XML file, to transform it
+   to a standard format.
+
+The first mode is the dump-mode the second is the input-mode. For dumping either
+choose eventID or the originID. If the eventID is choosen the preferred origin
+will be used.
+
+Output Modes
+------------
+
+Different output formats are available:
+
+1. **autoloc1** working with **-1**
+#. **autoloc3** working with **-3**
+#. **extended autoloc3** working with **-3 -x**
+#. **enhanced** working with **-1 -e** or  **-3 -e** for high-precision output.
+
+If called with an event or origin ID a database connection is necessary to
+fetch the corresponding object. Otherwise scbulletin will read the input source
+(defaults to stdin), grab the first found event or origin and dump it.
+
+Examples
+========
+
+#. Create bulletin from event in database
+
+   .. code-block:: sh
+
+      scbulletin -d mysql://sysop:sysop@localhost/seiscomp -E gfz2012abcd
+
+#. Convert XML file to bulletin
+
+   .. code-block:: sh
+
+      scbulletin < gfz2012abcd.xml
+
+   .. code-block:: sh
+
+      scbulletin -i gfz2012abcd.xml
+
+
+.. _scbulletin_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scbulletin.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scbulletin.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scbulletin.cfg`
+
+scbulletin inherits :ref:`global options<global-configuration>`.
+
+
+
+
+Command-line
+============
+
+.. program:: scbulletin
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Database
+--------
+
+.. option:: --db-driver-list
+
+   List all supported database drivers.
+
+.. option:: -d, --database arg
+
+   The database connection string, format: service:\/\/user:pwd\@host\/database.
+   \"service\" is the name of the database driver which can be
+   queried with \"\-\-db\-driver\-list\".
+
+.. option:: --config-module arg
+
+   The configmodule to use.
+
+.. option:: --inventory-db arg
+
+   Load the inventory from the given database or file, format: [service:\/\/]location
+
+.. option:: --db-disable
+
+   Do not use the database at all
+
+
+Dump
+----
+
+.. option:: -E, --event arg
+
+   ID of event that is read from database and
+   transformed into a bulletin.
+
+.. option:: -O, --origin arg
+
+   ID of origin that is read from database
+   and transformed into a bulletin.
+
+.. option:: -w, --weight arg
+
+   Weight threshold for printed and counted picks.
+
+.. option:: -1, --autoloc1
+
+   Use autoloc1 format for output. This is default.
+
+.. option:: -3, --autoloc3
+
+   Use autoloc3 format for output.
+
+.. option:: -x, --extra
+
+   Use a specially detailed autoloc3 format. This options works only
+   in combination with the autoloc3\-flag.
+
+.. option:: -e, --enhanced
+
+   Enhanced output with higher precision. Times: milliseconds,
+   distances: meter. Use for bulletins of local earthquakes.
+
+.. option:: --first-only
+
+   Convert only the first event\/origin to bulletin. Otherwise
+   all events or origins will be converted to single bulletins
+   which will be concatenated.
+
+.. option:: --event-agency-id
+
+   Use the agency ID of the event instead of the preferred origin.
+
+
+Input
+-----
+
+.. option:: -f, --format arg
+
+   Input format to use \(xml [default], zxml \(zipped xml\), binary\).
+
+.. option:: -i, --input arg
+
+   The input file. Default is stdin.
+

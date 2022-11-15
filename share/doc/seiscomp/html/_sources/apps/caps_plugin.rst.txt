@@ -1,0 +1,142 @@
+.. highlight:: rst
+
+.. _caps_plugin:
+
+###########
+caps_plugin
+###########
+
+**Transfers data from CAPS to SeedLink server**
+
+.. _caps_plugin_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/caps_plugin.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/caps_plugin.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/caps_plugin.cfg`
+
+caps_plugin inherits :ref:`global options<global-configuration>`.
+
+
+
+
+Command-line
+============
+
+.. program:: caps_plugin
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --print-component arg
+
+   For each log entry print the component right after the
+   log level. By default the component output is enabled
+   for file output but disabled for console output.
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --trace
+
+   Trace mode: \-\-verbosity\=4 \-\-console\=1 \-\-print\-component\=1 \-\-print\-context\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Plugin
+------
+
+.. option:: -I, --input arg
+
+   Overrides configuration parameter :confval:`input.address`.
+
+
+Streams
+-------
+
+.. option:: -f, --stream-file arg
+
+   Path to stream\-file. The stream file may contain a list of streams IDs [net.sta.loc.cha]
+
+
+Mode
+----
+
+.. option:: --archive
+
+   Overrides configuration parameter :confval:`archive`.
+
+
+Output
+------
+
+.. option:: -j, --journal arg
+
+   Overrides configuration parameter :confval:`journal`.
+

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<seiscomp>
+	<module name="sc2ql" category="gempa">
+		<description>QuakeLink plugin to import SeisComP events.</description>
+		<command-line>
+			<group name="Generic">
+				<optionReference>generic#help</optionReference>
+				<optionReference>generic#version</optionReference>
+				<optionReference>generic#config-file</optionReference>
+				<optionReference>generic#plugins</optionReference>
+				<optionReference>generic#daemon</optionReference>
+			</group>
+
+			<group name="Verbosity">
+				<optionReference>verbosity#verbosity</optionReference>
+				<optionReference>verbosity#v</optionReference>
+				<optionReference>verbosity#quiet</optionReference>
+				<optionReference>verbosity#print-component</optionReference>
+				<optionReference>verbosity#print-context</optionReference>
+				<optionReference>verbosity#component</optionReference>
+				<optionReference>verbosity#syslog</optionReference>
+				<optionReference>verbosity#lockfile</optionReference>
+				<optionReference>verbosity#console</optionReference>
+				<optionReference>verbosity#debug</optionReference>
+				<optionReference>verbosity#trace</optionReference>
+				<optionReference>verbosity#log-file</optionReference>
+			</group>
+
+			<group name="Messaging">
+				<optionReference>messaging#user</optionReference>
+				<optionReference>messaging#host</optionReference>
+				<optionReference>messaging#timeout</optionReference>
+				<optionReference>messaging#primary-group</optionReference>
+				<optionReference>messaging#subscribe-group</optionReference>
+				<optionReference>messaging#encoding</optionReference>
+				<optionReference>messaging#start-stop-msg</optionReference>
+			</group>
+
+			<group name="Database">
+				<optionReference>database#db-driver-list</optionReference>
+				<optionReference>database#database</optionReference>
+				<optionReference>database#config-module</optionReference>
+				<optionReference>database#inventory-db</optionReference>
+				<optionReference>database#config-db</optionReference>
+			</group>
+
+			<group name="Sink">
+				<option flag="" long-flag="test" argument="">
+					<description>Test output and read SCML from stdin</description>
+				</option>
+				<option flag="" long-flag="push-inv-only" argument="">
+					<description>Send inventory and exit</description>
+				</option>
+				<option flag="" long-flag="server" argument="arg" param-ref="QL.server"/>
+				<option flag="z" long-flag="gzip" argument="arg" param-ref="QL.compression"/>
+				<option flag="" long-flag="bin" argument="arg" param-ref="QL.binary"/>
+				<option flag="p" long-flag="pretty-print" argument="arg" param-ref="QL.indentation"/>
+				<option flag="" long-flag="end-buffer" argument="arg" param-ref="QL.bufferSize"/>
+			</group>
+
+			<group name="Inventory">
+				<option flag="" long-flag="inv-group" argument="arg" default="INVENTORY">
+					<description>
+						Use notifiers sent to this group as a trigger for
+						inventory updates
+					</description>
+				</option>
+				<option flag="" long-flag="flush-timeout" argument="arg" param-ref="QL.inventoryFlushTimeout"/>
+			</group>
+		</command-line>
+
+		<configuration>
+			<group name="QL">
+				<parameter name="server" type="string" default="localhost:18011">
+					<description>QuakeLink server to push data to</description>
+				</parameter>
+				<parameter name="compression" type="boolean" default="false">
+					<description>Compress messages pushed to QuakeLink with gzip</description>
+				</parameter>
+				<parameter name="binary" type="boolean" default="false">
+					<description>Encode messages in SeisComP binary format instead of SCML</description>
+				</parameter>
+				<parameter name="fetchAllAmplitudes" type="boolean" default="false">
+					<description>
+					If enabled then all amplitudes which reference an arrival of the
+					preferred origin are included regardless of being referenced by a
+					magnitude.
+					Otherwise only the amplitudes are included which are referenced
+					by the available station magnitudes.
+					</description>
+				</parameter>
+				<parameter name="onlyPublishedEvents" type="boolean" default="false">
+					<description>
+						An event is only forwarded to QuakeLink if the preferred
+						origin contains a comment with text &quot;OriginPublished&quot;.
+					</description>
+				</parameter>
+				<parameter name="indentation" type="boolean" default="false">
+					<description>Use indentation for SCML encoding</description>
+				</parameter>
+				<parameter name="bufferSize" type="int" default="128">
+					<description>
+						Buffer size in megabytes. If the QuakeLink server is not
+						reachable buffer messages up to X mb in a ring buffer.
+						If the server is reachable again all buffered messages
+						will be sent first.
+					</description>
+				</parameter>
+				<parameter name="inventoryFlushTimeout" type="int" default="60">
+					<description>
+						Timeout in seconds. Anytime the inventory is changed
+						(triggered by receiving messages on the INVENTORY group)
+						a timeout is set to this value in order to avoid too
+						many updates.  When the timeout expires the complete
+						inventory is sent to QuakeLink. The default value of 60
+						seconds is a very conservative value to make sure that
+						everything has been processed by eg "seiscomp config"
+						and/or sync_dlsv.
+					</description>
+				</parameter>
+				<parameter name="inventoryGroup" type="string" default="INVENTORY">
+					<description>
+						Name of the inventory group of the source system. Whenever
+						a message from this message group is received it is taken
+						as an inventory update and the inventory flush timer is
+						started.
+					</description>
+				</parameter>
+			</group>
+		</configuration>
+	</module>
+</seiscomp>

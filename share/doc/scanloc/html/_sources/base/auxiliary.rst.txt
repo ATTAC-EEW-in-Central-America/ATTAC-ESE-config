@@ -1,0 +1,60 @@
+.. _sec-scanloc-aux-tools:
+
+Auxiliary Scripts
+=================
+
+The scanloc package also ships with auxiliary scripts for real-time or non-real-time
+playbacks or tuning. For these tools, the usual options (``-h``, ``--debug``, etc.)
+apply. Read the :ref:`scanloc-example` section for applications.
+
+
+dump_picks
+----------
+
+:program:`dump_picks` reads picks and amplitudes from a database and writes them
+to file or the commandline in XML format (:term:`SCML`). Control the database
+request to filter by
+
+* Author (``--author``) contributing the object,
+* Comparison with inventory (``--check-inventory``),
+* Object evaluation mode (``--mode``),
+* Object evaluation status (``--manual``, ``--automatic``),
+* Region of contributing station (``--region``),
+* Time (``--time-window``, ``--hours``, ``--start``).
+
+**Examples:**
+
+.. code-block:: sh
+
+   dump_picks -h
+   dump_picks -t "2016-01-20 13:52:00~2016-01-20 13:57:00" -d localhost/seiscomp --author l1autopick
+
+.. note::
+
+   Multiple :term:`SCML` files can be merged into one using :program:`scxmlmerge`.
+
+
+playback_picks
+--------------
+
+:program:`playback_picks` plays back picks with amplitudes from XML files at
+normal or different speed and send them to the messaging system.
+:program:`playback_picks` supports multiple pipelines. The script allows
+controlling:
+
+* Message groups: Append the message groups for sending picks and amplitudes.
+* Mode (``--mode``): In real-time mode a constant number of seconds is added
+  to pick, creation and amplitude reference times when sending to the messaging
+  for mimicking real-time placks at current time. The seconds to add is derived
+  from the time of the first option. Default mode is "historic"
+* Speed (``--speed``): Set a speed factor.
+* Start (``--jump``): Ignore the first objects within the given number of
+  seconds.
+* Timing (``--timing``): Define the sorting of the objects. Default is "creationTime".
+
+**Examples:**
+
+.. code-block:: sh
+
+   playback_picks -h
+   playback_picks picks.xml:PICK:AMPLITUDE l1picks.xml:L1PICK:AMPLITUDE --timing pickTime

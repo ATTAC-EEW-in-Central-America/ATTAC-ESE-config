@@ -1,0 +1,417 @@
+.. highlight:: rst
+
+.. _scvsmaglog:
+
+##########
+scvsmaglog
+##########
+
+**Logs VS magnitude messages.**
+
+
+Description
+===========
+
+Part of the :ref:`VS` package.
+
+*scvsmaglog* is part of a new SeisComP implementation of the
+`Virtual Seismologist`_
+(VS) Earthquake Early Warning algorithm (Cua, 2005; Cua and Heaton, 2007) released
+under the `SED Public License for SeisComP Contributions`_. It requires
+the Python package `dateutil`_ to be installed.
+
+It logs the VS magnitude messages received from :ref:`scvsmag` and, once an event
+has timed out, generates report files. These report files are saved to disk and
+can also be sent via email.
+
+It also implements an `ActiveMQ`_ interface which
+provides the possibility to send alert messages in real-time. Currently, 
+messages can be sent in three different formats (SeisComPML, QuakeML, ShakeAlertML).
+The recommended client to display these alert messages is the `Earthquake Early Warning Display (EEWD)`_
+an OpenSource user interface developed within the
+European REAKT project and based on the
+the `UserDisplay`_.
+The UserDisplay is not openly available, however, people with permission to run
+the UserDisplay can use it to receive alert messages from *scvsmaglog*.
+
+To receive alerts with the EEWD set the format to *qml1.2-rt*, to receive alerts
+with the UserDisplay set the format to *shakealert*. There are currently no clients 
+which can digest SeisComPML. Using pipelines alerts can be sent out in more 
+than one format.
+
+The real-time ActiveMQ interface requires the Python packages 
+`stompy`_ and `lxml`_ to
+be installed.
+
+It is beyond the scope of this documentation to explain the complete setup of an
+ActiveMQ broker. However, since scvsmaglog uses the STOMP protocol to send
+messages to the broker it is essential to add the following line
+to configuration of the ActiveMQ broker.
+
+.. code-block:: sh
+
+   <connector>
+   <serverTransport uri="stomp://your-server-name:your-port"/>
+   </connector>
+
+Please refer to `ActiveMQ`_ for setting up an ActiveMQ broker.
+
+
+Reports
+=======
+
+Below is an example of the first few lines of a report file:
+
+.. code-block:: sh
+
+   Mag.|Lat.  |Lon.  |tdiff |Depth |creation time (UTC)      |origin time (UTC)        |likeh.|#st.(org.) |#st.(mag.)
+   ------------------------------------------------------------------------------------------------------------------
+   3.42| 47.15|  8.52| 12.73| 25.32|2012-02-11T22:45:39.0000Z|2012-02-11T22:45:26.2729Z|  0.99|          6|         6
+   3.43| 47.15|  8.52| 13.73| 25.32|2012-02-11T22:45:40.0000Z|2012-02-11T22:45:26.2729Z|  0.99|          6|         6
+   3.56| 47.15|  8.54| 14.70| 25.73|2012-02-11T22:45:41.0000Z|2012-02-11T22:45:26.3032Z|  0.99|         10|        10
+   3.64| 47.16|  8.54| 15.58| 24.32|2012-02-11T22:45:42.0000Z|2012-02-11T22:45:26.4178Z|  0.99|         12|        12
+   3.54| 47.16|  8.53| 16.45| 22.40|2012-02-11T22:45:43.0000Z|2012-02-11T22:45:26.5547Z|  0.99|         14|        14
+   3.67| 47.15|  8.54| 17.29| 20.40|2012-02-11T22:45:44.0000Z|2012-02-11T22:45:26.7142Z|  0.99|         16|        16
+   3.66| 47.16|  8.54| 18.34| 21.31|2012-02-11T22:45:45.0000Z|2012-02-11T22:45:26.6562Z|  0.99|         18|        18
+   3.75| 47.16|  8.54| 19.27| 19.91|2012-02-11T22:45:46.0000Z|2012-02-11T22:45:26.7326Z|  0.99|         19|        19
+
+*Creation time* is the time the VS magnitude message was generated, *tdiff* is the
+time difference between *creation time* and *origin time* in seconds, *likeh* is the
+likelihood that this event is a real event (see documentation of :ref:`scvsmag`), # *st.(org)*
+is the number of stations that contributed to the origin and # *st.(mag)* the number of envelope streams
+that contributed to the magnitude.
+
+
+
+References
+==========
+
+.. target-notes::
+
+.. _`Virtual Seismologist` : http://www.seismo.ethz.ch/en/research-and-teaching/products-software/EEW/Virtual-Seismologist/
+.. _`SED Public License for SeisComP Contributions` : http://www.seismo.ethz.ch/static/seiscomp_contrib/license.txt
+.. _`dateutil` : https://pypi.python.org/pypi/python-dateutil/
+.. _`ActiveMQ` : http://activemq.apache.org/
+.. _`Earthquake Early Warning Display (EEWD)` : http://www.seismo.ethz.ch/en/research-and-teaching/products-software/EEW/earthquake-early-warning-display-eewd/
+.. _`UserDisplay` : http://www.eew.caltech.edu/research/userdisplay.html
+.. _`stompy` : https://pypi.python.org/pypi/stompy/
+.. _`lxml` : http://lxml.de/
+
+
+.. _scvsmaglog_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scvsmaglog.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scvsmaglog.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scvsmaglog.cfg`
+
+scvsmaglog inherits :ref:`global options<global-configuration>`.
+
+
+
+.. confval:: email.activate
+
+   Type: *boolean*
+
+   Send email notifications.
+   Default is ``true``.
+
+.. confval:: email.smtpserver
+
+   Type: *string*
+
+   URL of the smtp server to send the report files to.
+
+
+.. confval:: email.port
+
+   Type: *int*
+
+   Port where the SMTP server accepts connections.
+   Default is ``25``.
+
+.. confval:: email.usetls
+
+   Type: *boolean*
+
+   Whether to use TLS when connecting to the smtp server.
+   Default is ``false``.
+
+.. confval:: email.usessl
+
+   Type: *boolean*
+
+   Whether to use SSL when connecting to the smtp server.
+   Note, only 'email.usetls' or 'user.ssl' can be true.
+   Default is ``false``.
+
+.. confval:: email.authenticate
+
+   Type: *boolean*
+
+   Whether the smtp server requires authentication \(username + password\).
+   Default is ``false``.
+
+.. confval:: email.credentials
+
+   Type: *file*
+
+   If the smtp server requires authentication you have to specify a file that contains
+   username and password in the format:
+   
+   username\=your\-username
+   
+   password\=your\-password
+   
+   Make sure that you set the file permission as restrictive as
+   possible.
+
+
+.. confval:: email.senderaddress
+
+   Type: *string*
+
+   Email address that will appear as sender in the report email.
+
+
+.. confval:: email.subject
+
+   Type: *string*
+
+   Any string that should be prepended to the email's subject string.
+
+
+.. confval:: email.host
+
+   Type: *string*
+
+   Host as it is supposed to appear in the email's subject string.
+
+
+.. confval:: email.recipients
+
+   Type: *list:string*
+
+   A list of email addresses that receive the report emails.
+
+
+.. confval:: email.magThresh
+
+   Type: *double*
+
+   Only send a notification email if the magnitude threshold is exceeded.
+   Default is ``0.0``.
+
+.. confval:: report.activate
+
+   Type: *boolean*
+
+   Save reports to disk.
+   Default is ``true``.
+
+.. confval:: report.eventbuffer
+
+   Type: *int*
+
+   Unit: *s*
+
+   Time in seconds that events and the related objects are buffered.
+   Default is ``3600``.
+
+.. confval:: report.directory
+
+   Type: *dir*
+
+   Directory to save reports to.
+   Default is ``~/.seiscomp/log/VS_reports``.
+
+.. confval:: ActiveMQ.hostname
+
+   Type: *string*
+
+   Server name that runs the ActiveMQ broker.
+   Default is ``localhost``.
+
+.. confval:: ActiveMQ.port
+
+   Type: *int*
+
+   Port on which ActiveMQ broker accepts stomp messages.
+   Default is ``61619``.
+
+.. confval:: ActiveMQ.username
+
+   Type: *string*
+
+   Username with which messages are sent.
+   Default is ``your-ActiveMQ-username``.
+
+.. confval:: ActiveMQ.password
+
+   Type: *string*
+
+   Password with which messages are sent.
+   Default is ``your-ActiveMQ-password``.
+
+.. confval:: ActiveMQ.topic
+
+   Type: *string*
+
+   ActiveMQ broker topic to send alerts to.
+   Default is ``/topic/your-topic-for-alerts``.
+
+.. confval:: ActiveMQ.hbtopic
+
+   Type: *string*
+
+   ActiveMQ broker topic to send heart beats to.
+   Default is ``/topic/your-topic-for-heart-beats``.
+
+.. confval:: ActiveMQ.messageFormat
+
+   Type: *string*
+
+   ActiveMQ message format; can be either 'qml1.2\-rt', 'shakealert', or 'sc3ml'.
+   Default is ``qml1.2-rt``.
+
+
+Command-line
+============
+
+.. program:: scvsmaglog
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Messaging
+---------
+
+.. option:: -u, --user arg
+
+   Overrides configuration parameter :confval:`connection.username`.
+
+.. option:: -H, --host arg
+
+   Overrides configuration parameter :confval:`connection.server`.
+
+.. option:: -t, --timeout arg
+
+   Overrides configuration parameter :confval:`connection.timeout`.
+
+.. option:: -g, --primary-group arg
+
+   Overrides configuration parameter :confval:`connection.primaryGroup`.
+
+.. option:: -S, --subscribe-group arg
+
+   A group to subscribe to. This option can be given more than once.
+
+.. option:: --start-stop-msg arg
+
+   Sets sending of a start\- and a stop message.
+
+
+Reports
+-------
+
+.. option:: --savedir path
+
+   Directory to save reports to.
+
+
+Mode
+----
+
+.. option:: --playback
+
+   Disable database connection.
+

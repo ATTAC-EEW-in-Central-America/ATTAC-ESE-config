@@ -1,0 +1,4 @@
+.. _sec-quakelink-changelog:
+  
+.. mdinclude:: CHANGELOG-server.md
+

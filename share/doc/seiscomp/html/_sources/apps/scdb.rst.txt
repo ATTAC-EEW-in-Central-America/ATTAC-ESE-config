@@ -1,0 +1,328 @@
+.. highlight:: rst
+
+.. _scdb:
+
+####
+scdb
+####
+
+**Populates a SQL database from XML files or messages.**
+
+
+Description
+===========
+
+A major component of the SeisComP system is the database. Almost all
+applications have only read access to the database, but all the processing
+results and objects have to be written into the database. This was the task of
+scdb. In very first versions of SeisComP scdb was the only component that had
+write access to the database. Its task is to connect to :ref:`scmaster` and populate
+the database with all received notifier messages. Although it worked it
+introduced race conditions caused by the latency of the database backend since
+all other clients received the message at the same time. Accessing the database
+immediately at this point in time did not guarantee that the object was
+written already.
+
+In consequence, the scmaster itself gained write access to the database and
+forwards messages to all clients after they are written to database.
+
+:ref:`scdb` by definition does not check existing objects in the database. It only
+generates INSERT/UPDATE/DELETE statements based on the data used and sends
+these statements to the database. E.g. if :ref:`scdb` receives a message to
+insert a new object into the database and this object exists already, the
+database will raise an error because :ref:`scdb` hasn't checked it.
+
+
+Online mode
+-----------
+
+Now scdb can be used to maintain a backup or archive the database that is not
+part of the real time processing. When running scdb as database write daemon it
+can inform a client about the database connection to use. A client sends a
+DatabaseRequest message and scdb sends back a DatabaseResponse message containing
+the database connection parameters.
+
+For that it connects to a messaging server and writes all received messages to a
+configured database, e.g. a backup database.
+
+.. note::
+
+   The database connection received from the messaging server during the
+   handshake is reported to clients requesting a database address. To overwrite
+   the read-only database, just override the application's database address
+   (with the '-d' option)
+
+Offline mode
+------------
+
+Another important task of :ref:`scdb` is to populate the database with any SeisComP
+data model content. In combination with :ref:`scxmldump` it can be used to copy events
+from one database to another.
+
+For that it does not connect to a messaging server but reads data from XML
+files and writes it to the database. Offline mode will be used if the
+'--input/-i' option is provided. Multiple input files can be specified by
+providing this option multiple times with separate filenames.
+
+.. warning::
+
+   When reading XML files the output database address is not passed
+   with -o but -d. The application's database address is used.
+
+Examples
+--------
+
+#. Connect to a messaging server and write all messages to the output database
+   `seiscomp` running on the host `db-server`:
+
+   .. code-block:: sh
+
+      scdb -H [server] -o mysql://sysop:sysop@db-server/seiscomp
+
+#. As above, but with the read-only database connection using the user `sysop`
+   and the output database connection using the user `writer`:
+
+   .. code-block:: sh
+
+      scdb -H [server] -d mysql://sysop:sysop@db-server/seiscomp \
+                       -o mysql://writer:12345@db-server/seiscomp
+
+#. Import data from the file :file:`data.xml` and write it to the database
+   `seiscomp` on the host `db-server`:
+
+   .. code-block:: sh
+
+      scdb -i data.xml -d mysql://sysop:sysop@db-server/seiscomp
+
+#. Import data from three files at once:
+
+   .. code-block:: sh
+
+      scdb -i data1.xml -i data2.xml -i data3.xml \
+           -d mysql://sysop:sysop@db-server/seiscomp
+
+
+.. _scdb_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scdb.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scdb.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scdb.cfg`
+
+scdb inherits :ref:`global options<global-configuration>`.
+
+
+
+.. confval:: connection.requestGroup
+
+   Type: *string*
+
+   Defines the group on scmaster to subscribe for database requests.
+
+
+.. confval:: connection.provideGroup
+
+   Type: *string*
+
+   Defines the group on scmaster to send database response messages to.
+
+
+.. confval:: output.type
+
+   Type: *string*
+
+   Defines the output database connection type.
+
+
+.. confval:: output.parameters
+
+   Type: *string*
+
+   Defines the output database connection parameters.
+
+
+
+Command-line
+============
+
+.. program:: scdb
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Messaging
+---------
+
+.. option:: -u, --user arg
+
+   Overrides configuration parameter :confval:`connection.username`.
+
+.. option:: -H, --host arg
+
+   Overrides configuration parameter :confval:`connection.server`.
+
+.. option:: -t, --timeout arg
+
+   Overrides configuration parameter :confval:`connection.timeout`.
+
+.. option:: -g, --primary-group arg
+
+   Overrides configuration parameter :confval:`connection.primaryGroup`.
+
+.. option:: -S, --subscribe-group arg
+
+   A group to subscribe to. This option can be given more than once.
+
+.. option:: --content-type arg
+
+   Overrides configuration parameter :confval:`connection.contentType`.
+
+.. option:: --start-stop-msg arg
+
+   Sets sending of a start\- and a stop message.
+
+.. option:: --m, --mode arg
+
+   scdb can either process a XML file and write it to the database
+   or collecting messages from scmaster. If connected to scmaster
+   the mode defines what objects are handled: none \(no objects at all\),
+   notifier \(notifier only\) or all \(all objects whereas non\-notifier
+   objects are INSERTED into the database\).
+
+
+Database
+--------
+
+.. option:: --db-driver-list
+
+   List all supported database drivers.
+
+.. option:: -d, --database arg
+
+   The database connection string, format: service:\/\/user:pwd\@host\/database.
+   \"service\" is the name of the database driver which can be
+   queried with \"\-\-db\-driver\-list\".
+
+.. option:: --config-module arg
+
+   The configmodule to use.
+
+.. option:: --inventory-db arg
+
+   Load the inventory from the given database or file, format: [service:\/\/]location
+
+.. option:: --config-db arg
+
+   Load the configuration from the given database or file, format: [service:\/\/]location
+
+.. option:: --o, --output arg
+
+   If connected to scmaster this flag defines the database
+   connection to use for writing. The configured application
+   database connection \(as received from scmaster\) is reported
+   to clients as part of a database response messages.
+
+
+Import
+------
+
+.. option:: -i, --input arg
+
+   Defines the import XML file to be written to database.
+   Can be provided multiple times to import multiple files.
+
+.. option:: -b, --batchsize arg
+
+   Batch size of a database transactions [0..1000].
+   By default all INSERT\/UPDATE\/DELETE statements are
+   executed in one single transaction.
+

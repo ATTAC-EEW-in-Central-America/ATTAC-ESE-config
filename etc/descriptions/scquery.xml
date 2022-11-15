@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<seiscomp>
+	<module name="scquery" category="Utilities">
+		<description>
+			Read database objects and writes them to the command line.
+		</description>
+		<configuration>
+		</configuration>
+		<command-line>
+			<synopsis>
+				scquery [OPTIONS] [query name] [query parameters]
+			</synopsis>
+			<group name="Generic">
+				<optionReference>generic#help</optionReference>
+				<optionReference>generic#version</optionReference>
+				<optionReference>generic#config-file</optionReference>
+				<optionReference>generic#plugins</optionReference>
+			</group>
+
+			<group name="Verbosity">
+				<optionReference>verbosity#verbosity</optionReference>
+				<optionReference>verbosity#v</optionReference>
+				<optionReference>verbosity#quiet</optionReference>
+				<optionReference>verbosity#component</optionReference>
+				<optionReference>verbosity#syslog</optionReference>
+				<optionReference>verbosity#lockfile</optionReference>
+				<optionReference>verbosity#console</optionReference>
+				<optionReference>verbosity#debug</optionReference>
+				<optionReference>verbosity#log-file</optionReference>
+			</group>
+
+			<group name="Database">
+				<optionReference>database#db-driver-list</optionReference>
+				<optionReference>database#database</optionReference>
+			</group>
+
+			<group name="Commands">
+				<option flag="" long-flag="showqueries">
+					<description>
+					Show the queries defined in queries.cfg
+					</description>
+				</option>
+				<option flag="" long-flag="print-column-name">
+					<description>
+					Print the name of each output column in a header
+					</description>
+				</option>
+				<option flag="" long-flag="print-header">
+					<description>
+					Print the query parameters and the query filter description
+					as a header of the query output
+					</description>
+				</option>
+				<option flag="" long-flag="delimiter">
+					<description>
+					Column delimiter. If found, this character will be escaped
+					in output values. Default: '|'
+					</description>
+				</option>
+				<option flag="Q" long-flag="query">
+					<description>
+					Execute the given query from the command line.
+					</description>
+				</option>
+			</group>
+		</command-line>
+	</module>
+</seiscomp>

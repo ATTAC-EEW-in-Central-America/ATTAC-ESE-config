@@ -1,0 +1,10 @@
+###
+scm
+###
+
+.. toctree::
+   :maxdepth: 2
+
+   /apps/scm_text
+   /apps/scm_email
+   /apps/scm_ncurses

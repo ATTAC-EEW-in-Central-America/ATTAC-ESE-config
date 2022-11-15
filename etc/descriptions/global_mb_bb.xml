@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<seiscomp>
+	<plugin name="mB_BB">
+		<extends>global</extends>
+		<description>
+		Body wave magnitude  at teleseismic distances similar to mb
+		</description>
+	</plugin>
+	<binding name="mB_BB" module="global">
+		<description>
+		The body wave magnitude at teleseismic distances similar to mb.
+		</description>
+		<configuration>
+			<group name="magnitudes">
+				<group name="mB">
+					<description>
+					Parameters for computing mB magnitudes from mB amplitudes.
+					</description>
+					<parameter name="minDist" type="double" unit="deg" default="5">
+						<description>
+						Minimum epicentral distance for computing mB. Note: According
+						to the IASPEI recommendations in 2013, the minimum distance
+						should be 20 deg.
+						</description>
+					</parameter>
+					<parameter name="maxDist" type="double" unit="deg" default="105">
+						<description>
+						Maximum epicentral distance for computing mB.
+						</description>
+					</parameter>
+				</group>
+			</group>
+		</configuration>
+	</binding>
+</seiscomp>

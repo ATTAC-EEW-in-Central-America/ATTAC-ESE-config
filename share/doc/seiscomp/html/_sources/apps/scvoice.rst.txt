@@ -1,0 +1,397 @@
+.. highlight:: rst
+
+.. _scvoice:
+
+#######
+scvoice
+#######
+
+**Real time voice alert.**
+
+
+Description
+===========
+
+This tool runs an external script whenever an event has been created or updated.
+It can also run a script in case an amplitude of a particular type or a
+preliminary origin (heads-up message) has been sent. The common purpose for
+this tool is to play a sound or to convert a message to speech using external
+tools like festival or espeak.
+There are three possible trigger mechanisms for calling scripts:
+
+* Event creation/update
+* Amplitude creation
+* Origin creation (with status = preliminary)
+
+Although this tool was designed to alert the user acoustically it can also be
+used to send e-mails, sms or to do any other kind of alert. scvoice can only
+run one script per call type at a time! A template (:ref:`scalert`) Python script with
+more options has been added to |scname| to be used as source for custom notifications.
+
+
+Examples
+========
+
+
+Event script
+------------
+
+The following script is used as event script. It requires
+`festival <http://www.cstr.ed.ac.uk/projects/festival/>`_ which should be
+available in almost any Linux distribution.
+
+.. important::
+   When saving the scripts given below do not forget to set the executable
+   bit otherwise scvoice cannot call the scripts. In Linux just run:
+
+   .. code-block:: sh
+
+      chmod +x /path/to/file
+
+
+#. Save an executable script file, e.g., under, e.g. :file:`~/.seiscomp/event.sh`:
+
+   .. code-block:: sh
+
+      #!/bin/sh
+      if [ "$2" = "1" ]; then
+      echo " $1" | sed 's/,/, ,/g'   | festival --tts;
+      else
+      echo "Event updated, $1" | sed 's/,/, ,/g'   | festival --tts;
+      fi
+
+#. Add the file to the configuration of :confval:`scripts.event` in the file
+   :file:`SEISCOMP_ROOT/etc/scvoice.cfg` or :file:`~/.seiscomp/scvoice.cfg`:
+
+   .. code-block:: sh
+
+      scripts.event = /home/sysop/.seiscomp/event.sh
+
+Amplitude script
+----------------
+
+#. Save an executable script file, e.g., under :file:`~/.seiscomp/amplitude.sh`
+
+   .. code-block:: sh
+
+      #!/bin/sh
+      # Play a wav file with a particular volume
+      # derived from the amplitude itself.
+      playwave ~/.seiscomp/beep.wav -v $3
+
+#. Add the file to the configuration of :confval:`scripts.amplitude` in the
+   file :file:`SEISCOMP_ROOT/etc/scvoice.cfg` or :file:`~/.seiscomp/scvoice.cfg`:
+
+   .. code-block:: sh
+
+      scripts.amplitude = /home/sysop/.seiscomp/amplitude.sh
+
+
+Alert script
+------------
+
+
+#. Create a sound file :file:`siren.wav` for accoustic alerts.
+#. Save an executable script file under, e.g., :file:`~/.seiscomp/alert.sh`:
+
+   .. code-block:: sh
+
+      #!/bin/sh
+      playwave /home/sysop/.seiscomp/siren.wav
+
+#. Add the script filename to the configuration of :confval:`scripts.alert` in
+   the file :file:`SEISCOMP_ROOT/etc/scvoice.cfg` or :file:`~/.seiscomp/scvoice.cfg`.
+
+   .. code-block:: sh
+
+      scripts.alert = /home/sysop/.seiscomp/alert.sh
+
+
+.. _scvoice_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scvoice.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scvoice.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scvoice.cfg`
+
+scvoice inherits :ref:`global options<global-configuration>`.
+
+
+
+.. confval:: firstNew
+
+   Type: *boolean*
+
+   Treats an event as new event when it is seen the first time.
+   Default is ``false``.
+
+.. confval:: agencyIDs
+
+   Type: *list:string*
+
+   Defines a white list of agencyIDs to alert an event. The
+   agencyID is extracted from the preferred origin of the event.
+   If this list is empty, all agencies are allowed.
+
+
+.. confval:: poi.message
+
+   Type: *string*
+
+   The default message string for the event\-script is
+   \"earthquake, [HOURS] hours [MINS] minutes ago, [DESC],
+   magnitude [MAG], depth [DEP] kilometers\" whereas [DESC] is the
+   string given in the event.description attribute. This string can be
+   overwritten using one of the following options.
+   There are three placeholders that can be used: \@region\@, \@dist\@ and
+   \@poi\@.
+   Example: \"\@region\@, \@dist\@ kilometers from \@poi\@ away\".
+
+
+.. confval:: poi.maxDist
+
+   Type: *double*
+
+   Unit: *deg*
+
+   When using the nearest point of interest \(city\) as part of the
+   message string, specify the maximum distance in degrees from the
+   event. Any point of interest farther away will be ignored.
+   Default is ``20``.
+
+.. confval:: poi.minPopulation
+
+   Type: *double*
+
+   Minimum population for a city to become a point of interest.
+   Default is ``50000``.
+
+.. confval:: scripts.amplitude
+
+   Type: *string*
+
+   Specify the script to be called if an amplitude
+   arrives, network\-, stationcode and amplitude are passed
+   as parameters \$1, \$2 and \$3.
+
+
+.. confval:: scripts.alert
+
+   Type: *string*
+
+   Specify the script to be called if a preliminary
+   origin arrives, latitude and longitude are passed as
+   parameters \$1 and \$2.
+
+
+.. confval:: scripts.event
+
+   Type: *string*
+
+   Specify the script to be called when an event has been
+   declared; the message string, a flag \(1\=new event,
+   0\=update event\), the EventID, the arrival count and the
+   magnitude \(optional when set\) are passed as parameter
+   \$1, \$2, \$3, \$4 and \$5.
+
+
+
+Command-line
+============
+
+.. program:: scvoice
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+.. option:: --first-new
+
+   Overrides configuration parameter :confval:`firstNew`.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Messaging
+---------
+
+.. option:: -u, --user arg
+
+   Overrides configuration parameter :confval:`connection.username`.
+
+.. option:: -H, --host arg
+
+   Overrides configuration parameter :confval:`connection.server`.
+
+.. option:: -t, --timeout arg
+
+   Overrides configuration parameter :confval:`connection.timeout`.
+
+.. option:: -g, --primary-group arg
+
+   Overrides configuration parameter :confval:`connection.primaryGroup`.
+
+.. option:: -S, --subscribe-group arg
+
+   A group to subscribe to. This option can be given more than once.
+
+.. option:: --content-type arg
+
+   Overrides configuration parameter :confval:`connection.contentType`.
+
+.. option:: --start-stop-msg arg
+
+   Sets sending of a start\- and a stop message.
+
+
+Database
+--------
+
+.. option:: --db-driver-list
+
+   List all supported database drivers.
+
+.. option:: -d, --database arg
+
+   The database connection string, format: service:\/\/user:pwd\@host\/database.
+   \"service\" is the name of the database driver which can be
+   queried with \"\-\-db\-driver\-list\".
+
+.. option:: --config-module arg
+
+   The configmodule to use.
+
+.. option:: --inventory-db arg
+
+   Load the inventory from the given database or file, format: [service:\/\/]location
+
+.. option:: --db-disable
+
+   Do not use the database at all
+
+
+Alert
+-----
+
+.. option:: --amp-type arg
+
+   Specify the amplitude type to listen to.
+
+.. option:: --amp-script arg
+
+   Overrides configuration parameter :confval:`scripts.amplitude`.
+
+.. option:: --alert-script arg
+
+   Overrides configuration parameter :confval:`scripts.alert`.
+
+.. option:: --event-script arg
+
+   Overrides configuration parameter :confval:`scripts.event`.
+
+
+Cities
+------
+
+.. option:: --max-dist arg
+
+   Overrides configuration parameter :confval:`poi.maxDist`.
+
+.. option:: --min-population arg
+
+   Overrides configuration parameter :confval:`poi.minPopulation`.
+
+
+Debug
+-----
+
+.. option:: -E, --eventid arg
+
+   Specify event ID that is used for testing. After running the alert
+   scripts scvoice will exit.
+

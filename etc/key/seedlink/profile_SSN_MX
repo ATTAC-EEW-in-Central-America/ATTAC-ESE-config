@@ -1,0 +1,9 @@
+# Activated plugins for category sources
+sources = SSN_MX:chain
+
+# Hostname or IP of the Seedlink server.
+sources.SSN_MX.address = 181.209.158.183
+
+# List of stream selectors. If left empty all available streams will be
+# requested. See slinktool manpage for more information.
+sources.SSN_MX.selectors = "!L","!T","BH?.D"

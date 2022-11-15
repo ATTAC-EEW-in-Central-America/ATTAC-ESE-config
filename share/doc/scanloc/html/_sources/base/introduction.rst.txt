@@ -1,0 +1,84 @@
+Introduction
+============
+
+scanloc for |scname| :cite:p:`seiscomp` is optimzed for monitoring local and
+micro seismicity within small as
+well as large seismic monitoring networks in low and high seismicity environments.
+Typical networks consist of 5 to 20 stations
+and sometimes even many more were the station distances are in the range of
+hundreds of meters to tens of kilometers.
+
+scanloc makes use of the cluster search algorithm DBSCAN :cite:p:`dbscan` to
+associate detected seismic phases to one or many potential seismic events.
+While the cluster search itself is based on P phases only, in a second step S
+picks and more P phases are associated to better locate the event.
+
+In order to provide high-quality picks from S phases, a new
+:ref:`S-phase picker <scanloc-spicker>` is distributed
+along with scanloc. The S picker allows to identify S phases on the horizontal
+components or on the vertical components if the horizontals should be unavailable.
+A :ref:`user-friendly debugger GUI <scanloc-spick-debugger>` allows the interactive
+tuning of the S picker configuration parameters based on waveforms.
+
+:ref:`Additonal auxiliary tools <sec-scanloc-aux-tools>` ship with the scanloc
+package to support detailed tuning and realistic playbacks.
+
+
+Applications
+------------
+
+scanloc is a backbone module in |scname| systems for many applications including
+
+* Real-time monitoring of local and regional earthquakes,
+* Re-processing of historical data for more complete seismicity catalogs,
+* Monitoring of natural and induced seismicity in industrial environments e.g. at
+
+  * geothermal plants,
+  * oil and gas production,
+  * underground gas storages,
+  * open and deep mines,
+
+* Integration of :ref:`teleseismic events<scanloc-zero-weight>` detected by
+  local monitoring networks
+* :ref:`Association of P and S phases <scanloc-assoc>` to detections by other
+  instances e.g. :cite:t:`ccloc` or :cite:t:`lambda`.
+
+
+Examples from science
+---------------------
+
+scanloc has been routinely applied, demonstrated, promoted and discussed with
+scientists and the SeisComP community in scientific publications and at
+international science conferences.
+
+Examples:
+
+#. A.F. Bell, P.C. La Femina, M. Ruiz, F. Amelung, M. Bagnardi, C. J. Bean, B.
+   Bernard, C. Ebinger, M. Gleeson, J. R. Grannell, S. Hernandez, M. Higgins, C.
+   Liorzou, P. Lundgren, N. J. Meier, M. Möllhoff, S.-J. Oliva, A. G. Ruiz and
+   M. J. Stock: Caldera resurgence during the 2018 eruption of Sierra Negra
+   volcano, Galápagos Islands, 2021, Nat. Commun., 12, 1397,
+   `doi: 10.1038/s41467-021-21596-4 <https://doi.org/10.1038/s41467-021-21596-4>`_.
+#. F. Grigoli, L. Scarabello, M. Boese, B. Weber, S. Wiemer, J. F. Clinton:
+   Pick- and waveform-based techniques for real-time detection of induced seismicity,
+   2018, Geophys. J. Int., 213:2, `doi: 0.1093/gji/ggy019 <https://doi.org/10.1093/gji/ggy019>`_.
+#. J. Clinton, F. Grigoli, T. Diehl, T. Kraft, L. Scarabello, M. Hermann, P. Kaestli,
+   M. Boese, S. Wiemer: Advanced  Real-time Monitoring for Natural and Induced
+   seismic sequences, 2018, Geophyscial Research Abracts, EGU General Assembly,
+   Vol. 20,
+   `abstract: EGU2018-9480-2 <https://meetingorganizer.copernicus.org/EGU2018/EGU2018-9480.pdf>`_.
+#. F. Grigoli, M. Boese, L. Scarabello, T. Diehl, B. Weber, S. Wiemer, J. F. Clinton:
+   Picking vs Waveform based detection and location methods for induced seismicity
+   monitoring, 2018, JpGU2018, Japan,
+   `abstract: SSS03-05 <https://confit.atlas.jp/guide/event/jpgu2018/subject/SSS03-05/detail>`_.
+#. F. Grigoli, M. Boese, L. Scarabello, T. Diehl, B. Weber, S. Wiemer, J. F. Clinton:
+   Picking vs Waveform based detection and location methods for induced seismicity
+   monitoring, 2017, Geophyscial Research Abracts, EGU General Assembly, Vol. 19,
+   `abstract: EGU2017-10562 <https://meetingorganizer.copernicus.org/EGU2017/EGU2017-10562.pdf>`_.
+#. D. Roessler, J. Becker, E. Ellguth, R. Henneberger, S. Herrnkind, B. Weber:
+   Cluster-search based monitoring of local earthquakes in SeisComP3, 2016,
+   AG Seismology - 42. meeting, Bad Salzschlirf, Germany
+#. D. Roessler, E. Ellguth, S. Herrnkind, B. Weber, R. Henneberger, H. Blanck:
+   Cluster-search based monitoring of local earthquakes in SeisComP3, 2016,
+   AGU Fall Meeting, San Francisco, USA,
+   `abstract S31E-06 <https://agu.confex.com/agu/fm16/meetingapp.cgi/Paper/119780>`_.

@@ -1,0 +1,193 @@
+.. highlight:: rst
+
+.. _dlsv2inv:
+
+########
+dlsv2inv
+########
+
+**Converts dataless SEED to SeisComP inventory XML.**
+
+
+Description
+===========
+
+dlsv2inv converts dataless `SEED <http://www.iris.edu/data/dataless.htm>`_ to
+SeisComP XML (:term:`SCML`). Due to the limitations of dataless SEED dlsv2inv allows to set
+attributes which are not available in dataless such as network type, network
+description and so on.
+
+It takes basically two important parameters:
+
+#. input file
+#. output file
+
+whereas the output file defaults to stdout if not given.
+
+The SeisComP inventory network and station objects have the attribute archive
+which should contain the local datacenter where the information comes from.
+
+While importing the attribute :confval:`datacenterID` is read and written into
+the archive attribute of all networks and stations available in the dataless.
+The datacenterID can be overridden with the ``--dcid`` command-line option.
+
+.. note::
+
+   Conversion of inventory in |scname| XML to dataless SEED is provided by :ref:`inv2dlsv`.
+
+
+Examples
+========
+
+#. Convert a given dataless SEED file to SeisComP XML.
+
+   .. code-block:: sh
+
+      dlsv2inv GE.dataless GE.xml
+
+#. Override the datacenterID and leave it blank in the output.
+
+   .. code-block:: sh
+
+      dlsv2inv --dcid "" GE.dataless GE.xml
+
+
+.. _dlsv2inv_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/dlsv2inv.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/dlsv2inv.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/dlsv2inv.cfg`
+
+dlsv2inv inherits :ref:`global options<global-configuration>`.
+
+
+
+
+Command-line
+============
+
+.. program:: dlsv2inv
+
+:program:`dlsv2inv [OPTIONS] input [output=stdout]`
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+ArcLink
+-------
+
+.. option:: --dcid arg
+
+   Overrides the datacenter ID which is read from the datacenterID
+   configuration parameter and written to the network and
+   station archive attribute.
+
+.. option:: --net-description arg
+
+   Sets the network description. It supports the following
+   placeholders: \${code}, \${start}, \${end}, \${class} and \${archive}.
+
+.. option:: --net-start arg
+
+   Set network start time. Format is %Y\-%m\-%d.
+
+.. option:: --net-end arg
+
+   Set network end time. Format is %Y\-%m\-%d.
+
+.. option:: --net-type arg
+
+   Sets the network type \(VBB, SM, etc.\).
+
+.. option:: --temporary
+
+   Sets the network temporary flag to true.
+
+.. option:: --restricted
+
+   Sets the network restricted flag to true.
+
+.. option:: --private
+
+   Sets the network private flag to true.
+
+
+Convert
+-------
+
+.. option:: -f, --formatted
+
+   Enables formatted XML output.
+

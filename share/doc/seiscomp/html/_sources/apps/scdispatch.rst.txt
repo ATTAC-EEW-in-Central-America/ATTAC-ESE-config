@@ -1,0 +1,328 @@
+.. highlight:: rst
+
+.. _scdispatch:
+
+##########
+scdispatch
+##########
+
+**Reads objects (event, origin, etc) from a SC3ML file and sends the objects
+to the messaging system.**
+
+
+Description
+===========
+
+scdispatch reads an :term:`SCML` file and creates notifier objects for them that
+are sent to the corresponding messaging groups (see :confval:`routingtable`).
+In contrast to :ref:`scdb` which writes SCML files directly into the database
+scdispatch uses the messaging bus. If :ref:`scmaster` is configured with
+the database plugin messages will end up in the database as well.
+
+scdispatch can work in two modes. The first mode is used when a concrete
+operation is specified such as *add*, *update* or *remove*. In that case all
+objects in the SCML are encapsulated in a notifier with that specific operation
+and sent to the messaging. No check is performed if the object is already in
+the database or not.
+
+In the second mode scdispatch loads the corresponding objects from the database
+and calculates differences. It will then create corresponding notifiers with
+operations *add*, *update* or *remove* and sent them to the messaging. That mode
+is quite close to a sync operation with the exception that top level objects
+(such as origin or event) that are not part of the input SCML are left untouched
+in the database. It can be used to synchronize event information from one system
+with another.
+
+
+Examples
+========
+
+#. Send different objects from a :term:`SCML` file because the default behavior is to merge:
+
+   .. code-block:: sh
+
+      scdispatch -i test.xml
+
+#. Send new objects:
+
+   .. code-block:: sh
+
+      scdispatch -i test.xml -O add
+
+#. Send an update:
+
+   .. code-block:: sh
+
+      scdispatch -i test.xml -O update
+
+
+#. Remove the objects:
+
+   .. code-block:: sh
+
+      scdispatch -i test.xml -O remove
+
+
+#. Subsets of SCML Objects
+
+   It can be useful to import a subset of QuakeML objects, e.g. Origins from other
+   agencies and then allow :ref:`scevent` to associate them to existing
+   events (and possibly prefer them based on the rules in scevent) or create new
+   events for the origins. If the event objects from a SCML file are not required
+   to be sent to the messaging then either they should be removed (e.g. using XSLT)
+   and all the remaining objects in the file added:
+
+   .. code-block:: sh
+
+      scdispatch -i test.xml -O add
+
+   or the **event objects** can be left out of the routing table, e.g.
+
+   .. code-block:: sh
+
+      scdispatch -i test.xml -O add \
+                 --routingtable Pick:PICK, \
+                                Amplitude:AMPLITUDE, \
+                                Origin:LOCATION,StationMagnitude:MAGNITUDE, \
+                                Magnitude:MAGNITUDE
+
+   .. hint::
+
+      The option ``--no-event`` is a wrapper for removing Event:EVENT from
+      the routing table. With this option no event objects will be sent which may
+      be useful if just the origins with magnitudes, amplitudes, arrivals, picks, etc.
+      shall be integrated, e.g. after XML-based playbacks.
+
+
+#. Testing
+
+   For testing it is useful to watch the results of dispatch with :ref:`scolv` or
+   :ref:`scxmldump`. It is also useful to clean the database and logs to remove
+   objects from persistent storage to allow repeated reloading of a file.
+
+   .. note:: The following will clear all events from the database and any other
+      other object persistence. Modify the mysql command to suit your db setup.
+
+   .. code-block:: sh
+
+      mysql -u root --password='my$q1' -e "DROP DATABASE IF EXISTS seiscomp; \
+        CREATE DATABASE seiscomp CHARACTER SET utf8 COLLATE utf8_bin; \
+        GRANT ALL ON seiscomp.* TO 'sysop'@'localhost' IDENTIFIED BY 'sysop'; \
+        USE seiscomp;source seiscomp/trunk/share/db/mysql.sql;"
+
+      seiscomp start
+
+
+.. _scdispatch_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scdispatch.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scdispatch.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scdispatch.cfg`
+
+scdispatch inherits :ref:`global options<global-configuration>`.
+
+
+
+
+Command-line
+============
+
+.. program:: scdispatch
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Messaging
+---------
+
+.. option:: -u, --user arg
+
+   Overrides configuration parameter :confval:`connection.username`.
+
+.. option:: -H, --host arg
+
+   Overrides configuration parameter :confval:`connection.server`.
+
+.. option:: -t, --timeout arg
+
+   Overrides configuration parameter :confval:`connection.timeout`.
+
+.. option:: -g, --primary-group arg
+
+   Overrides configuration parameter :confval:`connection.primaryGroup`.
+
+.. option:: -S, --subscribe-group arg
+
+   A group to subscribe to. This option can be given more than once.
+
+.. option:: --content-type arg
+
+   Overrides configuration parameter :confval:`connection.contentType`.
+
+.. option:: --start-stop-msg arg
+
+   Sets sending of a start\- and a stop message.
+
+
+Database
+--------
+
+.. option:: --db-driver-list
+
+   List all supported database drivers.
+
+.. option:: -d, --database arg
+
+   The database connection string, format: service:\/\/user:pwd\@host\/database.
+   \"service\" is the name of the database driver which can be
+   queried with \"\-\-db\-driver\-list\".
+
+.. option:: --config-module arg
+
+   The configmodule to use.
+
+.. option:: --inventory-db arg
+
+   Load the inventory from the given database or file, format: [service:\/\/]location
+
+.. option:: --db-disable
+
+   Do not use the database at all
+
+
+Dispatch
+--------
+
+.. option:: -i, --input flag
+
+   File to dispatch to messaging.
+
+.. option:: -O, --operation flag
+
+   Operation to use: add, update, remove, merge or merge\-without\-remove.
+   Merge and merge\-without\-remove are special operations and require
+   a database connection. Both will read a corresponding object
+   from the database and calculate the differences which will be
+   sent to the messaging. Merge\-no\-remove behaves like merge
+   with the exception that remove operations will be filtered
+   out that no objects in the database will be removed.
+   
+   If add, update or remove is specified then all objects in
+   XML are sent with the given operation regardless of their
+   existence in the database or not.
+
+.. option:: --routingtable flag
+
+   Specify routing table as comma separated list of object:group pairs,
+   e.g. \"Origin:LOCATION,Event:EVENT\". When an objects
+   should be routed to a group and no table entry for that perticular
+   class type is available, all parent objects are checked for
+   valid routing entries and the first found is used. E.g. if only
+   \"Origin:LOCATION\" is specified but the input file
+   contains also Arrivals which are child objects of Origin then
+   the routing entry of Origin is used because of the parent\-child
+   relationship between Origin and Arrival.
+
+.. option:: --print-objects
+
+   Print names of routable objects.
+
+.. option:: --test
+
+   Test mode. Does not send any object.
+
+.. option:: -e, --no-events
+
+   Do not send any event object. This is a wrapper to setting a
+   routing table without EVENT objects
+

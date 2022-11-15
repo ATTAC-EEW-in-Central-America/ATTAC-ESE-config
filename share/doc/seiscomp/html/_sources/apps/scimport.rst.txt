@@ -1,0 +1,521 @@
+.. highlight:: rst
+
+.. _scimport:
+
+########
+scimport
+########
+
+**Forward messages across two SeisComP systems.**
+
+
+Description
+===========
+
+scimport is responsible to forward messages from one system to another. The
+difference to :ref:`scimex` is that scimport does not handle the messages
+event based. scimport supports two different modes. The relay mode does a
+simple mapping from GROUP:SYSTEM_A to GROUP:SYSTEM_B. This mode is default.
+
+In case GROUP is not defined in the second system the message is forwarded to
+IMPORT_GROUP. The import mode supports custom mapping and filter functionality.
+It is possible to forward GROUP1:SYSTEM_A to GROUP2:SYSTEM_B. In addition the
+forwarded objects can be filtered by:
+
+Pick
+ - Status
+ - Mode
+ - Phase
+ - AgencyID
+
+Amplitude
+ - Amplitude
+
+Origin
+ - Location
+ - Depth
+ - AgencyID
+ - Status
+ - Mode
+
+Event
+ - Type
+
+StationMagnitude
+ - Type
+
+Magnitude
+ - Type
+
+
+Examples
+========
+
+Example scimport.cfg
+
+.. code-block:: sh
+
+   # The address of the importing system
+   sink = sinkAddress
+
+   # This option has to be set if the application runs in import mode.
+   # The routing table has to be defined in the form of source_group:sink_group
+   routingtable = PICK:PICK
+
+   # List of sink groups to subscribe to. If this option is not set the message
+   # groups will be determined automatically. If this option is set but not
+   # needed for a setup it can be ignored with the option --ignore-groups
+   msggroups = GROUP_ONE, GROUP_TWO
+
+   # Available filter options
+   filter.pick.mode     = manual
+   filter.pick.status   = confirmed
+   filter.pick.phase    = P
+   filter.pick.agencyID = GFZ
+
+   # Values: eq (==), lt (<=) ,gt (>=), *
+   filter.amplitude.operator = gt
+   filter.amplitude.amplitude = 100
+
+   # Values: lat0:lat1 (range)
+   filter.origin.latitude = -90:90
+
+   # Values: lon0:lon1 (range)
+   filter.origin.longitude = -180:180
+   filter.origin.depth     = 0:100
+   filter.origin.agencyID  = GFZ
+
+   # Values: automatic, manual
+   filter.origin.mode      = manual
+   filter.origin.status    = confirmed
+
+   # Values: earthquake, explosion, quarry blast, chemical explosion,
+   # nuclear explosion, landslide, debris avalanche, rockslide,
+   # mine collapse, volcanic eruption, meteor impact, plane crash,
+   # building collapse, sonic boom, other
+   filter.event.type = earthquake
+
+   # Values: Whatever your magnitudes are named
+   filter.stationMagnitude.type = MLv
+
+   # Values: Whatever your magnitudes are named
+   filter.magnitude.type = MLv
+
+   # Values: latency, delay, timing quality, gaps interval, gaps length,
+   # spikes interval, spikes amplitude, offset, rms
+   filter.qc.type = latency
+
+
+.. _scimport_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scimport.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scimport.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scimport.cfg`
+
+scimport inherits :ref:`global options<global-configuration>`.
+
+
+
+.. confval:: sink
+
+   Type: *string*
+
+   URI of receiving host which runs scmaster. The URI contains
+   the host name with an optional protocol and port.
+   
+   Format: protocol:\/\/host:port
+   
+   Examples:
+   
+   \- proc
+   
+   \- scmp:\/\/proc:18180
+
+
+.. confval:: routingtable
+
+   Type: *list:string*
+
+   This option has to be set if the application runs in import mode.
+   The routing table has to be defined in the form of source_group:sink_group
+
+
+.. confval:: msggroups
+
+   Type: *list:string*
+
+   Defines a list of message groups of the source system \(connection.server\).
+   If not specified the source system is queried for a list of message groups
+   which are then used to check each subscription extracted from the routing
+   table. This parameter allows to override to source query result.
+
+
+.. confval:: useFilter
+
+   Type: *boolean*
+
+   Default is ``true``.
+
+.. note::
+   **filter.\***
+   *Define filter criteria before sending*
+
+
+
+.. note::
+   **filter.pick.\***
+   *Criteria for filtering picks*
+
+
+
+.. confval:: filter.pick.mode
+
+   Type: *string*
+
+   The mode of picks to filter for. Allowed values:
+   \"automatic\" and \"manual\".
+
+
+.. confval:: filter.pick.status
+
+   Type: *string*
+
+   The status of picks to filter for. Allowed values:
+   \"preliminary\", \"confirmed\",
+   \"reviewed\", \"final\",
+   \"rejected\" and \"reported\".
+
+
+.. confval:: filter.pick.phase
+
+   Type: *string*
+
+   The pick phase hint to filter for. Allowed values:
+   all possible phase codes.
+
+
+.. confval:: filter.pick.agencyIDs
+
+   Type: *list:string*
+
+   The pick agencyIDs to filter for. Allowed values:
+   all possible agency ids;
+
+
+.. confval:: filter.pick.networkCode
+
+   Type: *string*
+
+   The pick network code of the processed waveforms.
+   Allowed values: all possible network codes.
+
+
+.. note::
+   **filter.amplitude.\***
+   *Criteria for filtering amplitudes*
+
+
+
+.. confval:: filter.amplitude.operator
+
+   Type: *string*
+
+   The amplitude comparison operator. Allowed values:
+   \"eq\", \"lt\", \"gt\" and \"\*\".
+
+
+.. confval:: filter.amplitude.amplitude
+
+   Type: *double*
+
+   The amplitude threshold to filter for. The operator
+   configured with \"operator\" is used to compare this threshold with
+   the incoming value. If \"operator\" is \"\*\" then
+   values will pass.
+
+
+.. confval:: filter.amplitude.agencyIDs
+
+   Type: *list:string*
+
+   The amplitude agencyIDs to filter for. Allowed values:
+   all possible agency ids.
+
+
+.. note::
+   **filter.origin.\***
+   *Criteria for filtering origins*
+
+
+
+.. confval:: filter.origin.latitude
+
+   Type: *string*
+
+   The latitude range in format [min]:[max].
+
+
+.. confval:: filter.origin.longitude
+
+   Type: *string*
+
+   The longitude range in format [min]:[max].
+
+
+.. confval:: filter.origin.depth
+
+   Type: *string*
+
+   The depth range in format [min]:[max].
+
+
+.. confval:: filter.origin.agencyIDs
+
+   Type: *list:string*
+
+   The origin agencyIDs to filter for. Allowed values:
+   all possible agency ids;
+
+
+.. confval:: filter.origin.mode
+
+   Type: *string*
+
+   The origin evaluation mode to filter for. Allowed values:
+   \"automatic\" and \"manual\".
+
+
+.. confval:: filter.origin.status
+
+   Type: *string*
+
+   The origin status to filter for. Allowed values:
+   \"preliminary\", \"confirmed\",
+   \"reviewed\", \"final\",
+   \"rejected\" and \"reported\".
+
+
+.. confval:: filter.origin.arrivalcount
+
+   Type: *string*
+
+   The minimum number of arrivals of an origin to pass
+   the filter.
+
+
+.. note::
+   **filter.event.\***
+   *Criteria for filtering events*
+
+
+
+.. confval:: filter.event.type
+
+   Type: *string*
+
+   The event type to filter for, e.g. \"earthquake\",
+   \"explosion\" ...
+
+
+.. note::
+   **filter.stationMagnitude.\***
+   *Criteria for filtering station magnitudes*
+
+
+
+.. confval:: filter.stationMagnitude.type
+
+   Type: *string*
+
+   The station magnitude type. Allowed values: all possible
+   magnitude types such as \"MLv\".
+
+
+.. note::
+   **filter.magnitude.\***
+   *Criteria for filtering network magnitudes*
+
+
+
+.. confval:: filter.magnitude.type
+
+   Type: *string*
+
+   The magnitude type. Allowed values: all possible
+   magnitude types such as \"MLv\".
+
+
+.. note::
+   **filter.qc.\***
+   *Criteria for filtering QC parameters*
+
+
+
+.. confval:: filter.qc.type
+
+   Type: *string*
+
+   The QC parameter type. Allowed values: all possible
+   types such as \"latency\", \"delay\" ...
+
+
+
+Command-line
+============
+
+.. program:: scimport
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Messaging
+---------
+
+.. option:: -u, --user arg
+
+   Overrides configuration parameter :confval:`connection.username`.
+
+.. option:: -H, --host arg
+
+   Overrides configuration parameter :confval:`connection.server`.
+
+.. option:: -t, --timeout arg
+
+   Overrides configuration parameter :confval:`connection.timeout`.
+
+.. option:: -g, --primary-group arg
+
+   Overrides configuration parameter :confval:`connection.primaryGroup`.
+
+.. option:: -S, --subscribe-group arg
+
+   A group to subscribe to. This option can be given more than once.
+
+.. option:: --content-type arg
+
+   Overrides configuration parameter :confval:`connection.contentType`.
+
+.. option:: --start-stop-msg arg
+
+   Sets sending of a start\- and a stop message.
+
+
+Import
+------
+
+.. option:: -o, --sink
+
+   Overrides configuration parameter :confval:`sink`.
+
+.. option:: -i, --import
+
+   Switch to import mode \(default is relay\). Im import mode the routing
+   table has to be specified whereas in relay the routing table will be
+   calculated  automatically.
+
+.. option:: --no-filter
+
+   Disable message filtering and ignore all configured filters.
+
+.. option:: --routeunknowngroup
+
+   Route unknown groups to the default group IMPORT_GROUP.
+
+.. option:: --ignore-groups
+
+   Ignore user specified groups.
+
+.. option:: --test
+
+   Do not send any messages.
+

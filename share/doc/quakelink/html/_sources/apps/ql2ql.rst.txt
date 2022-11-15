@@ -1,0 +1,377 @@
+.. highlight:: rst
+
+.. _ql2ql:
+
+#####
+ql2ql
+#####
+
+**QuakeLink (gempa GmbH) to QuakeLink event parameter exchange**
+
+
+Description
+===========
+
+ql2ql manages the import of SeisComP objects from one or several QuakeLink
+servers into a |scname| system in real time. Like :cite:t:`scimex` but contrary
+to :cite:t:`scimport` the exchange of the SeisComP objects is event based. This
+means no messages will be exchanged until the exporting system has produced an
+event.
+
+ql2ql is part of the QuakeLink suite.
+
+Please read the command-line help for more options: ::
+
+   ql2ql -h
+
+.. _event_filter:
+
+Server-side event filter
+========================
+
+QuakeLink provides a filter syntax similar to SQL-WHERE clauses which may be
+used to filter interesting events on the server side:
+
+.. code-block:: none
+
+   clause    := condition[ AND|OR [(]clause[)]]
+   condition := MAG|DEPTH|LAT|LON|PHASES|OTIME|UPDATED [op float|time]|[IS [NOT] NULL]
+   op        := =|&gt;|&gt;=|&lt;|&lt;=|eq|gt|ge|lt|ge
+   time      := %Y,%m,%d[,%H,%M,%S,%f]
+
+E.g. the following filter string would select only those events with a minimum
+magnitude of 6, detected by at least 10 stations and which are shallower than
+100km:
+
+.. code-block:: sql
+
+   MAG >= 6.0 AND PHASES >= 10 AND DEPTH < 100
+
+.. _object_filter:
+
+Server-side object filter
+=========================
+
+QuakeLink provides a coarse object filter for the most relevant SeisComP
+objects:
+
+============ ==============================================================
+Option       Impact
+============ ==============================================================
+picks        include picks
+amplitudes   include amplitudes
+arrivals     include origin arrivals
+staMags      include origin station magnitudes
+staMts       include moment tensor station contributions and phase settings
+preferred    include only preferred origin and magnitude information
+============ ==============================================================
+
+
+
+Module Configuration
+====================
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/ql2ql.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/ql2ql.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/ql2ql.cfg`
+
+ql2ql inherits :ref:`global options<global-configuration>`.
+
+.. note::
+
+   Modules/plugins may require a license file. The default path to license
+   files is :file:`@DATADIR@/licenses/` which can be overridden by global
+   configuration of the parameter :confval:`gempa.licensePath`. Example: ::
+
+      gempa.licensePath = @CONFIGDIR@/licenses
+
+
+
+.. confval:: server
+
+   Type: *string*
+
+   QuakeLink server to push data to
+   Default is ``localhost:18011``.
+
+.. confval:: gzip
+
+   Type: *boolean*
+
+   Compress messages pushed to QuakeLink with gzip
+   Default is ``false``.
+
+.. confval:: bufferSize
+
+   Type: *int*
+
+   Unit: *MiB*
+
+   Buffer size in megabytes \(1024\*1024 bytes\). If the QuakeLink server is not
+   reachable messages up to X MiB are buffered in a ring buffer.
+   If the server is reachable again all buffered messages
+   will be sent first.
+   Default is ``50``.
+
+.. confval:: backLog
+
+   Type: *int*
+
+   Unit: *s*
+
+   Number of seconds to fetch missed updates on start up.
+   Default is ``1800``.
+
+.. confval:: hosts
+
+   Type: *list:string*
+
+   Registration of QuakeLink hosts.
+
+
+.. note::
+
+   **host.$name.\***
+   *For each host profile a connection to a QuakeLink*
+   *server is established.*
+   $name is a placeholder for the name to be used and needs to be added to :confval:`hosts` to become active.
+
+   .. code-block:: sh
+
+      hosts = a,b
+      host.a.value1 = ...
+      host.b.value1 = ...
+      # c is not active because it has not been added
+      # to the list of hosts
+      host.c.value1 = ...
+
+
+.. confval:: host.$name.url
+
+   Type: *string*
+
+   URL of the QuakeLink service, the scheme 'qls' enables SSL.
+   
+   Format: [ql[s]:\/\/][user:pwd\@][host][:port].
+   
+   If set to an empty string the application will run without any QuakeLink connection attempt.
+   Default is ``ql://localhost:18010``.
+
+.. confval:: host.$name.gzip
+
+   Type: *boolean*
+
+   Enables\/disables GZip \(GNU zip\) compression.
+   Default is ``false``.
+
+.. confval:: host.$name.native
+
+   Type: *boolean*
+
+   Request native data instead of XML format. Native data export may be disabled on some hosts.
+   Default is ``false``.
+
+.. confval:: host.$name.keepAlive
+
+   Type: *boolean*
+
+   Request server to send keep alive message every 30s to
+   prevent connection reset by firewalls on long idle
+   periods. If activated the client will reset the
+   connection if no alive message is received within 60s.
+   The default timeout maybe overridden with the
+   'keepAliveTimeout' parameter.
+   Default is ``false``.
+
+.. confval:: host.$name.keepAliveTimeout
+
+   Type: *int*
+
+   Unit: *s*
+
+   Timeout in seconds to wait for a server response
+   when listening for updates with active keep alive
+   messages \(see parameter 'keepAlive'\). The response
+   might be a alive message or a message containing
+   actual data. The value defined here should be larger
+   than the value configured in the QuakeLink server's
+   'keepAliveInterval' parameter. If undefined a server
+   interval of 30 is assumed and a timeout value of 60s
+   is used. Set the value to 0 to deactivate the
+   timeout entirely.
+   Default is ``60``.
+
+.. confval:: host.$name.filter
+
+   Type: *string*
+
+   SQL like WHERE clause to filter the result set.
+   
+   clause    :\= condition[ AND\|OR [\(]clause[\)]] __
+   condition :\= MAG\|DEPTH\|LAT\|LON\|PHASES\|OTIME\|UPDATED [op float\|time]\|[IS [NOT] NULL] __
+   op        :\= \=\|>\|>\=\|<\|<\=\|eq\|gt\|ge\|lt\|ge __
+   time      :\= %Y,%m,%d[,%H,%M,%S,%f]
+
+
+.. confval:: host.$name.domain
+
+   Type: *string*
+
+   Select the object domain that will be requested.
+   Either \"event\" or \"dyfi\".
+   Default is ``event``.
+
+.. note::
+   **host.$name.data.\***
+   *QuakeLink options specifying which XML components to fetch.*
+   *Note: These options are not used if 'native' data is requested.*
+
+
+
+.. confval:: host.$name.data.picks
+
+   Type: *boolean*
+
+   Include picks
+   Default is ``true``.
+
+.. confval:: host.$name.data.amplitudes
+
+   Type: *boolean*
+
+   Include amplitudes
+   Default is ``true``.
+
+.. confval:: host.$name.data.arrivals
+
+   Type: *boolean*
+
+   Include origin arrivals
+   Default is ``true``.
+
+.. confval:: host.$name.data.staMags
+
+   Type: *boolean*
+
+   Include origin station magnitudes
+   Default is ``true``.
+
+.. confval:: host.$name.data.staMts
+
+   Type: *boolean*
+
+   Include moment tensor station contributions and phase settings
+   Default is ``true``.
+
+.. confval:: host.$name.data.preferred
+
+   Type: *boolean*
+
+   Include only preferred origin and magnitude information
+   Default is ``true``.
+
+
+Command-Line Options
+====================
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --print-component arg
+
+   For each log entry print the component right after the
+   log level. By default the component output is enabled
+   for file output but disabled for console output.
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --trace
+
+   Trace mode: \-\-verbosity\=4 \-\-console\=1 \-\-print\-component\=1 \-\-print\-context\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Sink
+----
+
+.. option:: --server arg
+
+   Overrides configuration parameter :confval:`server`.
+
+.. option:: -z, --gzip arg
+
+   Overrides configuration parameter :confval:`gzip`.
+
+.. option:: --event-buffer arg
+
+   Overrides configuration parameter :confval:`bufferSize`.
+
+.. option:: --back-log arg
+
+   Overrides configuration parameter :confval:`backLog`.
+

@@ -1,0 +1,755 @@
+.. highlight:: rst
+
+.. _scautopick:
+
+##########
+scautopick
+##########
+
+**Makes picks on waveforms.**
+
+
+Description
+===========
+
+scautopick applies threshold monitoring by searching for waveform anomalies in
+form of changes in amplitudes. It is applied for detecting phase arrivals and
+and for measuring related amplitudes.
+
+
+Phase Detections
+================
+
+scautopick detects phase onsets for generating :term:`picks <pick>`. Initally
+it searches for P picks on the waveform streams defined by global bindings.
+
+By default scautopick applies a robust STA/LTA detector
+(:ref:`STALTA filter <filter-grammar>`) to waveforms for detecting P phases. Other
+detection filters can be choosen from the :ref:`list of SeisComP filters <filter-grammar>`.
+The waveforms are typically :ref:`pre-filtered<filter-grammar>`.
+Without further configuration a running-mean highpass, a cosine taper and a Butterworth
+bandpass filter of third order with corner frequencies of 0.7 and 2 Hz are applied before
+the STALTA filter. The entire filter sequence is configurable by :confval:`filter`,
+module configuration, or :confval:`detecFilter`, binding configuration.
+Once the STA/LTA ratio has reached a configurable threshold (by default 3) for a
+particular stream, a :term:`pick` is set to the time when this
+threshold is exceeded (pick time) and the picker is set inactive. The picker is reactivated
+for this stream once the STA/LTA ratio falls to the value of 1.5 (default).
+
+The trigger thresholds are configurable:
+
+* Trigger on: :confval:`thresholds.triggerOn` in module configuration or
+  :confval:`trigOn` in binding configuration,
+* Trigger off: :confval:`thresholds.triggerOff`, module configuration or :confval:`trigOff`,
+  binding configuration.
+
+Following inital P-phase detections a second-stage P-phase picker (post picker) and
+a S-phase picker (secondary picker) can be applied. Configure :confval:`picker`,
+:confval:`spicker` and global bindings parameters accordingly.
+
+.. csv-table:: Second-stage pickers available by configuration of :confval:`picker` or :confval:`spicker`
+   :align: center
+   :header: "picker name", "picker","spicker","parameters in global bindings"
+
+   "AIC", "x", "", "picker.AIC"
+   "BK", "x", "", "picker.BK"
+   "S-L2", "", "x", "spicker.L2"
+
+After having detected a P phase, scautopick will not accept any further P detection
+until
+
+* The amplitudes measured after filtering (:confval:`filter` in module configuration
+  or :confval:`detecFilter` in binding configuration) fall below the
+  :confval:`thresholds.triggerOff` (module configuration) or :confval:`trigOff`
+  (binding configuration) and
+* Amplitudes, :math:`A_{trigger}`, measured after filtering reach or
+  exceed a threshold determined by :math:`T_{minOffset}` (:confval:`thresholds.minAmplOffset`),
+  :math:`T_{dead}` (:confval:`thresholds.deadTime`) and the amplitude of the
+  previous pick, :math:`A_{prev}`:
+
+  .. math ::
+
+     A_{trigger} \ge T_{minOffset} + A_{prev} * exp\left(-(dt/T_{dead})^2\right)
+
+  if :math:`T_{dead} > 0`. Otherwise:
+
+  .. math ::
+
+     A_{trigger} \ge T_{minOffset}
+
+  Here, :math:`dt` is the time passed since the last pick.
+  :math:`T_{minOffset}` (:confval:`thresholds.minAmplOffset`) is typically similar to
+  the trigger threshold, :confval:`thresholds.triggerOn` (module configuration) or
+  :confval:`trigOn` (binding configuration).
+
+
+Amplitude Measurements
+======================
+
+The second task of scautopick is to calculate amplitudes of a given type for the
+corresponding magnitude type (see :ref:`scamp` for a list of amplitude types and
+:ref:`scmag` for the magnitude types). Such amplitudes are required by:
+
+* :ref:`scautoloc` for associating phase picks and generating a source location
+* EEW (earthquake early warning) systems in order to provide raüid amplitudes for
+  magnitudes as soon as source locations are available.
+
+The time window for measuring amplitudes starts at the pick time. The window
+length is constant and specific to the amplitude type. It can be adjusted in
+global bindings. For example mb is calculated
+for a fixed time window of 30 s after the pick, mB for time window of 60s, for
+MLv a time window of 150 s is estimated to make sure that S-arrivals are inside
+this time window. The pre-calculated amplitudes are sent out and received by
+the magnitude tool, :ref:`scmag`.
+The fixed time window poses a limitation to EEW system. Howver, a speed-up is
+available with :confval:`amplitudes.enableUpdate`.
+Read the :ref:`scamp` documentation for more details on amplitude measurements.
+
+
+Modes of Operation
+==================
+
+scautopick usually runs in the background connected to a real-time data source
+such as :ref:`Seedlink <seedlink>`. This is referred to as online mode. Another
+option to run scautopick is on offline mode with files.
+
+
+Real-time
+---------
+
+In real-time mode the workflow draws like this:
+
+* scautopick reads all of its binding parameters and subscribes to stations
+  defined by global binding parameters where :confval:`detecEnable` is set to ``true``.
+* The data time window requested from the data source is [system-:confval:`leadTime`, NULL]
+  meaning an open end time that causes :ref:`SeedLink <seedlink>` to stream
+  real-time data if no more data are in the buffers.
+* Each incoming record is filtered according to :confval:`detecFilter`.
+* The samples are checked for exceedance of :confval:`trigOn` and in the positive
+  case either a post picker (:confval:`picker`) is launched or a :term:`Pick <pick>`
+  object will be sent.
+* If :confval:`sendDetections` is set to ``true`` trigger will be sent in any
+  case for e.g. debugging.
+* After the primary stage has finished (detector only or picker) secondary
+  pickers will be launched if configured with :confval:`spicker`.
+
+These steps repeat for any incoming record.
+
+To run scautopick in the background as a daemon module enable and start it ::
+
+$ seiscomp enable scautopick
+$ seiscomp start scautopick
+
+For executing on the command line simply call it with appropriate options, e.g. ::
+
+   $ seiscomp exec scautopick -h
+
+
+Non-real-time
+-------------
+
+.. note::
+
+   Due to code changes in the file data source, the command line option **--playback**
+   is essential for non-real-time operation. Otherwise a real-time time window
+   is set and all records are most likely filtered out.
+
+To tune scautopick or to do playbacks it is helpful to run scautopick not with
+a real-time data source but on a defined data set, e.g. a multiplexed sorted miniSEED
+volume. scautopick will apply the same workflow as in online mode but the
+acquisition of data records has to change. If the input data (file) has been
+read, scautopick will exit and furthermore it must not ask for a particular
+time window, especially not for a real-time time window. To accomplish that
+the command-line parameter ```--playback``` has to be used. Example:
+
+.. code-block:: sh
+
+   $ scautopick --playback -I data.mseed
+
+This call will process all records in :file:`data.mseed` for which bindings
+exist and **send the results to the messaging**. If all data records are processed,
+scautopick will exit. The processing steps are similar to the online mode.
+
+Use the ```--ep``` for offline processing **without messaging**. The results are
+printed in :term:`SCML` format. Example:
+
+.. code-block:: sh
+
+   $ scautopick --playback -I data.mseed --ep -d [type]://[host]/[database] > picks.xml
+
+
+.. _scautopick_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scautopick.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scautopick.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scautopick.cfg`
+
+scautopick inherits :ref:`global options<global-configuration>`.
+
+
+
+.. confval:: filter
+
+   Type: *string*
+
+   Defines the default filter used for picking. Station specific configurations
+   will override this value.
+
+
+.. confval:: timeCorrection
+
+   Type: *double*
+
+   Unit: *s*
+
+   Time correction applied for each pick made. Station specific
+   values override this value.
+   Default is ``-0.8``.
+
+.. confval:: ringBufferSize
+
+   Type: *int*
+
+   Unit: *s*
+
+   Defined the record ringbuffer size in seconds.
+   Default is ``300``.
+
+.. confval:: leadTime
+
+   Type: *int*
+
+   Unit: *s*
+
+   The leadTime defines the time in seconds to start picking on
+   waveforms before current time.
+   Default is ``60``.
+
+.. confval:: initTime
+
+   Type: *int*
+
+   Unit: *s*
+
+   The initTime defines a time span in seconds for that the picker
+   is blind after initialization. This time is needed to initialize
+   the filter and depends on it.
+   Default is ``60``.
+
+.. confval:: gapInterpolation
+
+   Type: *boolean*
+
+   Interpolate gaps linearly? This is valid for gaps shorter
+   than thresholds.maxGapLength.
+   Default is ``false``.
+
+.. confval:: amplitudes
+
+   Type: *list:string*
+
+   Defines the amplitude types to be computed by the picker as well.
+   Default is ``MLv, mb, mB``.
+
+.. confval:: picker
+
+   Type: *string*
+
+   Configures the picker to use. By default only a simple detections
+   are emitted as picks. To enable real picking on a time window around
+   the detection, an algorithm \(plugin\) can be defined with this parameter.
+   Currently available is: \"AIC\", \"BK\" or
+   \"GFZ\". More options may be available by plugins.
+   Configure related parameters in global bindings.
+
+
+.. confval:: spicker
+
+   Type: *string*
+
+   Configures the secondary picker to use, e.g. for pick S\-phases.
+   Currently available is: \"S\-L2\". More options may
+   be available by plugins. Configure related parameters
+   in global bindings.
+
+
+.. confval:: useAllStreams
+
+   Type: *boolean*
+
+   If enabled the all streams are used for picking that are received by the picker.
+   This option has only effect if a file is used as input which contains more data than
+   the picker requests. If connected to a waveform server such as SeedLink the picker
+   will only receive the data it subscribed to.
+   Default is ``true``.
+
+.. confval:: killPendingSPickers
+
+   Type: *boolean*
+
+   If enabled the all secondary pickers that were triggered by
+   a previous pick will be terminated when a new detection or
+   pick has been found. This aims to avoid the case where an
+   S phase is wrongly picked as P but would also be picked as
+   S by the secondary picker. But suppressing the S pick can
+   lead to undesired results. It might be better in some
+   situations to have two picks \(P and S\) instead only a wrong
+   P.
+   Default is ``true``.
+
+.. confval:: sendDetections
+
+   Type: *boolean*
+
+   If enabled and \"picker\" is configured, then initial detections
+   are sent as well. To distinguish between detections and picks
+   the evaluation status of the pick is set to \"rejected\".
+   This is meant to be a debug option which can be used to compare
+   detections and picks by their evaluation status.
+   Default is ``false``.
+
+.. confval:: extraPickComments
+
+   Type: *boolean*
+
+   If enabled and \"picker\" or \"spicker\" is
+   configured, then extra comments
+   will be added to the resulting pick.
+   
+   Supported comments:
+   
+   SNR: added if SNR >\= 0, comment id is \"SNR\"
+   Default is ``false``.
+
+.. confval:: playback
+
+   Type: *boolean*
+
+   If enabled, picks can be made on waveforms which are older than
+   current time \- \"leadTime\". Current time is the time
+   when the module was started. This allows to pick
+   historic data in real\-time playbacks which are preserving the
+   record times. See e.g. the \"msrtsimul\" module.
+   This option deactivates \"leadTime\". Activate only for playbacks.
+   Default is ``false``.
+
+.. confval:: thresholds.triggerOn
+
+   Type: *double*
+
+   For which value on the filtered waveforms is a pick
+   detected. Station specific values override this value.
+   Default is ``3``.
+
+.. confval:: thresholds.triggerOff
+
+   Type: *double*
+
+   The value the filtered waveforms must reach to enable
+   detection again. Between triggerOn and triggerOff the
+   picker is blind and does not produce picks. Station
+   specific values override this value.
+   Default is ``1.5``.
+
+.. confval:: thresholds.maxGapLength
+
+   Type: *double*
+
+   Unit: *s*
+
+   The maximum gap length in seconds to handle.
+   Gaps larger than this will cause the picker to be reset.
+   Default is ``4.5``.
+
+.. confval:: thresholds.amplMaxTimeWindow
+
+   Type: *double*
+
+   Unit: *s*
+
+   The time window used to compute a maximum \(snr\) amplitude
+   on the filtered waveforms.
+   Default is ``10``.
+
+.. confval:: thresholds.deadTime
+
+   Type: *double*
+
+   Unit: *s*
+
+   The time used together with measured amplitude and
+   `thresholds.minAmplOffset` for scaling the amplitude below which
+   the picker is inactive after a P pick. Read the documentation\!
+   Default is ``30``.
+
+.. confval:: thresholds.minAmplOffset
+
+   Type: *double*
+
+   The amplitude used together with measured amplitude and
+   `thresholds.deadTime` for scaling the amplitude below which
+   the picker is inactive after a P pick. The value is typically
+   similar to the trigger threshold. Read the documentation\!
+   Default is ``3``.
+
+.. confval:: amplitudes.enableUpdate
+
+   Type: *list:string*
+
+   Configure a list of magnitude types.
+   Update and send amplitudes for these magnitudes as soon as data are
+   available. Do not wait for complete time windows.
+   Only magnitudes computed by scautopick as given by the amplitudes parameter are considered.
+   This option is for rapid magnitude estimation and EEW.
+   
+   WARNING: This option increases the load on the system\!
+
+
+.. confval:: connection.amplitudeGroup
+
+   Type: *string*
+
+   Group used to send amplitudes to.
+   Default is ``AMPLITUDE``.
+
+
+Bindings
+========
+
+
+Configuration
+-------------
+
+
+.. confval:: detecEnable
+
+   Type: *boolean*
+
+   Enables\/disables picking on a station.
+   Default is ``true``.
+
+.. confval:: detecFilter
+
+   Type: *string*
+
+   Defines the filter to be used for picking.
+   Default is ``"RMHP(10)>>ITAPER(30)>>BW(4,0.7,2)>>STALTA(2,80)"``.
+
+.. confval:: trigOn
+
+   Type: *double*
+
+   For which value on the filtered waveform is a pick detected.
+   Default is ``3``.
+
+.. confval:: trigOff
+
+   Type: *double*
+
+   The value the filtered waveform must reach to
+   enable a detection again.
+   Default is ``1.5``.
+
+.. confval:: timeCorr
+
+   Type: *double*
+
+   Unit: *s*
+
+   The time correction applied to a detected pick.
+   Default is ``-0.8``.
+
+.. confval:: sensitivityCorrection
+
+   Type: *boolean*
+
+   Defines whether the detector applies sensitivity correction
+   \(applying the gain\) or not in advance to filter the data.
+   Default is ``false``.
+
+
+
+Command-line
+============
+
+.. program:: scautopick
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: -D, --daemon
+
+   Run as daemon. This means the application will fork itself and
+   doesn't need to be started with \&.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Messaging
+---------
+
+.. option:: -u, --user arg
+
+   Overrides configuration parameter :confval:`connection.username`.
+
+.. option:: -H, --host arg
+
+   Overrides configuration parameter :confval:`connection.server`.
+
+.. option:: -t, --timeout arg
+
+   Overrides configuration parameter :confval:`connection.timeout`.
+
+.. option:: -g, --primary-group arg
+
+   Overrides configuration parameter :confval:`connection.primaryGroup`.
+
+.. option:: -S, --subscribe-group arg
+
+   A group to subscribe to. This option can be given more than once.
+
+.. option:: --content-type arg
+
+   Overrides configuration parameter :confval:`connection.contentType`.
+
+.. option:: --start-stop-msg arg
+
+   Sets sending of a start\- and a stop message.
+
+
+Database
+--------
+
+.. option:: --db-driver-list
+
+   List all supported database drivers.
+
+.. option:: -d, --database arg
+
+   The database connection string, format: service:\/\/user:pwd\@host\/database.
+   \"service\" is the name of the database driver which can be
+   queried with \"\-\-db\-driver\-list\".
+
+.. option:: --config-module arg
+
+   The configmodule to use.
+
+.. option:: --inventory-db arg
+
+   Load the inventory from the given database or file, format: [service:\/\/]location
+
+.. option:: --db-disable
+
+   Do not use the database at all
+
+
+Records
+-------
+
+.. option:: --record-driver-list
+
+   List all supported record stream drivers
+
+.. option:: -I, --record-url arg
+
+   The recordstream source URL, format: [service:\/\/]location[#type].
+   \"service\" is the name of the recordstream driver which can be
+   queried with \"\-\-record\-driver\-list\". If \"service\"
+   is not given \"file:\/\/\" is used.
+
+.. option:: --record-file arg
+
+   Specify a file as record source.
+
+.. option:: --record-type arg
+
+   Specify a type for the records being read.
+
+
+Mode
+----
+
+.. option:: --offline
+
+   Do not connect to a messaging server and do not use the database.
+
+.. option:: --playback
+
+   Switches to playback mode which does not request a particular time window from
+   the input data source. This implies that all records are forwarded to scautopick
+   if files are being used. Without this option scautopick sets the requested
+   start time to NOW\-leadTime and therefore would not work anymore with
+   older datasets in offline mode or when running playbacks.
+
+.. option:: --ep
+
+   Outputs an XML event parameters file containing all picks and amplitudes.
+   This option implies offline.
+
+.. option:: --amplitudes arg
+
+   Enables or disables computation of amplitudes.
+
+.. option:: --test
+
+   Runs the picker as usual but does not send any messages. This can be useful to
+   test the picker within a running system.
+
+.. option:: --dump-config
+
+   Dumps the current configuration and exits. Station configuration is only read if
+   the picker connects to the messaging and the database. In offline mode it will
+   only dump the application specific setting unless a station.conf file is provided.
+
+.. option:: --dump-records
+
+   This option only works in combination with :option:`\-\-offline`. It will dump
+   the data of an amplitude processor if it completed processing successfully
+   and a new amplitude is available. The output format is a simple ASCII format.
+
+
+Settings
+--------
+
+.. option:: --filter filter
+
+   Overrides configuration parameter :confval:`filter`.
+
+.. option:: --time-correction time
+
+   Overrides configuration parameter :confval:`timeCorrection`.
+
+.. option:: --buffer-size timespan
+
+   Overrides configuration parameter :confval:`ringBufferSize`.
+
+.. option:: --before timespan
+
+   Overrides configuration parameter :confval:`leadTime`.
+
+.. option:: --init-time timespan
+
+   Overrides configuration parameter :confval:`initTime`.
+
+.. option:: --trigger-on arg
+
+   Overrides configuration parameter :confval:`thresholds.triggerOn`.
+
+.. option:: --trigger-off arg
+
+   Overrides configuration parameter :confval:`thresholds.triggerOff`.
+
+.. option:: --trigger-dead-time arg
+
+   Overrides configuration parameter :confval:`thresholds.deadTime`.
+
+.. option:: --ampl-max-time-window arg
+
+   Overrides configuration parameter :confval:`thresholds.amplMaxTimeWindow`.
+
+.. option:: --min-ampl-offset arg
+
+   Overrides configuration parameter :confval:`thresholds.minAmplOffset`.
+
+.. option:: --gap-tolerance arg
+
+   Overrides configuration parameter :confval:`thresholds.maxGapLength`.
+
+.. option:: --gap-interpolation arg
+
+   Overrides configuration parameter :confval:`gapInterpolation`.
+
+.. option:: --any-stream arg
+
+   Overrides configuration parameter :confval:`useAllStreams`.
+
+.. option:: --send-detections
+
+   Overrides configuration parameter :confval:`sendDetections`.
+
+.. option:: --extra-comments
+
+   Overrides configuration parameter :confval:`extraPickComments`.
+

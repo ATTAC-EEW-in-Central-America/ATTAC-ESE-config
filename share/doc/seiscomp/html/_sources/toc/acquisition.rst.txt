@@ -1,0 +1,15 @@
+###########
+Acquisition
+###########
+
+.. toctree::
+   :maxdepth: 1
+
+   /apps/access
+   /apps/caps_plugin
+   /apps/msrtsimul
+   /apps/scardac
+   /apps/scwfas
+   /apps/seedlink
+   /apps/slarchive
+   /apps/slinktool

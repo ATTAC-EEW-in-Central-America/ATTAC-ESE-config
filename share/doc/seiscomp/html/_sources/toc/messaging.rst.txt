@@ -1,0 +1,8 @@
+#########
+Messaging
+#########
+
+.. toctree::
+   :maxdepth: 1
+
+   /apps/scmaster

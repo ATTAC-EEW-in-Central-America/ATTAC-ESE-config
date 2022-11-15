@@ -1,0 +1,163 @@
+.. _global_locsat:
+
+######
+LOCSAT
+######
+
+Locator in SeisComP for computing source time and hypocenter
+coordinates from phase picks.
+
+Description
+===========
+
+LOCSAT is a locator in SeisComP for computing source time and hypocenter
+coordinates from phase picks considering:
+
+* Pick time,
+* Backazimuth,
+* Slowness.
+
+The LOCSAT locator interface implements a wrapper for the LocSAT locator
+by :cite:t:`bratt-1991` (according to the README file shipped with the
+LocSAT distribution) referred to as **LOCSAT** in |scname|.
+
+
+Travel-time tables
+==================
+
+|scname| ships with two predefined travel time tables: tab and iasp91.
+LOCSAT travel time tables are located under :file:`share/locsat/tables/`.
+
+The default profile is *iasp91*.
+
+
+Travel-time interface
+=====================
+
+LOCSAT provides an interface for computing travel times based on coordinates and depth.
+
+Use "LOCSAT" as a value for the travel-time interface when configurable, e.g. by
+:ref:`global_fixedhypocenter`.
+
+
+Configuration in |scname| modules
+=================================
+
+Use "LOCSAT" as a value for the locator type or interface when configurable, e.g. by
+:ref:`screloc` or :ref:`scolv`.
+
+
+Station corrections
+===================
+
+LOCSAT does not support station corrections natively. At least checking
+the code:
+
+.. code-block:: c
+
+   sta_cor[i]  = 0.0;    /* FIX !!!!!!*/
+
+
+However the |scname| wrapper adds this feature. It allows to define a
+:file:`.stacor` file which defines corrections of observation times
+in seconds. A correction is **subtracted** (not added) from
+the observation time to be compatible with the NonLinLoc :cite:p:`nonlinloc`
+station correction definitions.
+
+Each LOCSAT profile (travel time table) can have an associated station
+correction file. To use station corrections for the iasp91 tables, the file
+:file:`$SEISCOMP_ROOT/share/locsat/tables/iasp91.stacor` needs to be created.
+
+A station correction table takes the form:
+
+.. code-block:: sh
+
+   # LOCDELAY code phase numReadings delay
+   LOCDELAY GE.MORC P 1 -0.1
+
+with
+
+- **code** (*string*) station code (after all alias evaluations)
+- **phase** (*string*) phase type (any of the available travel time tables)
+- **numReadings** (*integer*) number of residuals used to calculate mean residual/delay
+  (not used by NLLoc, included for compatibility with the format of a summary,
+  phase statistics file)
+- **delay** (*float*) delay in seconds, subtracted from observed time
+
+.. note::
+
+   The fourth column (numReadings) is ignored and just provided for compatibility
+   reasons with :ref:`NonLinLoc <global_nonlinloc>`.
+
+.. _global_locsat_configuration:
+
+Configuration
+=============
+
+
+.. note::
+   **LOCSAT.\***
+   *Locator parameters: LOCSAT*
+
+
+
+.. confval:: LOCSAT.profiles
+
+   Type: *list:string*
+
+   Defines a list of available LOCSAT travel\-time tables.
+   Default is ``iasp91, tab``.
+
+.. confval:: LOCSAT.depthInit
+
+   Type: *double*
+
+   Unit: *km*
+
+   The initial depth estimate for LOCSAT.
+   Default is ``20.0``.
+
+.. confval:: LOCSAT.usePickUncertainties
+
+   Type: *boolean*
+
+   Whether to use pick time untertainties for arrival deltim rather
+   than a fixed time error. If true then the uncertainties are
+   retrieved from each individual pick object. If they are not
+   defined then the default pick time uncertainty will be used
+   as fallback.
+   Default is ``false``.
+
+.. confval:: LOCSAT.defaultTimeError
+
+   Type: *double*
+
+   Unit: *s*
+
+   The default pick time uncertainty assigned to LOCSAT's arrival deltim
+   attribute if pick uncertainties are not going to be used or
+   if they are absent. A time uncertainty of 0 s may result in
+   errors of the SVD decomposition in LOCSAT.
+   Default is ``1.0``.
+
+.. confval:: LOCSAT.degreesOfFreedom
+
+   Type: *int*
+
+   Number of degrees of freedom.
+   Default is ``9999``.
+
+.. confval:: LOCSAT.confLevel
+
+   Type: *double*
+
+   Confidence level between 0.5 and 1.0.
+   Default is ``0.9``.
+
+.. confval:: LOCSAT.enableConfidenceEllipsoid
+
+   Type: *boolean*
+
+   Compute the confidence ellipsoid from covariance matrix in 3D.
+   Default is ``false``.
+

@@ -1,0 +1,579 @@
+.. highlight:: rst
+
+.. _scmv:
+
+####
+scmv
+####
+
+**Map view**
+
+
+Description
+===========
+
+scmv visualizes the actual information regarding earthquakes, trigger status,
+ground motion and station quality. This information is visualized in a map
+showing also the topography of the region including bathymetry, state borders
+and geologic faults. scmv provides two different tabs with maps showing the
+ground motion and the network status.
+
+Ground motion status
+--------------------
+
+The ground motion tab (fig. :ref:`fig-scmv-gm`) shows the actual groundmotion
+in nm/s at each station color-coded. Furthermore the trigger status (new picks)
+of the stations are announced by blinking triangles (the same in all
+other tabs). In case a new pick is associated to an event, the blinking color
+changes from red to green (default). Events are represented by open circles
+and the depth is color-coded. By right mouse click on the symbol of a station
+more detailed information are shown in an information widget (fig. :ref:`fig-scmv-infowidget`).
+
+.. _fig-scmv-gm:
+
+.. figure:: media/scmv/ground-motion.png
+   :width: 16cm
+   :align: center
+
+   Ground motion tab
+
+   Tab 1-2 = Ground Motion, Network Status tab; Station A = station with ground
+   motion between 0 and 200 nm/s; Station B = triggering (red blinking) station;
+   Station C = station of undefined status; Station D = triggering and associated
+   station (green blinking); EQ = location of the earthquake/event; P = spreading
+   of the P-wave; S = spreading of the S-wave; Legend = ground motion scale.
+
+Network status
+--------------
+
+The network status tab (fig. :ref:`fig-scmv-netstat`) visualizes the quality control
+parameters of all shown stations. The colors of the triangles represent the data
+the selected parameters of a station, e.g. latency or delay. More detailed information about station quality
+can be derived by opening an information widget (fig. :ref:`fig-scmv-infowidget` left)
+with a right mouse click on the symbol.
+
+.. _fig-scmv-netstat:
+
+.. figure:: media/scmv/netstat.png
+   :width: 16cm
+   :align: center
+
+   Network status tab
+
+   Station A = station with up to 20 sec data latency/delay;
+   Station B = station with up to 10 min data latency/delay and a warning;
+   Station C = disabled station;
+   EQ = location of a recent or historic earthquake/event;
+   Legend = scale of the delay;
+   Status = connection status.
+
+The visualized QC parameters can be selected in the QC parameters widget of scmv.
+
+.. _fig-scmv-qc-select:
+
+.. figure:: media/scmv/qc-selection.png
+   :width: 16cm
+   :align: center
+
+   QC parameters selection widget
+
+The station information widget opens by right mouse click on a station symbol
+in one of the scmv maps. The widget gives a more detailed list of parameters.
+For a station general information (coordinates, network code etc.), quality
+parameter (latency, gaps etc.), amplitude information and the actual waveform
+data are provided. For an event information like the location, the number of
+stations and the azimuthal gap are shown.
+
+.. _fig-scmv-infowidget:
+
+.. figure:: media/scmv/infowidget-station.png
+   :width: 8cm
+   :align: center
+
+   Station information widget
+
+The info widget of a station shows station information like network code
+and location. The quality of the station can be checked here. The lower
+part shows the last 15 minutes of waveforms including picks (if available).
+
+
+Event information
+-----------------
+
+In addition to the current event scmv also shows all events it has currently
+saved in its session as circles. This depends on the configured time span it remembers
+events. Showing the events can give a convenient overview of the network activity.
+If available focal mechanisms are displayed with dashed lines connecting to their location.
+The circles and focal mechanisms are again colored by their depth and sized by
+magnitude.
+
+.. _fig-scmv-historic-origins:
+
+.. figure:: media/scmv/historic-origins.png
+   :width: 16cm
+   :align: center
+
+   Show historic origins
+
+   All historic origins currently saved in scmv are shown as circles.
+
+The events shown an the map can be confined by selecting the mode and the status
+of preferred origins in the event selection widget.
+
+.. _fig-scmv-event-select:
+
+.. figure:: media/scmv/event-selection.png
+   :width: 16cm
+   :align: center
+
+   Event selection widget
+
+The event information widget opens by right mouse click on an event symbol.
+It shows event details.
+Clicking on the "Show Details" button allows to open the preferred origin of
+the event in other GUIs such as in scolv.
+
+.. _fig-scmv-event-info:
+
+.. figure:: media/scmv/event-info.png
+   :width: 8cm
+   :align: center
+
+   Event information widget
+
+Hotkeys
+=======
+
+=====================  ========================================
+Hotkey                 Description
+=====================  ========================================
+:kbd:`F2`              Setup connection dialog
+:kbd:`F3`              Toggle ray paths and associated stations
+:kbd:`F6`              Hide propagation of P and S waves
+:kbd:`F7`              Toggle legend
+:kbd:`F8`              Toggle historic origins
+:kbd:`F9`              Toggle station annotation
+:kbd:`F10`             Toggle event list (event tab)
+:kbd:`F11`             Toggle full screen mode
+:kbd:`CTRL + f`        Seach station
+:kbd:`Arrows`          Move focus
+Mouse wheel            Zoom in or out
+Double click           Center map
+Right mouse button     Open info widget
+Mid mouse button       Set preliminary origin
+=====================  ========================================
+
+
+Use cases
+=========
+
+Get station information
+-----------------------
+
+- Position the mouse above a triangle representing a station.
+- Click the right mouse button for opening the station info widget.
+- Choose one station in case several stations are in the selection range.
+
+Get event information
+---------------------
+
+- Position the mouse above a circle representing a location of an event.
+- Click the right mouse button for opening the event info widget.
+- Choose one event in case several events are in the selection range.
+
+Set preliminary origin
+----------------------
+
+- Position the mouse in the map
+- Press the middle mouse button
+- Set date & time and latitude, longitude & depth
+- Press "Create" to open the origin in another GUI, e.g. scolv.
+
+  .. image:: media/scmv/artificial-origin.png
+     :width: 4cm
+
+Search station/network
+----------------------
+
+- Press :kbd:`CTRL + f`
+- Type station/network name
+- Double click in a station in the list to center the map at this location
+
+
+.. _scmv_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scmv.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scmv.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scmv.cfg`
+
+scmv inherits :ref:`global options<global-configuration>`.
+
+
+
+.. confval:: displaymode
+
+   Type: *string*
+
+   Set one of the available displaymodes: groundmotion or qualitycontrol
+
+
+.. confval:: groundMotionRecordLifeSpan
+
+   Type: *int*
+
+   Unit: *s*
+
+   Sets the maximum latency in seconds of the ground motion records to be valid.
+   Default is ``300``.
+
+.. confval:: removeEventDataOlderThan
+
+   Type: *double*
+
+   Unit: *s*
+
+   Sets the time span in seconds to keep events.
+   Default is ``43200``.
+
+.. confval:: readEventsNotOlderThan
+
+   Type: *double*
+
+   Unit: *s*
+
+   Sets the time span in seconds to read events initially from database.
+   Default is ``0``.
+
+.. confval:: centerOrigins
+
+   Type: *boolean*
+
+   If a new origin\/event is set\/selected this option defines if the map is centered
+   or not at the origin location.
+   Default is ``false``.
+
+.. confval:: eventActivityLifeSpan
+
+   Type: *double*
+
+   Unit: *s*
+
+   Time span of which an event is active after origin time to show blinking associated
+   stations.
+   Default is ``900``.
+
+.. confval:: expiredEventsInterval
+
+   Type: *double*
+
+   Unit: *s*
+
+   A positive value \(greater than zero\) defines the interval to check
+   for expired events. A negative or zero value disables the interval
+   check and expired events are only removed when a new event is declared
+   or an existing event is updated.
+   Default is ``0``.
+
+.. confval:: annotations
+
+   Type: *boolean*
+
+   Enables\/disabled drawing of station annotations at startup.
+   Default is ``false``.
+
+.. confval:: annotationsWithChannels
+
+   Type: *boolean*
+
+   Enables\/disabled drawing of station annotations with location\/channel codes.
+   Default is ``true``.
+
+.. confval:: mapLegendPosition
+
+   Type: *string*
+
+   Sets the location of the map symbol legend \(QC, ground motion\).
+   Use either: topleft, topright, bottomright or bottomleft.
+   Default is ``topleft``.
+
+.. confval:: eventLegendPosition
+
+   Type: *string*
+
+   Sets the location of the event symbol legend. Use either:
+   topleft, topright, bottomright or bottomleft.
+   Default is ``bottomleft``.
+
+.. confval:: eventTable.visible
+
+   Type: *boolean*
+
+   Whether to show the event table initially or not.
+   Default is ``false``.
+
+.. confval:: eventTable.columns
+
+   Type: *list:string*
+
+   The columns that are visible in the table. If nothing
+   is specified then all columns are visible. Valid column names are:
+   \"Event\", \"Origin Time\", \"Magnitude\", \"Magnitude Type\",
+   \"Region\", \"Latitude\", \"Longitude\", \"Depth\".
+
+
+.. confval:: stations.groundMotionFilter
+
+   Type: *string*
+
+   Sets the filter applied to determine ground motion.
+
+
+.. note::
+   **display.\***
+   *Allows to define an initial rectangular region for the map.*
+
+
+
+.. confval:: display.latmin
+
+   Type: *double*
+
+   Unit: *deg*
+
+   Minimum latitude in degrees.
+   Default is ``-90``.
+
+.. confval:: display.lonmin
+
+   Type: *double*
+
+   Unit: *deg*
+
+   Minimum longitude in degrees.
+   Default is ``-180``.
+
+.. confval:: display.latmax
+
+   Type: *double*
+
+   Unit: *deg*
+
+   Maximum latitude in degrees.
+   Default is ``90``.
+
+.. confval:: display.lonmax
+
+   Type: *double*
+
+   Unit: *deg*
+
+   Maximum longitude in degrees.
+   Default is ``180``.
+
+
+Command-line
+============
+
+.. program:: scmv
+
+:program:`scmv [options]`
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+.. option:: --plugins arg
+
+   Load given plugins.
+
+.. option:: --auto-shutdown arg
+
+   Enable\/disable self\-shutdown because a master module shutdown. This only
+   works when messaging is enabled and the master module sends a shutdown
+   message \(enabled with \-\-start\-stop\-msg for the master module\).
+
+.. option:: --shutdown-master-module arg
+
+   Sets the name of the master\-module used for auto\-shutdown. This
+   is the application name of the module actually started. If symlinks
+   are used then it is the name of the symlinked application.
+
+.. option:: --shutdown-master-username arg
+
+   Sets the name of the master\-username of the messaging used for
+   auto\-shutdown. If \"shutdown\-master\-module\" is given as well this
+   parameter is ignored.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Messaging
+---------
+
+.. option:: -u, --user arg
+
+   Overrides configuration parameter :confval:`connection.username`.
+
+.. option:: -H, --host arg
+
+   Overrides configuration parameter :confval:`connection.server`.
+
+.. option:: -t, --timeout arg
+
+   Overrides configuration parameter :confval:`connection.timeout`.
+
+.. option:: -g, --primary-group arg
+
+   Overrides configuration parameter :confval:`connection.primaryGroup`.
+
+.. option:: -S, --subscribe-group arg
+
+   A group to subscribe to. This option can be given more than once.
+
+.. option:: --content-type arg
+
+   Overrides configuration parameter :confval:`connection.contentType`.
+
+.. option:: --start-stop-msg arg
+
+   Sets sending of a start\- and a stop message.
+
+
+Database
+--------
+
+.. option:: --db-driver-list
+
+   List all supported database drivers.
+
+.. option:: -d, --database arg
+
+   The database connection string, format: service:\/\/user:pwd\@host\/database.
+   \"service\" is the name of the database driver which can be
+   queried with \"\-\-db\-driver\-list\".
+
+.. option:: --config-module arg
+
+   The configmodule to use.
+
+.. option:: --inventory-db arg
+
+   Load the inventory from the given database or file, format: [service:\/\/]location
+
+
+Records
+-------
+
+.. option:: --record-driver-list
+
+   List all supported record stream drivers
+
+.. option:: -I, --record-url arg
+
+   The recordstream source URL, format: [service:\/\/]location[#type].
+   \"service\" is the name of the recordstream driver which can be
+   queried with \"\-\-record\-driver\-list\". If \"service\"
+   is not given \"file:\/\/\" is used.
+
+.. option:: --record-file arg
+
+   Specify a file as record source.
+
+.. option:: --record-type arg
+
+   Specify a type for the records being read.
+
+
+Cities
+------
+
+.. option:: --city-xml arg
+
+   The path to the cities XML file. This overrides the default
+   paths. Compare with the global parameter \"citiesXML\"
+
+
+User interface
+--------------
+
+.. option:: -F, --full-screen
+
+   Starts the application filling the entire screen. This only works
+   with GUI applications.
+
+.. option:: -N, --non-interactive
+
+   Use non\-interactive presentation mode. This only works with GUI applications.
+
+
+Mapview
+-------
+
+.. option:: --displaymode arg
+
+   Start scmv as walldisplay.
+   Modes: groundmotion, qualitycontrol.
+
+.. option:: --with-legend
+
+   Shows the map legend if started as walldisplay.
+

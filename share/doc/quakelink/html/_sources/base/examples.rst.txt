@@ -1,0 +1,187 @@
+
+.. _quakelink-examples:
+
+Examples
+========
+
+3-Systems setup
+---------------
+
+- **Goal:** Parameter exchange between 3 separate SeisComP systems (A, B, C)
+
+- **Setup:**
+
+  - Run one QuakeLink instances along with each separate SeisComP system.
+  - :ref:`sc2ql` delivers the own Origins to own QuakeLink instance.
+  - :cite:t:`ql2sc` imports Origins from remote QuakeLink instance and
+    sends them to the own messaging system.
+  - :cite:t:`scevent` on the own system associates all Origins.
+  - Check the :ref:`parameters example <sec-ql_abc>` of the 1+2 system setup for
+    the detailed setup parameters at system A. Repeat for the system B and C.
+
+.. _fig-ql_3-systems:
+
+.. figure:: media/quakelink_3systems.png
+   :align: center
+   :width: 16cm
+
+   3-System setup.
+
+.. _sec-ql_abc:
+
+1+2 Systems setup
+-----------------
+
+Parameter exchange at agency A with agencies B, C. Configuration at agency A.
+
+- **Goals:**
+
+  - Push Event parameters of agency A to own QuakeLink instance running on the
+    same machine of agency A.
+  - Agency A allows secure connection from agencies B, C to QuakeLink at A.
+  - Import Origins from agencies B and C to A.
+
+- **Parameters:**
+
+  - Global configuration in :file:`global.cfg`
+
+    .. code-block:: sh
+
+      agencyID = A
+
+  - :cite:t:`scevent` configuration in :file:`scevent.cfg`
+
+    .. code-block:: sh
+
+      # Configures a timespan in seconds to delay event creation. If a new origin
+      # arrives which cannot be associated to an existing event, delay the event
+      # creation for a certain timespan.
+      eventAssociation.delayTimeSpan = 10
+
+      # The agencyID of the origin to be delayed.
+      eventAssociation.delayFilter.agencyID = B,C
+
+  - :cite:t:`ql2sc` configuration in :file:`ql2sc.cfg`
+
+    Decide whether to use secure connection (example: hostB) or non-secure
+    connection (example: hostC).
+
+    .. code-block:: sh
+
+      # Defines a whitelist of agencies that are allowed for processing separated by
+      # comma.
+      processing.whitelist.agencies = B,C
+
+      # Registration of QuakeLink hosts.
+      hosts = hostB,hostC
+
+      # URL of the QuakeLink service, the scheme 'qls' enables SSL.
+      # Format: [ql[s]://][user:pwd@][host][:port].
+      # If set to an empty string the application will run without any QuakeLink
+      # connection attempt.
+      host.hostB.url = qls://user:passwd@remotehostB:18010
+      # Request server to send keep alive messages to prevent connection reset by
+      # firewalls on long idle periods.
+      host.hostB.keepAlive = true
+      # SQL like WHERE clause to filter the result set.
+      # clause := condition[ AND|OR [(]clause[)]] __ condition :=
+      # MAG|DEPTH|LAT|LON|PHASES|OTIME|UPDATED [op float|time]|[IS [NOT] NULL] __ op
+      # := =|>|>=|<|<=|eq|gt|ge|lt|ge __ time := %Y,%m,%d[,%H,%M,%S,%f]
+      host.hostB.filter = "MAG > 5.0 AND AGENCY != 'A'"
+      # Request native data instead of XML format. Native data export may be disabled
+      # on some hosts.
+      host.hostB.native = true
+      # Tries to update the event attributes of the target event with the attributes
+      # of the source event which includes event type and event certainty. It will
+      # not import events but tries to find the associated event of the input
+      # preferred origin at the target system and will update the event attributes
+      # via journaling.
+      host.hostB.syncEventAttributes = false
+
+      # URL of the QuakeLink service, the scheme 'qls' enables SSL.
+      # Format: [ql[s]://][user:pwd@][host][:port].
+      # If set to an empty string the application will run without any QuakeLink
+      # connection attempt.
+      host.hostC.url = ql://remotehostC:18010
+      # Request server to send keep alive messages to prevent connection reset by
+      # firewalls on long idle periods.
+      host.hostC.keepAlive = true
+      # Request native data instead of XML format. Native data export may be disabled
+      # on some hosts.
+      host.hostC.native = true
+      # Tries to update the event attributes of the target event with the attributes
+      # of the source event which includes event type and event certainty. It will
+      # not import events but tries to find the associated event of the input
+      # preferred origin at the target system and will update the event attributes
+      # via journaling.
+      host.hostC.syncEventAttributes = false
+
+  - :ref:`quakelink` configuration in :file:`quakelink.cfg`: ::
+
+      # Port to listen for data requests
+      QL.port = 18010
+
+      # Port to listen for plugin data feeds
+      QL.pluginPort = 18011
+
+      # Path to the access control file. Format: Multiples lines of form 'KEY =
+      # VALUE'.
+      # KEY: '[DOMAIN].ALLOW|DENY'. VALUE: comma-separated list of IP addresses or
+      # network masks. DOMAIN: Allowed values: 'PLUGINS, COMMANDS, URLS'. PLUGINS:
+      # Access control of plugin data connections. COMMANDS: Allowed values: 'SET,
+      # FORMAT::[NATIVE, GZNATIVE, SUMMARY, XML, GZXML], INFO::[CLIENTS, EVENTS,
+      # OPTIONS]'.
+      QL.access-list = @ROOTDIR@/etc/quakelink-access.cfg
+      # Port to listen for data requests with SSL
+      QL.SSL.port = 22
+
+      # Path to SSL certificate file
+      QL.SSL.certificate = "xyz..."
+
+      # Path to SSL private key file
+      QL.SSL.key = "xyz..."
+
+      # Path to the SSL users database (same format Apache users file). The tool
+      # htpasswd can be used with switch "-d" to force usage of crypt() function. MD5
+      # is currently not implemented.
+      QL.SSL.users = "xyz..."
+
+      # Port to listen for HTTPS request
+      QL.https.port = 22
+
+
+Push external events to QuakeLink
+---------------------------------
+
+- **Goal:** Populate the QuakeLink database with the event parameters existing in
+  a file in :term:`SCML` format.
+  database of a particular type and on a particular host [type://user:password@host/database].
+- **Solution:** use :ref:`qlpush<sec-qlpush>`. Example: ::
+
+     qlpush -H localhost:18011 events.xml
+
+
+Import events from an external SeisComP
+---------------------------------------
+
+- **Goal:** Read events back in time from a remote |appname| server on demand and provide the parameters
+  to QuakeLink in local system.
+- **Solution:** use :cite:t:`ql2sc`. The remote is configured in :file:`ql2sc.cfg`.
+  Example for fetching events from the past 10 days from :ref:`quakelink` which are
+  sent to a SeisComP system: ::
+
+     ql2sc --backLog 864000 --debug
+
+
+Retrieve event information from a |appname| server
+--------------------------------------------------
+
+- **Goal:** Connect to :ref:`quakelink` to fetch the updated event parameters for an event
+  from the |appname| server.
+- **Solution 1:** use :ref:`qltool`. Example for fetching the parameters from event *gempa2018abcd*
+  and storing in a :term:`SCML` file: ::
+
+      qltool -E gempa2018abcd > gempa2018abcd.xml
+
+  **Solution 2:** use the download button in the event browser of the |appname|
+  web interface.

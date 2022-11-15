@@ -1,0 +1,333 @@
+.. highlight:: rst
+
+.. _scmaster:
+
+########
+scmaster
+########
+
+**The messaging system**
+
+
+Description
+===========
+
+scmaster is the implementation of the :ref:`messaging <concepts_messaging>`
+mediator.
+
+
+Message Groups
+==============
+
+scmaster provides the :ref:`message groups <messaging-groups>`. Configure
+
+* :confval:`defaultGroups`: Add the groups which can be used by all queues.
+* :confval:`queues.$name.groups`: Add all groups which are used by the given queue.
+  Adding any values ignores all values of :confval:`defaultGroups`.
+
+
+Queues
+======
+
+scmaster provides :ref:`queues <messaging-queues>` for separating the processing.
+Typically, the default queue *production* is used. To add new queues
+
+#. Define a new queue by adding a new profile with some name,
+#. Configure the profile parameters :confval:`queues.$name.*,
+#. Register the queue in :confval:`queues`.
+
+
+Scheme
+======
+
+scmaster provides unsecured and secured connection which is addressed by the
+scheme values *scmp* and *scmps*, respectively, in :confval:`connection.server`
+when connecting to the messaging.
+Read the :ref:`concepts section <messaging-scheme>` for more details. *scmps*
+is in use when configuring :confval:`interface.ssl.bind`.
+
+
+Database Access
+===============
+
+scmaster reads from and writes to the database and reports the database connection
+to the clients of the messaging system (compare with the :ref:`concepts section <messaging-db>`).
+
+The database is configured per queue.
+When running all |scname| modules on a single machine, the read and write
+parameters are typically configured with *localhost* as a *host name*.
+
+Example: ::
+
+   queues.production.processors.messages.dbstore.read = sysop:sysop@localhost/seiscomp
+   queues.production.processors.messages.dbstore.write = sysop:sysop@localhost/seiscomp
+
+However, if the clients are
+located on machines different from the messaging, the *host name* of the read parameter
+must be available on the client machine and the client machine must be able to
+connect to the host with its name. If the database is on the same machine as the
+messaging, the *host name* of the write connection typically remains *localhost*.
+
+Example for connecting clients on computerB to the messaging on computerA (compare
+with the :ref:`concepts section <messaging-distribution>`).
+
+* Configuration of scmaster on computerA: ::
+
+     queues.production.processors.messages.dbstore.read = sysop:sysop@computerA/seiscomp
+     queues.production.processors.messages.dbstore.write = sysop:sysop@localhost/seiscomp
+
+* Global configuration of client on computerB: ::
+
+     connection.server = computerA/production
+
+
+.. _scmaster_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scmaster.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scmaster.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scmaster.cfg`
+
+scmaster inherits :ref:`global options<global-configuration>`.
+
+
+
+.. confval:: defaultGroups
+
+   Type: *list:string*
+
+   The default set of message groups for each queue. Only used
+   if a queues group list is unset \(note: empty is not unset\).
+   Default is ``AMPLITUDE, PICK, LOCATION, MAGNITUDE, FOCMECH, EVENT, QC, PUBLICATION, GUI, INVENTORY, CONFIG, LOGGING, SERVICE_REQUEST, SERVICE_PROVIDE, STATUS_GROUP``.
+
+.. confval:: queues
+
+   Type: *list:string*
+
+   Enable messaging queues defined as profile in queues. The profile
+   names are the final queue names.
+   Default is ``production, playback``.
+
+.. note::
+   **interface.\***
+   *Control the messaging interface. The default protocol is*
+   *"scmp" but "scmps" (secure protocol) is*
+   *used when valid SSL certificate and key are configured.*
+
+
+
+.. confval:: interface.bind
+
+   Type: *ipbind*
+
+   Local bind address and port of the messaging system.
+   0.0.0.0:18180 accepts connections from all clients, 127.0.0.1:18180
+   only from localhost.
+   Default is ``0.0.0.0:18180``.
+
+.. confval:: interface.acl
+
+   Type: *list:ipmask*
+
+   The IP access control list for clients which are allowed
+   to connect to the interface.
+
+
+.. confval:: interface.socketPortReuse
+
+   Type: *boolean*
+
+   SO_REUSEADDR socket option for the TCP listening socket.
+   Default is ``true``.
+
+.. note::
+   **interface.ssl.\***
+   *SSL encryption is used if key and certificate are configured.*
+
+
+
+.. confval:: interface.ssl.bind
+
+   Type: *ipbind*
+
+   Additional local bind address and port of the messaging system
+   in case SSL encryption is active.
+   Default is ``0.0.0.0:-1``.
+
+.. confval:: interface.ssl.acl
+
+   Type: *list:ipmask*
+
+   The IP access control list for clients which are allowed
+   to connect to the interface.
+
+
+.. confval:: interface.ssl.socketPortReuse
+
+   Type: *boolean*
+
+   SO_REUSEADDR socket option for the TCP listening socket.
+   Default is ``true``.
+
+.. confval:: interface.ssl.key
+
+   Type: *path*
+
+   
+
+
+.. confval:: interface.ssl.certificate
+
+   Type: *path*
+
+   
+
+
+.. note::
+   **queues.\***
+   *Set the parameters for each messaging queue. The queues are used*
+   *when listed in the "queues" parameter. Several queues*
+   *can be used in parallel. For queues with without databases leave*
+   *the processor parameters empty.*
+
+
+
+.. note::
+
+   **queues.$name.\***
+   $name is a placeholder for the name to be used and needs to be added to :confval:`queues` to become active.
+
+   .. code-block:: sh
+
+      queues = a,b
+      queues.a.value1 = ...
+      queues.b.value1 = ...
+      # c is not active because it has not been added
+      # to the list of queues
+      queues.c.value1 = ...
+
+
+.. confval:: queues.$name.groups
+
+   Type: *list:string*
+
+   Define the list of message groups added to the queue. If unset
+   then the defaultGroups will be used. A queue will always
+   add the default group \"STATUS_GROUP\". This
+   parameter overrides defaultGroups.
+
+
+.. confval:: queues.$name.acl
+
+   Type: *list:ipmask*
+
+   The IP access control list for clients which are allowed
+   to join the queue.
+   Default is ``0.0.0.0/0``.
+
+.. confval:: queues.$name.maximumPayloadSize
+
+   Type: *int*
+
+   Unit: *B*
+
+   The maximum size in bytes of a message to be accepted.
+   Clients which send larger messages will be disconnected.
+   The default is 1MB.
+   Default is ``1048576``.
+
+.. confval:: queues.$name.plugins
+
+   Type: *list:string*
+
+   List of plugins required by this queue. This is just a
+   convenience parameter to improve configurations
+   readability. The plugins can also be added to the
+   global list of module plugins.
+   
+   Example: dbstore
+
+
+.. confval:: queues.$name.processors.messages
+
+   Type: *string*
+
+   Interface name. For now, use \"dbstore\" to
+   use a database.
+   
+   Use empty for testing or playbacks without a database.
+
+
+.. note::
+   **queues.$name.processors.messages.dbstore.\***
+   *Define the database connection parameters.*
+
+
+
+.. confval:: queues.$name.processors.messages.dbstore.driver
+
+   Type: *string*
+
+   Selected the database driver to use. Database drivers are
+   available through plugins. The default plugin is dbmysql
+   which supports the MYSQL database server. It is activated
+   with the core.plugins parameter.
+
+
+.. confval:: queues.$name.processors.messages.dbstore.read
+
+   Type: *string*
+
+   Sets the database read connection which is reported to clients
+   that connect to this server. If a remote setup should be
+   implemented, ensure that the hostname is reachable from
+   the remote computer.
+
+
+.. confval:: queues.$name.processors.messages.dbstore.write
+
+   Type: *string*
+
+   Sets the database write connection which is private to
+   scmaster. A separate write connection enables different
+   permissions on the database level for scmaster and
+   clients.
+
+
+.. confval:: queues.$name.processors.messages.dbstore.strictVersionMatch
+
+   Type: *boolean*
+
+   If enabled, the plugin will check the database schema version and refuse to start
+   if the version doesn't match the latest version. If disabled and the an object
+   needs to be stored which is incompatible with the database schema this object is
+   lost. Leave this option enabled unless you know exactly what are you doing and what
+   the consequences are.
+   Default is ``true``.
+
+.. confval:: http.filebase
+
+   Type: *path*
+
+   The directory served by the http server at staticPath.
+   Default is ``@DATADIR@/scmaster/http/``.
+
+.. confval:: http.staticPath
+
+   Type: *string*
+
+   The URL path at which html files and assets are available.
+   All files under filebase will be served at this URL path.
+   Default is ``/``.
+
+.. confval:: http.brokerPath
+
+   Type: *string*
+
+   The URL path at which the broker websocket is available.
+   Default is ``/``.

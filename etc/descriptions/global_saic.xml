@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<seiscomp>
+	<plugin name="S-AIC">
+		<extends>global</extends>
+		<description>
+		The S-AIC plugin computes S picks triggered by P picks by
+		computing a running AIC. It works on the L2-norm of the
+		horizontal components. S-AIC-V works on the vertical component.
+		</description>
+	</plugin>
+	<binding name="S-AIC" module="global">
+		<configuration>
+			<group name="spicker">
+				<group name="AIC">
+					<description>
+					AIC is an algorithm to pick S-phases based on an existing
+					P-phase. In module configuration use the spicker interface name
+					"S-AIC" for picking on the horizontal components or
+					"S-AIC-V" for picking on the vertical comonent. Add the plugins
+					&quot;saic&quot; for the detector and &quot;spickdbg&quot; for
+					the graphical debugger to globel module configuration.
+					</description>
+					<parameter name="noiseBegin" type="double" default="-10" unit="s">
+						<description>
+						Start time of the signal processing relative to the triggering
+						P pick. This adds a margin to the actual processing and is useful
+						to initialize the filter (e.g. STALTA). The data is not used
+						at all for detection until signalBegin is reached.
+						</description>
+					</parameter>
+					<parameter name="signalBegin" type="double" default="1" unit="s">
+						<description>
+						Start time of the S-phase detector relative to the triggering
+						P pick. Delaying the detector ignores P-coda and early signals,
+						e.g. due to P-S phase conversions at shallow depths.
+						</description>
+					</parameter>
+					<parameter name="signalEnd" type="double" default="60" unit="s">
+						<description>
+						End time of the S-phase detector relative to the triggering
+						P pick.
+						</description>
+					</parameter>
+					<parameter name="filter" type="string" default="&quot;RMHP(1)>>ITAPER(2)>>BW(3,3,8)&quot;">
+						<description>
+						Filter applied on the raw horizontal traces to compute
+						the L2 trace. As a minimum remove offsets. S-AIC-V,
+						filters the raw vertical trace computing the filtered
+						vertical trace.
+						</description>
+					</parameter>
+					<parameter name="detecFilter" type="string" default="">
+						<description>
+						Filter applied on the L2 trace before detection (S-AIC)
+						or filtered vertical trace (S-AIC-V). For S-AIC-V either
+						configure filter or detecFilter.
+						</description>
+					</parameter>
+					<parameter name="step" type="double" default="1" unit="s">
+						<description>
+						The AIC time window stepping in seconds. For every step
+						the window is expanded by step and the AIC is computed.
+						</description>
+					</parameter>
+					<parameter name="minSNR" type="double" default="5">
+						<description>
+						Mininum SNR as returned from AIC for accepting a
+						detection.
+						</description>
+					</parameter>
+					<parameter name="minCnt" type="int" default="3">
+						<description>
+						Minimum number of hits for a particular pick time
+						when the running AIC is computed for accepting a
+						detection.
+						</description>
+					</parameter>
+					<parameter name="uncertainty" type="string" unit="s">
+						<description>
+						Defines the pick time uncertainty. Either a symmetric
+						uncertainty as single number or an asymmetric uncertainty
+						in the following format: &quot;(0.5,0.25)&quot;. The first
+						value: uncertainty befor the pick, second value: uncertainty
+						after the pick.
+						</description>
+					</parameter>
+				</group>
+			</group>
+		</configuration>
+	</binding>
+</seiscomp>
+

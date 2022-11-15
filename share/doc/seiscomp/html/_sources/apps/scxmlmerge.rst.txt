@@ -1,0 +1,168 @@
+.. highlight:: rst
+
+.. _scxmlmerge:
+
+##########
+scxmlmerge
+##########
+
+**Merge the content of multiple XML files in SC3ML format.**
+
+
+Description
+===========
+
+scxmlmerge reads all SeisComP elements from one or more XML files in SC3ML format.
+It merges the content and prints the result to standard output. The input can contain
+and :ref:`SeisComP element<api-datamodel-python>` and the content can
+be filtered to print only some elements such as EventParameters.
+The output can be redirected into one single file and used by other applications.
+
+The supported :ref:`SeisComP elements<api-datamodel-python>` are:
+
+* EventParameters
+* Inventory
+* Config
+* Routing
+* QualityControl
+* DataAvailability
+
+By default all supported elements will be parsed and merged. Duplicates are removed.
+Use options to restrict the element types.
+
+.. note::
+
+    Use also :ref:`scinv` for merging inventory XML files and for extracting
+    inventory information.
+
+Examples
+========
+
+#. Merge the all SeisComP elements from 2 XML files into a single XML file:
+
+   .. code-block:: sh
+
+      scxmlmerge file1.xml file2.xml > file.xml
+
+#. Merge the all EventParameters and all Config elements from 2 XML files into a
+   single XML file. Other element types will be ignored:
+
+   .. code-block:: sh
+
+      scxmlmerge -E -C file1.xml file2.xml > file.xml
+
+
+.. _scxmlmerge_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scxmlmerge.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scxmlmerge.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scxmlmerge.cfg`
+
+scxmlmerge inherits :ref:`global options<global-configuration>`.
+
+
+
+
+Command-line
+============
+
+.. program:: scxmlmerge
+
+:program:`scxmlmerge [options] inputFiles`
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --print-component arg
+
+   For each log entry print the component right after the
+   log level. By default the component output is enabled
+   for file output but disabled for console output.
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --trace
+
+   Trace mode: \-\-verbosity\=4 \-\-console\=1 \-\-print\-component\=1 \-\-print\-context\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Options
+-------
+
+.. option:: --event E
+
+   Include Event Parameters
+
+.. option:: --inventory I
+
+   Include Inventory
+
+.. option:: --config C
+
+   Include Config
+
+.. option:: --routing R
+
+   Include Routing
+
+.. option:: --quality Q
+
+   Include QualityControl
+
+.. option:: --availability Y
+
+   Include DataAvailability
+

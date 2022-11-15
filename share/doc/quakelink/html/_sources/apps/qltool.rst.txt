@@ -1,0 +1,143 @@
+.. highlight:: rst
+
+.. _qltool:
+
+######
+qltool
+######
+
+**Module to retrieve data from QuakeLink servers.**
+
+
+Description
+===========
+
+qltool is an application to retrieve
+
+* Event data and
+* Inventory information
+
+from a QuakeLink server. It is part of the QuakeLink suite.
+
+By command-line options qltool can filter event and inventory objects and use
+logical object criteria. Please read the command-line help for the options:
+
+.. code-block:: sh
+
+   qltool -h
+
+Examples
+========
+
+* Query a specifc event, output: XML, stdout
+
+  .. code-block:: sh
+
+     qltool -E gempa2018abcd
+
+* Query all events, output: line based file
+
+  .. code-block:: sh
+
+     qltool -Sy /tmp/events.txt
+
+
+
+Module Configuration
+====================
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/qltool.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/qltool.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/qltool.cfg`
+
+qltool inherits :ref:`global options<global-configuration>`.
+
+.. note::
+
+   Modules/plugins may require a license file. The default path to license
+   files is :file:`@DATADIR@/licenses/` which can be overridden by global
+   configuration of the parameter :confval:`gempa.licensePath`. Example: ::
+
+      gempa.licensePath = @CONFIGDIR@/licenses
+
+
+
+
+Command-Line Options
+====================
+
+
+Options
+-------
+
+.. option:: -H, --host
+
+   host to connect to
+
+.. option:: -h, --help
+
+   display this help message
+
+.. option:: --ping
+
+   ping server and exit
+
+.. option:: -E, --event
+
+   event id to download
+
+.. option:: -r, --rev
+
+   revision of event
+
+.. option:: -P, --with-picks
+
+   export associated event picks
+
+.. option:: -A, --with-amplitudes
+
+   export associated amplitudes
+
+.. option:: -M, --with-magnitudes
+
+   export station magnitudes
+
+.. option:: -a, --ignore-arrivals
+
+   do not export origin arrivals
+
+.. option:: -p, --preferred-only
+
+   when exporting events only the preferred origin
+   and the preferred magnitude will be dumped
+
+.. option:: -I, --inventory
+
+   request file for inventory download \('\-' or an
+   empty string reads from stdin\)
+
+.. option:: --with-responses
+
+   include instrument information with inventory request
+
+.. option:: --seed
+
+   Convert inventory to dataless SEED. This option
+   requires the SeisComP3 Python libraries
+
+.. option:: --with-response-dict
+
+   Use response dictionary when exporting to SEED
+
+.. option:: -f, --formatted
+
+   use formatted output
+
+.. option:: -c, --credentials
+
+   username\/password for authentication separated by
+   colon. if password is not given it is asked from tty.
+

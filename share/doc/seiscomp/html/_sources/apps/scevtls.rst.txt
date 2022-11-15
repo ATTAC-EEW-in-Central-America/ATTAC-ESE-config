@@ -1,0 +1,158 @@
+.. highlight:: rst
+
+.. _scevtls:
+
+#######
+scevtls
+#######
+
+**List event IDs from database.**
+
+
+Description
+===========
+
+*scevtls* lists all available event IDs within a given time range to stdout.
+
+Use :ref:`scorgls` for listing all origin IDs. In extension to scevtls and
+:ref:`scorgls` :ref:`scquery` can search for parameters based on complex
+custom queries.
+
+
+Example
+=======
+
+Print all event IDs for the complete year 2012.
+
+.. code-block:: sh
+
+   scevtls -d mysql://sysop:sysop@localhost/seiscomp \
+           --begin "2012-01-01 00:00:00" \
+           --end "2013-01-01 00:00:00"
+
+
+.. _scevtls_configuration:
+
+Configuration
+=============
+
+| :file:`etc/defaults/global.cfg`
+| :file:`etc/defaults/scevtls.cfg`
+| :file:`etc/global.cfg`
+| :file:`etc/scevtls.cfg`
+| :file:`~/.seiscomp/global.cfg`
+| :file:`~/.seiscomp/scevtls.cfg`
+
+scevtls inherits :ref:`global options<global-configuration>`.
+
+
+
+
+Command-line
+============
+
+.. program:: scevtls
+
+
+Generic
+-------
+
+.. option:: -h, --help
+
+   show help message.
+
+.. option:: -V, --version
+
+   show version information
+
+.. option:: --config-file arg
+
+   Use alternative configuration file. When this option is used
+   the loading of all stages is disabled. Only the given configuration
+   file is parsed and used. To use another name for the configuration
+   create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+
+
+Verbosity
+---------
+
+.. option:: --verbosity arg
+
+   Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+
+.. option:: -v, --v
+
+   Increase verbosity level \(may be repeated, eg. \-vv\)
+
+.. option:: -q, --quiet
+
+   Quiet mode: no logging output
+
+.. option:: --component arg
+
+   Limits the logging to a certain component. This option can be given more than once.
+
+.. option:: -s, --syslog
+
+   Use syslog logging back end. The output usually goes to \/var\/lib\/messages.
+
+.. option:: -l, --lockfile arg
+
+   Path to lock file.
+
+.. option:: --console arg
+
+   Send log output to stdout.
+
+.. option:: --debug
+
+   Debug mode: \-\-verbosity\=4 \-\-console\=1
+
+.. option:: --log-file arg
+
+   Use alternative log file.
+
+
+Database
+--------
+
+.. option:: --db-driver-list
+
+   List all supported database drivers.
+
+.. option:: -d, --database arg
+
+   The database connection string, format: service:\/\/user:pwd\@host\/database.
+   \"service\" is the name of the database driver which can be
+   queried with \"\-\-db\-driver\-list\".
+
+.. option:: --config-module arg
+
+   The configmodule to use.
+
+.. option:: --inventory-db arg
+
+   Load the inventory from the given database or file, format: [service:\/\/]location
+
+.. option:: --db-disable
+
+   Do not use the database at all
+
+
+Events
+------
+
+.. option:: --begin time
+
+   Specify the lower bound of the time interval. Format is
+   \"2012\-01\-01 00:00:00\".
+
+.. option:: --end time
+
+   Specify the upper bound of the time interval. Format is
+   \"2012\-01\-01 00:00:00\".
+
+.. option:: -D, --delimiter string
+
+   Specify the delimiter of the resulting event ids.
+
