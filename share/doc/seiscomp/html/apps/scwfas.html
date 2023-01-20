@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scwfas &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="seedlink" href="seedlink.html" />
+    <link rel="prev" title="scardac" href="scardac.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="seedlink.html" title="seedlink"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scardac.html" title="scardac"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/acquisition.html" accesskey="U">Acquisition</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="scwfas">
+<span id="id1"></span><h1>scwfas<a class="headerlink" href="#scwfas" title="Permalink to this headline">¶</a></h1>
+<p><strong>Waveform archive server</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The waveform archive server is a small application that serves a local
+SDS archive via different protocols. Currently there are two implementations:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="fdsnws.html#sec-dataselect"><span class="std std-ref">fdsnws dataselect</span></a></p>
+<ul>
+<li><p>dataselect/1/query</p></li>
+<li><p>dataselect/1/version</p></li>
+<li><p>dataselect/1/application.wadl</p></li>
+</ul>
+</li>
+<li><p>Arclink (deprecated)</p></li>
+</ul>
+<p>This application is meant to share data with trusted computers in a fast and
+efficient way. It does not require inventory information and supports wildcards
+on each level.</p>
+<p>All data are forwarded unrestricted. There are no options to add restriction
+checks or user authentication.</p>
+</div>
+<div class="section" id="configuration">
+<span id="scwfas-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/scwfas.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/scwfas.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/scwfas.cfg</span></code></div>
+</div>
+<p>scwfas inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+<dl class="confval">
+<dt id="confval-handlerSDS">
+<code class="sig-name descname">handlerSDS</code><a class="headerlink" href="#confval-handlerSDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines an alternative SDS archive handler. This is the name
+of an RecordStream interface that can be loaded via a plugin.
+If not given, an internal implementation will be used.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-filebase">
+<code class="sig-name descname">filebase</code><a class="headerlink" href="#confval-filebase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The filebase of the SDS archive. If an alternative archive
+handler is defined by “handlerSDS”, this value serves
+as input to setSource().
+Default is <code class="docutils literal notranslate"><span class="pre">&#64;ROOTDIR&#64;/var/lib/archive</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-arclink.port">
+<code class="sig-name descname">arclink.port</code><a class="headerlink" href="#confval-arclink.port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The server port for Arclink connections. -1
+deactivates the Arclink server. The standard Arclink port is
+18001.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-fdsnws.port">
+<code class="sig-name descname">fdsnws.port</code><a class="headerlink" href="#confval-fdsnws.port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The server port for FDSNWS connections. -1
+deactivates the FDSN Web server.
+Default is <code class="docutils literal notranslate"><span class="pre">8080</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-fdsnws.baseURL">
+<code class="sig-name descname">fdsnws.baseURL</code><a class="headerlink" href="#confval-fdsnws.baseURL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The base URL of the FDSN Web service that is
+given in the WADL document.
+Default is <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/fdsnws</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-fdsnws.maxTimeWindow">
+<code class="sig-name descname">fdsnws.maxTimeWindow</code><a class="headerlink" href="#confval-fdsnws.maxTimeWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>The aggregated maximum time window (seconds)
+for all requested streams. A value of 0 will deactive
+any restriction.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">scwfas [options]</strong></p>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scwfas-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scwfas-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scwfas-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scwfas-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scwfas-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--daemon</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scwfas-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run as daemon. This means the application will fork itself and
+doesn’t need to be started with &amp;.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scwfas-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scwfas-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id2">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scwfas-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-print-component">
+<code class="sig-name descname">--print-component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scwfas-print-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each log entry print the component right after the
+log level. By default the component output is enabled
+for file output but disabled for console output.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scwfas-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scwfas-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scwfas-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scwfas-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scwfas-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-trace">
+<code class="sig-name descname">--trace</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scwfas-trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trace mode: –verbosity=4 –console=1 –print-component=1 –print-context=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scwfas-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="server">
+<h3>Server<a class="headerlink" href="#server" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scwfas-arclink-port">
+<code class="sig-name descname">--arclink-port</code><code class="sig-prename descclassname"> int</code><a class="headerlink" href="#cmdoption-scwfas-arclink-port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="#confval-arclink.port"><code class="xref std std-confval docutils literal notranslate"><span class="pre">arclink.port</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-fdsnws-port">
+<code class="sig-name descname">--fdsnws-port</code><code class="sig-prename descclassname"> int</code><a class="headerlink" href="#cmdoption-scwfas-fdsnws-port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="#confval-fdsnws.port"><code class="xref std std-confval docutils literal notranslate"><span class="pre">fdsnws.port</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scwfas-fdsnws-baseurl">
+<code class="sig-name descname">--fdsnws-baseurl</code><code class="sig-prename descclassname"> string</code><a class="headerlink" href="#cmdoption-scwfas-fdsnws-baseurl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="#confval-fdsnws.baseURL"><code class="xref std std-confval docutils literal notranslate"><span class="pre">fdsnws.baseURL</span></code></a>.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scwfas</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#server">Server</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scardac.html"
+                        title="previous chapter">scardac</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="seedlink.html"
+                        title="next chapter">seedlink</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scwfas.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

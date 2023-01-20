@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>fdsnxml2inv &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="import_inv" href="import_inv.html" />
+    <link rel="prev" title="dlsv2inv" href="dlsv2inv.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="import_inv.html" title="import_inv"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="dlsv2inv.html" title="dlsv2inv"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/inventory.html" accesskey="U">Inventory</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="fdsnxml2inv">
+<span id="id1"></span><h1>fdsnxml2inv<a class="headerlink" href="#fdsnxml2inv" title="Permalink to this headline">¶</a></h1>
+<p><strong>Convert station inventory between FDSN StationXML format and SeisComP inventory XML.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>fdsnws2inv is an inventory converter. It converts station meta data from
+FDSN StationXML format to SeisComP XML (<a class="reference internal" href="../base/glossary.html#term-scml"><span class="xref std std-term">SCML</span></a>) and back. Write the output to the command line.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Convert an inventory file in FDSN StationXML format to SCML with formatted XML.
+Redirect the output to a new file:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>fdsnxml2inv -f inventory_fdsn.xml &gt; inventory_sc.xml
+</pre></div>
+</div>
+</li>
+<li><p>Convert an inventory file in SCML format to FDSN StationXML with formatted XML.
+Redirect the output to a new file:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>fdsnxml2inv --to-staxml -f inventory_sc.xml &gt; inventory_fdns.xml
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="configuration">
+<span id="fdsnxml2inv-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/fdsnxml2inv.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/fdsnxml2inv.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/fdsnxml2inv.cfg</span></code></div>
+</div>
+<p>fdsnxml2inv inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">fdsnxml2inv [OPTIONS] input [output]</strong></p>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-fdsnxml2inv-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-fdsnxml2inv-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--daemon</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run as daemon. This means the application will fork itself and
+doesn’t need to be started with &amp;.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-fdsnxml2inv-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id2">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-fdsnxml2inv-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-fdsnxml2inv-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-fdsnxml2inv-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-fdsnxml2inv-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="convert">
+<h3>Convert<a class="headerlink" href="#convert" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-f">
+<code class="sig-name descname">-f</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--formatted</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate formatted SCML. Otherwise, output XML to a single line.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-to-staxml">
+<code class="sig-name descname">--to-staxml</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-to-staxml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from SCML to StationXML and expects SCML as input.
+If not given, input is SCML and output is StationXML.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-relaxed-ns-check">
+<code class="sig-name descname">--relaxed-ns-check</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-relaxed-ns-check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables relaxed XML namespace checks. This will also accept
+tags within a different namespace than defined in the supported schema.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fdsnxml2inv-log-stages">
+<code class="sig-name descname">--log-stages</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-fdsnxml2inv-log-stages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds more output to stderr for all channel response stages
+when converting from StationXML.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fdsnxml2inv</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#convert">Convert</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dlsv2inv.html"
+                        title="previous chapter">dlsv2inv</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="import_inv.html"
+                        title="next chapter">import_inv</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/fdsnxml2inv.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

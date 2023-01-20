@@ -1,0 +1,13 @@
+# Defines the channel code of the preferred stream used by e.g. scautopick and
+# scrttv. If no component code is given, the vertical component will be fetched
+# from inventory. For that the channel orientation (azimuth, dip) will be used.
+# If that approach fails, 'Z' will be appended and used as fallback.
+detecStream = CHAN
+
+# Defines the location code of the preferred stream used eg by scautopick and
+# scrttv.
+detecLocid = 01
+
+# Activates deconvolution for this station. If no responses are configured an
+# error is raised and the data is not processed.
+amplitudes.enableResponses = true

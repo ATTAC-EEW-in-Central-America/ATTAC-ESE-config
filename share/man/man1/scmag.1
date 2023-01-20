@@ -1,0 +1,563 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCMAG" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scmag \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBCalculates magnitudes of different types.\fP
+.SH DESCRIPTION
+.sp
+The purpose of scmag is to compute magnitudes from pre\-computed amplitudes.
+Instead it takes amplitudes and origins as input and produces StationMagnitudes
+and (network) Magnitudes as output. It does not access waveforms.
+The resulting magnitudes are sent to the "MAGNITUDE" group. scmag doesn’t access
+any waveforms. It only uses amplitudes previously calculated.
+.sp
+The purpose of scmag is the decoupling of magnitude computation from amplitude
+measurements. This allows several modules to generate amplitudes concurrently,
+like scautopick or scamp\&. As soon as an origin comes in, the amplitudes related
+to the picks are taken either from the memory buffer or the database to compute
+the magnitudes.
+.SS Relationship between amplitudes and origins
+.sp
+scmag makes use of the fact that origins sent by scautoloc, scolv
+or other modules include
+the complete set of arrivals, which reference picks used for origin computation.
+The picks in turn are referenced by a number of amplitudes, some of which are
+relevant for magnitude computation.
+.sp
+Read the scamp documentation for more details on amplitude measurements.
+.SS Primary magnitudes
+.sp
+Primary magnitudes are computed from amplitudes and station\-event distances.
+Currently the following primary magnitude types are implemented.
+.SS Local distances
+.INDENT 0.0
+.TP
+.B Md
+Duration magnitude as described in HYPOINVERSE (klein\-2002).
+.TP
+.B Mjma
+Mjma is computed on displacement data using body waves of period < 30s.
+.TP
+.B ML
+Local (Richter) magnitude calculated on the horizontal components using a
+correction term to fit with the standard ML (richter\-1935).
+.TP
+.B MLc
+Local custom magnitude calculated on the horizontal components according to
+Hessian Earthquake Service and stange\-2006
+.TP
+.B MLh
+Local magnitude calculated on the horizontal components according to SED
+specifications.
+.TP
+.B MLv
+Local magnitude calculated on the vertical component using a correction term
+to fit with the standard ML.
+.TP
+.B MLr
+Local magnitude calculated from MLv amplitudes based on GNS/GEONET specifications
+for New Zealand (ristau\-2016).
+.TP
+.B MN
+Nuttli magnitude for Canada and other Cratonic regions (nuttli\-1973).
+.UNINDENT
+.SS Teleseismic distances
+.INDENT 0.0
+.TP
+.B mb
+Narrow band body wave magnitude measured on a WWSSN\-SP filtered trace
+.TP
+.B mBc
+Cumulative body wave magnitude
+.TP
+.B mB
+Broad band body wave magnitude after bormann\-2008
+.TP
+.B Mwp
+The body wave magnitude of tsuboi\-1995
+.TP
+.B Ms_20
+Surface\-wave magnitude at 20 s period
+.TP
+.B Ms(BB)
+Broad band surface\-wave magnitude
+.UNINDENT
+.SS Derived magnitudes
+.sp
+Additionally, scmag derives the following magnitudes from primary magnitudes:
+.INDENT 0.0
+.TP
+.B Mw(mB)
+Estimation of the moment magnitude Mw based on mB using the Mw vs. mB
+regression of bormann\-2008
+.TP
+.B Mw(Mwp)
+Estimation of the moment magnitude Mw based on Mwp using the Mw vs. Mwp
+regression of whitmore\-2002
+.TP
+.B M
+Summary magnitude, which consists of a weighted average of the individual
+magnitudes and attempts to be a best possible compromise between all magnitudes.
+See below for configuration and also scevent for how to add the summary magnitude
+to the list of possible preferred magnitudes or how to make it always preferred.
+.sp
+More details are given in the \fI\%section Summary magnitude\fP\&.
+.TP
+.B Mw(avg)
+Estimation of the moment magnitude Mw based on a weighted average of other
+magnitudes, currently MLv, mb and Mw(mB), in future possibly other magnitudes as
+well, especially those suitable for very large events. The purpose of Mw(avg) is
+to have, at any stage during the processing, a “best possible” estimation of the
+magnitude by combining all available magnitudes into a single, weighted average.
+Initially the average will consist of only MLv and/or mb measurements, but as soon
+as Mw(mB) measurements become available, these (and in future other large\-event
+magnitudes) become progressively more weight in the average.
+.UNINDENT
+.sp
+If an amplitude is updated, the corresponding magnitude is updated as well.
+This allows the computation of preliminary, real\-time magnitudes even before
+the full length of the P coda is available.
+.SH STATION MAGNITUDES
+.sp
+Station magnitudes of a \fI\%particular magnitude type\fP are
+calculated based on amplitude values
+considered by this magnitude type and the distance between the event and the station
+at which the amplitude was measured. Typically, epicentral distance is used.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+Usually station magnitudes use amplitudes of the same type. However, some magnitude
+consider amplitudes of another type. E.g. MLr
+uses amplitudes computed for MLv\&.
+.UNINDENT
+.UNINDENT
+.SH NETWORK MAGNITUDES
+.sp
+The network magnitude is a magnitude value summarizing several \fI\%station magnitudes\fP
+values of one origin\&.
+Different methods are available for summarizing the station magnitudes:
+.INDENT 0.0
+.IP \(bu 2
+mean: the usual mean value
+.IP \(bu 2
+trimmed mean value:
+To stabilize the network magnitudes the smallest and the largest 12.5% of the
+station magnitude values are removed before computing the mean.
+.IP \(bu 2
+median: the usual median value
+.IP \(bu 2
+median trimmed mean:
+Removing all station magnitudes with a distance greater than 0.5 (default)
+from the median of all station magnitudes and computing the mean of all
+remaining station magnitudes.
+.UNINDENT
+.sp
+Default values apply for each magnitude type.
+In scolv the methods, the stations magnitudes and other parameters can be
+selected interactively.
+.SH SUMMARY MAGNITUDE
+.sp
+scmag can compute a summary magnitude as a weighted sum from all available
+\fI\%network magnitudes\fP\&.
+This magnitude is typically called \fBM\fP as configured in
+\fI\%summaryMagnitude.type\fP\&.
+.sp
+It is computed as a weighted average over the available magnitudes:
+.sp
+.ce
+M = \efrac{\esum w_{i} M_{i}}{\esum w_i}
+
+w_{i} = a_i stationCount(M_{i}) + b_i
+.ce 0
+.sp
+The coefficients a and b can be configured per magnitude type by
+\fI\%summaryMagnitude.coefficients.a\fP
+and \fI\%summaryMagnitude.coefficients.b\fP, respectively.
+Furthermore each magnitude type can be specifically added to or excluded from the
+summary magnitude calculation
+as defined in \fI\%summaryMagnitude.whitelist\fP or
+\fI\%summaryMagnitude.blacklist\fP, respectively.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+While the magnitudes are computed by scmag the decision about the preferred
+magnitude of an event is made by scevent\&.
+.UNINDENT
+.UNINDENT
+.SH PREFERRED MAGNITUDE
+.sp
+The preferred magnitude of an event is set automatically by scevent
+or interactively in scolv\&. It can be any network magnitude or the summary
+magnitude.
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scmag.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scmag.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scmag.cfg\fP
+.fi
+.sp
+.sp
+scmag inherits global options\&.
+.INDENT 0.0
+.TP
+.B magnitudes
+Type: \fIlist:string\fP
+.sp
+Definition of magnitude types to be calculated from amplitudes.
+Default is \fBMLv, mb, mB, Mwp\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B connection.sendInterval
+Type: \fIint\fP
+.sp
+Interval between 2 sending processes. The interval has influence how often information is updated.
+Default is \fB1\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B connection.minimumArrivalWeight
+Type: \fIdouble\fP
+.sp
+The minimum weight of an arrival to be used for magnitude calculations.
+Default is \fB0.5\fP\&.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBsummaryMagnitude.*\fP
+\fIThe summary magnitude is building a weighted summary above all defined magnitude types. The single magnitude value is multiplied with the magnitude type specific weight. This is summed up for all magnitude types and the resulting sum is divided through the sum of all weights.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B summaryMagnitude.enabled
+Type: \fIboolean\fP
+.sp
+Enables summary magnitude calculation.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B summaryMagnitude.type
+Type: \fIstring\fP
+.sp
+Define the type/name of the summary magnitude.
+Default is \fBM\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B summaryMagnitude.minStationCount
+Type: \fIint\fP
+.sp
+This is the minimum station magnitude required for any magnitude to contribute to
+the summary magnitude at all. If this is set to 4 then no magnitude with less than
+4 station magnitudes is taken into consideration even if this results in no summary
+magnitude at all. For this reason, the default here is 1 but in a purely automatic
+system it should be higher, at least 4 is recommended.
+Default is \fB4\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B summaryMagnitude.blacklist
+Type: \fIlist:string\fP
+.sp
+Define the magnitude types to be excluded from the summary magnitude calculation.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B summaryMagnitude.whitelist
+Type: \fIlist:string\fP
+.sp
+Define the magnitude types to be included in the summary magnitude calculation.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBsummaryMagnitude.coefficients.*\fP
+\fIDefine the coefficients to calculate the weight of a magnitude. weight = a*magStationCount+b\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B summaryMagnitude.coefficients.a
+Type: \fIlist:string\fP
+.sp
+Define the coefficients a. Unnamed values define the default value.
+Default is \fB0, Mw(mB):0.4, Mw(Mwp):0.4\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B summaryMagnitude.coefficients.b
+Type: \fIlist:string\fP
+.sp
+Define the coefficients b. Unnamed values define the default value.
+Default is \fB1, MLv:2, Mw(mB):\-1, Mw(Mwp):\-1\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B magnitudes.average
+Type: \fIlist:string\fP
+.sp
+Defines the average method to use when computing the network magnitude.
+To define the average method per magnitude type append the type, eg:
+"magnitudes.average = default, MLv:median"
+.sp
+The default behaviour is to compute the mean if less than 4 contributed
+station magnitudes exist otherwise a trimmed mean of 25 percent is used.
+.sp
+Options are "default", "mean",
+"trimmedMean" and "medianTrimmedMean".
+Default is \fBdefault\fP\&.
+.UNINDENT
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-x, \-\-expiry time
+Time span in hours after which objects expire.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Messaging
+.INDENT 0.0
+.TP
+.B \-u, \-\-user arg
+Overrides configuration parameter \fBconnection.username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-H, \-\-host arg
+Overrides configuration parameter \fBconnection.server\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-t, \-\-timeout arg
+Overrides configuration parameter \fBconnection.timeout\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-g, \-\-primary\-group arg
+Overrides configuration parameter \fBconnection.primaryGroup\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S, \-\-subscribe\-group arg
+A group to subscribe to. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-content\-type arg
+Overrides configuration parameter \fBconnection.contentType\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-stop\-msg arg
+Sets sending of a start\- and a stop message.
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-module arg
+The configmodule to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-inventory\-db arg
+Load the inventory from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-db\-disable
+Do not use the database at all
+.UNINDENT
+.SS Input
+.INDENT 0.0
+.TP
+.B \-\-ep file
+Defines an event parameters XML file to be read and processed. This
+implies offline mode and only processes all origins contained
+in that file. It computes station magnitudes for all picks associated
+with an origin where amplitudes are available and the corresponding
+network magnitudes. Station and network magnitudes having the
+evaluation status set are ignored. Use the \-\-force to include those
+magnitudes. It outputs an XML text adding the station\-
+and network magnitudes to the input XML file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-reprocess
+Reprocess also station and network magnitudes with an evaluation
+status set but do not change weights and just add new
+contributions with weight 0.
+.UNINDENT
+.SS Reprocess
+.INDENT 0.0
+.TP
+.B \-\-static
+With that flag all existing station magnitudes are recomputed
+based on their associated amplitudes. If an amplitude cannot
+be accessed, no station magnitude is updated.
+Network magnitudes are recomputed based on their station
+magnitude contributions. No new objects will
+be created in this mode, it only updates values and weights.
+The method to accumulate the station magnitudes to form the network
+magnitude will be read from the existing object and replicated.
+If it cannot be interpreted then the configured default for this
+magnitude type will be used instead. Weights of station magnitudes
+will be changed according to the accumulation method of the
+network magnitude.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-keep\-weights
+Reuses the original weights in combination with \-\-static.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

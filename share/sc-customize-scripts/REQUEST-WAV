@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+export MANPATH=/opt/seiscomp/share/man:
+export PYTHONPATH=/opt/seiscomp/lib/python:
+export LD_LIBRARY_PATH=/opt/seiscomp/lib:
+export PATH=/opt/seiscomp/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/VS/bin
+
+
+
+
+
+#listado -h 24 |xargs -I % sh -c 'wav_request -I % && scart -I file:///media/HDD/seiscomp/wav/%.mseed /media/HDD/seiscomp/archive-wav' && echo "solicitud realizada $(date)"
+
+listado -h 24 |xargs -I % sh -c 'if $( test -e /media/HDD/seiscomp/wav/%.mseed) ; then echo "path : /media/HDD/seiscomp/wav/%.meed" ; else wav_request -I %  && scart -I file:///media/HDD/seiscomp/wav/%.mseed /media/HDD/seiscomp/archive-wav ; fi ' && echo "solicitud realizada $(date)"
+

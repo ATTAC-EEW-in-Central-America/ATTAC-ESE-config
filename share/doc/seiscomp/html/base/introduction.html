@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Introduction and Scope &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Overview" href="overview.html" />
+    <link rel="prev" title="Welcome" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="overview.html" title="Overview"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="../index.html" title="Welcome"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="introduction-and-scope">
+<span id="introduction"></span><h1>Introduction and Scope<a class="headerlink" href="#introduction-and-scope" title="Permalink to this headline">¶</a></h1>
+<p>SeisComP is likely the most widely distributed software package for real-time monitoring
+of earthquakes and other seismic events. It provides automatic and interactive
+seismological data acquisition, processing and data exchange over the internet. Its
+data transmission protocol SeedLink has become a de facto world standard.</p>
+<p><cite>SeisComP</cite> convinces many seismologists and earthquake specialists at data and
+research centers, companies and governmental agencies world-wide by:</p>
+<ul class="simple">
+<li><p>Powerful and reliable automatic data processing in real time or during post-processing</p></li>
+<li><p>User-friendly and comprehensive graphical interfaces</p></li>
+<li><p>Modern and well-maintained OpenSource software on <a class="reference external" href="https://github.com/SeisComP">GitHub</a> <a class="footnote-reference brackets" href="#id1" id="id2">1</a> welcoming community contributions.</p></li>
+</ul>
+<p>The first work on what became <cite>SeisComP</cite> today began nearly two decades ago
+with developments at <a class="reference internal" href="glossary.html#term-gfz"><span class="xref std std-term">GFZ</span></a> of plugins for digitizers.
+It is now continued by <a class="reference internal" href="glossary.html#term-gempa-gmbh"><span class="xref std std-term">gempa GmbH</span></a> and GFZ.
+The <a class="reference internal" href="history.html#history"><span class="std std-ref">section on historical information</span></a> provides details on the past
+and current releases.</p>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p>Today <cite>SeisComP</cite> includes the following features:</p>
+<ul class="simple">
+<li><p>Data acquisition</p></li>
+<li><p>Waveform archiving</p></li>
+<li><p>Waveform data distribution</p></li>
+<li><p>Data quality control</p></li>
+<li><p>Data recording</p></li>
+<li><p>Real-time data exchange</p></li>
+<li><p>Network status monitoring</p></li>
+<li><p>Real-time data processing</p></li>
+<li><p>Automatic event detection and location</p></li>
+<li><p>Interactive event detection and location</p></li>
+<li><p>Automatic and interactive magnitude calculation</p></li>
+<li><p>Interactive determination of focal mechanisms</p></li>
+<li><p>Issuing event alerts</p></li>
+<li><p>Event parameter archiving</p></li>
+<li><p>Easy access to relevant information about stations, waveforms and recent
+earthquakes through graphical user interface and command-line tools</p></li>
+<li><p>Python interface for developing custom scripts and modules.</p></li>
+</ul>
+</div>
+<div class="section" id="software-design">
+<h2>Software Design<a class="headerlink" href="#software-design" title="Permalink to this headline">¶</a></h2>
+<p>The guidelines for the design of <cite>SeisComP</cite> are:</p>
+<ul class="simple">
+<li><p>Implementation of critical functions as standalone modules to guarantee the
+independence from other functions (e.g. picker, magnitude calculation,
+interactive analysis)</p></li>
+<li><p>Easy implementation of custom modules</p></li>
+<li><p>Independence of hard- and software</p></li>
+<li><p>Ability of data exchange between different automatic real-time systems</p></li>
+<li><p>Distribution of modules on several systems</p></li>
+<li><p>Robust system for rapid and reliable earthquake solutions (especially during
+seismic crises)</p></li>
+</ul>
+<p>These design principles have given <cite>SeisComP</cite> much robustness and flexibility
+to respond to new developments. The <cite>SeisComP</cite> community is encouraged to contribute
+their <cite>SeisComP</cite> source code on <a class="reference external" href="https://github.com/SeisComP">GitHub</a> <a class="footnote-reference brackets" href="#id1" id="id3">1</a>. Examples and guidelines for generating
+code are given in the <a class="reference internal" href="../index.html#sec-index-developers"><span class="std std-ref">developer section</span></a>.</p>
+</div>
+<div class="section" id="this-documentation">
+<h2>This Documentation<a class="headerlink" href="#this-documentation" title="Permalink to this headline">¶</a></h2>
+<p>This documentation begins with an <a class="reference internal" href="overview.html#overview"><span class="std std-ref">Overview</span></a> and a <a class="reference internal" href="concepts.html#concepts"><span class="std std-ref">Concepts</span></a> section
+necessary for understanding and using <cite>SeisComP</cite> successfully.
+The <a class="reference internal" href="glossary.html#glossary"><span class="std std-ref">Glossary section</span></a> introduces technical terms.
+All important code changes are listed in the <a class="reference internal" href="changelog.html#sc-changelog"><span class="std std-ref">change log</span></a>.
+When using <cite>SeisComP</cite> or contributing source code, you should understand the <a class="reference internal" href="license.html#license"><span class="std std-ref">license terms</span></a>.
+If you actually make use of <cite>SeisComP</cite> and publish the results, we ask you to give
+appropriate reference as set out on the <a class="reference internal" href="citation.html#citation"><span class="std std-ref">Citation section</span></a>.</p>
+<p>In the following section the documentation covers the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">installation</span></a>
+and how to configure and operate a working <cite>SeisComP</cite> system.
+A few <a class="reference internal" href="tutorials.html#tutorials"><span class="std std-ref">Tutorials</span></a> will guide you through a first example set up and further operations.</p>
+<p>The tutorials are followed by <a class="reference internal" href="../index.html#sec-index-modules"><span class="std std-ref">detailed technical descriptions</span></a>
+of each individual <cite>SeisComP</cite> module, grouped by their general functionality:</p>
+<ul class="simple">
+<li><p>Interactive analysis</p></li>
+<li><p>Data acquisition</p></li>
+<li><p>Inventory management</p></li>
+<li><p>Automatic processing</p></li>
+<li><p>Utilities</p></li>
+</ul>
+<p>and many more <a class="reference internal" href="../index.html#sec-index-extensions"><span class="std std-ref">extensions</span></a> like descriptions of the
+<a class="reference internal" href="glossary.html#term-recordstream"><span class="xref std std-term">RecordStream</span></a>, magnitude types, locators, GUI customizations, waveform filters or plugins.</p>
+<p>The final part of the documentation relates to
+<a class="reference internal" href="../index.html#sec-index-developers"><span class="std std-ref">contributing your own source code</span></a> to <cite>SeisComP</cite>.
+This requires a deeper knowledge of the <cite>SeisComP</cite> <a class="reference internal" href="api-python.html#api-datamodel-python"><span class="std std-ref">data model</span></a>
+and other details.
+This part also includes guidelines for developers such as
+<a class="reference internal" href="coding-conventions.html#coding-conventions"><span class="std std-ref">coding conventions</span></a>, <a class="reference internal" href="tests.html#unittests"><span class="std std-ref">unit tests</span></a> and a
+<a class="reference internal" href="contributing-docs.html#contributing-documentation"><span class="std std-ref">guide for contributing documentation</span></a>.
+<a class="reference internal" href="sdk-python-examples.html#sdk-python-examples"><span class="std std-ref">Some Python examples</span></a> help you to get started quickly
+with programming for <cite>SeisComP</cite>.</p>
+<p><cite>SeisComP</cite> is developed and distributed under the terms of the GNU
+<a class="reference external" href="https://www.gnu.org/licenses/agpl-3.0.html">Affero General Public License</a> <a class="footnote-reference brackets" href="#id4" id="id5">2</a>, as set out in the <a class="reference internal" href="license.html#license"><span class="std std-ref">License</span></a> section.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id1"><span class="brackets">1</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id3">2</a>)</span></dt>
+<dd><p><a class="reference external" href="https://github.com/SeisComP">https://github.com/SeisComP</a></p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id5">2</a></span></dt>
+<dd><p><a class="reference external" href="https://www.gnu.org/licenses/agpl-3.0.html">https://www.gnu.org/licenses/agpl-3.0.html</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction and Scope</a><ul>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#software-design">Software Design</a></li>
+<li><a class="reference internal" href="#this-documentation">This Documentation</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="overview.html"
+                        title="next chapter">Overview</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base/introduction.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

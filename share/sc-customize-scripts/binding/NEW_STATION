@@ -1,0 +1,70 @@
+#!/bin/bash
+
+_create_binding_(){
+
+	INFO=$(slinktool -Q -tw $(date -d '1 day ago' +%Y,%m,%d,%H,%M):$(date -d 'now' +%Y,%m,%d,%H,%M)  ${SLINK} |grep $STAT|awk '$0~/Z D/{print $0}' )
+	if [[ -z ${INFO} ]]
+	then
+		echo "NO INFO ${NET} - ${STAT}"
+		echo "" > "${SEISCOMP_ROOT}/etc/key/station_${NET}_$STAT"
+	else
+		LOC=$(echo $INFO |awk '$0~/Z D/{print $3}'|head -1)
+		CHAN=$(echo $INFO |awk '$0~/Z D/{print $4}'|head -1)
+
+		if [[ $CHAN == "D" ]]
+		then
+			CHAN=$LOC
+			LOC=""
+		fi
+
+		echo "${LOC} -- ${CHAN}"
+
+		if [[ ! $CHAN == *"Z" ]]
+		then
+			echo "CHANNEL NOT NECESARY"
+		else
+			if [[ `find $SEISCOMP_ROOT/etc/key/global -iname profile_${CHAN}_${LOC}` ]]
+			then
+				find $SEISCOMP_ROOT/etc/key/global -iname profile_${CHAN}_${LOC}
+				cp -v $TOP_DIR/STATION ${SEISCOMP_ROOT}/etc/key/station_${NET}_$STAT
+				sed -i s/GLOBAL/${CHAN}_${LOC}/g ${SEISCOMP_ROOT}/etc/key/station_${NET}_$STAT
+				echo "GLOBAL PROFILE --> profile_${CHAN}_${LOC}"
+			else
+				if [[ -n $LOC ]]
+				then
+					cp -v $TOP_DIR/CHAN_${LOC} $SEISCOMP_ROOT/etc/key/global/profile_${CHAN}_${LOC}
+				else
+					cp -v $TOP_DIR/CHAN_ $SEISCOMP_ROOT/etc/key/global/profile_${CHAN}_
+				fi
+				sed -i s/CHAN/${CHAN}/g $SEISCOMP_ROOT/etc/key/global/profile_${CHAN}_${LOC}
+				cp -v $TOP_DIR/STATION ${SEISCOMP_ROOT}/etc/key/station_${NET}_$STAT
+				sed -i s/GLOBAL/${CHAN}_${LOC}/g ${SEISCOMP_ROOT}/etc/key/station_${NET}_$STAT
+				echo "GLOBAL PROFILE --> profile_${CHAN}_${LOC}"
+			fi
+
+		fi
+	fi
+}
+
+if [ ! -e ${HOME}/.seiscomp.bash ]
+then
+	echo "no env var"
+else
+	source ${HOME}/.seiscomp.bash
+	TOP_DIR=${SEISCOMP_ROOT}/share/sc-customize-scripts/binding
+	cd $TOP_DIR
+	export SLINK=172.20.0.200
+	rm -f no-info.log
+	cd ${SEISCOMP_ROOT}/etc/key
+	for BINDING in station_*
+	do
+		if [[ ! -s $BINDING ]]
+		then
+			export NET=$(echo $BINDING |awk -F"_" '{print $2}')
+			export STAT=$(echo $BINDING |awk -F"_" '{print $3}')
+			echo -e "\n --------- \nEMPTY BINDING FOR $NET - $STAT"
+#			_create_binding_ $STAT
+			_create_binding_ 
+		fi
+	done
+fi

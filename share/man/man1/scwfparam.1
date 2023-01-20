@@ -1,0 +1,1443 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCWFPARAM" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scwfparam \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBWaveform parametrization module.\fP
+.SH DESCRIPTION
+.sp
+scwfparam is a SeisComP module that computes
+.INDENT 0.0
+.IP \(bu 2
+peak ground acceleration (PGA)
+.IP \(bu 2
+peak ground velocity (PGV)
+.IP \(bu 2
+relative displacement elastic response spectrum (DRS)
+.IP \(bu 2
+pseudo absolute acceleration elastic response spectrum (PSA)
+.UNINDENT
+.sp
+in real\-time or offline. It includes a process scheduler and handles
+reprocessing of data in a smart way. It supports ShakeMap XML output as
+documented in the
+\fI\%ShakeMap manual\fP each
+time a new set of data is available.
+.SH SCHEDULING
+.sp
+When the module is not started in offline mode, the processing of events is
+scheduled following the configured rules. Parameters that influence the
+scheduling are:
+.INDENT 0.0
+.IP \(bu 2
+\fI\%wfparam.cron.wakeupInterval\fP
+.IP \(bu 2
+\fI\%wfparam.cron.updateDelay\fP
+.IP \(bu 2
+\fI\%wfparam.cron.delayTimes\fP
+.UNINDENT
+.sp
+The wake\-up interval specifies when the scheduler is called to check if a
+process is about to be started or stopped. The default is 10 seconds.
+.sp
+The scheduler checks then all scheduled jobs, adds a job to the processing queue
+if the next run time is not in the future and removes all scheduled jobs with
+timestamps in the past. The process queue contains all jobs that are about to
+be executed. Because waveform acquisition is a time\- and memory\-costly operation
+only one process can run at a time. Once a process finished, the next process in
+the queue is executed (if any). When a process is started, it fetches the latest
+event parameters (origin time, magnitude, location).
+.sp
+To add processes to the scheduler, the module distinguishes two cases:
+.INDENT 0.0
+.IP 1. 3
+Process creation (new event or updated event seen the first time)
+.IP 2. 3
+Process update (event updates after an process has been created)
+.UNINDENT
+.SS Process creation
+.sp
+When a new event or an event update is received which does not have an
+associated process yet, a new process is created. The event
+time (Origin[Event.preferredOriginID].time) is used to build the default
+schedule according to \fI\%wfparam.cron.delayTimes\fP\&.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+for each time in wfparam.cron.delayTimes:
+  add_cron_job(process, Origin[Event.preferredOriginID].time + time)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Process update
+.sp
+If a process for an event already exists, the next run time is the current time
+plus wfparam.cron.updateDelay. Before adding this job to the scheduler the
+application checks if the next scheduled runtime is at least
+\fI\%wfparam.cron.updateDelay\fP seconds after the new run time. If not, a
+new job is not addded to the scheduler. Pseudo code to illustrate the strategy
+is given below.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+event_updated(event):
+  p = process_for_event(event)
+  # The schedule for process p could be {T1,T2,T3,T4}
+  now = get_current_time()
+  next_run = now + wfparam.cron.updateDelay
+  # Process currently suspended?
+  if isEmpty(p.schedule):
+    p.schedule.add(next_run)
+  elif (p.schedule[0] \- next_run) > wfparam.cron.updateDelay:
+    p.schedule.prepend(next_run)
+  else:
+    # Do nothing, ignore the event update
+    pass
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH PROCESSING
+.sp
+The processing can be divided into the following steps:
+.INDENT 0.0
+.IP \(bu 2
+Collect all stations within the configured maximum distance
+(\fI\%wfparam.maximumEpicentralDistance\fP or
+\fI\%wfparam.magnitudeDistanceTable\fP)
+.IP \(bu 2
+Remove already processed channels
+.IP \(bu 2
+Find the velocity and acceleration stream with the highest sampling frequency
+.INDENT 2.0
+.IP \(bu 2
+The sensor unit is used to distinguish between velocity and acceleration
+streams (M/S, M/S**2)
+.UNINDENT
+.IP \(bu 2
+Use all allowed components (\fI\%wfparam.streams.whitelist\fP,
+\fI\%wfparam.streams.blacklist\fP) of each stream
+.IP \(bu 2
+Compute expected P arrival time if no pick is available
+.IP \(bu 2
+Start waveform acquisition
+.IP \(bu 2
+If the configured time window for one stream is complete, do (optional steps
+are written italic)
+.INDENT 2.0
+.IP \(bu 2
+Check saturation depending on \fI\%wfparam.saturationThreshold\fP
+.IP \(bu 2
+Search maximum raw value (in counts)
+.IP \(bu 2
+Apply gain
+.IP \(bu 2
+Check STA/LTA threshold 5 seconds around P
+.IP \(bu 2
+\fIIf velocity, differentiate data to acceleration\fP
+.IP \(bu 2
+\fICompute pre\-event cut\-off if enabled\fP
+.IP \(bu 2
+Compute offset of pre\-event time window
+.IP \(bu 2
+\fICompute signal duration and check for aftershocks\fP
+.IP \(bu 2
+\fIDeconvolution using spectral division of FFT spectrum and transfer function\fP
+.IP \(bu 2
+\fIApply optional sensitivity correction filter (lo\-, hi\- or bandpass)\fP
+.IP \(bu 2
+\fIApply optional lo\-pass, hi\-pass or band\-pass filter\fP
+.IP \(bu 2
+Compute PGA/PGV
+.IP \(bu 2
+Calculate response spectra
+.UNINDENT
+.IP \(bu 2
+If acquisition finished
+.INDENT 2.0
+.IP \(bu 2
+Collect all values (also recently processed values)
+.INDENT 2.0
+.IP \(bu 2
+Results from velocity streams are always preferred over acceleration
+streams if both are available (eg. co\-located stations)
+.UNINDENT
+.IP \(bu 2
+Generate ShakeMap event and station XML
+.INDENT 2.0
+.IP \(bu 2
+Unless \fI\%wfparam.output.shakeMap.maximumOfHorizontals\fP is set
+to true all processed streams are included in XML
+.UNINDENT
+.IP \(bu 2
+Call ShakeMap script and pass eventID and event ID path
+.UNINDENT
+.UNINDENT
+.sp
+The channel is considered to be processed if the last step succeeded.
+.SH WAVEFORM ARCHIVAL
+.sp
+If \fI\%wfparam.output.waveforms.enable\fP is set to true all processed
+waveforms are stored in the configured output directory
+\fI\%wfparam.output.waveforms.path\fP\&. The naming convention of a channel
+miniSEED file is:
+.sp
+[EventDateTime]_[net]_[sta]_[loc][cha]_[filter][order]_[freqs].mseed
+.sp
+If \fI\%wfparam.output.waveforms.withEventDirectory\fP is set to true, an
+event directory with the eventID is created additionally where the channel
+files are stored under.
+.sp
+Either:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+/path/to/waveforms/file1.mseed
+/path/to/waveforms/file2.mseed
+\&...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+or
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+/path/to/waveforms/eventid/file1.mseed
+/path/to/waveforms/eventid/file2.mseed
+\&...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The miniSEED file contains uncompressed float 4096 byte records.
+.sp
+Example:
+.TS
+center;
+|l|l|.
+_
+T{
+Event time
+T}	T{
+2011\-11\-21 08:30:00 Network: CH
+T}
+_
+T{
+Station
+T}	T{
+SNIB
+T}
+_
+T{
+Location
+T}	T{
+_ _
+T}
+_
+T{
+Channel
+T}	T{
+HGZ
+T}
+_
+T{
+Filter
+T}	T{
+hi\-pass
+T}
+_
+T{
+Order
+T}	T{
+2
+T}
+_
+T{
+Corner frequencies
+T}	T{
+0.025
+T}
+_
+T{
+Filename
+T}	T{
+\fB20111121083000_CH_SNIB_HGZ_HP2_0.025.mseed\fP
+T}
+_
+.TE
+.SH DATABASE
+.sp
+scwfparam can make use of the database schema extension for strong motion
+parameters.
+.sp
+In order to prepare the database the extension schema must be applied. The
+database schema is installed in \fBshare/db/wfparam/*.sql\fP\&. Login into the
+database backend and source the .sql file corresponding to the used database
+backend.
+.sp
+In order to enable scmaster to handle messages containing objects for
+strong motion parameters load the dmsm (data model strong motion) plugin as
+follows in scmaster.cfg:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+plugins = ${plugins}, dmsm
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+scmaster must be restarted to activate the plugin.
+.sp
+To activate scwfparam to send messages with strong motion objects, set
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+wfparam.output.messaging = true
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+in scwfparam.cfg.
+.SH SHAKEMAPS
+.sp
+The ShakeMap XML is generated according the documentation of version 3.5 if
+\fI\%wfparam.output.shakeMap.enable\fP is set to true.
+.sp
+Below an example is given of an event XML and a station XML. The data was
+generated from a playback and does \fBnot\fP describe a \fBreal event\fP\&.
+.SS Event XML
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+<?xml version="1.0" encoding="UTF\-8" standalone="yes"?>
+<!DOCTYPE earthquake SYSTEM "earthquake.dtd">
+<earthquake id="gfz2011oasp" lat="38.916" lon="40.0711"
+            depth="10.3249" mag="5.80361" year="2011"
+            month="7" day="19" hour="14" minute="54"
+            second="21" timezone="GMT"
+            locstring="tst2011oasp / 38.916 / 40.0711"
+/>
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Station XML
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+<?xml version="1.0" encoding="UTF\-8" standalone="yes"?>
+<!DOCTYPE earthquake SYSTEM "stationlist.dtd">
+<stationlist created="" xmlns="ch.ethz.sed.shakemap.usgs.xml">
+  <station code="JMB" name="JMB" lat="42.467" lon="26.583">
+    <comp name="BHZ">
+      <acc value="0.0175823522" flag="0"/>
+      <vel value="0.0265134476" flag="0"/>
+      <psa03 value="0.0177551343" flag="0"/>
+      <psa10 value="0.0179450342" flag="0"/>
+      <psa30 value="0.0507100318" flag="0"/>
+    </comp>
+  </station>
+  <station code="BUD" name="BUD" insttype="STS\-2/N"
+           lat="47.4836" lon="19.0239">
+    <comp name="BHZ">
+      <acc value="0.0018418704" flag="0"/>
+      <vel value="0.0012123935" flag="0"/>
+      <psa03 value="0.0019287320" flag="0"/>
+      <psa10 value="0.0033152716" flag="0"/>
+      <psa30 value="0.0027636448" flag="0"/>
+    </comp>
+  </station>
+  <station code="ANTO" name="ANTO" lat="39.868" lon="32.7934">
+    <comp name="BHZ">
+      <acc value="0.0322238962" flag="0"/>
+      <vel value="0.0250842840" flag="0"/>
+      <psa03 value="0.0326696355" flag="0"/>
+      <psa10 value="0.0621788884" flag="0"/>
+      <psa30 value="0.0903777107" flag="0"/>
+    </comp>
+  </station>
+  <station code="GNI" name="GNI" lat="40.148" lon="44.741">
+    <comp name="BHZ">
+      <acc value="0.0760558909" flag="0"/>
+      <vel value="0.0273735691" flag="0"/>
+      <psa03 value="0.0818660133" flag="0"/>
+      <psa10 value="0.1230812588" flag="0"/>
+      <psa30 value="0.1682284546" flag="0"/>
+    </comp>
+  </station>
+</stationlist>
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH EXAMPLES
+.INDENT 0.0
+.IP 1. 3
+Running scwfparam offline with a multiplexed miniseed volume, an event xml
+and an inventory xml file. A hi\-pass filter of 0.1hz (10secs) is used.
+Processing starts immediately and the application finishes when processing
+is done. The scheduler is disabled in offline mode.
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scwfparam \-\-offline \-I vallorcine.mseed \e
+          \-\-inventory\-db vallorcine_inv.xml \e
+          \-\-ep vallorcine.xml \-E "Vallorcine.2005.09.08" \e
+          \-\-lo\-filter 0.1 \-\-hi\-filter 0
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 2. 3
+Running for a given event with scheduling enabled. Only the given event will
+be processed.
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scwfparam \-I arclink://localhost:18001 \-E gfz2011oeej \e
+          \-d mysql://sysop:sysop@localhost/seiscomp
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 3. 3
+For running in real\-time it is enough to add the module to the client list
+of the trunk package in seiscomp config.
+.IP 4. 3
+Running with remote Arclink server
+.sp
+To use a remote Arclink server it is
+enough to configure the record stream with \-I:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scwfparam \-\-offline \-I vallorcine.mseed \e
+          \-\-inventory\-db vallorcine_inv.xml \e
+          \-\-ep vallorcine.xml \-E "Vallorcine.2005.09.08" \e
+          \-I "arclink://arclink.ethz.ch:18002"
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Note that the default acquisition timeout of 30 seconds might not be enough
+to get all the requested data. If necessary, increase the value with
+parameter \fI\%wfparam.acquisition.initialTimeout\fP\&. This can also be
+reached on command line:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scwfparam \-\-offline \-I vallorcine.mseed \e
+          \-\-inventory\-db vallorcine_inv.xml \e
+          \-\-ep vallorcine.xml \-E "Vallorcine.2005.09.08" \e
+          \-I "arclink://arclink.ethz.ch:18002" \e
+          \-\-wfparam.acquisition.initialTimeout=300
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 5. 3
+Running with remote Seedlink server
+.sp
+To use a remote Seedlink server it is enough to configure the record stream with \-I:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scwfparam \-\-offline \-I vallorcine.mseed \e
+          \-\-inventory\-db vallorcine_inv.xml \e
+          \-\-ep vallorcine.xml \-E "Vallorcine.2005.09.08" \e
+          \-I "slink://geofon.gfz\-potsdam.de:18000"
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scwfparam.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scwfparam.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scwfparam.cfg\fP
+.fi
+.sp
+.sp
+scwfparam inherits global options\&.
+.INDENT 0.0
+.TP
+.B wfparam.logfile
+Type: \fIpath\fP
+.sp
+The path to the processing info logfile.
+Default is \fB@LOGDIR@/scwfparam\-processing\-info.log\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.totalTimeWindowLength
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default value of total time window length in seconds if
+wfparam.magnitudeTimeWindowTable is not specified. This times window
+includes wfparam.preEventWindowLength.
+Default is \fB360\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.magnitudeTimeWindowTable
+Type: \fIlist:string\fP
+.sp
+Magnitude dependent time window table. The format is
+"mag1:secs1, mag2:secs2, mag3:secs3". If a magnitude falls
+between two configured magnitudes the time window of the lower
+magnitude is used then. No interpolation is performed. Magnitude
+outside the configured range are clipped to the lowest/highest value.
+Example: "3:100, 4:200, 5:300"
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.preEventWindowLength
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+The pre event time window length in seconds.
+Default is \fB60\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.maximumEpicentralDistance
+Type: \fIint\fP
+.sp
+Unit: \fIkm\fP
+.sp
+The maximum epicentral distance in km of a station being considered
+for processing. This value is used if wfparam.magnitudeDistanceTable
+is not specified.
+Default is \fB400\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.magnitudeDistanceTable
+Type: \fIlist:string\fP
+.sp
+Analogue to wfparam.magnitudeTimeWindowTable but instead giving a
+time window, the distance in km is specified.
+Example: "3:400, 4:450, 5:500"
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.saturationThreshold
+Type: \fIdouble\fP
+.sp
+Unit: \fI%\fP
+.sp
+Relative saturation threshold in percent. If the absolute raw amplitude
+exceeds X% of 2**23 counts the station will be excluded from
+processing. This assumes a 24bit datalogger.
+Default is \fB80\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.STAlength
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Specifies the STA length in seconds of the applied STA/LTA check.
+Default is \fB1\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.LTAlength
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Specifies the LTA length in seconds of the applied STA/LTA check.
+Default is \fB60\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.STALTAratio
+Type: \fIdouble\fP
+.sp
+Specifies the minimum STALTA ratio to be reached to further process
+a station.
+Default is \fB3\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.STALTAmargin
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Specifies the number of seconds around P to be used to check the STA/LTA ratio.
+Default is \fB5\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.durationScale
+Type: \fIdouble\fP
+.sp
+Defines the factor applied to the signigicant duration to define the
+processing spetra time window. If that value is <= 0 the totalTimeWindowLength
+is used.
+Default is \fB1.5\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.dampings
+Type: \fIlist:double\fP
+.sp
+Unit: \fI%\fP
+.sp
+Specifies a list of damping values (in percent) for computation of
+the relative displacement elastic response spectrum.
+Example: "5,10,15"
+Default is \fB5\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.naturalPeriods
+Type: \fIint\fP
+.sp
+Specifies the number of natural periods for computation of the
+relative displacement elastic response spectrum between Tmin and Tmax.
+If fixed is given then a fixed list of periods is used.
+Default is \fB100\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.Tmin
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Specifies the minimum period (Tmin) in seconds for computation of the
+relative displacement elastic response spectrum.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.Tmax
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Specifies the maximum period (Tmax) in seconds for computation of the
+relative displacement elastic response spectrum.
+Default is \fB5\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.clipTmax
+Type: \fIboolean\fP
+.sp
+Should the maximum period (Tmax) clipped against the
+configured filter lower corner frequency, the maximum of
+pd.loFreq or filter.loFreq.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.afterShockRemoval
+Type: \fIboolean\fP
+.sp
+Enables/disables aftershock removal (Figini, 2006; Paolucci et al., 2008)
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.eventCutOff
+Type: \fIboolean\fP
+.sp
+Enables/disables pre\-event cut\-off. A hardcoded sta/lta algorithm
+(with sta=0.1s, lta=2s, sta/lta threshold=1.2) is run on the time
+window defined by (expected_P_arrival_time \- 15 s). The pre\-event
+window is hence defined as
+[t(sta/lta =1.2) \- 15.5s, t(sta/lta =1.2) \- 0.5s].
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.magnitudeFilterTable
+Type: \fIlist:string\fP
+.sp
+Default is \fB0:0.2;0.8fNyquist,3:0.1;0.8fNyquist,5:0.05;0.8fNyquist,7:0.025;0.8fNyquist\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.deconvolution
+Type: \fIboolean\fP
+.sp
+Enables/disables deconvolution. If a channel does not provide full
+response information it is not used for processing.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.magnitudeTolerance
+Type: \fIdouble\fP
+.sp
+Defines the magnitude tolerance to completely reprocess an event with
+respect to the last state.
+Default is \fB0.5\fP\&.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBwfparam.streams.*\fP
+\fIDefines the white\- and blacklist of data streams to be used. The\fP
+\fIrules to decide if a stream is used or not are the following:\fP
+**
+\fI1. if whitelist is not empty and the stream is not on the whitelist,\fP
+\fIdon\(aqt use it, ok otherwise\fP
+**
+\fI2. if blacklist is not empty and the stream is on the blacklist,\fP
+\fIdon\(aqt use it, ok otherwise\fP
+**
+\fIBoth checks are made and combined with AND. Either whitelist or\fP
+\fIblacklist contains a list of patterns (wildcard allowed as * and ?),\fP
+\fIeg GE.\fP\&.*.*, \fI, GE.MORC.\fP\&.BH? Each stream id (NET.STA.LOC.CHA) will*
+\fIbe checked against the defined patterns.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.streams.whitelist
+Type: \fIlist:string\fP
+.sp
+The stream whitelist
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.streams.blacklist
+Type: \fIlist:string\fP
+.sp
+The stream blacklist
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.naturalPeriods.log
+Type: \fIboolean\fP
+.sp
+Defines if a linear spacing or logarithmic spacing between Tmin and
+Tmax is used. The default is a linear spacing. The logarithmic
+spacing will fail if either Tmin or Tmax is 0.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBwfparam.filter.*\fP
+\fIParameters of the 1st stage filter.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.filter.order
+Type: \fIint\fP
+.sp
+Specifies the order of the 1st stage filter.
+Default is \fB4\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.filter.loFreq
+Type: \fIdouble\fP
+.sp
+Specifies the frequency of the 1st stage hi\-pass filter. If this
+parameter is equal to 0 the hi\-pass filter is not used.
+If suffix "fNyquist" is used then the value is multiplied
+by the Nyquist frequency of the data to get the final corner
+frequency of the filter.
+Default is \fB0.025\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.filter.hiFreq
+Type: \fIdouble\fP
+.sp
+Specifies the frequency of the 1st stage lo\-pass filter. If this
+parameter is equal to 0 the lo\-pass filter is not used.
+If suffix "fNyquist" is used then the value is multiplied
+by the Nyquist frequency of the data to get the final corner
+frequency of the filter.
+Default is \fB40\fP\&.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBwfparam.pd.*\fP
+\fIParameters of the post\-deconvolution filter applied in the\fP
+\fIfrequency domain.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.pd.order
+Type: \fIint\fP
+.sp
+Specifies the order of the 2nd stage filter.
+Default is \fB4\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.pd.loFreq
+Type: \fIdouble\fP
+.sp
+Specifies the frequency of the 2nd stage hi\-pass filter. If this
+parameter is equal to 0 the hi\-pass filter is not used.
+If suffix "fNyquist" is used then the value is multiplied
+by the Nyquist frequency of the data to get the final corner
+frequency of the filter.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.pd.hiFreq
+Type: \fIdouble\fP
+.sp
+Specifies the frequency of the 2nd stage lo\-pass filter. If this
+parameter is equal to 0 the lo\-pass filter is not used.
+If suffix "fNyquist" is used then the value is multiplied
+by the Nyquist frequency of the data to get the final corner
+frequency of the filter.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.filtering.noncausal
+Type: \fIboolean\fP
+.sp
+Enables non\-causal filtering in the frequency domain.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.filtering.taperLength
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Defines the cosine taper length in seconds if non\-causal filters
+are activated applied on either side of the waveform. If a
+negative length is given 10 percent of the pre\-event window length
+is used on either side of the waveform.
+Default is \fB\-1\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.filtering.padLength
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+The length of the zero padding window in seconds applied on either
+side of the waveform if non\-causal filters are activated. If
+negative, it is computed following Boore (2005) as
+1.5*order/corner_freq and applied half at the beginning and half at
+the end of the waveform.
+Default is \fB\-1\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.cron.wakeupInterval
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Specifies the interval in seconds to check/start scheduled operations.
+Default is \fB10\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.cron.eventMaxIdleTime
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Specifies the maximum allowed idle time of a process before removed.
+The idle time is calculated if no further processing is scheduled
+and computes as: [now]\-lastRun.
+Default is \fB3600\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.cron.logging
+Type: \fIboolean\fP
+.sp
+Enables/disables updating of a cron log file. This file will be
+created at ~/.seiscomp/log/[appname].sched
+and contains information about the scheduled events and the
+processing queue. The file is updated each n seconds,
+where n = wfparam.cron.wakeupInterval.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.cron.updateDelay
+Type: \fIint\fP
+.sp
+Specifies the delay in seconds to delay processing if a new
+authoritative origin arrives for an event.
+Default is \fB60\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.cron.delayTimes
+Type: \fIlist:int\fP
+.sp
+Specifies a list of delay times in seconds relative to event time
+to trigger the processing. When the first origin of an event arrives
+this list is used to construct the crontab for this event.
+Example: "60, 120, 300, 3600"
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.acquisition.initialTimeout
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Specifies the initial acquisition timeout. If the acquisition
+source (e.g. Arclink) does not respond within this threshold with
+waveforms, the request is discarded.
+Default is \fB30\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.acquisition.runningTimeout
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Specifies the acquisition timeout when waveforms are being
+transfered. If no new waveforms arrive within this threshold, the
+request is aborted. This is important if a Seedlink connection is
+configured which can block the application for a very long time if
+at least one requested channel has no data. Seedlink does not
+finished the request until all data has been sent. When data will
+arrive for a particular channel is not known.
+Default is \fB2\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.messaging
+Type: \fIboolean\fP
+.sp
+Enables messaging output which creates objects of the
+StrongMotionParameters data model extension (defined by SED) and
+sends them to scmaster. In order to save the objects to the database,
+scmaster needs to load the dmsm plugin and the corresponding database
+schema must be applied.
+The default message group is AMPLITUDE. To change this group redefine
+connection.primaryGroup.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shortEventID
+Type: \fIboolean\fP
+.sp
+Uses short event ids when an event output directory needs to be
+created. The default pattern is [eventtime]_[mag]_[lat]_[lon]_[updatetime].
+The short format just contains the first part, namely [eventtime] in
+the format YEARmmddHHMMSS.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.waveforms.enable
+Type: \fIboolean\fP
+.sp
+Enables/disables the output of processed waveforms.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.waveforms.path
+Type: \fIstring\fP
+.sp
+Specifies the waveform output path. This parameter is only used if
+wfparam.output.waveforms.enable is true.
+Default is \fB@LOGDIR@/shakemaps/waveforms\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.waveforms.withEventDirectory
+Type: \fIboolean\fP
+.sp
+Enables/disables the creation of an event directory (named with
+eventID) when storing the processed waveforms. This parameter is
+only used if wfparam.output.waveforms.enable is true.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.spectra.enable
+Type: \fIboolean\fP
+.sp
+Enables/disables the output of spectra (psa, drs). The output
+format is a simple ASCII file where the first column is the
+period and the second column the corresponding value.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.spectra.path
+Type: \fIstring\fP
+.sp
+Specifies the spectra output path. This parameter is only used if
+wfparam.output.spectra.enable is true.
+Default is \fB@LOGDIR@/shakemaps/spectra\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.spectra.withEventDirectory
+Type: \fIboolean\fP
+.sp
+Enables/disables the creation of an event directory (named with
+eventID) when storing the spectra. This parameter is only used if
+wfparam.output.spectra.enable is true.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shakeMap.enable
+Type: \fIboolean\fP
+.sp
+Enables/disables ShakeMap XML output.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shakeMap.path
+Type: \fIstring\fP
+.sp
+Specifies the ShakeMap XML output path. This is only used if
+wfparam.output.shakeMap.enable is set to true.
+Default is \fB@LOGDIR@/shakemaps\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shakeMap.script
+Type: \fIstring\fP
+.sp
+Specifies the path to a script that is called whenever a new
+ShakeMap XML is available. The script is called with 3 parameters:
+EventID, modified ShakeMap eventID, path to event directory (where
+input/event.xml and input/event_dat.xml lives).
+The event files are not deleted by the application. The ownership
+goes to the called script.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shakeMap.synchronous
+Type: \fIboolean\fP
+.sp
+Enables/disables synchronous or asynchronous script calls. If
+enabled, be careful to not spend too much time in the script.
+The application is blocked while the script is running.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shakeMap.maximumOfHorizontals
+Type: \fIboolean\fP
+.sp
+If enabled the maximum PGV, PGA, PSA03, PSA10 and PSA30 of both
+horizontal components is used in the final output. Otherwise each
+component is saved.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shakeMap.SC3EventID
+Type: \fIboolean\fP
+.sp
+Uses the SeisComP event publicID as id attribute of the
+earthquake tag, a generated ShakeMapID otherwise.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shakeMap.regionName
+Type: \fIboolean\fP
+.sp
+Uses the event region name (if available) for the locstring
+attribute, the publicID, lat, lon otherwise.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shakeMap.encoding
+Type: \fIstring\fP
+.sp
+The XML encoding string written to the Shakemap XML file.
+Default is \fBUTF\-8\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B wfparam.output.shakeMap.version
+Type: \fIint\fP
+.sp
+The target version of the Shakemap input files.
+Default is \fB3\fP\&.
+.UNINDENT
+.SH BINDINGS
+.SS Configuration
+.INDENT 0.0
+.TP
+.B amplitudes.PGAV.saturationThreshold
+Type: \fIstring\fP
+.sp
+Defines the saturation threshold for the optional saturation check.
+By default the saturation check is configured for all stations
+as module parameter. This parameters overrides the threshold
+per station.
+.sp
+This value can either be an absolute value such as "100000"
+or a relative value (optionally in percent) with respect to
+the number of effective bits, e.g. "0.8@23" or
+"80%@23". The first version uses 1**23 * 0.8
+whereas the latter uses 1**23 * 80/100.
+.sp
+The special value "false" explicitly disables
+the check.
+.UNINDENT
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-x, \-\-expiry hours
+Time span in hours after which objects expire
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-E, \-\-event\-id arg
+EventID to calculate amplitudes for
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-ep arg
+EventParameters (XML) to load
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Messaging
+.INDENT 0.0
+.TP
+.B \-u, \-\-user arg
+Overrides configuration parameter \fBconnection.username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-H, \-\-host arg
+Overrides configuration parameter \fBconnection.server\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-t, \-\-timeout arg
+Overrides configuration parameter \fBconnection.timeout\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-g, \-\-primary\-group arg
+Overrides configuration parameter \fBconnection.primaryGroup\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S, \-\-subscribe\-group arg
+A group to subscribe to. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-content\-type arg
+Overrides configuration parameter \fBconnection.contentType\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-stop\-msg arg
+Sets sending of a start\- and a stop message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-test
+Test mode, no messages are sent
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-module arg
+The configmodule to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-inventory\-db arg
+Load the inventory from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-db\-disable
+Do not use the database at all
+.UNINDENT
+.SS Records
+.INDENT 0.0
+.TP
+.B \-\-record\-driver\-list
+List all supported record stream drivers
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-I, \-\-record\-url arg
+The recordstream source URL, format: [\fI\%service://\fP]location[#type].
+"service" is the name of the recordstream driver which can be
+queried with "\-\-record\-driver\-list". If "service"
+is not given "\fI\%file://\fP" is used.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-record\-file arg
+Specify a file as record source.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-record\-type arg
+Specify a type for the records being read.
+.UNINDENT
+.SS Mode
+.INDENT 0.0
+.TP
+.B \-\-order arg
+Filter order
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-lo\-filter freq
+High\-pass filter frequency
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-hi\-filter freq
+Low\-pass filter frequency
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-sc\-order arg
+Sensitivity correction filter order
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-sc\-lo\-filter freq
+Sensitivity correction high\-pass filter frequency
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-sc\-hi\-filter freq
+Sensitivity correction low\-pass filter frequency
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-offline
+Do not connect to the messaging and  and disable the database in combination with \-\-inventory\-db and \-\-ep
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-force
+Force event processing even if a journal entry exists that processing has completed
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-force\-shakemap
+Force ShakeMap script to be run even if no station has contributed data
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-dump\-config
+Dump the configuration and exit
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-dump\-records
+Dumps all received records (binary) to [eventd].recs
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

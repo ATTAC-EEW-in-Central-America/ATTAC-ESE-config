@@ -1,0 +1,434 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCXMLDUMP" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scxmldump \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBDumps database objects to XML files.\fP
+.SH DESCRIPTION
+.sp
+To get event information from the database without using SQL is an important
+task for the user. \fI\%scxmldump\fP queries the database and transforms that
+information into XML. The result can be converted into a bulletin with
+scbulletin or imported into another database with scdb\&.
+.sp
+An XSD schema of the XML output can be found under
+\fB$SEISCOMP_ROOT/share/xml/\fP\&.
+.SS Examples
+.sp
+Export inventory
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scxmldump \-fI \-o inventory.xml \-d mysql://sysop:sysop@localhost/seiscomp
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Export configuration
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scxmldump \-fC \-o config.xml \-d mysql://sysop:sysop@localhost/seiscomp
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Export full event data incl. the relevant journal entries
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scxmldump \-fPAMFJ \-E test2012abcd \-o test2012abcd.xml \e
+          \-d mysql://sysop:sysop@localhost/seiscomp
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Export summary event data
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scxmldump \-fap \-E test2012abcd \-o test2012abcd.xml \e
+          \-d mysql://sysop:sysop@localhost/seiscomp
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Create bulletin
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scxmldump \-fPAMF \-E test2012abcd
+          \-d mysql://sysop:sysop@localhost/seiscomp | \e
+scbulletin
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Copy event
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scxmldump \-fPAMF \-E test2012abcd \e
+          \-d mysql://sysop:sysop@localhost/seiscomp | \e
+scdb \-i \- \-d mysql://sysop:sysop@archive\-db/seiscomp
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Export the entire journal:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scxmldump \-fJ \-o journal.xml \e
+          \-d mysql://sysop:sysop@localhost/seiscomp
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scxmldump.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scxmldump.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scxmldump.cfg\fP
+.fi
+.sp
+.sp
+scxmldump inherits global options\&.
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Messaging
+.INDENT 0.0
+.TP
+.B \-u, \-\-user arg
+Overrides configuration parameter \fBconnection.username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-H, \-\-host arg
+Overrides configuration parameter \fBconnection.server\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-t, \-\-timeout arg
+Overrides configuration parameter \fBconnection.timeout\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-g, \-\-primary\-group arg
+Overrides configuration parameter \fBconnection.primaryGroup\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S, \-\-subscribe\-group arg
+A group to subscribe to. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-content\-type arg
+Overrides configuration parameter \fBconnection.contentType\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-stop\-msg arg
+Sets sending of a start\- and a stop message.
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-module arg
+The configmodule to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-inventory\-db arg
+Load the inventory from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-db arg
+Load the configuration from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.SS Dump
+.INDENT 0.0
+.TP
+.B \-\-listen
+Enables server mode which listens to the message server for
+incoming events and dumps each received add/update.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-I, \-\-inventory
+Dump the inventory.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-without\-station\-groups
+Removes all station groups from inventory.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-stations sta\-list
+If inventory is exported filter the stations to export where each
+item is in format net[.{sta|*}].
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-C, \-\-config
+Dump the configuration database.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-J, \-\-journal
+Dump the journal. In combination with \-E only corresponding journal entries are included.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-R, \-\-routing
+Dump the routing database.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-Y, \-\-availability
+Dump data availability information.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-with\-segments
+Dump individual data segments.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-O, \-\-origin id
+Origin publicID(s) to dump. Multiple origins may be specified
+as a comma\-separated list.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-E, \-\-event id
+Event publicID(s) to dump. Multiple events may be specified
+as a comma\-separated list.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-P, \-\-with\-picks
+Dump associated picks along with origins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-A, \-\-with\-amplitudes
+Dump associated amplitudes along with magnitudes.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-M, \-\-with\-magnitudes
+Dump station magnitudes.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-F, \-\-with\-focal\-mechanism
+Dump focal mechanisms of events.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-a, \-\-ignore\-arrivals
+Do not dump arrivals part of origins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-ignore\-magnitudes
+Does not export (network) magnitudes of origins. This
+option is most useful in combination with \-O to only
+export the location information.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-p, \-\-preferred\-only
+When exporting events only the preferred origin, the preferred
+magnitude and the preferred focal mechanism will be dumped.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-m, \-\-all\-magnitudes
+If only the preferred origin is exported, all magnitudes for this
+origin will be dumped.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-f, \-\-formatted
+Use formatted XML output.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-prepend\-datasize
+Prepend a line with the length of the XML data.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-o, \-\-output
+The output file. Default is stdout.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

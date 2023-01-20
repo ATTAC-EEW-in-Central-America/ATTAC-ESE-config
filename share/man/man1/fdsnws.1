@@ -1,0 +1,1407 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "FDSNWS" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+fdsnws \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBProvides FDSN Web Services\fP
+.SH DESCRIPTION
+.sp
+fdsnws is a server that provides event and station information by FDSN Web Services
+(fdsn)
+from a SeisComP database and waveforms from a global_recordstream source.
+Also it may be configured to serve data
+availability information as described in the IRIS DMC FDSNWS availability Web
+Service Documentation ().
+.sp
+\fBCAUTION:\fP
+.INDENT 0.0
+.INDENT 3.5
+If you expose the FDSN Web Service as a public service, make sure that
+the database connection is read\-only. fdsnws will never attempt to write
+into the database.
+.UNINDENT
+.UNINDENT
+.SH SERVICE OVERVIEW
+.sp
+The following services are available:
+.TS
+center;
+|l|l|l|.
+_
+T{
+Service
+T}	T{
+Provides
+T}	T{
+Provided format
+T}
+_
+T{
+\fI\%fdsnws\-dataselect\fP
+T}	T{
+time series data
+T}	T{
+\fI\%miniSEED\fP
+T}
+_
+T{
+\fI\%fdsnws\-station\fP
+T}	T{
+network, station, channel, response metadata
+T}	T{
+\fI\%FDSN Station XML\fP, \fI\%StationXML\fP, SCML
+T}
+_
+T{
+\fI\%fdsnws\-event\fP
+T}	T{
+earthquake origin and magnitude estimates
+T}	T{
+\fI\%QuakeML\fP, SCML
+T}
+_
+T{
+\fI\%ext\-availability\fP
+T}	T{
+waveform data availability information
+T}	T{
+text, geocsv, json, sync, request (\fI\%fdsnws\-dataselect\fP)
+T}
+_
+.TE
+.sp
+The available services can be reached from the fdsnws start page.  The services
+also provide an interactive URL builder constructing the request URL based on
+user inputs. The FDSN specifications can be found on fdsn\&.
+.sp
+\fBURL\fP
+.INDENT 0.0
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws\fP
+.UNINDENT
+.sp
+If \fBfdsnws\fP is started, it accepts connections by default on port 8080 which
+can be changed in the configuration. Also please read \fI\%Changing the Service Port\fP for
+running the services on a privileged port, e.g. port 80 as requested by the
+FDSNWS specification.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+If you decide to run the service on a different URL than \fBlocalhost:8080\fP
+you have to change the URL string in the \fB*.wadl\fP documents located under
+\fB$DATADIR/fdsnws\fP\&.
+.UNINDENT
+.UNINDENT
+.SS DataSelect
+.INDENT 0.0
+.IP \(bu 2
+Provides time series data in miniSEED format
+.IP \(bu 2
+Request type: HTTP\-GET, HTTP\-POST
+.UNINDENT
+.SS URL
+.INDENT 0.0
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/dataselect/1/builder\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/dataselect/1/query\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/dataselect/1/queryauth\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/dataselect/1/version\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/dataselect/1/application.wadl\fP
+.UNINDENT
+.SS Example
+.INDENT 0.0
+.IP \(bu 2
+Request URL for querying waveform data from the GE station BKNI, all BH channels
+on 11 April 2013 between 00:00:00 and 12:00:00:
+.sp
+\fBhttp://localhost:8080/fdsnws/dataselect/1/query?net=GE&sta=BKNI&cha=BH?&start=2013\-04\-11T00:00:00&end=2013\-04\-11T12:00:00\fP
+.UNINDENT
+.sp
+To submit HTTP\-POST requests the command line tool \fBcurl\fP may be used:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ curl \-X POST \-\-data\-binary @request.txt "http://localhost:8080/fdsnws/dataselect/1/query"
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+where \fIrequest.txt\fP contains the POST message body. For details read the
+FDSN specifications.
+.SS Feature notes
+.INDENT 0.0
+.IP \(bu 2
+\fBquality\fP parameter not implemented (information not available in SeisComP)
+.IP \(bu 2
+\fBminimumlength\fP parameter is not implemented
+.IP \(bu 2
+\fBlongestonly\fP parameter is not implemented
+.IP \(bu 2
+Access to drestricted networks and stations is only granted through the
+\fBqueryauth\fP method
+.UNINDENT
+.sp
+The data channels exposed by this service may be restrict by defining an
+inventory filter, see section \fI\%Filtering Inventories\fP\&.
+.SS Service configuration
+.INDENT 0.0
+.IP \(bu 2
+Activate \fI\%serveDataSelect\fP in the module configuration
+.IP \(bu 2
+Configure the global_recordstream in the module\(aqs global configuration.
+If the data is stored in a local waveform archive the
+rs\-sdsarchive provides fast access to the data. For archives on remote hosts
+use rs\-arclink or rs\-fdsnws instead.
+.UNINDENT
+.sp
+\fBWARNING:\fP
+.INDENT 0.0
+.INDENT 3.5
+Requesting future or delayed data may block the \fI\%DataSelect\fP service.
+Therefore, real\-time global_recordstream requests such as rs\-slink
+should be avoided.
+If rs\-slink is inevitable make use of the \fBtimeout\fP and
+\fBretries\fP parameters. E.g. set the \fBrecordstream\fP to
+\fBslink://localhost:18000?timeout=1&retries=0\fP or in case of the rs\-combined
+service to
+\fBcombined://slink/localhost:18000?timeout=1&retries=0;sdsarchive//home/sysop/seiscomp/var/lib/archive\fP\&.
+.UNINDENT
+.UNINDENT
+.SS Station
+.INDENT 0.0
+.IP \(bu 2
+Provides network, station, channel, response metadata
+.IP \(bu 2
+Request type: HTTP\-GET, HTTP\-POST
+.IP \(bu 2
+Stations may be filtered e.g. by geographic region and time, also the
+information depth level is selectable
+.IP \(bu 2
+Optionally handles time\-based conditional HTTP\-GET requests as specified by
+\fI\%RFC 7232\fP\&.
+.UNINDENT
+.SS URL
+.INDENT 0.0
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/station/1/builder\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/station/1/query\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/station/1/version\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/station/1/application.wadl\fP
+.UNINDENT
+.SS Example
+.INDENT 0.0
+.IP \(bu 2
+Request URL for querying the information for the GE network on response level:
+.sp
+\fI\%http://localhost:8080/fdsnws/station/1/query?net=GE&cha=BH%3F&level=response&nodata=404\fP
+.UNINDENT
+.SS Feature notes
+.INDENT 0.0
+.IP \(bu 2
+To enable FDSNXML or StationXML support load the plugin \fBfdsnxml\fP\&. The
+plugin is loaded by default configuration.
+.IP \(bu 2
+\fBupdatedafter\fP request parameter not implemented: The last modification time
+in \fISeisComP\fP is tracked on the object level. If a child of an object is updated
+the update time is not propagated to all parents. In order to check if a
+station was updated all children must be evaluated recursively. This operation
+would be much too expensive.
+.IP \(bu 2
+\fBformatted\fP: boolean, default: \fBfalse\fP
+.IP \(bu 2
+Additional values of request parameters:
+.INDENT 2.0
+.IP \(bu 2
+format:
+.INDENT 2.0
+.IP \(bu 2
+standard: \fB[xml, text]\fP
+.IP \(bu 2
+additional: \fB[fdsnxml (=xml), stationxml, sc3ml]\fP
+.IP \(bu 2
+default: \fBxml\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+The inventory exposed by this service may be restricted, see section
+\fI\%Filtering Inventories\fP\&.
+.SS Event
+.INDENT 0.0
+.IP \(bu 2
+Provides earthquake origin and magnitude estimates
+.IP \(bu 2
+Request type: HTTP\-GET
+.IP \(bu 2
+Events may be filtered e.g. by hypocenter, time and magnitude
+.UNINDENT
+.SS URL
+.INDENT 0.0
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/event/1/builder\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/event/1/query\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/event/1/catalogs\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/event/1/contributors\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/event/1/version\fP
+.IP \(bu 2
+\fI\%http://localhost:8080/fdsnws/event/1/application.wadl\fP
+.UNINDENT
+.SS Example
+.INDENT 0.0
+.IP \(bu 2
+Request URL for fetching the event parameters within 10 degrees around 50°N/11°E
+starting on 18 April 2013:
+.sp
+\fI\%http://localhost:8080/fdsnws/event/1/query?start=2018\-06\-01&lat=50&lon=11&maxradius=10&nodata=404\fP
+.UNINDENT
+.SS Feature Notes
+.INDENT 0.0
+.IP \(bu 2
+\fISeisComP\fP does not distinguish between catalogs and contributors, but
+supports agencyIDs. Hence, if specified, the value of the \fBcontributor\fP
+parameter is mapped to the agencyID. The file
+\fB@DATADIR@/share/fdsn/contributors.xml\fP has to be filled manually with all
+available agency ids
+.IP \(bu 2
+Origin and magnitude filter parameters are always applied to preferred origin
+resp. preferred magnitude
+.IP \(bu 2
+\fBupdatedafter\fP request parameter not implemented: The last modification time
+in \fISeisComP\fP is tracked on the object level. If a child of an object is updated
+the update time is not propagated to all parents. In order to check if a
+station was updated all children must be evaluated recursively. This operation
+would be much too expensive.
+.IP \(bu 2
+Additional request parameters:
+.INDENT 2.0
+.IP \(bu 2
+\fBincludepicks\fP: boolean, default: \fBfalse\fP, works only in combination
+with \fBincludearrivals\fP set to \fBtrue\fP
+.IP \(bu 2
+\fBincludecomments\fP: boolean, default: \fBtrue\fP
+.IP \(bu 2
+\fBformatted\fP: boolean, default: \fBfalse\fP
+.UNINDENT
+.IP \(bu 2
+Additional values of request parameters:
+.INDENT 2.0
+.IP \(bu 2
+format:
+.INDENT 2.0
+.IP \(bu 2
+standard: \fB[xml, text]\fP
+.IP \(bu 2
+additional: \fB[qml (=xml), qml\-rt, sc3ml, csv]\fP
+.IP \(bu 2
+default: \fBxml\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Data Availability
+.sp
+The data availability web service returns detailed time span information of
+what time series data is available at the DMC archive. The availability information
+can be created by scardac in the \fISeisComP\fP database from where it is
+fetched by fdsnws.
+.sp
+The availability service is no official standard yet. This implementation aims
+to be compatible with the IRIS DMC availability FDSN Web Service
+() implementation.
+.INDENT 0.0
+.IP \(bu 2
+request type: HTTP\-GET, HTTP\-POST
+.IP \(bu 2
+results may be filtered e.g. by channel code, time and quality
+.UNINDENT
+.SS URL
+.INDENT 0.0
+.IP \(bu 2
+\fI\%http://localhost:8080/ext/availability/1/extent\fP \- Produces list of available
+time extents (earliest to latest) for selected channels (network, station,
+location and quality) and time ranges.
+.IP \(bu 2
+\fI\%http://localhost:8080/ext/availability/1/builder\-extent\fP \- URL builder helping
+you to form your data extent requests
+.IP \(bu 2
+\fI\%http://localhost:8080/ext/availability/1/query\fP \- Produces list of contiguous
+time spans for selected channels (network, station, location, channel and
+quality) and time ranges.
+.IP \(bu 2
+\fI\%http://localhost:8080/ext/availability/1/builder\fP \- URL builder helping you to
+form your data time span requests
+.IP \(bu 2
+\fI\%http://localhost:8080/ext/availability/1/version\fP
+.UNINDENT
+.SS Examples
+.INDENT 0.0
+.IP \(bu 2
+Request URL for data extents of seismic network \fBIU\fP:
+.sp
+\fI\%http://localhost:8080/fdsnws/ext/availability/1/extent?net=IU\fP
+.IP \(bu 2
+Further limit the extents to those providing data for August 1st 2018:
+.sp
+\fI\%http://localhost:8080/fdsnws/ext/availability/1/extent?net=IU&start=2018\-08\-01\fP
+.IP \(bu 2
+Request URL for continues time spans of station \fBANMO\fP in July 2018:
+.sp
+\fI\%http://localhost:8080/fdsnws/ext/availability/1/query?sta=ANMO&start=2018\-07\-01&end=2018\-08\-01\fP
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+Use scardac for creating the availability information.
+.UNINDENT
+.UNINDENT
+.SS Feature Notes
+.INDENT 0.0
+.IP \(bu 2
+The IRISWS availability implementation truncates the time spans of the returned
+data extents and segments to the requested start and end times (if any). This
+implementation truncates the start and end time only for the formats: \fBsync\fP
+and \fBrequest\fP\&. The \fBtext\fP, \fBgeocsv\fP and \fBjson\fP format will return the
+exact time windows extracted from the waveform archive.
+.sp
+The reasons for this derivation are:
+.INDENT 2.0
+.IP \(bu 2
+performance: With the \fB/extent\fP query the \fBtext\fP, \fBgeocsv\fP and
+\fBjson\fP offer the display of the number of included time spans
+(\fBshow=timespancount\fP). The data model offers no efficient way to
+recalculate the number of time spans represented by an extent if the extents
+time window is altered by the requested start and end times. The \fBsync\fP
+and \fBrequest\fP formats do not provided this counter and it is convenient to
+use their outputs for subsequent data requests.
+.IP \(bu 2
+by truncating the time windows information is lost. There would be no
+efficient way for a client to retrieve the exact time windows falling into a
+specific time span.
+.IP \(bu 2
+network and station epochs returned by the \fI\%Station\fP service are also
+not truncated to the requested start and end times.
+.IP \(bu 2
+truncation can easily be done on client side. No additional network traffic is
+generated.
+.UNINDENT
+.UNINDENT
+.SH FILTERING INVENTORIES
+.sp
+The channels served by the \fI\%Station\fP and \fI\%DataSelect\fP services
+may be filtered by specified an INI file in the \fBstationFilter\fP and
+\fBdataSelectFilter\fP configuration parameter. You may use the same file for both
+services or define a separate configuration set. \fBNote:\fP If distinct file
+names are specified and both services are activated, the inventory is loaded
+twice which will increase the memory consumption of this module.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+[Chile]
+code = CX.*.*.*
+
+[!Exclude station APE]
+code = GE.APE.*.*
+
+[German (not restricted)]
+code = GE.*.*.*
+restricted = false
+shared = true
+archive = GFZ
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The listing above shows a configuration example which includes all Chile
+stations. Also all not restricted German stations, with exception of the station
+GE.APE, are included.
+.sp
+The configuration is divided into several rules. The rule name is given in
+square brackets. A name starting with an exclamation mark defines an exclude
+rule, else the rule is an include. The rule name is not evaluated by the
+application but is plotted when debugging the rule set, see configuration
+parameter \fBdebugFilter\fP\&.
+.sp
+Each rule consists of a set of attributes. The first and mandatory attribute is
+\fBcode\fP which defines a regular expression for the channel code (network,
+station, location, channel). In addition the following optional attributes
+exist:
+.TS
+center;
+|l|l|l|l|l|l|.
+_
+T{
+Attribute
+T}	T{
+Type
+T}	T{
+Network
+T}	T{
+Station
+T}	T{
+Location
+T}	T{
+Channel
+T}
+_
+T{
+\fBrestricted\fP
+T}	T{
+Boolean
+T}	T{
+X
+T}	T{
+X
+T}	T{
+T}	T{
+X
+T}
+_
+T{
+\fBshared\fP
+T}	T{
+Boolean
+T}	T{
+X
+T}	T{
+X
+T}	T{
+T}	T{
+X
+T}
+_
+T{
+\fBnetClass\fP
+T}	T{
+String
+T}	T{
+X
+T}	T{
+T}	T{
+T}	T{
+T}
+_
+T{
+\fBarchive\fP
+T}	T{
+String
+T}	T{
+X
+T}	T{
+X
+T}	T{
+T}	T{
+T}
+_
+.TE
+.sp
+A rule matches if all of its attributes match. The optional attributes are
+evaluated bottom\-up where ever they are applicable. E.g. if a rule defines
+\fBrestricted = false\fP but the restricted flag is not present on channel level
+then it is searched on station and then on network level. If no \fBrestricted\fP
+attribute is found in the hierarchy, the rule will not match even if the value
+was set to \fBfalse\fP\&.
+.sp
+The individual rules are evaluated in order of their definition. The processing
+stops once a matching rule is found and the channel is included or excluded
+immediately. So the order of the rules is important.
+.sp
+One may decided to specify a pure whitelist, a pure blacklist, or to mix include
+and exclude rules. If neither a matching include nor exclude rule is found, then
+channel is only added if no other include rule exists in the entire rule set.
+.SH CHANGING THE SERVICE PORT
+.sp
+The FDSN Web service specification defines that the Service SHOULD be available
+under port 80. Typically \fISeisComP\fP runs under a user without root permissions
+and therefore is not allowed to bind to privileged ports (<1024).
+To serve on port 80 you may for instance
+.INDENT 0.0
+.IP \(bu 2
+Run \fISeisComP\fP with root privileged (not recommended)
+.IP \(bu 2
+Use a proxy Webserver, e.g. Apache with
+\fI\%mod\-proxy\fP module
+.IP \(bu 2
+Configure and use \fI\%Authbind\fP
+.IP \(bu 2
+Setup \fI\%Firewall\fP redirect rules
+.UNINDENT
+.SH AUTHBIND
+.sp
+\fBauthbind\fP allows a program which does not or should not run as root to bind
+to low\-numbered ports in a controlled way. Please refer to \fBman authbind\fP for
+program descriptions. The following lines show how to install and setup authbind
+for the user \fBsysop\fP under the Ubuntu OS.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ sudo apt\-get install authbind
+sysop@host:~$ sudo touch /etc/authbind/byport/80
+sysop@host:~$ sudo chown sysop /etc/authbind/byport/80
+sysop@host:~$ sudo chmod 500 /etc/authbind/byport/80
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Once \fBauthbind\fP is configured correctly the FDSN Web services may be started
+as follows:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ authbind \-\-deep seiscomp exec fdsnws
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+In order use \fBauthbind\fP when starting \fBfdsnws\fP as \fISeisComP\fP service the last
+line in the \fB~/seiscomp/etc/init/fdsnws.py\fP have to be commented in.
+.SH FIREWALL
+.sp
+All major Linux distributions ship with their own firewall implementations which
+are front\-ends for the \fBiptables\fP kernel functions. The following line
+temporary adds a firewall rule which redirects all incoming traffic on port 8080
+to port 80.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ sudo iptables \-t nat \-A PREROUTING \-p tcp \-\-dport 80 \-j REDIRECT \-\-to 8080
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Please refer to the documentation of your particular firewall solution on how to
+set up this rule permanently.
+.SH AUTHENTICATION EXTENSION
+.sp
+The FDSNWS standard requires HTTP digest authentication as the
+authentication mechanism. The "htpasswd" configuration option is used to
+define the location of the file storing usernames and passwords of users
+who are allowed to get restricted data. Any user with valid credentials
+would have access to all restricted data.
+.sp
+An extension to the FDSNWS protocol has been developed in order to use
+email\-pattern\-based access control lists, which is an established
+authorization mechanism in SeisComP3 (used by Arclink). It works as follows:
+.INDENT 0.0
+.IP \(bu 2
+The user contacts an authentication service (based on eduGAIN AAI,
+e\-mail, etc.) and receives a list of attributes (a token), signed by the
+authentication service. The validity of the token is typically 30 days.
+.IP \(bu 2
+The user presents the token to /auth method (HTTPS) of the dataselect
+service. This method is the only extension to standard FDSNWS that is
+required.
+.IP \(bu 2
+If the digital signature is valid, a temporary account for /queryauth
+is created. The /auth method returns username and password of this
+account, separated by \(aq:\(aq. The account is typically valid for 24 hours.
+.IP \(bu 2
+The username and password are to be used with /queryauth as usual.
+.IP \(bu 2
+Authorization is based on user\(aqs e\-mail address in the token and
+arclink\-access bindings.
+.UNINDENT
+.SS Configuration
+.sp
+The authentication extension is enabled by setting the "auth.enable"
+configuration option to "true" and pointing "auth.gnupgHome" to a directory
+where GPG stores its files. Let\(aqs use the directory
+~/seiscomp/var/lib/gpg, which is the default.
+.INDENT 0.0
+.IP \(bu 2
+First create the direcory and your own signing key:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ mkdir \-m 700 ~/seiscomp/var/lib/gpg
+sysop@host:~$ gpg \-\-homedir ~/seiscomp/var/lib/gpg \-\-gen\-key
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP \(bu 2
+Now import GPG keys of all authentication services you trust:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ gpg \-\-homedir ~/seiscomp/var/lib/gpg \-\-import <keys.asc
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP \(bu 2
+Finally sign all imported keys with your own key (XXXXXXXX is the ID of
+an imported key):
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ gpg \-\-homedir ~/seiscomp/var/lib/gpg \-\-edit\-key XXXXXXXX sign save
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP \(bu 2
+\&...and set auth.enable, either using the "scconfig" tool or:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ echo "auth.enable = true" >> ~/seiscomp/etc/fdsnws.cfg
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Usage example
+.sp
+A client like \fI\%fdsnws_fetch\fP is recommended, but also tools like wget and
+curl can be used. As an example, let\(aqs request data from the restricted
+station AAI (assuming that we are authorized to get data of this station).
+.INDENT 0.0
+.IP \(bu 2
+The first step is to obtain the token from an authentication service.
+Assuming that the token is saved in "token.asc", credentials of the
+temporary account can be requested using one of the following commands:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ wget \-\-post\-file token.asc https://geofon.gfz\-potsdam.de/fdsnws/dataselect/1/auth \-O cred.txt
+sysop@host:~$ curl \-\-data\-binary @token.asc https://geofon.gfz\-potsdam.de/fdsnws/dataselect/1/auth \-o cred.txt
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP \(bu 2
+The resulting file "cred.txt" contains username and password separated by
+a colon, so one can conveniently use a shell expansion:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ wget "http://\(gacat cred.txt\(ga@geofon.gfz\-potsdam.de/fdsnws/dataselect/1/queryauth?starttime=2015\-12\-15T16:00:00Z&endtime=2015\-12\-15T16:10:00Z&network=IA&station=AAI" \-O data.mseed
+sysop@host:~$ curl \-\-digest "http://\(gacat cred.txt\(ga@geofon.gfz\-potsdam.de/fdsnws/dataselect/1/queryauth?starttime=2015\-12\-15T16:00:00Z&endtime=2015\-12\-15T16:10:00Z&network=IA&station=AAI" \-o data.mseed
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP \(bu 2
+Using the \fI\%fdsnws_fetch\fP utility, the two steps above can be combined into
+one:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sysop@host:~$ fdsnws_fetch \-a token.asc \-s 2015\-12\-15T16:00:00Z \-e 2015\-12\-15T16:10:00Z \-N IA \-S AAI \-o data.mseed
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH LOGGING
+.sp
+In addition to normal \fISeisComP\fP logs, fdsnws can create a simple HTTP access log
+and/or a detailed request log. The locations of log files are specified by
+"accessLog" and "requestLog" in fdsnws.cfg.
+.sp
+Both logs are text\-based and line\-oriented. Each line of \fIaccess\fP log
+contains the following fields, separated by \(aq|\(aq (some fields can be empty):
+.INDENT 0.0
+.IP \(bu 2
+service name;
+.IP \(bu 2
+hostname of service;
+.IP \(bu 2
+access time;
+.IP \(bu 2
+hostname of user;
+.IP \(bu 2
+IP address of user (proxy);
+.IP \(bu 2
+length of data in bytes;
+.IP \(bu 2
+processing time in milliseconds;
+.IP \(bu 2
+error message;
+.IP \(bu 2
+agent string;
+.IP \(bu 2
+HTTP response code;
+.IP \(bu 2
+username (if authenticated);
+.IP \(bu 2
+network code of GET request;
+.IP \(bu 2
+station code of GET request;
+.IP \(bu 2
+location code of GET request;
+.IP \(bu 2
+channel code of GET request;
+.UNINDENT
+.sp
+Each line of \fIrequest\fP log contains a JSON object, which has the following
+attributes:
+.INDENT 0.0
+.TP
+.B service
+service name
+.TP
+.B userID
+anonymized (numeric) user ID for statistic purposes
+.TP
+.B clientID
+agent string
+.TP
+.B userEmail
+e\-mail address of authenticated user if using restricted data
+.TP
+.B auth
+True if user is authenticated (not anonymous)
+.TP
+.B userLocation
+JSON object containing rough user location (eg., country) for statistic purposes
+.TP
+.B created
+time of request creation
+.TP
+.B status
+"OK", "NODATA", "ERROR" or "DENIED"
+.TP
+.B bytes
+length of data in bytes
+.TP
+.B finished
+time of request completion
+.TP
+.B trace
+request content after wildcard expansion (array of JSON objects)
+.UNINDENT
+.sp
+Each trace object has the following attributes:
+.INDENT 0.0
+.TP
+.B net
+network code
+.TP
+.B sta
+station code
+.TP
+.B loc
+location code
+.TP
+.B cha
+channel code
+.TP
+.B start
+start time
+.TP
+.B end
+end time
+.TP
+.B restricted
+True if the data requires authorization
+.TP
+.B status
+"OK", "NODATA", "ERROR" or "DENIED"
+.TP
+.B bytes
+length of trace in bytes
+.UNINDENT
+.sp
+Both logs are rotated daily. In case of access log, one week of data is
+kept. Request logs are compressed using bzip2 and not removed.
+.sp
+If trackdb.enable=true in fdsnws.cfg, then requests are additionally logged
+into SeisComP database using the ArcLink request log schema. Be aware that the
+number of requests in a production system can be rather large. For example,
+the GEOFON datacentre is currently serving between 0.5..1 million FDSNWS
+requests per day.
+.SH RELATED MODULES
+.sp
+GEOFON maintains scripts for FDSNWS fdsnws_scripts:
+.INDENT 0.0
+.IP \(bu 2
+The \fBfdsnws_fetch\fP client is a convenient tool for requesting
+waveforms from a FDSN web service hosted by EIDA nodes.
+.IP \(bu 2
+The \fBfdsnws2sds\fP client is a tool for requesting waveforms
+from a FDSN web service hosted by EIDA nodes and to store them into an
+SDS archive.
+.UNINDENT
+.SH PUBLIC FDSN WEB SERVERS
+.sp
+IRIS maintains a list of data centers ()
+supporting FDSN Web Services (fdsn).
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/fdsnws.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/fdsnws.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/fdsnws.cfg\fP
+.fi
+.sp
+.sp
+fdsnws inherits global options\&.
+.INDENT 0.0
+.TP
+.B listenAddress
+Type: \fIIP\fP
+.sp
+Defines the bind address of the server. "0.0.0.0" allows
+any interface to connect to this server whereas "127.0.0.0"
+only allows connections from localhost.
+Default is \fB0.0.0.0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B port
+Type: \fIint\fP
+.sp
+Server port to listen for incoming requests. Note: The FDSN Web
+service specification defines the service port 80. Please refer
+to the documentation on how to serve on privileged ports.
+Default is \fB8080\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B connections
+Type: \fIint\fP
+.sp
+Number of maximum simultaneous requests.
+Default is \fB5\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B queryObjects
+Type: \fIint\fP
+.sp
+Maximum number of objects per query, used in fdsnws\-station and
+fdsnws\-event to limit main memory consumption.
+Default is \fB10000\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B realtimeGap
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Restricts end time of requests to current time \- realtimeGap
+seconds. Negative values allowed. Used in fdsnws\-dataselect.
+WARNING: If this value is unset and a realtime recordsource
+(e.g. slink) is used, requests may block if end time in future
+is requested.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B samplesM
+Type: \fIfloat\fP
+.sp
+Maximum number of samples (in units of million) per query, used
+in fdsnws\-dataselect to prevent a single user to block one
+connection with a large request.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B recordBulkSize
+Type: \fIint\fP
+.sp
+Unit: \fIbytes\fP
+.sp
+Set the number of bytes to buffer for each chunk of waveform data
+served to the client. The lower the buffer the higher the overhead
+of Python Twisted. The higher the buffer the higher the memory
+usage per request. 100kB seems to be a good trade\-off.
+Default is \fB102400\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B htpasswd
+Type: \fIstring\fP
+.sp
+Path to password file used in fdsnws\-dataselect/queryauth. The
+format is \(aqusername:password\(aq separated by lines. Because of the
+HTTP digest authentication method required by the FDSN
+specification, the passwords have to be stored in plain text.
+Default is \fB@CONFIGDIR@/fdsnws.htpasswd\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B accessLog
+Type: \fIstring\fP
+.sp
+Path to access log file. If unset no access log is created.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B requestLog
+Type: \fIstring\fP
+.sp
+Path to request log file. If unset no request log is created.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B userSalt
+Type: \fIstring\fP
+.sp
+Secret salt for calculating userID.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B corsOrigins
+Type: \fIlist:string:\fP
+.sp
+List of domain names Cross\-Origin Resource Sharing (CORS)
+request may originate from. A value of \(aq*\(aq allows any web page
+to embed your service. An empty value will switch of CORS
+requests entirely. An example of multiple domains might be:
+\(aq\fI\%https://test.domain.de\fP, \fI\%https://production.domain.de\fP\(aq.
+Default is \fB*\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B allowRestricted
+Type: \fIboolean\fP
+.sp
+Enables/disables access to restricted inventory data.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B handleConditionalRequests
+Type: \fIboolean\fP
+.sp
+Enables/disables handling of time\-based conditional requests (RFC
+7232) by the fdsnws\-station resource.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B useArclinkAccess
+Type: \fIboolean\fP
+.sp
+If enabled, then access to restricted waveform data is controlled
+by arclink\-access bindings. By default authenticated users have
+access to all data.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B hideAuthor
+Type: \fIboolean\fP
+.sp
+If enabled author information is removed from any event creationInfo element.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B hideComments
+Type: \fIboolean\fP
+.sp
+If enabled event comment elements are no longer accessible.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B evaluationMode
+Type: \fIstring\fP
+.sp
+If set the event service will only return events having a preferred origin with a matching evaluationMode property.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventFormats
+Type: \fIlist:string\fP
+.sp
+List of enabled event formats. If unspecified all supported
+formats are enabled.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B serveDataSelect
+Type: \fIboolean\fP
+.sp
+Enables/disables the DataSelect service.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B serveEvent
+Type: \fIboolean\fP
+.sp
+Enables/disables the Event service.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B serveStation
+Type: \fIboolean\fP
+.sp
+Enables/disables the Station service.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B serveAvailability
+Type: \fIboolean\fP
+.sp
+Enables/disables the Availability service. Note: This is a non
+standard FDSNWS extension served under fdsnws/ext/availability.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B stationFilter
+Type: \fIstring\fP
+.sp
+Path to station inventory filter file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B dataSelectFilter
+Type: \fIstring\fP
+.sp
+Path to dataselect inventory filter file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B debugFilter
+Type: \fIboolean\fP
+.sp
+If enabled a debug line is written for each stream ID explaining
+why a stream was added/removed by a inventory filter.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B fileNamePrefix
+Type: \fIstring\fP
+.sp
+Defines the prefix for the default filenames if downloading and saving data from within a browser.
+For data loaded using dataselect, it is thus fdsnws.mseed by default.
+Default is \fBfdsnws\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventType.whitelist
+Type: \fIlist:string\fP
+.sp
+List of enabled event types
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventType.blacklist
+Type: \fIlist:string\fP
+.sp
+List of disabled event types
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdataAvailability.*\fP
+\fIProvide access to waveform data availability information stored\fP
+\fIin the SeisComP database. In case of a SDS archive this\fP
+\fIinformation may be collected by scardac (SeisComP archive\fP
+\fIdata availability collector).\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B dataAvailability.enable
+Type: \fIboolean\fP
+.sp
+Enable loading of data availabilty information from
+SeisComP database. Availability information is used by
+station and ext/availability service.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B dataAvailability.cacheDuration
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Number of seconds data availabilty information is considered
+valid. If the duration time is exeeded the information is
+fetched again from the database.
+Default is \fB300\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B dataAvailability.dccName
+Type: \fIstring\fP
+.sp
+Name of the archive use in sync format of dataavailability extent service
+Default is \fBDCC\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B dataAvailability.repositoryName
+Type: \fIstring\fP
+.sp
+Name of the archive use in some format of dataavailability extent service
+Default is \fBprimary\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B trackdb.enable
+Type: \fIboolean\fP
+.sp
+Save request log to database.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B trackdb.defaultUser
+Type: \fIstring\fP
+.sp
+Default user.
+Default is \fBfdsnws\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B auth.enable
+Type: \fIboolean\fP
+.sp
+Enable auth extension.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B auth.gnupgHome
+Type: \fIstring\fP
+.sp
+GnuPG home directory.
+Default is \fB@ROOTDIR@/var/lib/gpg\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B auth.blacklist
+Type: \fIlist:string\fP
+.sp
+List of revoked token IDs.
+.UNINDENT
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-module arg
+The configmodule to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-inventory\-db arg
+Load the inventory from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-db\-disable
+Do not use the database at all
+.UNINDENT
+.SS Records
+.INDENT 0.0
+.TP
+.B \-\-record\-driver\-list
+List all supported record stream drivers
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-I, \-\-record\-url arg
+The recordstream source URL, format: [\fI\%service://\fP]location[#type].
+"service" is the name of the recordstream driver which can be
+queried with "\-\-record\-driver\-list". If "service"
+is not given "\fI\%file://\fP" is used.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-record\-file arg
+Specify a file as record source.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-record\-type arg
+Specify a type for the records being read.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

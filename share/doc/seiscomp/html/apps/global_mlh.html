@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>MLh &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hypo71" href="global_hypo71.html" />
+    <link rel="prev" title="NonLinLoc" href="global_nonlinloc.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_hypo71.html" title="Hypo71"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_nonlinloc.html" title="NonLinLoc"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../toc/extensions.html" >Extensions</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/extensions/global.html" accesskey="U">global</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="mlh">
+<span id="global-mlh"></span><h1>MLh<a class="headerlink" href="#mlh" title="Permalink to this headline">¶</a></h1>
+<p>The MLh plugin (previously MLsed) is designed to compute amplitudes
+and magnitudes according to the Swiss Seismological Service (SED)
+standards.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="amplitude">
+<h3>Amplitude<a class="headerlink" href="#amplitude" title="Permalink to this headline">¶</a></h3>
+<p>The MLh amplitude calculation is very similar to the original <a class="reference internal" href="global_ml.html#global-ml"><span class="std std-ref">ML</span></a>.
+The two differences are:</p>
+<ul class="simple">
+<li><p>It uses the maximum of the two horizontal components (average can be configured if necessary)</p></li>
+<li><p>It uses zero-to-peak in stead of peak-to-peak values</p></li>
+</ul>
+<p>Zero-to-peak is calculated by just dividing the peak-to-peak amplitude by two.
+This is not exact for unsymmetrical signals, but that doesn’t matter because the
+code actually generates zero-to-peak amplitudes internally and multiplies them
+with two. So in the end we get real zero-to-peak values.</p>
+</div>
+<div class="section" id="station-magnitude">
+<h3>Station Magnitude<a class="headerlink" href="#station-magnitude" title="Permalink to this headline">¶</a></h3>
+<p>The MLh plugin calculates the individual station magnitude using the following formula:</p>
+<div class="math">
+<p><img src="../_images/math/4cfbd65af2e9b33bf217b7f95d186fabbf6a6db7.png" alt="mag = \log10(waamp1) + A \times hypdistkm + B"/></p>
+</div><p>waampl is the amplitude produced by the MLh plugin. Hypdistkm is the distance
+from the sensor to the hypocenter in kilometers. A and B are parameters that
+can be configured in a config file. Several pairs of A and B can be configured
+for different ranges of hypocenter distance.</p>
+<ul class="simple">
+<li><p>Amplitude unit in SeisComP: <strong>millimeter</strong> (mm)</p></li>
+<li><p>Time window: 150 s by <a class="reference internal" href="scautopick.html#scautopick"><span class="std std-ref">scautopick</span></a> or distance dependent</p></li>
+<li><p>Distance range: 0 - 20 deg</p></li>
+<li><p>Depth range: 0 - 80 km</p></li>
+</ul>
+</div>
+<div class="section" id="network-magnitude">
+<h3>Network Magnitude<a class="headerlink" href="#network-magnitude" title="Permalink to this headline">¶</a></h3>
+<p>To compute the network magnitude from station magnitudes the SED standard is applied
+by computing the median value of all contributing station magnitudes without any trimming.</p>
+</div>
+<div class="section" id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h3>
+<p>Add the <em>mlh</em> plugin to the existing plugins in the global configuration.
+Set the calibration parameters in the global bindings to compute MLh.
+There exist no default configuration. Add MLh to the list of
+amplitudes and magnitudes in the configuration of <a class="reference internal" href="scamp.html#scamp"><span class="std std-ref">scamp</span></a> and <a class="reference internal" href="scmag.html#scmag"><span class="std std-ref">scmag</span></a> for computation
+and in <a class="reference internal" href="scesv.html#scesv"><span class="std std-ref">scesv</span></a> for visibility.</p>
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MLh</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
+<li><a class="reference internal" href="#amplitude">Amplitude</a></li>
+<li><a class="reference internal" href="#station-magnitude">Station Magnitude</a></li>
+<li><a class="reference internal" href="#network-magnitude">Network Magnitude</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="global_nonlinloc.html"
+                        title="previous chapter">NonLinLoc</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="global_hypo71.html"
+                        title="next chapter">Hypo71</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/global_mlh.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

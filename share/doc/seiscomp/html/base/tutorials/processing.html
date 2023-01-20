@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Configure real-time processing &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script type="text/javascript" src="../../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Add real-time stations from GEOFON" href="geofon_waveforms.html" />
+    <link rel="prev" title="Set up local waveform archiving" href="archiving.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="geofon_waveforms.html" title="Add real-time stations from GEOFON"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="archiving.html" title="Set up local waveform archiving"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../tutorials.html" accesskey="U">Tutorials</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="configure-real-time-processing">
+<span id="tutorials-processing"></span><h1>Configure real-time processing<a class="headerlink" href="#configure-real-time-processing" title="Permalink to this headline">¶</a></h1>
+<p>You will enable processing by your existing local SeisComP system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre-requisites for this tutorial</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>Real-time data for the station must be available locally.
+See <a class="reference internal" href="waveforms.html#tutorials-waveforms"><span class="std std-ref">Get real-time data from a remote Seedlink server (single station)</span></a> or <a class="reference internal" href="geofon_waveforms.html#tutorials-geofon-waveforms"><span class="std std-ref">Add real-time stations from GEOFON</span></a>.</p></li>
+<li><p>Inventory must be loaded locally.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Afterwards/Results/Outcomes</dt>
+<dd class="field-even"><p>The new station is used for automatic real-time data processing.</p>
+</dd>
+<dt class="field-odd">Time range estimate</dt>
+<dd class="field-odd"><p>10 minutes.</p>
+</dd>
+<dt class="field-even">Related tutorial(s)</dt>
+<dd class="field-even"><p><a class="reference internal" href="addstation.html#tutorials-addstation"><span class="std std-ref">Add a new station</span></a></p>
+</dd>
+</dl>
+<hr class="docutils" />
+<div class="section" id="create-bindings">
+<h2>Create bindings<a class="headerlink" href="#create-bindings" title="Permalink to this headline">¶</a></h2>
+<p>In SeisComP terminology, <em>bindings</em> are the connection between modules
+and individual stations.
+See the “Bindings” section of <a class="reference internal" href="../concepts/configuration.html#concepts-configuration"><span class="std std-ref">Configuration</span></a> for full details.</p>
+<p>You can create the necessary bindings for your new station
+using <strong class="program">scconfig</strong>.
+Go to the “Bindings” tab on the left side bar of <strong class="program">scconfig</strong>.</p>
+<ul>
+<li><p>You will need to add  “global” and “scautopick” bindings.</p>
+<ul class="simple">
+<li><p>Create a global profile named “BH” by clicking with the right button on “global”
+in the top right panel. Double click on it and set BH as <em>detectStream</em> and
+empty location code as <em>detecLocID</em> information.
+Adjust these as appropriate for your station.</p></li>
+<li><p>Create a <em>scautopick</em> profile named “default” (no changes necessary).</p></li>
+<li><p>Drag and drop all profiles from the right side to the network icon on the
+left side (you may do that also at the station level).</p></li>
+<li><p>Press Ctrl+S to save the configuration.
+This writes configuration files in <code class="file docutils literal notranslate"><span class="pre">~/seiscomp/etc/key</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Alternatively, you can add the scautopick and global bindings
+by editing the relevant top-level key file.
+(For station CLL of the GR network, this would be <code class="file docutils literal notranslate"><span class="pre">etc/key/station_GR_CLL</span></code>.)
+It would contain:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Binding references</span>
+<span class="k">global</span>
+<span class="n">scautopick</span><span class="p">:</span><span class="n">default</span>
+</pre></div>
+</div>
+<p>in addition to any other bindings that might be defined for this station.</p>
+</li>
+</ul>
+<p>Then:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ seiscomp update-config
+$ seiscomp restart scautopick
+</pre></div>
+</div>
+</div>
+<div class="section" id="check-the-station-is-used-for-processing">
+<h2>Check the station is used for processing<a class="headerlink" href="#check-the-station-is-used-for-processing" title="Permalink to this headline">¶</a></h2>
+<p>If you have correctly configured the station for processing, then:</p>
+<ul>
+<li><p>On restarting <strong class="program">scautopick</strong>, the station appears in the
+<code class="file docutils literal notranslate"><span class="pre">scautopick.log</span></code> log
+file in <code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/log</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2020</span><span class="o">/</span><span class="mi">03</span><span class="o">/</span><span class="mi">01</span> <span class="mi">18</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">00</span> <span class="p">[</span><span class="n">info</span><span class="o">/</span><span class="n">Autopick</span><span class="p">]</span> <span class="n">Adding</span> <span class="n">detection</span> <span class="n">channel</span> <span class="n">GR</span><span class="o">.</span><span class="n">CLL</span><span class="o">..</span><span class="n">BHZ</span>
+</pre></div>
+</div>
+<p>After some time, a nearby event will occur and the station should then be picked.
+This should appear in the latest <code class="file docutils literal notranslate"><span class="pre">autoloc-picklog</span></code> file in
+<code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/log</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ grep <span class="s2">&quot;CLL&quot;</span> .seiscomp/log/autoloc-picklog.2020-03-01
+<span class="m">2020</span>-03-01 <span class="m">18</span>:31:47.1 GR CLL    BHZ __   <span class="m">40</span>.9    <span class="m">177</span>.433  <span class="m">1</span>.1 A <span class="m">20200301</span>.183147.13-AIC-GR.CLL..BHZ
+</pre></div>
+</div>
+</li>
+<li><p>The station should now appear in the GUIs.
+After restarting them,</p>
+<ul class="simple">
+<li><p>The station should now show up in <strong class="program">scmv</strong>
+(as a new triangle at the expected location on the map,
+which is not black if the station is active).</p></li>
+<li><p>In <strong class="program">scrttv</strong> a trace should be visible.</p></li>
+<li><p>In <strong class="program">scolv</strong>, the new station is either already included
+in automatic locations, or can be added manually.</p></li>
+</ul>
+</li>
+</ul>
+<p>In case of problems, check that <a class="reference internal" href="../../apps/global.html#confval-detecStream"><code class="xref std std-confval docutils literal notranslate"><span class="pre">detecStream</span></code></a> and
+<a class="reference internal" href="../../apps/global.html#confval-detecLocid"><code class="xref std std-confval docutils literal notranslate"><span class="pre">detecLocid</span></code></a> are set correctly.
+They must match both what is in inventory and the waveforms provided
+from the upstream server.</p>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configure real-time processing</a><ul>
+<li><a class="reference internal" href="#create-bindings">Create bindings</a></li>
+<li><a class="reference internal" href="#check-the-station-is-used-for-processing">Check the station is used for processing</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="archiving.html"
+                        title="previous chapter">Set up local waveform archiving</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="geofon_waveforms.html"
+                        title="next chapter">Add real-time stations from GEOFON</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/base/tutorials/processing.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,344 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCARDAC" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scardac \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBWaveform archive data availability collector\fP
+.SH DESCRIPTION
+.sp
+scardac scans an SDS waveform archive , e.g.,
+created by slarchive or scart for
+available \fI\%miniSEED\fP data. It will
+collect information about
+.INDENT 0.0
+.IP \(bu 2
+data extents \- the absolute earliest and latest times data is available of a
+particular channel
+.IP \(bu 2
+data segments \- continuous data segments sharing the same quality and sampling
+rate attributes
+.UNINDENT
+.sp
+scardac is intended to be executed periodically, e.g., as a cronjob.
+.sp
+The data availability information is stored in the SeisComP database under the
+root element DataAvailability\&. Access to the data
+availability is provided by the fdsnws module via the services:
+.INDENT 0.0
+.IP \(bu 2
+/fdsnws/station (extent information only, see
+\fBmatchtimeseries\fP and \fBincludeavailability\fP request parameters).
+.IP \(bu 2
+/fdsnws/ext/availability (extent and segment information
+provided in different formats)
+.UNINDENT
+.SS Workflow
+.INDENT 0.0
+.IP 1. 3
+Read existing \fBExtents\fP from database
+.IP 2. 3
+Scan the SDS archive for new channel IDs and create new \fBExtents\fP
+.IP 3. 3
+Subsequently process the \fBExtents\fP using \fBthreads\fP number of parallel
+threads. For each \fBExtent\fP:
+.INDENT 3.0
+.IP 1. 3
+Find all available daily data files
+.IP 2. 3
+Sort the file list according date
+.IP 3. 3
+For each data file
+.INDENT 3.0
+.IP \(bu 2
+remove \fBDataSegments\fP that do longer exists
+.IP \(bu 2
+update or create \fBDataSegments\fP that changed or are new
+.IP \(bu 2
+a segment is split if
+.INDENT 3.0
+.IP \(bu 2
+the \fBjitter\fP (difference between previous records end time and
+current records start time) is exceeded
+.IP \(bu 2
+the quality or sampling rate changed
+.UNINDENT
+.IP \(bu 2
+merge segment information into \fBDataAttributeExtents\fP (\fBExtents\fP
+sharing the same quality and sample rate information)
+.IP \(bu 2
+merge segment start and end time into overall \fBExtent\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Examples
+.INDENT 0.0
+.IP 1. 3
+Get command line help or execute scardac with default parameters and informative
+debug output:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scardac \-h
+scardac \-\-debug
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 2. 3
+Update the availability of waveform data files existing in the standard
+SDS archive to the seiscomp database and create an XML file using
+scxmldump:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scardac \-d mysql://sysop:sysop@localhost/seiscomp \-a $SEISCOMP_ROOT/var/lib/archive \-\-debug
+scxmldump \-Yf \-d mysql://sysop:sysop@localhost/seiscomp \-o availability.xml
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 3. 3
+Update the availability of waveform data files existing in the standard
+SDS archive to the seiscomp database. Use fdsnws to fetch a flat file containing a list
+of periods of available data from stations of the CX network sharing the same
+quality and sampling rate attributes:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scardac \-d mysql://sysop:sysop@localhost/seiscomp \-a $SEISCOMP_ROOT/var/lib/archive
+wget \-O availability.txt \(aqhttp://localhost:8080/fdsnws/ext/availability/1/query?network=CX\(aq
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 3.0
+.INDENT 3.5
+The SeisComP module fdsnws must be running for executing this example.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scardac.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scardac.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scardac.cfg\fP
+.fi
+.sp
+.sp
+scardac inherits global options\&.
+.INDENT 0.0
+.TP
+.B archive
+Type: \fIstring\fP
+.sp
+Path to MiniSeed waveform archive where all data is stored. The SDS archive
+structure is defined as
+YEAR/NET/STA/CHA/NET.STA.LOC.CHA.YEAR.DATEOFYEAR, e.g.
+2018/GE/APE/BHZ.D/GE.APE..BHZ.D.2018.125
+Default is \fB@SEISCOMP_ROOT@/var/lib/archive\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B threads
+Type: \fIint\fP
+.sp
+Number of threads scanning the archive in parallel
+Default is \fB1\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B batchSize
+Type: \fIint\fP
+.sp
+Batch size of database transactions used when updating data
+availability segments. Allowed range: [1,1000]
+Default is \fB100\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B jitter
+Type: \fIfloat\fP
+.sp
+Acceptable derivation of end time and start time of successive
+records in multiples of sample time.
+Default is \fB0.5\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B maxSegments
+Type: \fIint\fP
+.sp
+Maximum number of segments per stream. If the limit is reached
+no more segments are added to the database and the corresponding
+extent is flagged as to fragmented. Use a negative value to
+disable any limit.
+Default is \fB1000000\fP\&.
+.UNINDENT
+.SH COMMAND-LINE
+.sp
+\fBscardac [OPTION]...\fP
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-print\-component arg
+For each log entry print the component right after the
+log level. By default the component output is enabled
+for file output but disabled for console output.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-trace
+Trace mode: \-\-verbosity=4 \-\-console=1 \-\-print\-component=1 \-\-print\-context=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Collector
+.INDENT 0.0
+.TP
+.B \-a, \-\-archive arg
+Overrides configuration parameter \fBarchive\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-threads arg
+Overrides configuration parameter \fI\%threads\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-b, \-\-batch\-size arg
+Overrides configuration parameter \fBbatchsize\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-j, \-\-jitter arg
+Overrides configuration parameter \fI\%jitter\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-generate\-test\-data arg
+Do not scan the archive but generate test data for each
+stream in the inventory. Format:
+days,gaps,gapslen,overlaps,overlaplen. E.g. the following
+parameter list would generate test data for 100 days
+(starting from now()\-100) which includes 150 gaps with a
+length of 2.5s followed by 50 overlaps with an overlap of
+5s: \-\-generate\-test\-data=100,150,2.5,50,5
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

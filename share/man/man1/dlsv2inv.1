@@ -1,0 +1,238 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "DLSV2INV" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+dlsv2inv \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBConverts dataless SEED to SeisComP inventory XML.\fP
+.SH DESCRIPTION
+.sp
+dlsv2inv converts dataless \fI\%SEED\fP to
+SeisComP XML (SCML). Due to the limitations of dataless SEED dlsv2inv allows to set
+attributes which are not available in dataless such as network type, network
+description and so on.
+.sp
+It takes basically two important parameters:
+.INDENT 0.0
+.IP 1. 3
+input file
+.IP 2. 3
+output file
+.UNINDENT
+.sp
+whereas the output file defaults to stdout if not given.
+.sp
+The SeisComP inventory network and station objects have the attribute archive
+which should contain the local datacenter where the information comes from.
+.sp
+While importing the attribute \fBdatacenterID\fP is read and written into
+the archive attribute of all networks and stations available in the dataless.
+The datacenterID can be overridden with the \fB\-\-dcid\fP command\-line option.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+Conversion of inventory in \fISeisComP\fP XML to dataless SEED is provided by inv2dlsv\&.
+.UNINDENT
+.UNINDENT
+.SH EXAMPLES
+.INDENT 0.0
+.IP 1. 3
+Convert a given dataless SEED file to SeisComP XML.
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+dlsv2inv GE.dataless GE.xml
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 2. 3
+Override the datacenterID and leave it blank in the output.
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+dlsv2inv \-\-dcid "" GE.dataless GE.xml
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/dlsv2inv.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/dlsv2inv.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/dlsv2inv.cfg\fP
+.fi
+.sp
+.sp
+dlsv2inv inherits global options\&.
+.SH COMMAND-LINE
+.sp
+\fBdlsv2inv [OPTIONS] input [output=stdout]\fP
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS ArcLink
+.INDENT 0.0
+.TP
+.B \-\-dcid arg
+Overrides the datacenter ID which is read from the datacenterID
+configuration parameter and written to the network and
+station archive attribute.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-net\-description arg
+Sets the network description. It supports the following
+placeholders: ${code}, ${start}, ${end}, ${class} and ${archive}.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-net\-start arg
+Set network start time. Format is %Y\-%m\-%d.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-net\-end arg
+Set network end time. Format is %Y\-%m\-%d.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-net\-type arg
+Sets the network type (VBB, SM, etc.).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-temporary
+Sets the network temporary flag to true.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-restricted
+Sets the network restricted flag to true.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-private
+Sets the network private flag to true.
+.UNINDENT
+.SS Convert
+.INDENT 0.0
+.TP
+.B \-f, \-\-formatted
+Enables formatted XML output.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

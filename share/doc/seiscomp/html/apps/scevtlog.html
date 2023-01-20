@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scevtlog &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="scevtls" href="scevtls.html" />
+    <link rel="prev" title="scdumpcfg" href="scdumpcfg.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="scevtls.html" title="scevtls"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scdumpcfg.html" title="scdumpcfg"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/utilities.html" accesskey="U">Utilities</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="scevtlog">
+<span id="id1"></span><h1>scevtlog<a class="headerlink" href="#scevtlog" title="Permalink to this headline">¶</a></h1>
+<p><strong>Event log preserving the history of updates.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Running SeisComP causes many database accesses for writing. Anytime a new
+event has been created a new row will be inserted in the database table.
+When the same event is updated the row in the database table is going to be
+changed as well. The information about the history of the event is lost because
+the database contains only the current event attributes. scevtlog saves the
+event history into files. While scevtlog is running it keeps the track of all
+event updates and stores this information in a directory that can be analyzed
+at anytime. The stored information is written as plain text in an easily
+readable format. Additionally scevtlog maintains an event summary file for an
+overview of the event history.</p>
+</div>
+<div class="section" id="configuration">
+<span id="scevtlog-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/scevtlog.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/scevtlog.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/scevtlog.cfg</span></code></div>
+</div>
+<p>scevtlog inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+<dl class="confval">
+<dt id="confval-directory">
+<code class="sig-name descname">directory</code><a class="headerlink" href="#confval-directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Specify the output directory. Within this directory the logging
+directory structure and the event files are stored.
+Default is <code class="docutils literal notranslate"><span class="pre">&#64;LOGDIR&#64;/events</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-format">
+<code class="sig-name descname">format</code><a class="headerlink" href="#confval-format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Specify output event format (default is autoloc3). For completeness
+it is recommended to switch to xml as storage format. The autoloc3
+format can be easily reconstructed with scbulletin but not the other
+way around.
+Default is <code class="docutils literal notranslate"><span class="pre">xml</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-gzip">
+<code class="sig-name descname">gzip</code><a class="headerlink" href="#confval-gzip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If format is xml then all XML files will be compressed with gzip
+and stored with file extension “.xml.gz”. They are also
+valid gzip files and can be used as input to e.g. zgrep.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scevtlog-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scevtlog-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scevtlog-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--daemon</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scevtlog-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run as daemon. This means the application will fork itself and
+doesn’t need to be started with &amp;.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-auto-shutdown">
+<code class="sig-name descname">--auto-shutdown</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-auto-shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable/disable self-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with –start-stop-msg for the master module).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-shutdown-master-module">
+<code class="sig-name descname">--shutdown-master-module</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-shutdown-master-module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the master-module used for auto-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-shutdown-master-username">
+<code class="sig-name descname">--shutdown-master-username</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-shutdown-master-username" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the master-username of the messaging used for
+auto-shutdown. If “shutdown-master-module” is given as well this
+parameter is ignored.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scevtlog-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id2">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scevtlog-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scevtlog-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scevtlog-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="messaging">
+<h3>Messaging<a class="headerlink" href="#messaging" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scevtlog-u">
+<code class="sig-name descname">-u</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--user</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.username"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.username</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-host">
+<code class="sig-name descname">-H</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--host</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.server"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.server</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-t">
+<code class="sig-name descname">-t</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--timeout</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.timeout"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.timeout</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-g">
+<code class="sig-name descname">-g</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--primary-group</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-g" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.primaryGroup"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.primaryGroup</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-subscribe-group">
+<code class="sig-name descname">-S</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--subscribe-group</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-subscribe-group" title="Permalink to this definition">¶</a></dt>
+<dd><p>A group to subscribe to. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-content-type">
+<code class="sig-name descname">--content-type</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-content-type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.contentType"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.contentType</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-start-stop-msg">
+<code class="sig-name descname">--start-stop-msg</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-start-stop-msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets sending of a start- and a stop message.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="database">
+<h3>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scevtlog-db-driver-list">
+<code class="sig-name descname">--db-driver-list</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scevtlog-db-driver-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all supported database drivers.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-database">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--database</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-database" title="Permalink to this definition">¶</a></dt>
+<dd><p>The database connection string, format: <a class="reference external" href="service://user:pwd&#64;host/database">service://user:pwd&#64;host/database</a>.
+“service” is the name of the database driver which can be
+queried with “–db-driver-list”.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-config-module">
+<code class="sig-name descname">--config-module</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-config-module" title="Permalink to this definition">¶</a></dt>
+<dd><p>The configmodule to use.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-inventory-db">
+<code class="sig-name descname">--inventory-db</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-inventory-db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the inventory from the given database or file, format: [<a class="reference external" href="service://]location">service://]location</a></p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-db-disable">
+<code class="sig-name descname">--db-disable</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scevtlog-db-disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not use the database at all</p>
+</dd></dl>
+
+</div>
+<div class="section" id="storage">
+<h3>Storage<a class="headerlink" href="#storage" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scevtlog-o">
+<code class="sig-name descname">-o</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--directory</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-o" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="#confval-directory"><code class="xref std std-confval docutils literal notranslate"><span class="pre">directory</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scevtlog-f">
+<code class="sig-name descname">-f</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--format</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scevtlog-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="#confval-format"><code class="xref std std-confval docutils literal notranslate"><span class="pre">format</span></code></a>.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scevtlog</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#messaging">Messaging</a></li>
+<li><a class="reference internal" href="#database">Database</a></li>
+<li><a class="reference internal" href="#storage">Storage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scdumpcfg.html"
+                        title="previous chapter">scdumpcfg</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scevtls.html"
+                        title="next chapter">scevtls</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scevtlog.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

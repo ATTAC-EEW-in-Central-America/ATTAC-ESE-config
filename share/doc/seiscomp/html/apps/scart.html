@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scart &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="scbulletin" href="scbulletin.html" />
+    <link rel="prev" title="scalert" href="scalert.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="scbulletin.html" title="scbulletin"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scalert.html" title="scalert"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/utilities.html" accesskey="U">Utilities</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="scart">
+<span id="id1"></span><h1>scart<a class="headerlink" href="#scart" title="Permalink to this headline">¶</a></h1>
+<p><strong>Import/export MiniSEED data to/from SDS archives.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The archive tool scart creates playback files (multiplexed miniSEED files) from
+<a class="reference internal" href="../base/glossary.html#term-sds"><span class="xref std std-term">SDS</span></a> structured data (e.g. created by slarchive) or from data passed from
+another record source such as <a class="reference internal" href="global_recordstream.html#rs-arclink"><span class="std std-ref">Arclink</span></a>. It can also playback
+records directly out of an SDS structure. Furthermore it can be used to import
+multiplexed miniSEED files into a local SDS structure.
+So it is possible to save event based waveform data in combination with
+scevtstreams into another archive.</p>
+</div>
+<div class="section" id="configuration">
+<span id="scart-config"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>scart can make use of <a class="reference internal" href="global_recordstream.html#global-recordstream"><span class="std std-ref">RecordStream</span></a>
+implementations which are provided by additional plugins.
+For loading additional plugins, e.g. the <em>xyz</em> plugin create and configure <code class="file docutils literal notranslate"><span class="pre">scart.cfg</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">plugins</span> <span class="o">=</span> xyz
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Extract data from the default <a class="reference internal" href="../base/glossary.html#term-sds"><span class="xref std std-term">SDS</span></a> archive in <code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/var/lib/archive</span></code>
+or from a local <a class="reference internal" href="../base/glossary.html#term-sds"><span class="xref std std-term">SDS</span></a> archive [SDS archive] into a miniSEED file <code class="file docutils literal notranslate"><span class="pre">file.mseed</span></code>
+and sort by end time of the records:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scart -dsvE -t <span class="s1">&#39;[start-time]~[end-time]&#39;</span> &gt; file.mseed
+    scart -dsvE -t <span class="s1">&#39;[start-time]~[end-time]&#39;</span> <span class="o">[</span>SDS archive<span class="o">]</span> &gt; <span class="o">[</span>file.mseed<span class="o">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sorting data is computational expensive but required for waveform playbacks.</p>
+</div>
+</li>
+<li><p>Push miniSEED data from file <code class="file docutils literal notranslate"><span class="pre">file.mseed</span></code> into a local <a class="reference internal" href="../base/glossary.html#term-sds"><span class="xref std std-term">SDS</span></a> archive:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scart  -I file://<span class="o">[</span>file.mseed<span class="o">]</span> <span class="o">[</span>SDS archive<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>Collect data from an FDSNWS server using the <a class="reference internal" href="global_recordstream.html#global-recordstream"><span class="std std-ref">RecordStream</span></a>
+interface and write to a miniSEED file. The data streams and the time spans are
+defined in a list file using the option <code class="docutils literal notranslate"><span class="pre">list</span></code>. The list can be generated e.g.
+by <a class="reference internal" href="scevtstreams.html#scevtstreams"><span class="std std-ref">scevtstreams</span></a>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scart  -I fdsnws://<span class="o">[</span>server<span class="o">]</span>:80 --list list.file --stdout &gt; file.mseed
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Repeated pushing of miniSEED data into an archive will duplicate the data.</p>
+</div>
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">scart [options] {archive-dir}</strong></p>
+<p>The last option has to be the archive directory when dump mode is enabled.
+When no archive directory is explicitly given,
+$SEISCOMP_ROOT/var/lib/archive or the current directory
+is used depending on whether $SEISCOMP_ROOT has been set or not.
+The default operation mode is import. That means that a multiplexed
+MiniSEED file or another record source such as ArcLink is used to import
+records into a SDS structure.</p>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scart-v">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--verbose</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scart-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbose mode.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scart-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a help message.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="mode">
+<h3>Mode<a class="headerlink" href="#mode" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scart-d">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--dump</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scart-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set export (dump) mode. Records are retrieved from an archive and
+written to standard output.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-i">
+<code class="sig-name descname">-I</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scart-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import mode: Specify the recordstream URL when in import mode.
+When using another recordstream than a file (like ArcLink) a stream
+list file is required. Default: <a class="reference external" href="file://">file://</a>- (stdin).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="output">
+<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scart-t">
+<code class="sig-name descname">-t</code><code class="sig-prename descclassname"> timewindow</code><a class="headerlink" href="#cmdoption-scart-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify the time window (as one properly quoted string) to dump
+records for. Times are UTC and separated by a tilde “~”.
+To dump one hour of waveform data between 2008/01/01 00:00:00 and
+2008/01/01 01:00:00 use
+&lt;-t “2008-01-01 00:00:00~2008-01-01 01:00:00”&gt;.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--list</code><code class="sig-prename descclassname"> file</code><a class="headerlink" href="#cmdoption-scart-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses a stream list file instead of defined networks and channels
+(-n and -c are ignored). The list can be generated from events
+by scevetstreams. Line format: starttime;endtime;streamID.
+The time format is the same as described in option ‘-t’.</p>
+<p>Example:</p>
+<p>2019-07-17 02:00:00;2019-07-17 02:10:00;GR.CLL..BHZ</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--sort</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scart-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort records by [start-]time. To sort records by their endtime use -E.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-e">
+<code class="sig-name descname">-E</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scart-e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort records according to their end time. Default: start time.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-m">
+<code class="sig-name descname">-m</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--modify</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scart-m" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the record time for real time playback when in export mode.
+The first record time is NOW. The relative time of successive records
+to the first one are kept.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-speed">
+<code class="sig-name descname">--speed</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scart-speed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify the speed to dump the records. A value of 0 means no delay
+otherwise speed is a multiplier of the real time difference between
+the records. When feeding the records directly into the replay pipe
+a value of 1 (real time) is recommended.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-n">
+<code class="sig-name descname">-n</code><code class="sig-prename descclassname"> networks</code><a class="headerlink" href="#cmdoption-scart-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of network codes to dump (comma separated). Default: *.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-c">
+<code class="sig-name descname">-c</code><code class="sig-prename descclassname"> channels</code><a class="headerlink" href="#cmdoption-scart-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify the channel filter for the dumped streams as regular
+expression. Default: (B|S|M|H)(L|H)(Z|N|E). To dump only
+BHZ, BHN and BHE streams use BH(Z|N|E).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-files">
+<code class="sig-name descname">--files</code><code class="sig-prename descclassname"> count</code><a class="headerlink" href="#cmdoption-scart-files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify the number of file handles to cache. Default: 100.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scart-test">
+<code class="sig-name descname">--test</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scart-test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test mode, no record output. This switch is useful for debugging.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scart</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#mode">Mode</a></li>
+<li><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scalert.html"
+                        title="previous chapter">scalert</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scbulletin.html"
+                        title="next chapter">scbulletin</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scart.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

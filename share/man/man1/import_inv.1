@@ -1,0 +1,270 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "IMPORT_INV" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+import_inv \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBImport inventory information from various sources.\fP
+.SH DESCRIPTION
+.sp
+import_inv is a wrapper for inventory converters. Inventory converters convert
+an input format such as
+.TS
+center;
+|l|l|l|.
+_
+T{
+Format
+T}	T{
+Converter
+T}	T{
+Conversion
+T}
+_
+T{
+scml
+T}	T{
+scml2inv
+T}	T{
+SeisComP inventory XML, schema: \fB$SEISCOMP_ROOT/share/xml/\fP
+T}
+_
+T{
+sc3
+T}	T{
+sc32inv
+T}	T{
+Alias for scml for backwards compatibility to SeisComP3
+T}
+_
+T{
+arclink
+T}	T{
+arclink2inv
+T}	T{
+Arclink inventory XML
+T}
+_
+T{
+dlsv
+T}	T{
+dlsv2inv
+T}	T{
+\fI\%dataless SEED\fP
+T}
+_
+T{
+fdsnxml
+T}	T{
+fdsnxml2inv
+T}	T{
+\fI\%FDSN StationXML\fP
+T}
+_
+.TE
+.sp
+to SeisComP inventory XML which is read by the trunk config module to
+synchronize the local inventory file pool with the central inventory database.
+.sp
+For printing all available formats call
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ import_inv help formats
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+When \fBimport_inv help formats\fP is called it globs for
+\fB$SEISCOMP_ROOT/bin/*2inv\fP\&.
+If another format needs to be converted, it is very easy to provide a new
+converter.
+.SS Converter interface
+.sp
+For making a new converter work with import_inv it must implement an interface
+on shell level. Furthermore the converter program must be named
+\fB\fIformat\fP\fP\fB2inv\fP and must live in \fBSEISCOMP_ROOT/bin\fP\&.
+.sp
+The converter program must take the input location (file, directory, URL, ...)
+as first parameter and the output file (SeisComP XML) as second parameter. The
+output file must be optional and default to stdout.
+.sp
+To add a new converter for a new format, e.g. Excel, place the new converter
+program at \fB$SEISCOMP_ROOT/bin/excel2inv\fP\&.
+.SS Examples
+.INDENT 0.0
+.IP \(bu 2
+Convert inventory file in FDSN StationXML format (fdsnxml) and copy the content to
+\fB$SEISCOMP_ROOT/etc/inventoy/inventory.xml\fP\&. The call will invoke
+fdsnxml2inv for actually making the conversion:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ import_inv fdsnxml inventory_fdsn.xml $SEISCOMP_ROOT/etc/inventoy/inventory.xml
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/import_inv.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/import_inv.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/import_inv.cfg\fP
+.fi
+.sp
+.sp
+import_inv inherits global options\&.
+.SH COMMAND-LINE
+.sp
+\fBimport_inv [FORMAT] input [output]\fP
+.sp
+\fBimport_inv help [topic]\fP
+.sp
+The first form takes the format as first parameter and the input
+and output location. The input location is either a file or directory
+depending on the format and its converter. If the output is not
+given it defaults to seiscomp/etc/inventory/{input}.xml. To write
+the output to stdout, "\-" must be used.
+.sp
+The second form provides help on a particular topic. The only topic
+currently supported is "formats" which prints all available input
+formats.
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

@@ -17,11 +17,11 @@ Author of the Software: Camilo Munoz
 
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
-try:
-    import events_dash
-    import event_dash
-except:
-    print('No event(s) dashboards')
+#try:
+import events_dash
+import event_dash
+#except:
+#    print('No event(s) dashboards')
 
 import sys
 import configparser

@@ -1,0 +1,381 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCQUERY" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scquery \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBRead database objects and writes them to the command line.\fP
+.SH DESCRIPTION
+.sp
+\fIscquery\fP reads objects such as event information from the \fISeisComP\fP database based
+on custom queries and writes them to stdout.
+It extends scevtls and scorgls which are limited to searching event
+and origin IDs, respectively, by time.
+.sp
+scquery takes into account the \fI\%query profiles\fP
+defined in
+.INDENT 0.0
+.IP \(bu 2
+\fB@SYSTEMCONFIGDIR@/queries.cfg\fP or
+.IP \(bu 2
+\fB@CONFIGDIR@/queries.cfg\fP
+.UNINDENT
+.sp
+while parameters in the latter take priority.
+.SH MODULE SETUP
+.INDENT 0.0
+.IP 1. 3
+Create the query profiles in \fBqueries.cfg\fP in @SYSTEMCONFIGDIR@ or
+@CONFIGDIR@. The file contains your database queries. Examples for
+MariaDB/MySQL and PostgreSQL are found in the section \fI\%Queries\fP\&.
+.IP 2. 3
+\fBOptional:\fP Add the database connection parameter to the configuration file
+\fBscquery.cfg\fP or \fBglobal.cfg\fP in @CONFIGDIR@ or to @SYSTEMCONFIGDIR@:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+database = mysql://sysop:sysop@localhost/seiscomp
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBHINT:\fP
+.INDENT 3.0
+.INDENT 3.5
+If the database connection is configured, the database option \fB\-d\fP
+in the section \fI\%Examples\fP can be omitted or used to
+override the configuration.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH EXAMPLES
+.sp
+Choose any query profile defined in the \fI\%queries.cfg\fP\&. Provide
+the required parameters in the same order as in the database request. The required
+parameters are indicated by hashes, e.g. ##latMin##.
+.INDENT 0.0
+.IP 1. 3
+List all available query profiles using the command\-line option \fBshowqueries\fP:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scquery \-d localhost/seiscomp \-\-showqueries
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 2. 3
+Profile \fBevent_filter\fP: Fetch all event IDs and event parameters for events
+with magnitude ranging from 2.5 to 5 in central Germany between 2014 and 2017:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scquery \-d localhost/seiscomp eventFilter 50 52 11.5 12.5 2.5 5 2014\-01\-01 2018\-01\-01 > events_vogtland.txt
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 3. 3
+Profile \fBeventByAuthor\fP: Fetch all event IDs where the preferred origin was
+provided by a specific author for events 2.5 to 5 with 6 to 20 phases in central
+Germany between 2014 and 2017:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scquery \-d localhost/seiscomp eventByAuthor 50 52 11.5 12.5 6 20 2.5 5 2014\-01\-01 2018\-01\-01 scautoloc > events_vogtland.txt
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 4. 3
+Profile \fBeventType\fP: Fetch all event IDs and event times from events
+with the given event type and within the provided time interval:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scquery \-d localhost/seiscomp eventType explosion \(aq2017\-11\-01 00:00:00\(aq \(aq2018\-11\-01 00:00:00\(aq
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH QUERIES
+.sp
+Example queries for \fI\%MariaDB/MySQL\fP and \fI\%PostgreSQL\fP are given
+below.
+.SS MariaDB/MySQL
+.sp
+\fBGeneral event queries\fP
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+queries = eventFilter, eventUncertainty, eventByAuthor, eventWithStationCount, phaseCountPerAuthor, eventType
+
+query.eventFilter.description = "Returns all events (lat, lon, mag, time) that fall into a certain region and a magnitude range"
+query.eventFilter = "SELECT PEvent.publicID, Origin.time_value AS OT, Origin.latitude_value,Origin.longitude_value, Origin.depth_value, Magnitude.magnitude_value, Magnitude.type FROM Origin,PublicObject as POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject as PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID=Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value >= ##latMin## AND Origin.latitude_value <= ##latMax## AND Origin.longitude_value >= ##lonMin## AND Origin.longitude_value <= ##lonMax## AND Magnitude.magnitude_value >= ##minMag## AND Magnitude.magnitude_value <= ##maxMag## AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq;"
+
+query.eventUncertainty.description = "Returns all events (eventsIDs, time, lat, lat error, lon, lon error, depth, depth error, magnitude, region name) in the form of an event catalog"
+query.eventUncertainty = "SELECT PEvent.publicID, Origin.time_value AS OT, ROUND(Origin.latitude_value, 3), ROUND(Origin.latitude_uncertainty, 3), ROUND(Origin.longitude_value, 3), ROUND(Origin.longitude_uncertainty, 3), ROUND(Origin.depth_value, 3), ROUND(Origin.depth_uncertainty, 3), ROUND(Magnitude.magnitude_value, 1), EventDescription.text FROM Event, PublicObject AS PEvent, EventDescription, Origin, PublicObject AS POrigin, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND Event.preferredOriginID = POrigin.publicID AND Event.preferredMagnitudeID = PMagnitude.publicID AND Event._oid = EventDescription._parent_oid AND EventDescription.type = \(aqregion name\(aq AND Event.type = \(aq##type##\(aq AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq;"
+
+query.eventByAuthor.description = "Get events by preferred origin author etc"
+query.eventByAuthor = "SELECT PEvent.publicID, Origin.time_value AS OT, Origin.latitude_value AS lat,Origin.longitude_value AS lon, Origin.depth_value AS dep, Magnitude.magnitude_value AS mag, Magnitude.type AS mtype, Origin.quality_usedPhaseCount AS phases, Event.type AS type, Event.typeCertainty AS certainty, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value >= ##latMin## AND Origin.latitude_value <= ##latMax## AND Origin.longitude_value >= ##lonMin## AND Origin.longitude_value <= ##lonMax## AND Origin.quality_usedPhaseCount >= ##minPhases## AND Origin.quality_usedPhaseCount <= ##maxPhases## AND Magnitude.magnitude_value >= ##minMag## AND Magnitude.magnitude_value <= ##maxMag## AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq AND Origin.creationInfo_author like \(aq##author##\(aq;"
+
+query.eventWithStationCount.description = "Get events by preferred origin author etc"
+query.eventWithStationCount = "SELECT PEvent.publicID, Origin.time_value AS OT, Origin.latitude_value AS lat, Origin.longitude_value AS lon, Origin.depth_value AS dep, Magnitude.magnitude_value AS mag, Magnitude.type AS mtype, Origin.quality_usedStationCount AS stations, Event.type AS type, Event.typeCertainty AS certainty, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq;"
+
+query.phaseCountPerAuthor.description = "Get phase count per author FROM #EventID#"
+query.phaseCountPerAuthor = "SELECT PEvent.publicID, Origin.creationInfo_author, MAX(Origin.quality_usedPhaseCount) FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, OriginReference WHERE Origin._oid = POrigin._oid AND Event._oid = PEvent._oid AND OriginReference._parent_oid = Event._oid AND OriginReference.originID = POrigin.publicID AND PEvent.publicID = \(aq##EventID##\(aq group by Origin.creationInfo_author;"
+
+query.eventType.description = "Returns all eventIDs FROM event WHERE the type is flagged AS \(aqevent type\(aq"
+query.eventType = "SELECT pe.publicID, o.time_value AS OT FROM PublicObject pe, PublicObject po, Event e, Origin o WHERE pe._oid = e._oid AND po._oid = o._oid AND e.preferredOriginID = po.publicID AND e.type = \(aq##type##\(aq AND o.time_value >= \(aq##startTime##\(aq AND o.time_value <= \(aq##endTime##\(aq;"
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBMore examples and statistics\fP
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+queries = time, mag_time, space_time, all, space_mag_time, event, fm_space_time, picks, stationPicks, assoc_picks, pref_assoc_picks, sta_net_mag, sta_net_mag_type, delta_sta_net_mag, delta_sta_net_mag_type
+
+query.time.description = "Events in time range"
+query.time = "SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq;"
+
+query.mag_time.description = "Events in magnitude\-time range"
+query.mag_time = "SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Magnitude.magnitude_value >= ##minMag## AND Magnitude.magnitude_value <= ##maxMag## AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq;"
+
+query.space_time.description = "Events in space\-time range"
+query.space_time = "SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value >= ##latMin## AND Origin.latitude_value <= ##latMax## AND Origin.longitude_value >= ##lonMin## AND Origin.longitude_value <= ##lonMax## AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq;"
+
+query.all.description = "Events in space\-magnitude\-time\-quality range by author"
+query.all = "SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value >= ##latMin## AND Origin.latitude_value <= ##latMax## AND Origin.longitude_value >= ##lonMin## AND Origin.longitude_value <= ##lonMax## AND Origin.quality_usedPhaseCount >= ##minPhases## AND Origin.quality_usedPhaseCount <= ##maxPhases## AND Magnitude.magnitude_value >= ##minMag## AND Magnitude.magnitude_value <= ##maxMag## AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq AND Origin.creationInfo_author like \(aq##author##%\(aq;"
+
+query.space_mag_time.description = "Events in space\-magnitude\-time range"
+query.space_mag_time = "SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value >= ##latMin## AND Origin.latitude_value <= ##latMax## AND Origin.longitude_value >= ##lonMin## AND Origin.longitude_value <= ##lonMax## AND Magnitude.magnitude_value >= ##minMag## AND Magnitude.magnitude_value <= ##maxMag## AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq;"
+
+query.fm_space_time.description = "Events with focal mechanisms in space\-time range"
+query.fm_space_time = "SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, MomentTensor.doubleCouple, MomentTensor.variance, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude, FocalMechanism, PublicObject AS PFocalMechanism, MomentTensor WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND FocalMechanism._oid = PFocalMechanism._oid AND PFocalMechanism.publicID = Event.preferredFocalMechanismID AND MomentTensor._parent_oid = FocalMechanism._oid AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value >= ##latMin## AND Origin.latitude_value <= ##latMax## AND Origin.longitude_value >= ##lonMin## AND Origin.longitude_value <= ##lonMax## AND Origin.time_value >= \(aq##startTime##\(aq AND Origin.time_value <= \(aq##endTime##\(aq;"
+
+query.event.description = "List authors and number of origins for event"
+query.event = "SELECT PEvent.publicID, Origin.creationInfo_author, MAX(Origin.quality_usedPhaseCount) FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, OriginReference WHERE Origin._oid = POrigin._oid AND Event._oid = PEvent._oid AND OriginReference._parent_oid = Event._oid AND OriginReference.originID = POrigin.publicID AND PEvent.publicID = \(aq##EventID##\(aq group by Origin.creationInfo_author;"
+
+query.picks.description = "List number of picks per station in a certain timespan"
+query.picks = "SELECT waveformID_networkCode AS Network, waveformID_stationCode AS Station, COUNT(_oid) AS Picks, MIN(time_value) AS Start, MAX(time_value) AS End FROM Pick WHERE time_value >= \(aq##startTime##\(aq AND time_value <= \(aq##endTime##\(aq GROUP BY waveformID_networkCode, waveformID_stationCode;"
+
+query.stationPicks.description = "List the picks and phase hints per station in a certain timespan"
+query.stationPicks = "SELECT PPick.publicID, Pick.phaseHint_code FROM Pick, PublicObject AS PPick WHERE Pick._oid = PPick._oid AND waveformID_networkCode = \(aq##netCode##\(aq AND waveformID_stationCode = \(aq##staCode##\(aq AND time_value >= \(aq##startTime##\(aq AND time_value <= \(aq##endTime##\(aq;"
+
+query.assoc_picks.description = "List number of associated picks per station in a certain time span"
+query.assoc_picks = "SELECT Pick.waveformID_networkCode AS Network, Pick.waveformID_stationCode AS Station, COUNT(DISTINCT(Pick._oid)) AS Picks, MIN(Pick.time_value) AS Start, MAX(Pick.time_value) AS End FROM Pick, PublicObject PPick, Arrival WHERE Pick._oid = PPick._oid AND PPick.publicID = Arrival.pickID AND Pick.time_value >= \(aq##startTime##\(aq AND Pick.time_value <= \(aq##endTime##\(aq GROUP BY Pick.waveformID_networkCode, Pick.waveformID_stationCode;"
+
+query.pref_assoc_picks.description = "List number of associated picks of preferred origins per station for certain time span"
+query.pref_assoc_picks = "SELECT Pick.waveformID_networkCode AS Network, Pick.waveformID_stationCode AS Station, COUNT(DISTINCT(Pick._oid)) AS Picks, MIN(Pick.time_value) AS Start, MAX(Pick.time_value) AS End FROM Pick, PublicObject PPick, Arrival, Origin, PublicObject POrigin, Event WHERE Event.preferredOriginID = POrigin.publicID AND Origin._oid = POrigin._oid AND Origin._oid = Arrival._parent_oid AND Pick._oid = PPick._oid AND PPick.publicID = Arrival.pickID AND Pick.time_value >= \(aq##startTime##\(aq AND Pick.time_value <= \(aq##endTime##\(aq GROUP BY Pick.waveformID_networkCode, Pick.waveformID_stationCode;"
+
+query.sta_net_mag.description = "Compares station magnitudes of a particular station with the network magnitude in a certain time span"
+query.sta_net_mag = "SELECT StationMagnitude.waveformID_networkCode AS Network, StationMagnitude.waveformID_stationCode AS Station, StationMagnitude.magnitude_value AS StaMag, Magnitude.magnitude_value AS NetMag, Magnitude.type AS NetMagType, StationMagnitude.creationInfo_creationTime AS CreationTime FROM StationMagnitude, PublicObject PStationMagnitude, StationMagnitudeContribution, Magnitude WHERE StationMagnitude._oid = PStationMagnitude._oid AND StationMagnitudeContribution.stationMagnitudeID = PStationMagnitude.publicID AND StationMagnitudeContribution._parent_oid = Magnitude._oid AND StationMagnitude.waveformID_networkCode = \(aq##netCode##\(aq AND StationMagnitude.waveformID_stationCode = \(aq##staCode##\(aq AND StationMagnitude.creationInfo_creationTime >= \(aq##startTime##\(aq AND StationMagnitude.creationInfo_creationTime <= \(aq##endTime##\(aq ORDER BY StationMagnitude.creationInfo_creationTime;"
+
+query.sta_net_mag_type.description = "Compares station magnitudes of a particular station with the network magnitude of specific type in a certain time span"
+query.sta_net_mag_type = "SELECT StationMagnitude.waveformID_networkCode AS Network, StationMagnitude.waveformID_stationCode AS Station, StationMagnitude.magnitude_value AS StaMag, Magnitude.magnitude_value AS NetMag, Magnitude.type AS NetMagType, StationMagnitude.creationInfo_creationTime AS CreationTime FROM StationMagnitude, PublicObject PStationMagnitude, StationMagnitudeContribution, Magnitude WHERE StationMagnitude._oid = PStationMagnitude._oid AND StationMagnitudeContribution.stationMagnitudeID = PStationMagnitude.publicID AND StationMagnitudeContribution._parent_oid = Magnitude._oid AND StationMagnitude.waveformID_networkCode = \(aq##netCode##\(aq AND StationMagnitude.waveformID_stationCode = \(aq##staCode##\(aq AND StationMagnitude.creationInfo_creationTime >= \(aq##startTime##\(aq AND StationMagnitude.creationInfo_creationTime <= \(aq##endTime##\(aq AND Magnitude.type = \(aq##magType##\(aq ORDER BY StationMagnitude.creationInfo_creationTime;"
+
+query.delta_sta_net_mag.description = "Calculates delta values of station and network magnitudes for all stations in a certain time span"
+query.delta_sta_net_mag = "SELECT StationMagnitude.waveformID_networkCode AS Network, StationMagnitude.waveformID_stationCode AS Station, AVG(StationMagnitude.magnitude_value \- Magnitude.magnitude_value) AS DeltaAvg, MIN(StationMagnitude.magnitude_value \- Magnitude.magnitude_value) AS DeltaMin, MAX(StationMagnitude.magnitude_value \- Magnitude.magnitude_value) AS DeltaMax, MIN(StationMagnitude.creationInfo_creationTime) AS Start, MAX(StationMagnitude.creationInfo_creationTime) AS End FROM StationMagnitude, PublicObject PStationMagnitude, StationMagnitudeContribution, Magnitude WHERE StationMagnitude._oid = PStationMagnitude._oidStationMagnitudeContribution.stationMagnitudeID = PStationMagnitude.publicIDStationMagnitudeContribution._parent_oid = Magnitude._oidStationMagnitude.creationInfo_creationTime >= \(aq##startTime##\(aqStationMagnitude.creationInfo_creationTime <= \(aq##endTime##\(aq GROUP BY StationMagnitude.waveformID_networkCode, StationMagnitude.waveformID_stationCode;"
+
+query.delta_sta_net_mag_type.description = "Calculates delta values of station and network magnitudes for all stations and all magnitude types in a certain time span"
+query.delta_sta_net_mag_type = "SELECT StationMagnitude.waveformID_networkCode AS Network, StationMagnitude.waveformID_stationCode AS Station, AVG(StationMagnitude.magnitude_value \- Magnitude.magnitude_value) AS DeltaAvg, MIN(StationMagnitude.magnitude_value \- Magnitude.magnitude_value) AS DeltaMin, MAX(StationMagnitude.magnitude_value \- Magnitude.magnitude_value) AS DeltaMax, Magnitude.type AS NetMagType, MIN(StationMagnitude.creationInfo_creationTime) AS Start, MAX(StationMagnitude.creationInfo_creationTime) AS End FROM StationMagnitude, PublicObject PStationMagnitude, StationMagnitudeContribution, Magnitude WHERE StationMagnitude._oid = PStationMagnitude._oid AND StationMagnitudeContribution.stationMagnitudeID = PStationMagnitude.publicID AND StationMagnitudeContribution._parent_oid = Magnitude._oid AND StationMagnitude.creationInfo_creationTime >= \(aq##startTime##\(aq AND StationMagnitude.creationInfo_creationTime <= \(aq##endTime##\(aq GROUP BY StationMagnitude.waveformID_networkCode, StationMagnitude.waveformID_stationCode, Magnitude.type;"
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS PostgreSQL
+.sp
+In contrast to queries for objects in \fI\%MariaDB/MySQL\fP the
+string \fBm_\fP must be added to the value and publicID database columns as shown
+below for the query "eventFilter".
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+queries = eventFilter
+
+query.eventFilter.description = "Returns all events (lat, lon, mag, time) that fall into a certain region and a magnitude range"
+query.eventFilter = "SELECT PEvent.m_publicID, Origin.m_time_value AS OT, Origin.m_latitude_value, Origin.m_longitude_value, Origin.m_depth_value, Magnitude.m_magnitude_value, Magnitude.m_type FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.m_publicID = Event.m_preferredMagnitudeID AND POrigin.m_publicID = Event.m_preferredOriginID AND Origin.m_latitude_value >= ##latMin## AND Origin.m_latitude_value <= ##latMax## AND Origin.m_longitude_value >= ##lonMin## AND Origin.m_longitude_value <= ##lonMax## AND Magnitude.m_magnitude_value >= ##minMag## AND Magnitude.m_magnitude_value <= ##maxMag## AND Origin.m_time_value >= \(aq##startTime##\(aq AND Origin.m_time_value <= \(aq##endTime##\(aq;"
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scquery.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scquery.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scquery.cfg\fP
+.fi
+.sp
+.sp
+scquery inherits global options\&.
+.SH COMMAND-LINE
+.sp
+\fBscquery [OPTIONS] [query name] [query parameters]\fP
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.SS Commands
+.INDENT 0.0
+.TP
+.B \-\-showqueries
+Show the queries defined in queries.cfg
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-print\-column\-name
+Print the name of each output column in a header
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-print\-header
+Print the query parameters and the query filter description
+as a header of the query output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-delimiter
+Column delimiter. If found, this character will be escaped
+in output values. Default: \(aq|\(aq
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-Q, \-\-query
+Execute the given query from the command line.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

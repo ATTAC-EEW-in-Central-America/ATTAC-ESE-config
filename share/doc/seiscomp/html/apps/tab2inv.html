@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>tab2inv &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tabinvmodifier" href="tabinvmodifier.html" />
+    <link rel="prev" title="scinv" href="scinv.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="tabinvmodifier.html" title="tabinvmodifier"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scinv.html" title="scinv"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/inventory.html" accesskey="U">Inventory</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="tab2inv">
+<span id="id1"></span><h1>tab2inv<a class="headerlink" href="#tab2inv" title="Permalink to this headline">¶</a></h1>
+<p><strong>tab to SeisComp3 inventory converter</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The tab2inv program is part of the nettab package distributed together with the
+<cite>SeisComP</cite> package. The nettab is a text-based format developed inside the
+GEOFON data center to describe seismological instruments responses information.
+The tab2inv program can generate <cite>SeisComP</cite> inventory files by parsing
+´´tab files´´ as described by in the nettab format.</p>
+<p>This program can read a set of tab files in the nettab format,
+verify their contents and generate inventory for the stations
+described in them.</p>
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">tab2inv [options] tab-file [more-tab-file]</strong></p>
+<div class="section" id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-tab2inv-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a small help message and exits.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-tab2inv-f">
+<code class="sig-name descname">-f</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--filterf</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicate the filter folder. The filter folder is where the program will search for the files indicated by the Ff and If lines.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-tab2inv-x">
+<code class="sig-name descname">-x</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--xmlf</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicate a folder containing a set of XML files that contains the SeisComp3 inventory files that will be used to resolve the station groups. Normally this folder is seiscomp/etc/inventory.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-tab2inv-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--database</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-tab2inv-force">
+<code class="sig-name descname">--force</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-force" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don’t stop on errors of individual files. Try to perform the requested task even if some files contain formatting errors.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-tab2inv-g">
+<code class="sig-name descname">-g</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--generate</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-g" title="Permalink to this definition">¶</a></dt>
+<dd><p>This option instruct the program to generate the XML document in the end of processing. When you don’t supply this option the file is just parsed and loaded into objects in the memory.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-tab2inv-c">
+<code class="sig-name descname">-c</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--check</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform some tests after the files can be loaded. The tests include testing that the instruments all can be resolved and has no unused instruments supplied.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-tab2inv-default">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--default</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use this option to indicate a default file. A default file is a file containing normally a set of rules for Network (Na), Stations (Sa) and Instruments (Ia) that are applied for every object created before the attributes specified in the file are applied. This option help sto set parameters that you want to be set on all objects.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-tab2inv-o">
+<code class="sig-name descname">-o</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--output</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-o" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use this option to indicate the output filename for the XML file. If not indicated the program will write the output file to STDOUT.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-tab2inv-i">
+<code class="sig-name descname">-i</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--ip</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-tab2inv-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow prefixing of the instrument (Datalogger or Sensor) name attribute on the inventory generated by a prefix. This option is normally used when you want to convert many networks that share the same instrumentation in different calls of the program. In each call of the program you can supply the network code and year as padding to guarantee that the instruments generated in both runs of the program will have different name values that are used as Key on the SeisComp3 inventory.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">tab2inv</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#options">Options</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scinv.html"
+                        title="previous chapter">scinv</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tabinvmodifier.html"
+                        title="next chapter">tabinvmodifier</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/tab2inv.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

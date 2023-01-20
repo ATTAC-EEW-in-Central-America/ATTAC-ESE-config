@@ -1,0 +1,3 @@
+# Overrides the default time (relative to the trigger time) of the begin of the
+# signal window used to pick.
+picker.AIC.signalEnd = 0.1

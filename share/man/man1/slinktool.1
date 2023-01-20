@@ -1,0 +1,521 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SLINKTOOL" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+slinktool \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBSeedLink query interface module\fP
+.SH DESCRIPTION
+.sp
+slinktool connects to a seedlink server and queries the server for information
+or requests data using uni\-station or multi\-station mode and prints information
+about the packets received. All received packets can optionally be dumped to a
+single file or saved in custom directory and file layouts.
+.SH EXAMPLES
+.SS All\-station/Uni\-station mode
+.sp
+The following would connect to a SeedLink server at slink.host.com port 18000 and
+configure the link in all\-station/uni\-station mode, exactly which data are received
+depends on the data being served by the SeedLink server on that particular port.
+Additionally, all of the received packets are appended to the file \(aqdata.mseed\(aq
+and each packet received is reported on the standard output.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+slinktool \-v \-o data.mseed slink.host.com:18000
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The \(aq\-s\(aq argument could be used to indicate selectors to limit the type of packets
+sent by the SeedLink server (without selectors all packet types are sent). The
+following would limit this connection to BHZ channel waveform data with a location
+code of 10 (see an explanation of SeedLink selectors below). Additionally another
+verbose flag is given, causing slinktool to report detailed header information
+from data records.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+slinktool \-vv \-s 10BHZ.D \-o data.mseed slink.host.com:18000
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Multi\-station mode
+.sp
+The following example would connect to a SeedLink server on localhost port 18010
+and configure the link in multi\-station mode. Each station specified with the \(aq\-S\(aq
+argument will be requested, optionally specifying selectors for each station.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+slinktool \-v \-S GE\e_WLF,MN\e_AQU:00???,IU\e_KONO:BHZ.D :18010
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+This would request all data from the GEOFON station WLF as no selectors were indicated,
+MedNet station AQU with location code 00 and all streams and waveform data from the
+IU network station KONO from stream BHZ.
+A variety of different data selections can be made simultaneously.
+.sp
+Examples:
+.INDENT 0.0
+.IP \(bu 2
+Horizontal BH channels, data only:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+\-s \(aqBHE.D BHN.D\(aq \-S \(aqGE\e_STU,GE\e_MALT,GE\e_WLF\(aq
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP \(bu 2
+Vertical channels only:
+.INDENT 2.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+\-s BHZ \-S GE\e_STU,GE\e_WLF,GE\e_RUE,GE\e_EIL
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Wildcarding network and station codes
+.sp
+Some SeedLink implementations support wildcarding of the network and station codes.
+If this is the case, the only two wildcard characters recognized are \(aq*\(aq for
+one or more characters and \(aq?\(aq for any single character.
+.sp
+As an example, all US network data can be requested using the following syntax
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+\-S \(aqUS\e_\e*\(aq
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH SEEDLINK SELECTORS
+.sp
+SeedLink selectors are used to request specific types of data within a given data
+stream, in effect limiting the default action of sending all data types.
+A data packet is sent to the client if it matches any positive selector
+(without leading "!") and doesn\(aqt match any negative selectors (with a leading "!").
+The general format of selectors is LLSSS.T, where LL is location, SSS is channel
+and T is type (one of [DECOTL] for Data, Event, Calibration, Blockette, Timing,
+and Log records). "LL", ".T", and "LLSSS." can be omitted, implying anything in
+that field. It is also possible to use "?" in place of L and S as a single character
+wildcard. Multiple selectors are separated by space(s).
+.sp
+Examples:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+BH?          \- BHZ, BHN, BHE (all record types)
+00BH?.D      \- BHZ, BHN, BHE with location code \(aq00\(aq (data records)
+BH? !E       \- BHZ, BHN, BHE (excluding detection records)
+BH? E        \- BHZ, BHN, BHE & detection records of all channels
+!LCQ !LEP    \- exclude LCQ and LEP channels
+!L !T        \- exclude log and timing records
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH ARCHIVING DATA
+.sp
+Using the \(aq\-A format\(aq option received data can be saved in a custom directory and
+file structure. The archive format argument is expanded for each packet processed
+using the following flags:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+n : network code, white space removed
+s : station code, white space removed
+l : location code, white space removed
+c : channel code, white space removed
+Y : year, 4 digits
+y : year, 2 digits zero padded
+j : day of year, 3 digits zero padded
+H : hour, 2 digits zero padded
+M : minute, 2 digits zero padded
+S : second, 2 digits zero padded
+F : fractional seconds, 4 digits zero padded
+% : the percent (%) character
+# : the number (#) character
+t : single character type code:
+      D \- waveform data packet
+      E \- detection packet
+      C \- calibration packet
+      T \- timing packet
+      L \- log packet
+      O \- opaque data packet
+      U \- unknown/general packet
+      I \- INFO packet
+      ? \- unidentifiable packet
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The flags are prefaced with either the % or # modifier. The % modifier indicates
+a defining flag while the # indicates a non\-defining flag. All received packets
+with the same set of defining flags will be saved to the same file. Non\-defining
+flags will be expanded using the values in the first packet received for the
+resulting file name.
+.sp
+Time flags are based on the start time of the given packet.
+.sp
+For example, the format string:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+/archive/%n/%s/%n.%s.%l.%c.%Y.%j
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+would be expanded to day length files named something like:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+/archive/NL/HGN/NL.HGN..BHE.2003.055
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Using non\-defining flags the format string:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+/data/%n.%s.%Y.%j.%H:#M:#S.miniseed
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+would be expanded to:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+/data/NL.HGN.2003.044.14:17:54.miniseed
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+resulting in hour length files because the minute and second are specified with the non\-defining modifier. The minute and second fields are from the first packet in the file.
+.SH STREAM LIST FILE
+.sp
+The stream list file used with the \(aq\-l\(aq option is expected to define a data stream
+on each line. The format of each line is:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+Network Station [selectors]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The selectors are optional. If default selectors are also specified (with the \(aq\-s\(aq option),
+they they will be used when no selectors are specified for a given stream.
+.sp
+Example:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+\-\-\-\-  Begin example file \-\-\-\-\-
+# Comment lines begin with a \(aq#\(aq or \(aq\e*\(aq
+# Example stream list file for use with the \-l argument of slclient or
+# with the sl\e_read\e_streamlist() libslink function.
+GE ISP  BH?.D
+NL HGN
+MN AQU  BH? HH?
+\-\-\-\-  End example file \-\-\-\-\-
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+All diagnostic output from slinktool is printed to standard error (stderr).
+Exceptions are when
+.INDENT 0.0
+.IP \(bu 2
+Printing miniSEED packet details with the \fI\-p\fP option.
+.IP \(bu 2
+Printing unpacked samples with the \fI\-u\fP option.
+.IP \(bu 2
+Printing the raw or formatted responses to INFO requests.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH AUTHOR OF SLINKTOOL
+.sp
+Chad Trabant
+.sp
+ORFEUS Data Center/EC\-Project MEREDIAN
+.sp
+IRIS Data Management Center
+.sp
+Original source code: \fI\%https://github.com/iris\-edu/slinktool/tree/master/doc\fP
+.SH COMMAND-LINE
+.sp
+\fBslinktool [OPTION]... [host][:][port]\fP
+.sp
+Address ([host][:][port]) is a required argument. It specifies the address
+of the SeedLink server in host:port format. Either the host, port or both
+can be omitted. If host is omitted then localhost is assumed,
+i.e. \(aq:18000\(aq implies \(aqlocalhost:18000\(aq. If the port is omitted,
+then 18000 is assumed, i.e. \(aqlocalhost\(aq implies \(aqlocalhost:18000\(aq.
+If only \(aq:\(aq is specified, \(aqlocalhost:18000\(aq is assumed.
+.SS General program options
+.INDENT 0.0
+.TP
+.B \-V
+Print program version and exit.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-h
+Print program usage and exit.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v
+Be more verbose. This flag can be used multiple times ("\-v \-v" or "\-vv")
+for more verbosity. One flag: report basic handshaking (link configuration) details and
+briefly report each packet received. Two flags: report the details of the handshaking,
+each packet received and detailed connection diagnostics.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-P
+Ping the server, report the server ID and exit.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-p
+Print details of received Mini\-SEED data records. This flag can be used multiple times
+("\-p \-p" or "\-pp") for more detail. One flag: a single summary line
+for each data packet received. Two flags: details of the Mini\-SEED data records received,
+including information from fixed header and 100/1000/1001 blockettes.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-u
+Print unpacked samples of data packets.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-nd delay
+The network reconnect delay for the connection to the SeedLink server.
+If the connection breaks for any reason this will govern how soon a reconnection should
+be attempted.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-nt timeout
+The network timeout (in seconds) for the connection to the SeedLink server. If no data
+[or keep alive packets?] are received in this time range the connection is closed and
+re\-established (after the reconnect delay has expired). The default value is 600 seconds.
+A value of 0 disables the timeout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-k interval
+Interval at which keepalive (heartbeat) packets are sent to the server.
+Keepalive packets are only sent if nothing is received within the interval.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-x sfile[:interval]
+Save/restore stream state information to this file.
+.sp
+During client shutdown the last received sequence numbers and time stamps (start times)
+for each data stream will be saved in this file. If this file exists upon startup the information
+will be used to resume the data streams from the point at which they were stopped. In this way the
+client can be stopped and started without data loss, assuming the data are still available on the
+server. If an interval is specified the state will be saved every interval in that packets are
+received. Otherwise the state will be saved only on normal program termination.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d
+Configure the connection in "dial\-up" mode. The remote server will close the connection when
+it has sent all of the data in its buffers for the selected data streams. This is opposed to
+the normal behavior of waiting indefinitely for data.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-b
+Configure the connection in "batch" mode.
+.UNINDENT
+.SS Data stream selection
+.INDENT 0.0
+.TP
+.B \-s selector
+Selectors for uni\-station or default for multi\-station mode
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l listfile
+Read a stream list from this file for multi\-station mode
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S streams
+Define a stream list for multi\-station mode.
+.sp
+\(aqstreams\(aq = \(aqstream1[:selectors1],stream2[:selectors2],...\(aq
+.sp
+\(aqstream\(aq is in NET_STA format, for example:
+.sp
+\-S "IU_KONO:BHE BHN,GE_WLF,MN_AQU:HH?.D"
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-tw begin:[end]
+Specify a time window in year,month,day,hour,min,sec format.
+.sp
+Example: \-tw 2002,08,05,14,00,00:2002,08,05,14,15,00
+.sp
+The end time is optional, but the colon must be present.
+.UNINDENT
+.SS Data saving options
+.INDENT 0.0
+.TP
+.B \-o dumpfile
+Write all received records to this file
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-A format
+If specified, all received packets (Mini\-SEED records) will be appended to a directory/file
+structure defined by format. All directories implied in the format string will be created if
+necessary.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-SDS SDSdir
+If specified, all received packets (Mini\-SEED records) will be saved into a Simple Data
+Structure (SDS) dir/file structure starting at the specified directory. This directory and
+all subdirectories will be created if necessary. This option is a preset of the \(aq\-A\(aq option.
+The SDS dir/file structure is:
+.sp
+<SDSdir>/<YEAR>/<NET>/<STA>/<CHAN.TYPE>/NET.STA.LOC.CHAN.TYPE.YEAR.DAY
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-BUD BUDdir
+If specified, all received waveform data packets (Mini\-SEED data records) will be saved into
+a Buffer of Uniform Data (BUD) dir/file structure starting at the specified directory.
+This directory and all subdirectories will be created if necessary. This option is a preset
+of the \(aq\-A\(aq option. The BUD dir/file structure is:
+.sp
+<BUDdir>/<NET>/<STA>/STA.NET.LOC.CHAN.YEAR.DAY
+.UNINDENT
+.SS Data server
+.INDENT 0.0
+.TP
+.B \-i type
+Send info request, type is one of the following:
+.sp
+ID, CAPABILITIES, STATIONS, STREAMS, GAPS, CONNECTIONS, ALL
+.sp
+The returned raw XML is displayed when using this option.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-I
+Print formatted server id and version
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-L
+Print formatted station list (if supported by server)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-Q
+Print formatted stream list (if supported by server)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-G
+Print formatted gap list (if supported by server)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-C
+Print formatted connection list (if supported by server)
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

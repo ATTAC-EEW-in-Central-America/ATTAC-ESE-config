@@ -1,0 +1,2941 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scolv &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="scqcv" href="scqcv.html" />
+    <link rel="prev" title="scmv" href="scmv.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="scqcv.html" title="scqcv"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scmv.html" title="scmv"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../gui.html" accesskey="U">Graphical User Interfaces</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="scolv">
+<span id="id1"></span><h1>scolv<a class="headerlink" href="#scolv" title="Permalink to this headline">¶</a></h1>
+<p><strong>Origin locator view</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="four column layout"><div class="figure align-default" id="id6">
+<img alt="scolv" src="../_images/scolv-location.png" />
+<p class="caption"><span class="caption-text">scolv: OriginLocatorView <a class="reference internal" href="#scolv-sec-location-tab"><span class="std std-ref">Location tab</span></a>
+with event and phase information</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-default" id="id7">
+<img alt="scolv picker" src="../_images/scolv-picker.png" />
+<p class="caption"><span class="caption-text">scolv: OriginLocatorView <a class="reference internal" href="#scolv-sec-waveform-review"><span class="std std-ref">phase picker</span></a>
+with waveforms and phase information</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-default" id="id8">
+<img alt="scolv picker" src="../_images/scolv-event.png" />
+<p class="caption"><span class="caption-text">scolv: OriginLocatorView <a class="reference internal" href="#fig-scolv-event"><span class="std std-ref">Event tab</span></a> with all origins</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-default" id="id9">
+<img alt="scolv picker" src="../_images/scolv-magnitude-picker.png" />
+<p class="caption"><span class="caption-text">scolv: OriginLocatorView <a class="reference internal" href="#scolv-sec-amplitude-review"><span class="std std-ref">amplitude waveform review</span></a>
+with station magnitudes</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</div><p>scolv is the main interactive tool to revise or review origin and event information.
+It thus provides the entire functionality to analyze earthquake parameters:</p>
+<ul class="simple">
+<li><p>Phase picks and arrivals in diagrams and waveforms</p></li>
+<li><p>Hypocenter location and source time with uncertainties</p></li>
+<li><p>Focal mechanism from first-motion polarities</p></li>
+<li><p>Magnitudes in diagrams and waveforms</p></li>
+<li><p>Origin status and certainty</p></li>
+<li><p>Event association</p></li>
+<li><p>Event type</p></li>
+</ul>
+<p>The main scolv window is divided into 4 perspectives (tabs) from which external windows
+can be opened:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#scolv-sec-location-tab"><span class="std std-ref">Location tab</span></a>: Details of the selected <a class="reference internal" href="../base/glossary.html#term-origin"><span class="xref std std-term">origin</span></a> with</p>
+<ul>
+<li><p><a class="reference internal" href="#scolv-sec-waveform-review"><span class="std std-ref">Phase picker</span></a> (external window): Review
+waveforms for phase picking including polarities, uncertainties, spectra and
+spectrograms,</p></li>
+<li><p><a class="reference internal" href="#scolv-sec-commit"><span class="std std-ref">Extended commit</span></a> (external window): Commit solution
+with additional options.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#scolv-sec-magnitude-tab"><span class="std std-ref">Magnitudes tab</span></a>: Magnitude details of the
+selected origin with</p>
+<ul>
+<li><p><a class="reference internal" href="#scolv-sec-amplitude-review"><span class="std std-ref">Amplitude waveform review</span></a> (external window):
+Waveform review for measuring amplitudes and for computing magnitudes.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#fig-scolv-event"><span class="std std-ref">Event tab</span></a>: Origins and focal mechanisms referenced
+by the selected <a class="reference internal" href="../base/glossary.html#term-event"><span class="xref std std-term">event</span></a>.</p></li>
+<li><p><a class="reference internal" href="#fig-scolv-events"><span class="std std-ref">Events tab</span></a>: Table of event parameters of the loaded
+events with interactive filtering of database requests and loaded events.</p></li>
+</ul>
+</div>
+<div class="section" id="modes-of-operation">
+<h2>Modes of Operation<a class="headerlink" href="#modes-of-operation" title="Permalink to this headline">¶</a></h2>
+<p>scolv can be operated in 2 modes:</p>
+<ul>
+<li><p><strong>Connected to the messaging</strong> where all event and station inventory parameters
+are received from the <a class="reference internal" href="../base/concepts/messaging.html#concepts-messaging"><span class="std std-ref">messaging</span></a> or the database and
+<em>updated in real time</em>. New or updated
+parameters can be commited to the messaging. Simply start scolv without any argument
+or connect to a specific host providing the messaging, e.g.:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>scolv
+scolv -H [host]
+</pre></div>
+</div>
+</li>
+<li><p><strong>Offline without messaging</strong> where all event and station
+inventory parameters are read from an XML files or from the database and
+<em>updated interactively</em>. New or updated parameters can be written to an XML file.
+Execute scolv with the command-line option
+<code class="docutils literal notranslate"><span class="pre">--offline</span></code> and optionally provide the database or inventory and bindings
+parameters in <a class="reference internal" href="../base/glossary.html#term-scml"><span class="xref std std-term">SCML</span></a> format to fetch event parameters as well as inventory
+and bindings configuration parameters. Examples:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>scolv --offline
+scolv --offline -d [database]
+scolv --offline --inventory-db [inventory] --config-db [config]
+</pre></div>
+</div>
+<p>Select one XML file in the <cite>File</cite> menu to read event parameters.
+After processing, the parameters can be saved to another XML file though the
+<cite>File</cite> menu.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="location-tab">
+<span id="scolv-sec-location-tab"></span><h2>Location Tab<a class="headerlink" href="#location-tab" title="Permalink to this headline">¶</a></h2>
+<p>The Location tab shows detailed information of the associated
+phases and the residuals from the chosen origin additional information about the
+hypocenter, time, station distribution, helps to find outlier.</p>
+<div class="figure align-center" id="id10">
+<span id="fig-scolv-location"></span><a class="reference internal image-reference" href="../_images/tab_location.png"><img alt="../_images/tab_location.png" src="../_images/tab_location.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Location tab of scolv with summary widget to the left.</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+<div class="legend">
+<p>(<strong>Redo/Undo</strong>) Switch to last/next location result
+(<strong>Tab 1-4</strong>) Location/Magnitude/Event/Events tab
+(<strong>Map</strong>) map with the event location, associated stations, the color coded
+residuals (red-positive, blue-negative) and ray paths
+(<strong>Information</strong>) Origin information including time, epicentre, depth, number of
+used and available phases, RMS, azimuthal gap and minimum
+station distance
+(<strong>List</strong>) Table of associated arrivals (phases) containing stream information
+and phase information
+(<strong>Tab 5-10</strong>) Arrival residual plots against distance and azimuth (linear and
+polar) in a separate tab
+(<strong>Plot</strong>) Arrival residual plot (distance over residual in seconds)
+(<strong>Depth</strong>) Checkbox to fix to a defined depth
+(<strong>B1</strong>) Relocate with the given arrival information
+(<strong>B2</strong>) Open Manual Picker
+(<strong>B3</strong>) Import picks of other automatic origins belonging to the same event
+(<strong>B4</strong>) Compute magnitudes
+(<strong>B5</strong>) Commit origin
+(<strong>Summary</strong>) all information of the preferred origin of the loaded event</p>
+</div>
+</div>
+<div class="section" id="summary-widget">
+<span id="scolv-sec-summary-widget"></span><h3>Summary widget<a class="headerlink" href="#summary-widget" title="Permalink to this headline">¶</a></h3>
+<p>The summary widget in the Location tab contains two other tabs: <em>Preferred</em> and
+<em>Current</em>. <em>Preferred</em>
+reflects the current official (database) state of the event while <em>Current</em>
+shows the current solution (location and magnitudes). Activate the Summary widget
+by pressing <kbd class="kbd docutils literal notranslate">F8</kbd> or from the <em>View</em> menu.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The summary tab is available for all other tabs of the scolv main window and
+also for other GUI applications.</p>
+</div>
+</div>
+<div class="section" id="diagrams">
+<span id="scolv-sec-diagrams"></span><h3>Diagrams<a class="headerlink" href="#diagrams" title="Permalink to this headline">¶</a></h3>
+<p>The default arrival residual plot is shown in the figure above. Additional
+plots are available to analyze arrivals which can be shown by activating the
+corresponding tab.</p>
+<p>In these diagrams, arrival can be activated or deactivating for <a class="reference internal" href="#scolv-sec-relocating"><span class="std std-ref">relocating</span></a>
+by clicking on a point or by selecting a range using mouse drag. Deselecting is
+available by mouse drag when pressing kbd:<cite>Ctrl</cite>.</p>
+<div class="figure align-center" id="id11">
+<a class="reference internal image-reference" href="../_images/tab_location_plots.png"><img alt="../_images/tab_location_plots.png" src="../_images/tab_location_plots.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Additional arrival plots in Location tab of the main window</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+<div class="legend">
+<p>From upper left to lower right: <strong>1</strong>) azimuth vs distance, <strong>2</strong>) travel time vs distance,
+<strong>3</strong>) travel time - predicted travel time vs distance, <strong>4</strong>) azimuth vs distance polar</p>
+</div>
+</div>
+<p>The move out plot uses the reduced travel time with a default reduction velocity
+of 6km/s. This value is configurable by <a class="reference internal" href="#confval-olv.Pvel"><code class="xref std std-confval docutils literal notranslate"><span class="pre">olv.Pvel</span></code></a>, either in the configuration file
+(<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>) or in the <a class="reference internal" href="#scolv-settings"><span class="std std-ref">settings window</span></a>, e.g.:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reduction velocity used for move out plot</span>
+olv.Pvel <span class="o">=</span> <span class="m">6</span>.0
+</pre></div>
+</div>
+<p>The diagrams in the scolv Location tab present observations (e.g. arrival residuals). Each plot
+is also interactive to select a subset of data or to zoom into a region.</p>
+<p>A plot filter can be defined. Filtering means that arrivals that match the
+filter are not plotted. They are filtered out visually. To enable a filter
+click the link “not active” right below the plot tabs. A setup window pops up
+where the filter can be defined. Currently only a filter by azimuth around
+epicenter can be applied.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/plot-filter-setup.png"><img alt="../_images/plot-filter-setup.png" src="../_images/plot-filter-setup.png" style="width: 8cm;" /></a>
+</div>
+<p>Select the center azimuth and the extent to either side. If OK is pressed all
+arrivals that fall outside the defined azimuthal area are hidden from the plot
+and the line below the tabs turns into “Filter is active”. Clicking on the
+link again and select the “None” filter will show all arrivals in the plot again.</p>
+<p>Plots can also be configured to show or hide dashed grid lines. Use <a class="reference internal" href="#confval-olv.drawGridLines"><code class="xref std std-confval docutils literal notranslate"><span class="pre">olv.drawGridLines</span></code></a>
+for configuration (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>). The default is true.</p>
+</div>
+<div class="section" id="arrival-table">
+<h3>Arrival table<a class="headerlink" href="#arrival-table" title="Permalink to this headline">¶</a></h3>
+<p>The arrival table shows all arrivals of the current origin. The columns are
+sortable by clicking on the corresponding header item. Additional data columns
+can be shown or active columns can be hidden, either initially or interactively.
+Available column identifiers are:</p>
+<ul class="simple">
+<li><p><strong>Used</strong></p></li>
+<li><p><strong>Status</strong></p></li>
+<li><p><strong>Phase</strong></p></li>
+<li><p>Weight</p></li>
+<li><p>Method</p></li>
+<li><p>Polarity</p></li>
+<li><p>Takeoff</p></li>
+<li><p><strong>Net</strong></p></li>
+<li><p><strong>Sta</strong></p></li>
+<li><p><strong>Loc/Cha</strong></p></li>
+<li><p><strong>Res</strong></p></li>
+<li><p><strong>Dis</strong></p></li>
+<li><p><strong>Az</strong></p></li>
+<li><p><strong>Time</strong></p></li>
+<li><p><strong>Timeres</strong></p></li>
+<li><p>Slo</p></li>
+<li><p>Slores</p></li>
+<li><p>Baz</p></li>
+<li><p>Bazres</p></li>
+<li><p><strong>+/-</strong></p></li>
+<li><p>Created</p></li>
+<li><p>Latency</p></li>
+</ul>
+<p>The columns printed bold are shown initially. The initial column
+list can be changed in <code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code> by adjusting <a class="reference internal" href="#confval-olv.arrivalTable.visibleColumns"><code class="xref std std-confval docutils literal notranslate"><span class="pre">olv.arrivalTable.visibleColumns</span></code></a>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>olv.arrivalTable.visibleColumns <span class="o">=</span> Used, Status, Weight, Phase, Net, Sta,<span class="se">\</span>
+                                  Loc/Cha, Res, Dis, Az, Time, +/-
+</pre></div>
+</div>
+<p>The user can also interactively select what columns are be visible or hidden
+from a context menu which pops up after a right click on the table header.</p>
+<div class="figure align-center">
+<img alt="../_images/arrivals-header-context.png" src="../_images/arrivals-header-context.png" />
+</div>
+<p>The checkbox in the first column indicates if the arrival was used for locating the
+origin. The overall usage state of arrival contains three flags: arrival time used,
+backazimuth used and slowness used. If any of these flags is active then the
+overall usage state is active as well. The arrival table shows those flags indicated
+by <strong>T</strong> for pick time, <strong>S</strong> for horizontal slowness and <strong>B</strong> for backazimuth.
+A flag is rendered with a dash if the referred pick does not contain the
+corresponding feature. For example, if a pick does not carry a backazimuth
+measure then the backazimuth flag is disabled. It would not make sense to
+activate backazimuth usage without a corresponding measure.</p>
+<p>In most cases, only the time flag, indicated by the capital <strong>T</strong>, will be active.
+The other two flags are rendered with dashes, meaning that they are inactive.
+Background: an arrival refers to a pick which can hold several features. The basic
+feature a pick must hold is the pick time. Some modules such as for array processing
+might compute additional pick features. Such features can be the backazimuth and
+the horizontal slowness. Locators like LocSAT were developed to use those features
+to increase the precision of a location. Special applictions are locations based
+borehole networks with poor azimuthal coverage or locations with very few stations.</p>
+<p>There may be cases where a backazimuth measure of a pick should not be used by
+the locator. In contrast, if a backazimuth is available but the timing is bad,
+disabling the use of the pick time but including the backazimuth may be advantageous.
+For that a simple weight value is not enough. With a weight one cannot separate
+whether or not to use a particular feature. So the arrival does not only refer
+to a pick but holds flags indicating which features of that pick should be used
+for locating.</p>
+<div class="figure align-center">
+<img alt="../_images/arrival-flags.png" src="../_images/arrival-flags.png" />
+</div>
+<p>Single or multiple rows can be selected in the table. The selection of multiple
+rows works either with Ctrl+LeftMouse (add single row) or
+Shift+LeftMouse (range selection).</p>
+<p>When pressing the right mouse button on a selected row a context menu pops up.
+If an unselected row is used, the current selection will be reset and only the
+row below the mouse is selected.</p>
+<p>The context menu allows to:</p>
+<ul class="simple">
+<li><p>Select arrivals based on a certain criterion,</p></li>
+<li><p>Activate/deactivate selected pick features,</p></li>
+<li><p>Delete selected arrivals,</p></li>
+<li><p>Rename phases of selected arrivals.</p></li>
+</ul>
+<div class="figure align-center">
+<img alt="../_images/arrivals-context.png" src="../_images/arrivals-context.png" />
+</div>
+<p>If arrivals are deleted, they are removed physically from this solution in
+contrast to deactivate an arrival where only the used flags are set to zero.</p>
+</div>
+<div class="section" id="waveform-review-picker">
+<span id="scolv-sec-waveform-review"></span><h3>Waveform review (Picker)<a class="headerlink" href="#waveform-review-picker" title="Permalink to this headline">¶</a></h3>
+<p>The <em>Picker</em> button opens the interactive waveform picker window. It allows
+to pick additional phases, to confirm picks, to add additional pick information
+such as polarity and uncertainty, to rotate traces and much more.</p>
+<p>It is divided into two parts, the zoom trace and the trace list. The zoom trace
+shows a sub area of the active trace in the list.</p>
+<div class="figure align-center" id="fig-scolv-picker">
+<a class="reference internal image-reference" href="../_images/picker.png"><img alt="../_images/picker.png" src="../_images/picker.png" style="width: 16cm;" /></a>
+</div>
+<p>Initially the picker shows only the vertical channels for each station that
+have been associated with the current location. It can be
+<a class="reference internal" href="#scolv-settings"><span class="std std-ref">configured</span></a> to show all three components.</p>
+<p>Phase picks are color-coded:</p>
+<ul class="simple">
+<li><p>Red: automatic</p></li>
+<li><p>Green: manual</p></li>
+<li><p>Blue: predicted using the selected travel-time table</p></li>
+</ul>
+<p>Mature colors and light color indicate arrivals and unassociated picks, respectively.
+Unassociated picks can be shown/hidden using <kbd class="kbd docutils literal notranslate">Ctrl`+:kbd:`5</kbd>.</p>
+<p>Initially the picker allows to pick the following phases:</p>
+<ul class="simple">
+<li><p>P</p></li>
+<li><p>Pn</p></li>
+<li><p>Pg</p></li>
+<li><p>pP</p></li>
+<li><p>S</p></li>
+<li><p>Sg</p></li>
+</ul>
+<p>Up to 9 phase types can be selected by hot keys. This list of favourite phases
+can be customized by <a class="reference internal" href="#confval-picker.phases.favourites"><code class="xref std std-confval docutils literal notranslate"><span class="pre">picker.phases.favourites</span></code></a>, e.g. (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>):</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span># Define a list of favourite phases for quick access
+picker.phases.favourites = Pn, P, Pg, PmP, P1, Pg, Sg, S, Sn, SmS
+</pre></div>
+</div>
+<p>The list of favourites is used to assign shortcuts to. <kbd class="kbd docutils literal notranslate">1</kbd> is assigned
+to the first phase, <kbd class="kbd docutils literal notranslate">2</kbd> to the second and so on.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Shortcuts are assigned only  to the first 9 favourite phases. All
+other defined phases can be activated from the <em>Picking</em> menu.</p>
+</div>
+<p>The phases can be also grouped to reflect e.g. regional
+and teleseismic profiles. In group not hot keys are available.
+An example configuration looks like this (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define two phase groups: regional and teleseismic</span>
+picker.phases.groups <span class="o">=</span> regional, teleseismic
+
+<span class="c1"># Define all phases of group &quot;regional&quot;</span>
+picker.phases.groups.regional <span class="o">=</span> Pn, P, Pg, PmP, P1, Sg, S, Sn, SmS
+
+<span class="c1"># Define all phases of group &quot;teleseismic&quot;</span>
+picker.phases.groups.teleseismic <span class="o">=</span> pP, sP, sS, PKP, PKP
+</pre></div>
+</div>
+<div class="figure align-center" id="id12">
+<img alt="../_images/phases-menu.png" src="../_images/phases-menu.png" />
+<p class="caption"><span class="caption-text">Pick phase selection menu</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</div>
+<p>To set the uncertainty of a pick more easily a list of predefined uncertainties can be
+defined using <a class="reference internal" href="#confval-picker.uncertainties"><code class="xref std std-confval docutils literal notranslate"><span class="pre">picker.uncertainties</span></code></a>, e.g.:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>picker.uncertainties = 0.05, 0.1, 0.2, &quot;(0.1,0.2)&quot;, &quot;(0.05,0.02)&quot;
+</pre></div>
+</div>
+<p>where single values define symmetric and pairs of values define asymmetric uncertainties.
+The pre-defined uncertainties can be selected during picking using hot keys, e.g.
+<kbd class="kbd docutils literal notranslate">1</kbd> or <kbd class="kbd docutils literal notranslate">2</kbd> for the 1st or the 2nd value defined in <a class="reference internal" href="#confval-picker.uncertainties"><code class="xref std std-confval docutils literal notranslate"><span class="pre">picker.uncertainties</span></code></a>.
+Later, the uncertainties can be adjusted manually.</p>
+<p>Additionally, uncertainties can be defined freely whereas choosing
+among a predefined set of uncertainties is a lot faster.</p>
+<p>If the mouse hovers a pick a dashed rectangle is drawn around this pick. Then
+the pick is active and the right mouse button can be pressed to open the context
+menu where the polarity and uncertainty can be defined. The following screen shot
+shows the available uncertainties.</p>
+<div class="figure align-center" id="id13">
+<img alt="../_images/pick-context2.png" src="../_images/pick-context2.png" />
+<p class="caption"><span class="caption-text">Pick context menu</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</div>
+<p>As for phase types, uncertainty profiles can be additionally configured (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>):</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span># Define available pick uncertainty profiles. Single values
+# are symmetric uncertainties whereas tuples are asymmetric
+# uncertainties: (left,right). Uncertainty values are given
+# in seconds.
+
+# Define an uncertainty profile for local events
+picker.uncertainties.profile.local = 0.05, 0.1, 0.2, 0.3, &quot;(0.1,0.2)&quot;
+
+# Define an uncertainty profile for teleseismic events
+picker.uncertainties.profile.teleseismic = 0.5, 1, 2, 3, &quot;(1,2)&quot;
+
+# Define the list of uncertainty sets that are active in scolv.
+# This first set in the list is used by default. The other sets
+# can be activated in the settings dialog (scolv: F3)
+picker.uncertainties.preferred = local, teleseismic
+</pre></div>
+</div>
+<p>If an uncertainty is selected the active pick is copied into a manual pick
+and the uncertainty is displayed as semi transparent bar to the left and
+to the right of the pick. The width of the bar corresponds to the uncertainty
+in seconds.</p>
+<div class="figure align-center">
+<img alt="../_images/pick-uncertainty.png" src="../_images/pick-uncertainty.png" />
+</div>
+<p>Furthermore the pick polarity can be defined.</p>
+<div class="figure align-center">
+<img alt="../_images/pick-context.png" src="../_images/pick-context.png" />
+</div>
+<p>Either <em>positive</em>, <em>negative</em>, <em>undecidable</em> or <em>unset</em>. If set it is displayed
+as an arrow. <em>Undecidable</em> is displayed as a cross (X).</p>
+<div class="figure align-center">
+<img alt="../_images/pick-polarity.png" src="../_images/pick-polarity.png" />
+</div>
+<p>To rotate the waveform components into ZNE or ZRT system a new drop down list
+was added in the toolbar. Selecting either ZNE or ZRT implies that all missing
+components are requested.</p>
+<div class="figure align-center">
+<img alt="../_images/rotation-options.png" src="../_images/rotation-options.png" />
+</div>
+<p>When waveforms are requested the corresponding widget background is changed
+according to the current state:</p>
+<ul class="simple">
+<li><p>Yellow: waveforms requested but not yet received</p></li>
+<li><p>Red: acquisition finished and data is not available</p></li>
+<li><p>Green: waveforms received and acquisition still in progress</p></li>
+<li><p>Gray: meta data are missing</p></li>
+</ul>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/picker-acqui.png"><img alt="../_images/picker-acqui.png" src="../_images/picker-acqui.png" style="width: 16cm;" /></a>
+</div>
+<p>If a trace displays all three components and amplitudes are scaled up, they are
+not clipped to their window area. The clipping behavior can be toggled by
+either pressing <kbd class="kbd docutils literal notranslate">C</kbd> or in the menu
+<span class="menuselection">View ‣ Zoomtrace ‣ Clip components to viewport</span>.</p>
+<p>The difference is shown in the following two images:</p>
+<div class="figure align-center" id="id14">
+<a class="reference internal image-reference" href="../_images/clobber-off.png"><img alt="../_images/clobber-off.png" src="../_images/clobber-off.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Trace clipping enabled</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id15">
+<a class="reference internal image-reference" href="../_images/clobber-on.png"><img alt="../_images/clobber-on.png" src="../_images/clobber-on.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Trace clipping disabled</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="relocate-events">
+<span id="scolv-sec-relocating"></span><h3>Relocate events<a class="headerlink" href="#relocate-events" title="Permalink to this headline">¶</a></h3>
+<p>Before relocating choose the locator, the locator profile and additional parameters
+to the right or from the the tool box. Additional locator routines are available
+by <a class="reference internal" href="../base/concepts/plugins.html#concepts-plugins"><span class="std std-ref">SeisComP plugins</span></a>.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/scolv-relocating.png"><img alt="../_images/scolv-relocating.png" src="../_images/scolv-relocating.png" style="width: 16cm;" /></a>
+</div>
+<p>Pressing <em>Relocate</em> creates a new origin and updates the arrival table and the
+parameters displayed in the Location tab.</p>
+</div>
+<div class="section" id="compute-magnitudes">
+<h3>Compute magnitudes<a class="headerlink" href="#compute-magnitudes" title="Permalink to this headline">¶</a></h3>
+<p>When an event was <a class="reference internal" href="#scolv-sec-relocating"><span class="std std-ref">relocated</span></a> a new origin is created
+and new magnitudes can be calculated by using the
+“Compute Magnitudes” button. The advantage of calculating the magnitudes before
+committing the new origin, is the possibility to check the resulting magnitudes
+before they are computed manually by <a class="reference internal" href="scmag.html#scmag"><span class="std std-ref">scmag</span></a>.</p>
+<div class="figure align-center" id="id16">
+<span id="fig-scolv-location-mag-status"></span><img alt="../_images/tab_location_mag_status.png" src="../_images/tab_location_mag_status.png" />
+<p class="caption"><span class="caption-text">Compute magnitudes status window</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
+</div>
+<p><a class="reference internal" href="#fig-scolv-location-mag-status"><span class="std std-ref">A window</span></a> will pop up showing the progress
+information of computation. The amplitudes are either fetched from database if
+the pick is unchanged and already in the system. For new manual picks,
+waveforms are requested to compute the amplitudes. The popup window contains
+information about the progress and possible errors. After closing this windows
+all available magnitudes are shown and can be interactively re-processed
+in the <a class="reference internal" href="#scolv-sec-magnitude-tab"><span class="std std-ref">magnitudes tab</span></a>.</p>
+</div>
+<div class="section" id="commit-a-solution">
+<span id="scolv-sec-commit"></span><h3>Commit a solution<a class="headerlink" href="#commit-a-solution" title="Permalink to this headline">¶</a></h3>
+<p>Committing a solution means to send the location (including optional magnitudes)
+to the processing system and let it decide what origin becomes preferred.</p>
+<p>To optimize the workflow</p>
+<ol class="arabic simple">
+<li><p>Select an event</p></li>
+<li><p>Review solution</p></li>
+<li><p>Commit solution</p></li>
+<li><p>Change to event tab</p></li>
+<li><p>Set this solution preferred</p></li>
+<li><p>Set event type</p></li>
+<li><p>Change to events tab</p></li>
+<li><p>Goto 1.</p></li>
+</ol>
+<p>to</p>
+<ol class="arabic simple">
+<li><p>Select an event</p></li>
+<li><p>Review solution</p></li>
+<li><p>Commit solution</p></li>
+<li><p>Change to events tab</p></li>
+<li><p>Goto 1.</p></li>
+</ol>
+<p>an additional commit mode was added which allows to set certain options along
+with the location and its magnitudes.</p>
+<div class="figure align-center">
+<img alt="../_images/commit-options.png" src="../_images/commit-options.png" />
+</div>
+<p>After pressing and holding the Commit button down for a little while, a menu
+pops up which allows to select <em>With additional options</em>. Selecting this entry
+brings up another window where the different options can be set.</p>
+<div class="figure align-center">
+<img alt="../_images/commit-options2.png" src="../_images/commit-options2.png" />
+</div>
+<p>It allows to fix the origin to be committed as preferred origin and to set the
+event type in one go. If <em>Return to event list after commit</em> is ticked the
+event list is activated after pressing OK to select another event quickly.</p>
+<dl class="simple">
+<dt><em>Earthquake name</em></dt><dd><p>Contains the event description <em>earthquake name</em>. If this field is empty the
+description will be removed from the event otherwise it will be added.</p>
+</dd>
+<dt><em>Comment</em></dt><dd><p>contains an optional event comment added as comment with ID <em>Operator</em>.</p>
+</dd>
+</dl>
+<p id="sec-scolv-custom-commit">As a shortcut for committing with additional options,
+<a class="reference internal" href="#fig-scolv-custom-commit"><span class="std std-ref">custom commit buttons</span></a> can be added by
+configuration: Add, enable and configure a custom commit profile in
+<code class="xref std std-confval docutils literal notranslate"><span class="pre">olv.customCommits</span></code>.
+With custom commit buttons origin and event paramters can be set, e.g.:</p>
+<ul class="simple">
+<li><p>Origin status</p></li>
+<li><p>Fixing the origin</p></li>
+<li><p>Event type</p></li>
+<li><p>Event type certainty</p></li>
+<li><p>Magnitude type of the <a class="reference internal" href="../base/glossary.html#term-preferred-magnitude"><span class="xref std std-term">preferred magnitude</span></a>. The preferred magnitude
+can also be set in the <a class="reference internal" href="#scolv-sec-magnitude-summary"><span class="std std-ref">magnitude tab</span></a>.</p></li>
+<li><p>Event comments</p></li>
+</ul>
+<div class="figure align-center" id="id17">
+<span id="fig-scolv-custom-commit"></span><a class="reference internal image-reference" href="../_images/commit-custom.png"><img alt="../_images/commit-custom.png" src="../_images/commit-custom.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Custom commit buttons in the Location tab for configured actions and with specific label and color.</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="magnitudes-tab">
+<span id="scolv-sec-magnitude-tab"></span><h2>Magnitudes Tab<a class="headerlink" href="#magnitudes-tab" title="Permalink to this headline">¶</a></h2>
+<p>The Magnitude tab shows all available magnitude information for the current
+origin. They can be recomputed after creating a new origin, e.g. by relocating.</p>
+<div class="figure align-center" id="id18">
+<span id="fig-scolv-magnitudes"></span><a class="reference internal image-reference" href="../_images/tab_magnitudes.png"><img alt="../_images/tab_magnitudes.png" src="../_images/tab_magnitudes.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Magnitudes tab of scolv.</span><a class="headerlink" href="#id18" title="Permalink to this image">¶</a></p>
+<div class="legend">
+<p>(<strong>Map</strong>) Map with residual and status of the station magnitude, filled
+circles show stations which delivered a magnitude, empty circles represent
+for which no magnitude was calculated
+(<strong>Magnitude tabs</strong>) Each magnitude and the residuals are displayed in a
+separate tab, no residuals are displayed for deduced magnitudes like
+Mw(mB) or M
+(<strong>Information</strong>) Magnitude information including network magnitude value,
+magnitude error, number of used and available station magnitudes and
+minimum/maximum station magnitude
+(<strong>List</strong>) Station magnitude table with weights
+(<strong>Plot</strong>) Station magnitude residual from network magnitude (distance
+over residual)
+(<strong>Weighting</strong>) Weighting scheme for the network magnitude
+(<strong>B1</strong>) Recalculation of the network magnitudes
+(<strong>B2</strong>) Open waveform review</p>
+</div>
+</div>
+<div class="section" id="station-magnitudes">
+<span id="scolv-sec-magnitude-station"></span><h3>Station magnitudes<a class="headerlink" href="#station-magnitudes" title="Permalink to this headline">¶</a></h3>
+<p>For each of the different magnitude types (e.g. mb, mB, MLv, Mw(mB)),
+the <a class="reference internal" href="scmag.html#scmag-stationm"><span class="std std-ref">station magnitudes</span></a> are shown in the magnitude residual plot and the table.
+The residual plot visualizes the difference between the station magnitude and
+the network magnitude for the different station distances. After relocation the
+magnitudes can be recalculated by the “Compute Magnitudes” button in the
+Location tab.</p>
+<p>The station magnitudes can also be recalculated by
+<a class="reference internal" href="#scolv-sec-amplitude-review"><span class="std std-ref">interactive waveform analysis</span></a>. Press the B2 button to
+start the interactive analysis.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Magnitudes cannot be recalculated for origins loaded from
+database. To review magnitudes, create a new origin (relocate), recompute
+magnitudes and then change into this tab to open either the waveform
+review window or to just remove outliers.</p>
+</div>
+</div>
+<div class="section" id="network-magnitudes">
+<span id="scolv-sec-magnitude-network"></span><h3>Network magnitudes<a class="headerlink" href="#network-magnitudes" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="scmag.html#scmag-networkm"><span class="std std-ref">Network magnitudes</span></a> are computed from corresponding
+<a class="reference internal" href="scmag.html#scmag-stationm"><span class="std std-ref">station magnitudes</span></a>.
+The considered station magnitudes can be selected or unselected in the
+list and in the plot of station magnitudes. The method, the status and the margins
+to disregard outliers can be selected.
+Normally, the 25%-trimmed mean is calculated as network magnitude to stabilize
+the result against a few outliers. The 25%-trimmed mean first removes the outliers
+of the outer 12.5% percentiles and then forms the mean.</p>
+<p>Magnitudes that were not computed due to missing data or low signa-to-noise
+ratios have a cross button rendered in their tab headers and their value is
+nan (not a number). Furthermore was the status of the magnitude set to
+rejected. To manually review the waveforms and to fine tune the
+parameters, open the waveforms and add at least one station magnitude. Otherwise
+the rejected magnitude will be removed from the origin prio to committing it.</p>
+</div>
+<div class="section" id="summary-magnitude">
+<span id="scolv-sec-magnitude-summary"></span><h3>Summary magnitude<a class="headerlink" href="#summary-magnitude" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="scmag.html#scmag-summarym"><span class="std std-ref">summary magnitude</span></a> typically is calculated from all network magnitudes
+by <a class="reference internal" href="scmag.html#scmag"><span class="std std-ref">scmag</span></a> and set as preferred magnitude type by <a class="reference internal" href="scevent.html#scevent"><span class="std std-ref">scevent</span></a> after committing
+or confirming an origin. The defaults can be changed by configuring <a class="reference internal" href="scmag.html#scmag"><span class="std std-ref">scmag</span></a>
+and <a class="reference internal" href="scevent.html#scevent"><span class="std std-ref">scevent</span></a>.</p>
+<p>However, in combination with <a class="reference internal" href="#sec-scolv-custom-commit"><span class="std std-ref">custom commit buttons</span></a>,
+the network magnitude to be considered as the preferred can be set by hitting this
+configured button or interactively in the <a class="reference internal" href="#fig-scolv-magnitudes"><span class="std std-ref">magnitude tab</span></a>
+of scolv. Interactively check the box in the network magnitudes tab, then press the
+custom commit button. Setting the preferred magnitude interactively in the magnitude
+tab takes priority over the configuration of the custom commit button.</p>
+</div>
+<div class="section" id="waveform-review">
+<span id="scolv-sec-amplitude-review"></span><h3>Waveform review<a class="headerlink" href="#waveform-review" title="Permalink to this headline">¶</a></h3>
+<p>The magnitude review page also allows the review of waveforms.
+The button <em>Waveforms</em> brings up the amplitude waveform review page.
+The waveform review magnitude type is the same as the currently active tab.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/magnitudes-waveforms.png"><img alt="../_images/magnitudes-waveforms.png" src="../_images/magnitudes-waveforms.png" style="width: 16cm;" /></a>
+</div>
+<p>The initial view loads all traces of all arrivals within the defined distance
+for that magnitude type. The zoom trace shows all components required for this
+particular amplitude type and the lower part shows all stations and only the
+currently active component. All traces are aligned on trigger time (blue P marker).
+If a station has got an amplitude it shows up as a red (automatic
+determined amplitude) or green (manually determined amplitude) marker.
+This display is similar to the Picker.</p>
+<p>The toolbar contains two lines of settings. The first line is similar to the
+Picker, the second line is amplitude picker specific.</p>
+<div class="figure align-center" id="id19">
+<img alt="../_images/magnitudes-toolbar.png" src="../_images/magnitudes-toolbar.png" />
+<p class="caption"><span class="caption-text">Second toolbar line: filter selection, filter toggle, min SNR editor,
+amplitude measurement type selector, amplitude combiner selector,
+(re)calculate amplitudes, apply amplitudes.</span><a class="headerlink" href="#id19" title="Permalink to this image">¶</a></p>
+</div>
+<p>A station trace is divided into three areas:</p>
+<ul class="simple">
+<li><p>Dark gray: unused data</p></li>
+<li><p>Light gray: data used for noise offset and noise amplitude</p></li>
+<li><p>White: data used for amplitude calculation</p></li>
+</ul>
+<p>The example above shows nicely how different data time windows are used for
+amplitude determination depending on the distance. This depends on the
+amplitude type and its implementation.</p>
+<p>Available actions are:</p>
+<ul class="simple">
+<li><p>Show raw data</p></li>
+<li><p>Change processing settings</p></li>
+<li><p>Adjust processing areas (noise, signal) for a single trace or all traces</p></li>
+<li><p>Apply a secondary filter (e.g. to remove noise or low frequencies)</p></li>
+<li><p>Pick amplitudes within a user definable time window</p></li>
+<li><p>Add unpicked/unassociated stations that are within a certain distance</p></li>
+<li><p>Remove bad stations</p></li>
+</ul>
+<div class="section" id="show-raw-data">
+<h4>Show raw data<a class="headerlink" href="#show-raw-data" title="Permalink to this headline">¶</a></h4>
+<p>By default the processed waveforms are displayed. To look at the raw waveforms
+change the filter drop down box to <em>Raw</em>.</p>
+</div>
+<div class="section" id="processing-settings">
+<h4>Processing settings<a class="headerlink" href="#processing-settings" title="Permalink to this headline">¶</a></h4>
+<p>A basic amplitude processor uses two basic settings: Minimum signal/noise
+ratio (SNR) and data time windows. The default minimum SNR is defined by the
+implementation of the amplitude algorithm. This default SNR is shown in the
+toolbar right from <em>Min SNR:</em>. In some situations an operator might want to
+increase or decrease the minimum SNR for some reason. This can be done by
+modifying the value in the corresponding spin box.</p>
+<p>In the time scale of the zoom widget and the overview three black triangles are
+visible. Those triangles can be used to adjust the data time windows of either
+the zoom trace (upper part) or all traces (lower part) by dragging the handle
+with the left mouse button.</p>
+<p>Some amplitude processors allow the modification of the type of amplitude
+measurement (e.g. absolute maximum or peak-to-peak) and/or the amplitude
+combiner procedure. This procedure is mostly used when a final amplitude from
+two components is computed, e.g. ML on the horizontals. The combiner procedure
+defines how the amplitudes of each horizontal are combined to a single amplitude,
+e.g. by taking the maximum of both or the average.</p>
+<p>If the amplitude processor allows any of these options the corresponding drop
+down boxes are enabled in the toolbar and can be used to change the defaults.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Amplitudes are not recalculated if any changes to the settings are
+made. Recalculation has to be activated manually (see below).</p>
+</div>
+</div>
+<div class="section" id="secondary-filters">
+<h4>Secondary filters<a class="headerlink" href="#secondary-filters" title="Permalink to this headline">¶</a></h4>
+<p>Another option is to filter the data additionally to the internal filter of the
+amplitude processor. Be warned that wrongly applied filters screw up the results.
+The available filters can be defined in the settings dialog of scolv or in the
+configuration file similar to the manual picker filters (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># List of filters available in the picker. Format:</span>
+<span class="c1"># &quot;name1;filter-definition1&quot;, &quot;name2;filter-definition2&quot;</span>
+amplitudePicker.filters <span class="o">=</span> <span class="s2">&quot;4 pole HP @2s;BW_HP(4,0.5)&quot;</span>
+</pre></div>
+</div>
+<p>The new filter selection is applied immediately to the waveforms while the amplitudes are not recalculated
+(see next section).</p>
+</div>
+<div class="section" id="calculate-amplitudes">
+<h4>Calculate amplitudes<a class="headerlink" href="#calculate-amplitudes" title="Permalink to this headline">¶</a></h4>
+<p>To calculate the amplitudes of all traces with the current settings press the
+green check in the toolbar. It will process all traces and recalculate the
+amplitudes within the shown time windows. If an error occurs it will show up as
+a small message box in the station trace itself. If a new amplitude is available
+its state is set to manual and the marker is updated to reflect the new position
+of the amplitude. If the mouse hovers an amplitude marker a tooltip pops up
+after a certain amount of time and shows information about the amplitude.</p>
+<div class="figure align-center">
+<img alt="../_images/amplitude-tooltip.png" src="../_images/amplitude-tooltip.png" />
+</div>
+</div>
+<div class="section" id="pick-amplitudes">
+<h4>Pick amplitudes<a class="headerlink" href="#pick-amplitudes" title="Permalink to this headline">¶</a></h4>
+<p>In addition to the default picking of all stations it is also possible to
+define the time window of the amplitude of a station manually. To do so,
+activate picking by pressing <kbd class="kbd docutils literal notranslate">1</kbd> or in the main menu:
+<span class="menuselection">Amplitudes ‣ Pick amplitudes</span>.</p>
+<p>There are two modes of picking:</p>
+<ol class="arabic simple">
+<li><p>Create a time window by pressing with left mouse button at the start time and
+releasing at the end time, or</p></li>
+<li><p>Double click at a time and use a time window of [t-0.5sec;t+0.5sec]</p></li>
+</ol>
+</div>
+<div class="section" id="add-stations-in-range">
+<h4>Add stations in range<a class="headerlink" href="#add-stations-in-range" title="Permalink to this headline">¶</a></h4>
+<p>Unpicked or unassociated stations can be added the same way as in the manual
+picker. The new stations will not have an amplitude and need either manual
+picking or global amplitude recalculation.</p>
+</div>
+<div class="section" id="remove-bad-stations">
+<h4>Remove bad stations<a class="headerlink" href="#remove-bad-stations" title="Permalink to this headline">¶</a></h4>
+<p>Stations can be disabled by either double clicking on the trace label in the
+overview or by deactivating an amplitude similar to deactivating a pick.</p>
+</div>
+<div class="section" id="confirm-the-amplitudes">
+<h4>Confirm the amplitudes<a class="headerlink" href="#confirm-the-amplitudes" title="Permalink to this headline">¶</a></h4>
+<p>The red button in the toolbar confirms all amplitudes and transfers them to the
+magnitude review page. Only activated amplitudes are transferred. Disabled
+stations or disabled amplitudes are ignored. At this stage all magnitudes are
+calculated and the network magnitude is calculated according to the available
+settings: <em>Mean</em>, <em>Median</em> or <em>Trimmed mean</em>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="event-tab">
+<h2>Event Tab<a class="headerlink" href="#event-tab" title="Permalink to this headline">¶</a></h2>
+<p>The Event tab gives all information of associated origins and magnitude of the
+actual event. Here the selection of the preferred origin and preferred magnitude
+can be influenced independent from <a class="reference internal" href="scevent.html#scevent"><span class="std std-ref">scevent</span></a>. The messaging between
+scevent and scolv about the selected origins and magnitudes can be viewed in
+a window that has to be opened by pulling the left side frame to the right.</p>
+<div class="figure align-center" id="id20">
+<span id="fig-scolv-event"></span><a class="reference internal image-reference" href="../_images/tab_event.png"><img alt="../_images/tab_event.png" src="../_images/tab_event.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Event tab of scolv.</span><a class="headerlink" href="#id20" title="Permalink to this image">¶</a></p>
+</div>
+<ul class="simple">
+<li><p><strong>Origin list:</strong> List of all associated origins
+* <strong>B1</strong> Selector for the event type
+* <strong>B2</strong> Button to fix the selected origin as preferred
+* <strong>B3</strong> Button to let <a class="reference internal" href="scevent.html#scevent"><span class="std std-ref">scevent</span></a> select the preferred origin</p></li>
+<li><p><strong>Magnitude list</strong> List of magnitudes of the actual origin
+* <strong>B4</strong> Button to fix the selected magnitude as preferred
+* <strong>B5</strong> Button to let <a class="reference internal" href="scevent.html#scevent"><span class="std std-ref">scevent</span></a> select the preferred magnitude</p></li>
+<li><p><strong>Focal Mechanism:</strong> List of all focal mechanisms associated to the selected event.</p></li>
+</ul>
+<p>The map (lower left part) shows all associated origins while the currently
+selected origin (<strong>Origin list</strong>) is drawn filled.</p>
+<div class="section" id="origin-list">
+<span id="scolv-origin-list"></span><h3>Origin list<a class="headerlink" href="#origin-list" title="Permalink to this headline">¶</a></h3>
+<p>The Origin list shows details of all available origins. You may fix/unfix an
+origin to become the preferred one or select the type and set
+the type uncertainty for the selected sevent.</p>
+<p>Select a row or cell and
+press the right mouse button to copy the row or cell, respectively.
+The <em>Stat</em> column indicates a combination of the mode and the status of the origin.</p>
+<p id="scolv-origin-mode">The mode is color coded:</p>
+<ul class="simple">
+<li><p><strong>Red</strong>: automatic</p></li>
+<li><p><strong>Green</strong>: manual</p></li>
+</ul>
+<p id="scolv-origin-status">The status is coded by a single character:</p>
+<ul class="simple">
+<li><p><strong>A</strong>: unset, status not specifically set, e.g. usually automatic origins from <a class="reference internal" href="scautoloc.html#scautoloc"><span class="std std-ref">scautoloc</span></a></p></li>
+<li><p><strong>F</strong>: final</p></li>
+<li><p><strong>V</strong>: reviewed</p></li>
+<li><p><strong>C</strong>: confirmed</p></li>
+<li><p><strong>P</strong>: preliminary, e.g. XXL origins from <a class="reference internal" href="scautoloc.html#scautoloc"><span class="std std-ref">scautoloc</span></a></p></li>
+<li><p><strong>R</strong>: reported</p></li>
+<li><p><strong>X</strong>: rejected</p></li>
+</ul>
+</div>
+<div class="section" id="magnitude-list">
+<span id="scolv-magnitude-list"></span><h3>Magnitude list<a class="headerlink" href="#magnitude-list" title="Permalink to this headline">¶</a></h3>
+<p>The magnitude list shows all available magnitudes available for the origin
+selected in the <a class="reference internal" href="#scolv-origin-list"><span class="std std-ref">Origin list</span></a>. You may fix/unfix a
+magnitude type to become the preferred magnitude.</p>
+<p>Select a row or cell and
+press the right mouse button to copy the row or cell, respectively.</p>
+</div>
+<div class="section" id="focal-mechanism-list">
+<span id="scolv-fm-list"></span><h3>Focal Mechanism list<a class="headerlink" href="#focal-mechanism-list" title="Permalink to this headline">¶</a></h3>
+<p>The Focal Mechanism tab shows all focal mechanisms and moment tensors associated
+to the selected event. You may fix the preferred mechanism or fix/unfix
+<a class="reference internal" href="../base/glossary.html#term-magnitude-moment-mw"><span class="xref std std-term">Mw</span></a> to become the preferred magnitude.</p>
+<p>Select a row or cell and
+press the right mouse button to copy the row or cell, respectively.</p>
+</div>
+</div>
+<div class="section" id="events-tab">
+<span id="scolv-events-tab"></span><h2>Events Tab<a class="headerlink" href="#events-tab" title="Permalink to this headline">¶</a></h2>
+<p>The Events tab gives an overview of the events in a defined time span. Shown events
+are updated in real time as new events arrive in <cite>SeisComP</cite> or are loaded from the database.
+When starting scolv with the option <strong>–ep</strong> events can also be loaded from an XML
+file using the File menu in the main window.</p>
+<div class="figure align-center" id="id21">
+<span id="fig-scolv-events"></span><a class="reference internal image-reference" href="../_images/tab_events.png"><img alt="../_images/tab_events.png" src="../_images/tab_events.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">scolv Events tab with the list of events and the filter window.</span><a class="headerlink" href="#id21" title="Permalink to this image">¶</a></p>
+</div>
+<p>Information about origin time, preferred (“best”) magnitude, preferred magnitude
+type, number of phases, epicenter and depth, origin status, region, agency and
+event/origin ID are similar to the event list in <a class="reference internal" href="scesv.html#scesv"><span class="std std-ref">scesv</span></a>. Additionally,
+all origins associated with one event are displayed if an event item is expanded.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The region name of an event is read from the database or received via the
+messaging bus. It is an integral part of the event description and set based
+on the data set available at the time of the event creation. The region name
+of the origins is not part of the origin description and resolved dynamically
+when the information is required. That can lead to confusion if the dataset
+of the computer where the event has been created and the local dataset
+differs. Therefore the region names resolved locally are rendered with italic
+font style.</p>
+</div>
+<div class="section" id="events-table">
+<h3>Events table<a class="headerlink" href="#events-table" title="Permalink to this headline">¶</a></h3>
+<p>As with the arrival table the shown columns of the list are also configurable.
+The available identifiers are:</p>
+<ul class="simple">
+<li><p><strong>OT(GMT)</strong> : origin time</p></li>
+<li><p><strong>Type</strong> : event type</p></li>
+<li><p>M : magnitude</p></li>
+<li><p><strong>MType</strong> : magnitude type</p></li>
+<li><p><strong>Phases</strong> : number of used phases</p></li>
+<li><p><strong>RMS</strong> : root-mean square</p></li>
+<li><p><strong>Lat</strong> : latitude</p></li>
+<li><p><strong>Lon</strong> : longitude</p></li>
+<li><p><strong>Depth</strong> : depth</p></li>
+<li><p>DType : depth type</p></li>
+<li><p><strong>Stat</strong> : a combination of the <a class="reference internal" href="#scolv-origin-mode"><span class="std std-ref">color-coded mode</span></a> and
+the <a class="reference internal" href="#scolv-origin-status"><span class="std std-ref">status</span></a> of the preferred origin as described by
+a letter. A trailing “+” indicates that origins were contributed to the event
+by multiple agencies, e.g. “C+”.</p></li>
+<li><p>FM : focal mechanism</p></li>
+<li><p>Origins: number of origins per event</p></li>
+<li><p><strong>Agency</strong> : agency ID</p></li>
+<li><p>Author : author</p></li>
+<li><p><strong>Region</strong> : region name</p></li>
+<li><p><strong>ID</strong> : ID of the show element, e.g. event or origin</p></li>
+</ul>
+<p>The bold identifiers are visible initially.
+To show or hide columns interactively click with the right mouse button on the
+table header and check or uncheck the corresponding column.</p>
+<p>Sorting and re-ordering is available by clicking on the header of the columns and
+by dragging the header fields, respectively. Right-click on cells to copy individual
+cells values or entire rows.</p>
+<p>This list can also be customized
+with <a class="reference internal" href="global_gui.html#confval-eventlist.visibleColumns"><code class="xref std std-confval docutils literal notranslate"><span class="pre">eventlist.visibleColumns</span></code></a> in the global configuration
+(<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code> or <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove Type and Author from column list that is initially active</span>
+eventlist.visibleColumns <span class="o">=</span> OT<span class="o">(</span>GMT<span class="o">)</span>, Type, M, MType Phases, RMS, Lat, Lon,<span class="se">\</span>
+                           Depth, DType, Stat, FM, Author, Agency, Region, ID
+</pre></div>
+</div>
+</div>
+<div class="section" id="event-filtering">
+<h3>Event filtering<a class="headerlink" href="#event-filtering" title="Permalink to this headline">¶</a></h3>
+<p>Database requests filters can be set and adjusted in
+the filter parameter window which opens when pressing the Filter button. Press <em>Read</em>
+to reload the events list based on the filter parameters. Filter parameters
+are <a class="reference internal" href="global.html#global"><span class="std std-ref">Global parameters</span></a> parameters which can be preset by adjusting the configuration parameters
+<code class="xref std std-confval docutils literal notranslate"><span class="pre">eventlist.filter.database.*</span></code>. <strong>The request filter only concerns the
+database request for loading events. It does not update the current list.</strong></p>
+<p>The event list also contains a checkbox <em>Hide other/fake events</em>. If checked all
+events with type <em>not existing</em> or <em>other</em> are hidden. If unchecked they are
+shown. <strong>Pressing the Hide button affects the currently loaded list.</strong></p>
+<p>It is possible to configure the event types used for this filter as well
+as the label text of the checkbox. Use the global configuration for setting
+the parameters (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code> or <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the event types to be filtered</span>
+eventlist.filter.types.blacklist <span class="o">=</span> <span class="s2">&quot;not existing&quot;</span>, <span class="s2">&quot;other&quot;</span>,<span class="se">\</span>
+                                   <span class="s2">&quot;outside of network interest&quot;</span>
+
+<span class="c1"># Define the label of the button to filter the events</span>
+eventlist.filter.types.label <span class="o">=</span> <span class="s2">&quot;Hide fake events&quot;</span>
+
+<span class="c1"># Define the default behavior</span>
+eventlist.filter.types.enabled <span class="o">=</span> <span class="nb">true</span>
+</pre></div>
+</div>
+<p>Another option to filter events is by agencyID. The button <em>Show only own events</em>
+will hide all events where the preferred origins agencyID is not the configured
+<a class="reference internal" href="global.html#confval-agencyID"><code class="xref std std-confval docutils literal notranslate"><span class="pre">agencyID</span></code></a> of scolv. This is the default behavior which can be customized
+(<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code> or <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the preferred agencyIDs to GFZ and EMSC</span>
+eventlist.filter.agencies.whitelist <span class="o">=</span> GFZ, EMSC
+
+<span class="c1"># Set type to &#39;origins&#39; which means that an event will pass the filter if</span>
+<span class="c1"># at least one origin is from a preferred agency defined with the whitelist</span>
+<span class="c1"># above. The default type is &#39;events&#39; which checks only the events preferred</span>
+<span class="c1"># origin.</span>
+eventlist.filter.agencies.type <span class="o">=</span> origins
+eventlist.filter.agencies.label <span class="o">=</span> <span class="s2">&quot;Show only my preferred events&quot;</span>
+
+<span class="c1"># Enable this filter initially. If this option is not used the filter</span>
+<span class="c1"># is disabled by default.</span>
+eventlist.filter.agencies.enabled <span class="o">=</span> <span class="nb">true</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="custom-actions">
+<h2>Custom Actions<a class="headerlink" href="#custom-actions" title="Permalink to this headline">¶</a></h2>
+<p>Since the internal data model is limited, scolv allows addition of custom quantities
+derived from the origin objects to the information panel, to the origin list of
+Event tab and to the Event list. This can help to evaluate origins in a better
+way.</p>
+<p>Two sources are currently supported</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#sec-scolv-comments"><span class="std std-ref">Origin comments</span></a> provided along with origins,</p></li>
+<li><p><a class="reference internal" href="#sec-scolv-scripts"><span class="std std-ref">Custom scripts</span></a> provided by the <cite>SeisComP</cite> operator.</p></li>
+</ul>
+<div class="section" id="origin-comments">
+<span id="sec-scolv-comments"></span><h3>Origin comments<a class="headerlink" href="#origin-comments" title="Permalink to this headline">¶</a></h3>
+<p>Currently only one comment of an origin can be added to the different panels.</p>
+<div class="section" id="id2">
+<h4>Location tab<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>To add a comment value to the information panel of the Location tab, the
+following configuration can be used (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the comment id to be used</span>
+display.origin.comment.id <span class="o">=</span> SED.quality
+
+<span class="c1"># Define the default display value if no comment is available</span>
+display.origin.comment.default <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+
+<span class="c1"># Define the label text in the information panel for this value</span>
+display.origin.comment.label <span class="o">=</span> Quality
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h4>Event tab<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>To add a custom column to the <strong>origin list of the Event tab</strong> using a comment
+value, configure (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the default value if no comment is present</span>
+eventedit.customColumn.default <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+
+<span class="c1"># Define the comment id to be used</span>
+eventedit.customColumn.originCommentID <span class="o">=</span> SED.quality
+
+<span class="c1"># Define the column header label</span>
+eventedit.customColumn <span class="o">=</span> <span class="s2">&quot;Qual&quot;</span>
+
+<span class="c1"># Define the column position in the table</span>
+eventedit.customColumn.pos <span class="o">=</span> <span class="m">4</span>
+
+<span class="c1"># Allows to map comment values (strings) to colors. In this case the</span>
+<span class="c1"># comment will have A,B,C or D which is mapped to green, yellow, orange and</span>
+<span class="c1"># red</span>
+eventedit.customColumn.colors <span class="o">=</span> <span class="s2">&quot;A:00FF00&quot;</span>,<span class="s2">&quot;B:rgb(64,192,0)&quot;</span>,<span class="se">\</span>
+                                <span class="s2">&quot;C:rgb(192,64,0)&quot;</span>,<span class="s2">&quot;D:FF0000&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h4>Events tab<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>To add a custom column to the <strong>event list of the Events tab</strong> using a comment
+value, the following configuration can be used (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code> or <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the default value if no comment is present</span>
+eventlist.customColumn.default <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+
+<span class="c1"># Define the comment id to be used</span>
+eventlist.customColumn.originCommentID <span class="o">=</span> <span class="s2">&quot;SED.quality&quot;</span>
+
+<span class="c1"># Define the column header label</span>
+eventlist.customColumn <span class="o">=</span> <span class="s2">&quot;Qual&quot;</span>
+
+<span class="c1"># Define the column position in the table</span>
+eventlist.customColumn.pos <span class="o">=</span> <span class="m">5</span>
+
+<span class="c1"># Allows to map comment values (strings) to colors. In this case the</span>
+<span class="c1"># comment will have A,B,C or D which is mapped to green, yellow, orange and</span>
+<span class="c1"># red</span>
+eventlist.customColumn.colors <span class="o">=</span> <span class="s2">&quot;A:00FF00&quot;</span>,<span class="s2">&quot;B:rgb(64,192,0)&quot;</span>,<span class="se">\</span>
+                                <span class="s2">&quot;C:rgb(192,64,0)&quot;</span>,<span class="s2">&quot;D:FF0000&quot;</span>
+</pre></div>
+</div>
+<p>The last three examples are used to show the <em>SED.quality</em> comment value which
+is set by the <a class="reference internal" href="global_nonlinloc.html#global-nonlinloc"><span class="std std-ref">NonLinLoc locator plugin</span></a>.</p>
+</div>
+</div>
+<div class="section" id="external-scripts">
+<span id="sec-scolv-scripts"></span><h3>External scripts<a class="headerlink" href="#external-scripts" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="custom-buttons">
+<h4>Custom buttons<a class="headerlink" href="#custom-buttons" title="Permalink to this headline">¶</a></h4>
+<p>scolv allows to add custom buttons to the <strong>summary window</strong> and the <strong>Location tab</strong>.
+When pressing the custom buttons, user-defined external scripts are executed.
+Configuration (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>):</p>
+<ul class="simple">
+<li><p>Button in summary window: <a class="reference internal" href="#confval-scripts.export"><code class="xref std std-confval docutils literal notranslate"><span class="pre">scripts.export</span></code></a></p></li>
+<li><p>Up to 2 buttons in Location tab: <a class="reference internal" href="#confval-button0"><code class="xref std std-confval docutils literal notranslate"><span class="pre">button0</span></code></a>, <a class="reference internal" href="#confval-scripts.script0"><code class="xref std std-confval docutils literal notranslate"><span class="pre">scripts.script0</span></code></a>,
+<a class="reference internal" href="#confval-button1"><code class="xref std std-confval docutils literal notranslate"><span class="pre">button1</span></code></a>,  <a class="reference internal" href="#confval-scripts.script0"><code class="xref std std-confval docutils literal notranslate"><span class="pre">scripts.script0</span></code></a></p></li>
+</ul>
+<p>Another option to add derived origin parameters is to use external scripts.
+scolv will call those scripts and writes a binary serialized origin object
+to its standard input. scolv reads the script output and displays this value
+only if the return code of the script is 0.</p>
+<p>An example script which just returns the standard error looks like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env seiscomp-python</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">seiscomp</span> <span class="kn">import</span> <span class="n">datamodel</span><span class="p">,</span> <span class="n">io</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">ar</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BinaryArchive</span><span class="p">()</span>
+
+    <span class="c1"># Open standard input</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ar</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">):</span>
+        <span class="c1"># Hmmm, opening stdin failed</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="c1"># Read the object</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">readObject</span><span class="p">()</span>
+    <span class="n">ar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Try to cast obj to an origin</span>
+    <span class="n">org</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">Origin</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="c1"># No origin -&gt; error</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">org</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="c1"># Try to print the standard error to stdout</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">org</span><span class="o">.</span><span class="n">quality</span><span class="p">()</span><span class="o">.</span><span class="n">standardError</span><span class="p">())</span>
+    <span class="c1"># Field not set, return error</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The script must be executable. In Linux don’t forget
+to call</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>chmod +x /path/to/script
+</pre></div>
+</div>
+</div>
+<p>As many scripts as necessary for evaluation can be created.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Calling external scripts causes overhead and can take some time
+depending on the implementation of the script. scolv needs to access the
+database to fetch additional information which it does not need normally.
+The slower the database access, the longer it takes to display the results.</p>
+</div>
+</div>
+<div class="section" id="add-information-to-location-tab">
+<h4>Add information to Location tab<a class="headerlink" href="#add-information-to-location-tab" title="Permalink to this headline">¶</a></h4>
+<p>To add the output of an external custom script to the information panel of the Location tab,
+configure (<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the available add-ons to be used</span>
+display.origin.addons <span class="o">=</span> qual, qual2
+
+<span class="c1"># Configure each add-on</span>
+display.origin.addon.qual1.label <span class="o">=</span> <span class="s2">&quot;Qual1&quot;</span>
+display.origin.addon.qual1.script <span class="o">=</span> <span class="s2">&quot;@CONFIGDIR@/scripts/scolv/qual1&quot;</span>
+
+display.origin.addon.qual2.label <span class="o">=</span> <span class="s2">&quot;Qual2&quot;</span>
+display.origin.addon.qual2.script <span class="o">=</span> <span class="s2">&quot;@CONFIGDIR@/scripts/scolv/qual2&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-information-to-event-tab">
+<h4>Add information to Event tab<a class="headerlink" href="#add-information-to-event-tab" title="Permalink to this headline">¶</a></h4>
+<p>Provide an external script and add the output to the <strong>origin list of the Event tab</strong>
+(<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>eventedit.scripts.columns <span class="o">=</span> qual1, qual2
+eventedit.scripts.column.qual1.label <span class="o">=</span> <span class="s2">&quot;Qual1&quot;</span>
+eventedit.scripts.column.qual1.pos <span class="o">=</span> <span class="m">8</span>
+eventedit.scripts.column.qual1.script <span class="o">=</span> <span class="s2">&quot;@CONFIGDIR@/scripts/scolv/qual1&quot;</span>
+eventedit.scripts.column.qual2.label <span class="o">=</span> <span class="s2">&quot;Qual2&quot;</span>
+eventedit.scripts.column.qual2.pos <span class="o">=</span> <span class="m">9</span>
+eventedit.scripts.column.qual2.script <span class="o">=</span> <span class="s2">&quot;@CONFIGDIR@/scripts/scolv/qual2&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-information-to-events-tab">
+<h4>Add information to Events tab<a class="headerlink" href="#add-information-to-events-tab" title="Permalink to this headline">¶</a></h4>
+<p>Provide an external script and add the output to <strong>event list of the Events tab</strong>
+(<code class="file docutils literal notranslate"><span class="pre">scolv.cfg</span></code> or <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>eventlist.scripts.columns <span class="o">=</span> qual1, qual2
+eventlist.scripts.column.qual1.label <span class="o">=</span> <span class="s2">&quot;Qual1&quot;</span>
+eventlist.scripts.column.qual1.pos <span class="o">=</span> <span class="m">5</span>
+eventlist.scripts.column.qual1.script <span class="o">=</span> <span class="s2">&quot;@CONFIGDIR@/scripts/scolv/qual1&quot;</span>
+eventlist.scripts.column.qual2.label <span class="o">=</span> <span class="s2">&quot;Qual2&quot;</span>
+eventlist.scripts.column.qual2.pos <span class="o">=</span> <span class="m">6</span>
+eventlist.scripts.column.qual2.script <span class="o">=</span> <span class="s2">&quot;@CONFIGDIR@/scripts/scolv/qual2&quot;</span>
+</pre></div>
+</div>
+<p>Adding external scripts to the event list is the most expensive part. Whenever
+the event list is reloaded, it will start to run the scripts on all origins
+in the background. It can take a while until the complete list has been
+processed. A progress indicator is plotted in the middle of the event list while
+the background processes are running.</p>
+</div>
+</div>
+</div>
+<div class="section" id="settings">
+<span id="scolv-settings"></span><h2>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h2>
+<p>All settings of scolv can be adjusted in its <a class="reference internal" href="#scolv-configuration"><span class="std std-ref">configuration file</span></a>.
+However, some settings can be changed on-the-fly. The connection to the messaging
+system and the database can be adjusted in the <em>Setup connection</em> dialog access
+by pressing <kbd class="kbd docutils literal notranslate">F2</kbd>. A window for adjusting scolv settings is
+available which can be opened by pressing <kbd class="kbd docutils literal notranslate">F3</kbd>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When pressing the Save button in the scolv settings menu, the parameters will be written
+to <code class="file docutils literal notranslate"><span class="pre">$HOME/.seiscomp/scolv.cfg</span></code> (use mode configuration) where they take
+priority over configurations in <code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/scolv.cfg</span></code> (system mode configuration).</p>
+</div>
+<div class="section" id="global">
+<h3>Global<a class="headerlink" href="#global" title="Permalink to this headline">¶</a></h3>
+<p>This section contains settings for all the main tabs and <em>all</em> waveform windows.</p>
+<div class="figure align-center" id="id22">
+<img alt="../_images/settings-global.png" src="../_images/settings-global.png" />
+<p class="caption"><span class="caption-text">Global settings</span><a class="headerlink" href="#id22" title="Permalink to this image">¶</a></p>
+</div>
+<dl class="simple">
+<dt><em>Reduction velocity</em></dt><dd><p>Sets the reduction velocity used for plot <em>MoveOut</em>.</p>
+</dd>
+<dt><em>Compute magnitudes after relocate</em></dt><dd><p>Automatically computes magnitudes after each relocation. This has the same
+effect as pressing “Compute magnitudes” manually.</p>
+</dd>
+<dt><em>Compute magnitudes silently</em></dt><dd><p>Automatically closes the compute magnitudes dialog if the computation is
+finished and no error occurred.</p>
+</dd>
+<dt><em>Draw grid lines</em></dt><dd><p>Enables dashed grid lines in all plots.</p>
+</dd>
+<dt><em>Data source</em></dt><dd><p>Defines the waveform data source for both, pick review and amplitude review</p>
+</dd>
+<dt><em>Default distance for “add station”</em></dt><dd><p>The default value to add stations (traces) that have not been picked or
+associated is 15 degrees. A lower value can be defined, e.g. if mainly local events are analyzed.</p>
+</dd>
+<dt><em>Hide station traces without data and arrivals</em></dt><dd><p>If new stations are added during pick review or amplitude review and if no
+data is available for some of those stations, they will be hidden and not
+shown. Once data arrives the trace becomes visible.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="picker">
+<h3>Picker<a class="headerlink" href="#picker" title="Permalink to this headline">¶</a></h3>
+<p>This section contains settings for the picker window.</p>
+<div class="figure align-center" id="id23">
+<img alt="../_images/settings-picker.png" src="../_images/settings-picker.png" />
+<p class="caption"><span class="caption-text">Waveform picker settings</span><a class="headerlink" href="#id23" title="Permalink to this image">¶</a></p>
+</div>
+<dl class="simple">
+<dt><em>Show cross hair cursor</em></dt><dd><p>Enables the cross hair cursor which shows the currently selected uncertainty
+ranges.</p>
+</dd>
+<dt><em>Uncertainties</em></dt><dd><p>Select the current uncertainty set to be used (<a class="reference internal" href="#confval-picker.uncertainties.preferred"><code class="xref std std-confval docutils literal notranslate"><span class="pre">picker.uncertainties.preferred</span></code></a>).</p>
+</dd>
+<dt><em>Remove automatic station picks</em></dt><dd><p>If checked all automatic picks of a station with manual picks are removed once
+the manual review is confirmed.</p>
+</dd>
+<dt><em>Remove all automatic picks</em></dt><dd><p>If checked all automatic picks are removed once the manual review is confirmed.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="magnitude-review">
+<h3>Magnitude review<a class="headerlink" href="#magnitude-review" title="Permalink to this headline">¶</a></h3>
+<p>This section contains settings for the magnitude waveform review window.</p>
+<div class="figure align-center" id="id24">
+<img alt="../_images/settings-amplitude.png" src="../_images/settings-amplitude.png" />
+<p class="caption"><span class="caption-text">Amplitude/magnitude review settings</span><a class="headerlink" href="#id24" title="Permalink to this image">¶</a></p>
+</div>
+<dl>
+<dt><em>Waveform time window pre offset</em></dt><dd><p>Sets an offset before the used amplitude time window that is used when
+collecting data.</p>
+</dd>
+<dt><em>Waveform time window post offset</em></dt><dd><p>Sets an offset after the used amplitude time window that is used when
+collecting data.</p>
+<p>The greater the offset the more the amplitude time window can be extended or
+shifted.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="units-and-precisions">
+<h3>Units and precisions<a class="headerlink" href="#units-and-precisions" title="Permalink to this headline">¶</a></h3>
+<p>Local network users prefer the distance unit in kilometers while others prefer degrees.
+scolv (as any other GUI) can be configured to show either the one or the other.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># If true, show distances in km. Use degree otherwise.</span>
+scheme.unit.distanceInKM <span class="o">=</span> <span class="nb">true</span>
+</pre></div>
+</div>
+<p>Furthermore the precision of various values can be configured:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Precision of depth values.</span>
+scheme.precision.depth <span class="o">=</span> <span class="m">0</span>
+<span class="c1"># Precision of latitude/longitude values.</span>
+scheme.precision.location <span class="o">=</span> <span class="m">2</span>
+<span class="c1"># Precision of magnitude values.</span>
+scheme.precision.magnitude <span class="o">=</span> <span class="m">2</span>
+<span class="c1"># Precision of pick times (fractions of seconds).</span>
+scheme.precision.pickTime <span class="o">=</span> <span class="m">1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Configuring units and precisions only affects the way the values are presented,
+not the values themselves. These and other lock-and-feel parameters can be
+adjusted in <em>scheme</em> section of the <a class="reference internal" href="global.html#global"><span class="std std-ref">global configuration</span></a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="hotkeys">
+<span id="sec-scolv-hotkeys"></span><h2>Hotkeys<a class="headerlink" href="#hotkeys" title="Permalink to this headline">¶</a></h2>
+<p>The following table describes the available key combinations and their triggered
+actions in scolv. The hotkeys are provided for:</p>
+<ul class="simple">
+<li><p>Main window</p></li>
+<li><p>Picker window</p>
+<ul>
+<li><p>all areas</p></li>
+<li><p>upper area - picking trace</p></li>
+<li><p>lower area - picker overview</p></li>
+</ul>
+</li>
+<li><p>Magnitude waveform window.</p></li>
+</ul>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 72%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Shortcut</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Main window</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>F2</p></td>
+<td><p>Setup connection dialog</p></td>
+</tr>
+<tr class="row-even"><td><p>F3</p></td>
+<td><p>Picker and amplitude settings dialog</p></td>
+</tr>
+<tr class="row-odd"><td><p>F8</p></td>
+<td><p>Display left event summary panel</p></td>
+</tr>
+<tr class="row-even"><td><p>F9</p></td>
+<td><p>Show ray paths and associated stations</p></td>
+</tr>
+<tr class="row-odd"><td><p>F10</p></td>
+<td><p>Show event list (Events tab)</p></td>
+</tr>
+<tr class="row-even"><td><p>F11</p></td>
+<td><p>Toggle fullscreen</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+N</p></td>
+<td><p>Create an unassociated artificial origin at the current map
+center</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+Z</p></td>
+<td><p>Go back to last origin (if available)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+Shift+Z</p></td>
+<td><p>Go to next origin (if available)</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+PgUp</p></td>
+<td><p>Load previous event from the event list</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+PgDown</p></td>
+<td><p>Load next event from the event list</p></td>
+</tr>
+<tr class="row-even"><td><p>Mouse wheel</p></td>
+<td><p>Zoom map in/out</p></td>
+</tr>
+<tr class="row-odd"><td><p>Double click</p></td>
+<td><p>Center map at the clicked position</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Phase picker</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>1 .. 9</p></td>
+<td><p>Activate configured phase picking</p></td>
+</tr>
+<tr class="row-even"><td><p>Space</p></td>
+<td><p>If phase picking is enabled, set pick</p></td>
+</tr>
+<tr class="row-odd"><td><p>Esc</p></td>
+<td><p>Leaving picking mode</p></td>
+</tr>
+<tr class="row-even"><td><p>F3</p></td>
+<td><p>Add station</p></td>
+</tr>
+<tr class="row-odd"><td><p>F5</p></td>
+<td><p>Relocate</p></td>
+</tr>
+<tr class="row-even"><td><p>E</p></td>
+<td><p>Switch to E-component</p></td>
+</tr>
+<tr class="row-odd"><td><p>F</p></td>
+<td><p>Toggle between current filter and unfiltered</p></td>
+</tr>
+<tr class="row-even"><td><p>G</p></td>
+<td><p>Toggle all filters</p></td>
+</tr>
+<tr class="row-odd"><td><p>N</p></td>
+<td><p>Switch to N-component</p></td>
+</tr>
+<tr class="row-even"><td><p>S</p></td>
+<td><p>Maximize visible amplitudes</p></td>
+</tr>
+<tr class="row-odd"><td><p>X</p></td>
+<td><p>Scroll down (through the traces)</p></td>
+</tr>
+<tr class="row-even"><td><p>Z</p></td>
+<td><p>Switch to Z-component</p></td>
+</tr>
+<tr class="row-odd"><td><p>Shift+F</p></td>
+<td><p>Toggle filter but limits to the selected trace</p></td>
+</tr>
+<tr class="row-even"><td><p>Up</p></td>
+<td><p>Scroll up (through the traces)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Down</p></td>
+<td><p>Scroll down (through the traces)</p></td>
+</tr>
+<tr class="row-even"><td><p>&gt;</p></td>
+<td><p>Increase time scale</p></td>
+</tr>
+<tr class="row-odd"><td><p>&lt;</p></td>
+<td><p>Decrease time scale</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+S</p></td>
+<td><p>Show Fourier spectrum of selected trace</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+N</p></td>
+<td><p>Default trace view</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+T</p></td>
+<td><p>Toggle display of theoretical arrivals</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+P</p></td>
+<td><p>Toggle display of picks (not arrivals). If picks should
+be shown the first time, all picks within the time span of
+interest are loaded from database. The behavior is the
+same as ticking the option “Load all picks”.</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+Right</p></td>
+<td><p>Time zoom in</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+Left</p></td>
+<td><p>Time zoom out</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+0</p></td>
+<td><p>Align by origin time</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+[1..9]</p></td>
+<td><p>Align on 1st - 9th favorite phase</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+Shift+[1..9]</p></td>
+<td><p>Align on theoretical onset of 1st - 9th favorite phase</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+F1</p></td>
+<td><p>Align on P arrival</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+F2</p></td>
+<td><p>Align on S arrival</p></td>
+</tr>
+<tr class="row-odd"><td><p>Alt+Right</p></td>
+<td><p>Jump to next marker (picking mode)</p></td>
+</tr>
+<tr class="row-even"><td><p>Alt+Left</p></td>
+<td><p>Jump to previous marker (picking mode)</p></td>
+</tr>
+<tr class="row-odd"><td><p><em>Picking trace</em></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>T</p></td>
+<td><p>Temporarily toggle 3 component view</p></td>
+</tr>
+<tr class="row-odd"><td><p>Left</p></td>
+<td><p>Move trace view to left (fine)</p></td>
+</tr>
+<tr class="row-even"><td><p>Right</p></td>
+<td><p>Move trace view to right (fine)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Shift+Left</p></td>
+<td><p>Move trace view to left (rough)</p></td>
+</tr>
+<tr class="row-even"><td><p>Shift+Right</p></td>
+<td><p>Move trace view to left (rough)</p></td>
+</tr>
+<tr class="row-odd"><td><p>W</p></td>
+<td><p>Reset scale</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+WheelUp</p></td>
+<td><p>Amplitude zoom in</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+WheelDown</p></td>
+<td><p>Amplitude zoom out</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+Up</p></td>
+<td><p>Amplitude zoom in</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+Down</p></td>
+<td><p>Amplitude zoom out</p></td>
+</tr>
+<tr class="row-even"><td><p>Shift+S</p></td>
+<td><p>Toggle spectrogram of selected trace</p></td>
+</tr>
+<tr class="row-odd"><td><p>Shift+WheelUp</p></td>
+<td><p>Time zoom in</p></td>
+</tr>
+<tr class="row-even"><td><p>Shift+WheelDown</p></td>
+<td><p>Time zoom out</p></td>
+</tr>
+<tr class="row-odd"><td><p><em>Picking overview</em></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Alt+D</p></td>
+<td><p>Sort by distance</p></td>
+</tr>
+<tr class="row-odd"><td><p>Alt+R</p></td>
+<td><p>Sort by residual</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+F</p></td>
+<td><p>Search for station code</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+Up</p></td>
+<td><p>Time zoom in</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+Down</p></td>
+<td><p>Time zoom out</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+Shift+WheelUp</p></td>
+<td><p>Time and amplitude zoom in</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+Shift+WheelDown</p></td>
+<td><p>Time and amplitude zoom out</p></td>
+</tr>
+<tr class="row-odd"><td><p>Y</p></td>
+<td><p>Decrease row height</p></td>
+</tr>
+<tr class="row-even"><td><p>Shift+Y</p></td>
+<td><p>Increase row height</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Amplitude picker</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>F5</p></td>
+<td><p>Compute network magnitudes and return to Magnitudes tab</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>Pick amplitudes manually</p></td>
+</tr>
+<tr class="row-even"><td><p>ESC</p></td>
+<td><p>Leave picking mode</p></td>
+</tr>
+<tr class="row-odd"><td><p>F</p></td>
+<td><p>Toggle filter</p></td>
+</tr>
+<tr class="row-even"><td><p>Shift+N</p></td>
+<td><p>Default view</p></td>
+</tr>
+<tr class="row-odd"><td><p>Left</p></td>
+<td><p>Move trace view to left (fine)</p></td>
+</tr>
+<tr class="row-even"><td><p>Right</p></td>
+<td><p>Move trace view to right (fine)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Shift+Left</p></td>
+<td><p>Move trace view to left (rough)</p></td>
+</tr>
+<tr class="row-even"><td><p>Shift+Right</p></td>
+<td><p>Move trace view to left (rough)</p></td>
+</tr>
+<tr class="row-odd"><td><p>R</p></td>
+<td><p>Recompute amplitude of selected station</p></td>
+</tr>
+<tr class="row-even"><td><p>X</p></td>
+<td><p>Deactivate selected pick or station</p></td>
+</tr>
+<tr class="row-odd"><td><p>Y</p></td>
+<td><p>Decrease row height</p></td>
+</tr>
+<tr class="row-even"><td><p>Shift+Y</p></td>
+<td><p>Increase row height</p></td>
+</tr>
+<tr class="row-odd"><td><p>&gt;</p></td>
+<td><p>Increase time scale</p></td>
+</tr>
+<tr class="row-even"><td><p>&lt;</p></td>
+<td><p>Decrease time scale</p></td>
+</tr>
+<tr class="row-odd"><td><p>Alt+A</p></td>
+<td><p>Sort traces by distance</p></td>
+</tr>
+<tr class="row-even"><td><p>Alt+D</p></td>
+<td><p>Sort traces by station name</p></td>
+</tr>
+<tr class="row-odd"><td><p>Alt+D</p></td>
+<td><p>Sort traces by station name</p></td>
+</tr>
+<tr class="row-even"><td><p>Left</p></td>
+<td><p>Move trace view to left (fine)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Right</p></td>
+<td><p>Move trace view to right (fine)</p></td>
+</tr>
+<tr class="row-even"><td><p>Shift+Left</p></td>
+<td><p>Move trace view to left (rough)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ctrl+0</p></td>
+<td><p>Align traces by origin time</p></td>
+</tr>
+<tr class="row-even"><td><p>Ctrl+1</p></td>
+<td><p>Align traces by trigger time</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="configuration">
+<span id="scolv-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/scolv.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/scolv.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/scolv.cfg</span></code></div>
+</div>
+<p>scolv inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+<dl class="confval">
+<dt id="confval-loadEventDB">
+<code class="sig-name descname">loadEventDB</code><a class="headerlink" href="#confval-loadEventDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>days</em></p>
+<p>Number of days to preload events from the database when staring scolv.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-magnitudes">
+<code class="sig-name descname">magnitudes</code><a class="headerlink" href="#confval-magnitudes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>List of magnitude types to be calculated when
+computing magnitudes. This list can be altered interactively so
+this reflects only the default unless computeMagnitudesSilently
+is set to true.
+Default is <code class="docutils literal notranslate"><span class="pre">MLv,mb,mB,Mwp</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-visibleMagnitudes">
+<code class="sig-name descname">visibleMagnitudes</code><a class="headerlink" href="#confval-visibleMagnitudes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>A list of magnitude types to be displayed in the summary widget (F8).
+Default is <code class="docutils literal notranslate"><span class="pre">M,ML,MLv,mb,mB,Mwp,Mjma,Ms_20,Ms(BB)</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-button0">
+<code class="sig-name descname">button0</code><a class="headerlink" href="#confval-button0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Label of the button that triggers the script defined in “script0”.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-button1">
+<code class="sig-name descname">button1</code><a class="headerlink" href="#confval-button1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Label of the button that triggers the script defined in “script1”.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scripts.*</strong>
+<em>Define scripts linked to extra buttons. A button is created</em>
+<em>by definition of the corresponding script.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scripts.export">
+<code class="sig-name descname">scripts.export</code><a class="headerlink" href="#confval-scripts.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Full path to the script which enables a publish button in the
+summary panel on the left side of scolv (activated with F8).</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scripts.script0">
+<code class="sig-name descname">scripts.script0</code><a class="headerlink" href="#confval-scripts.script0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Full path to the script executed when hitting the button labeled with “button0”.
+OriginID and EventID are passed to the script as arguments.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scripts.script1">
+<code class="sig-name descname">scripts.script1</code><a class="headerlink" href="#confval-scripts.script1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Full path to the script executed when hitting the button labeled with “button1”.
+OriginID and EventID are passed to the script as arguments.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scripts.export.silentTerminate">
+<code class="sig-name descname">scripts.export.silentTerminate</code><a class="headerlink" href="#confval-scripts.export.silentTerminate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>If the publish button is clicked while another script is
+still running, a message box pops up with a warning that
+a script is still running and to option to terminate it. If
+this flag is true, then it will be terminated automatically
+without user interaction and the warning message.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.defaultEventType">
+<code class="sig-name descname">olv.defaultEventType</code><a class="headerlink" href="#confval-olv.defaultEventType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the default event type to be used when confirming a solution. If
+not set, the event type is not changed at all unless “with options”
+is used. The origin or its source must be associated with an event already.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.commonEventTypes">
+<code class="sig-name descname">olv.commonEventTypes</code><a class="headerlink" href="#confval-olv.commonEventTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>A list of event types which are commonly set. This defines
+a priority list which will be displayed on top of the event
+type selection menu. Additionally the remaining (non-prioritized)
+types are displayed with less contrast.
+The order is preserved in the event editor as well as in the drop-down
+list of the “Commit with additional options” dialog.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.defaultMagnitudeAggregation">
+<code class="sig-name descname">olv.defaultMagnitudeAggregation</code><a class="headerlink" href="#confval-olv.defaultMagnitudeAggregation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the default magnitude aggregation method. It can be either “mean”,
+“trimmed mean” or “median”. If not set, the default
+behavior is used which computes the mean if less than 4 stations are available,
+trimmed mean otherwise.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.computeMagnitudesAfterRelocate">
+<code class="sig-name descname">olv.computeMagnitudesAfterRelocate</code><a class="headerlink" href="#confval-olv.computeMagnitudesAfterRelocate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Automatically starts computation of magnitudes after relocating an
+origin.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.computeMagnitudesSilently">
+<code class="sig-name descname">olv.computeMagnitudesSilently</code><a class="headerlink" href="#confval-olv.computeMagnitudesSilently" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Starts magnitude computation without user interaction if everything
+runs without errors. In case of errors a window pops up with
+the current state of processing.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.enableMagnitudeSelection">
+<code class="sig-name descname">olv.enableMagnitudeSelection</code><a class="headerlink" href="#confval-olv.enableMagnitudeSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If enabled, a magnitude selection pop window will open in advance
+to compute magnitudes. The default selection reflects the configuration
+parameter “magnitudes”.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.Pvel">
+<code class="sig-name descname">olv.Pvel</code><a class="headerlink" href="#confval-olv.Pvel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>km/s</em></p>
+<p>The P reduction velocity used in the “move out” plot.
+Default is <code class="docutils literal notranslate"><span class="pre">6.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.drawMapLines">
+<code class="sig-name descname">olv.drawMapLines</code><a class="headerlink" href="#confval-olv.drawMapLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Sets the drawing of lines in the map connecting the station with the event.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.drawGridLines">
+<code class="sig-name descname">olv.drawGridLines</code><a class="headerlink" href="#confval-olv.drawGridLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Sets the drawing of grid lines in the plot.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.computeMissingTakeOffAngles">
+<code class="sig-name descname">olv.computeMissingTakeOffAngles</code><a class="headerlink" href="#confval-olv.computeMissingTakeOffAngles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If a locator does not populate the take off angle in its arrivals,
+the first motion plot will not show picked polarities. This option
+defines whether to compute take off angles that are not present
+in the arrivals or not.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.defaultAddStationsDistance">
+<code class="sig-name descname">olv.defaultAddStationsDistance</code><a class="headerlink" href="#confval-olv.defaultAddStationsDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>deg</em></p>
+<p>The default value for adding unassociated stations in the picker.
+Default is <code class="docutils literal notranslate"><span class="pre">15</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.hideStationsWithoutData">
+<code class="sig-name descname">olv.hideStationsWithoutData</code><a class="headerlink" href="#confval-olv.hideStationsWithoutData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If enabled, all traces without data and arrivals are
+hidden in the picker.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.hideDisabledStations">
+<code class="sig-name descname">olv.hideDisabledStations</code><a class="headerlink" href="#confval-olv.hideDisabledStations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If enabled, all traces of disabled stations without picks are hidden.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.defaultDepth">
+<code class="sig-name descname">olv.defaultDepth</code><a class="headerlink" href="#confval-olv.defaultDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>km</em></p>
+<p>When creating an artificial origin this is the default depth used.
+Default is <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.artificialOriginAdvanced">
+<code class="sig-name descname">olv.artificialOriginAdvanced</code><a class="headerlink" href="#confval-olv.artificialOriginAdvanced" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Adds advanced input parameters in artificial origin dialog.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.systemTray">
+<code class="sig-name descname">olv.systemTray</code><a class="headerlink" href="#confval-olv.systemTray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Adds an icon to the system tray and displays a message
+when a new event was received. Note that this feature
+requires libQt4 version 4.3 or higher.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.map.stations.unassociatedMaxDist">
+<code class="sig-name descname">olv.map.stations.unassociatedMaxDist</code><a class="headerlink" href="#confval-olv.map.stations.unassociatedMaxDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Maximum distance in degrees up to which also unassociated stations are
+shown in the map. The default value is 360 which will
+show all unassociated stations.
+Default is <code class="docutils literal notranslate"><span class="pre">360</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.map.event.defaultRadius">
+<code class="sig-name descname">olv.map.event.defaultRadius</code><a class="headerlink" href="#confval-olv.map.event.defaultRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Default map radius in degrees if a new event is selected.
+A negative value restores the default behavior.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.arrivalTable.visibleColumns">
+<code class="sig-name descname">olv.arrivalTable.visibleColumns</code><a class="headerlink" href="#confval-olv.arrivalTable.visibleColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Defines the visible columns in the arrival table. Valid tokens are:
+Used, Status, Phase, Weight, Method, Polarity, Takeoff,
+Net, Sta, Loc/Cha, Timeres, Dis, Az, Time, +/-,
+Slo, Slores, Baz, Bazres, Created, Latency</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.locator.interface">
+<code class="sig-name descname">olv.locator.interface</code><a class="headerlink" href="#confval-olv.locator.interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The default locator interface to use.
+Default is <code class="docutils literal notranslate"><span class="pre">LOCSAT</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.locator.defaultProfile">
+<code class="sig-name descname">olv.locator.defaultProfile</code><a class="headerlink" href="#confval-olv.locator.defaultProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The default locator profile to use.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.locator.minimumDepth">
+<code class="sig-name descname">olv.locator.minimumDepth</code><a class="headerlink" href="#confval-olv.locator.minimumDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>km</em></p>
+<p>Minimum depth which is set if the locator used supports fixing
+the depth. If the depth is lower than this value, the depth is
+fixed to this configured value and the origin is relocated again.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.locator.presetFromOrigin">
+<code class="sig-name descname">olv.locator.presetFromOrigin</code><a class="headerlink" href="#confval-olv.locator.presetFromOrigin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Whether to preset the locator settings when an origin
+is being loaded. It tries to figure the locator type
+from Origin.methodID and the profile from Origin.earthModelID.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.commit.forceEventAssociation">
+<code class="sig-name descname">olv.commit.forceEventAssociation</code><a class="headerlink" href="#confval-olv.commit.forceEventAssociation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Activates the button “Force association with event” when
+committing with additional options. This is just the default
+setting and can be changed manually when the dialog pops up.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.commit.fixOrigin">
+<code class="sig-name descname">olv.commit.fixOrigin</code><a class="headerlink" href="#confval-olv.commit.fixOrigin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Activates the button “Fix this origin as preferred solution” when
+committing with additional options. This is just the default
+setting and can be changed manually when the dialog pops up.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.commit.returnToEventList">
+<code class="sig-name descname">olv.commit.returnToEventList</code><a class="headerlink" href="#confval-olv.commit.returnToEventList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Whether to return to the event list after committing with
+additional options or not.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.commit.eventCommentOptions">
+<code class="sig-name descname">olv.commit.eventCommentOptions</code><a class="headerlink" href="#confval-olv.commit.eventCommentOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Turns the event comment input field into a drop down box
+allowing the user to select from a list a predefined comment
+values which may be changed if required.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>olv.customCommits.*</strong>
+<em>Configure custom commit buttons which</em>
+<em>behave like shortcuts to “Commit with additional options”.</em>
+<em>Pressing a custom button does not open a popup window. Instead</em>
+<em>it reads the configured profile and applies the options to the event</em>
+<em>and origin. Each commit button can be coloured and labeled.</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>olv.customCommits.$name.*</strong>
+$name is a placeholder for the name to be used.</p>
+</div>
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.enable">
+<code class="sig-name descname">olv.customCommits.$name.enable</code><a class="headerlink" href="#confval-olv.customCommits.$name.enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable this commit button.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.askForConfirmation">
+<code class="sig-name descname">olv.customCommits.$name.askForConfirmation</code><a class="headerlink" href="#confval-olv.customCommits.$name.askForConfirmation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Ask for confirmation by presenting the “commit with options”
+dialog with the options pre-populated from this configuration.
+Cancelling the dialog aborts the commit procedure.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.forceEventAssociation">
+<code class="sig-name descname">olv.customCommits.$name.forceEventAssociation</code><a class="headerlink" href="#confval-olv.customCommits.$name.forceEventAssociation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Associate a new origin to the currently active event or not.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.fixOrigin">
+<code class="sig-name descname">olv.customCommits.$name.fixOrigin</code><a class="headerlink" href="#confval-olv.customCommits.$name.fixOrigin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Fix the origin as preferred
+solution in the event it is associated to.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.eventType">
+<code class="sig-name descname">olv.customCommits.$name.eventType</code><a class="headerlink" href="#confval-olv.customCommits.$name.eventType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The event type to be set of the event associated with
+the committed origin. If unset, the type remains unchanged.
+Use quotes for event types with spaces, e.g.
+“not existing”.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.eventTypeCertainty">
+<code class="sig-name descname">olv.customCommits.$name.eventTypeCertainty</code><a class="headerlink" href="#confval-olv.customCommits.$name.eventTypeCertainty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The event type certainty to be set of the event
+associated with the committed origin. If unset,
+the type certainty remains unchanged.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.originStatus">
+<code class="sig-name descname">olv.customCommits.$name.originStatus</code><a class="headerlink" href="#confval-olv.customCommits.$name.originStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The status to be set of the origin being
+committed. If unset, the status remains unchanged.
+If empty, the origin status will be set to none.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.magnitudeType">
+<code class="sig-name descname">olv.customCommits.$name.magnitudeType</code><a class="headerlink" href="#confval-olv.customCommits.$name.magnitudeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the preferred magnitude type of the event. If
+unset, no changes will be requested. If empty,
+the currently fixed preferred magnitude type will
+be reset.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.eventName">
+<code class="sig-name descname">olv.customCommits.$name.eventName</code><a class="headerlink" href="#confval-olv.customCommits.$name.eventName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Optional event name which will be set. This option
+exists for completeness and does not make much
+sense to be applied on any event. Use quotes for event
+names with spaces, e.g. “Quarry XYZ”.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.eventComment">
+<code class="sig-name descname">olv.customCommits.$name.eventComment</code><a class="headerlink" href="#confval-olv.customCommits.$name.eventComment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Optional event comment which will be set. Use quotes for event
+comments with spaces, e.g. “Blast on Monday morning”.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.returnToEventList">
+<code class="sig-name descname">olv.customCommits.$name.returnToEventList</code><a class="headerlink" href="#confval-olv.customCommits.$name.returnToEventList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Return to the event list after committing or not.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.label">
+<code class="sig-name descname">olv.customCommits.$name.label</code><a class="headerlink" href="#confval-olv.customCommits.$name.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The commit button label. Use quotes for labels with
+spaces, e.g. “Earthquake reported”.
+Default is <code class="docutils literal notranslate"><span class="pre">Commit+</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.color">
+<code class="sig-name descname">olv.customCommits.$name.color</code><a class="headerlink" href="#confval-olv.customCommits.$name.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Optional primary color for the bulk commit button.
+Use hexadecimal values.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.colorText">
+<code class="sig-name descname">olv.customCommits.$name.colorText</code><a class="headerlink" href="#confval-olv.customCommits.$name.colorText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Optional text color for the bulk commit button.
+Use hexadecimal values.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-olv.customCommits.$name.tooltip">
+<code class="sig-name descname">olv.customCommits.$name.tooltip</code><a class="headerlink" href="#confval-olv.customCommits.$name.tooltip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Add a summary of the actions to the button’s tooltip.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>picker.*</strong>
+<em>Parameters controlling the phase picker window.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-picker.showCrossHairCursor">
+<code class="sig-name descname">picker.showCrossHairCursor</code><a class="headerlink" href="#confval-picker.showCrossHairCursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Activate a cross hair cursor showing the configured uncertainties
+when in picking mode.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.loadAllPicks">
+<code class="sig-name descname">picker.loadAllPicks</code><a class="headerlink" href="#confval-picker.loadAllPicks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Load all existing picks for the requested data time window.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.ignoreUnconfiguredStations">
+<code class="sig-name descname">picker.ignoreUnconfiguredStations</code><a class="headerlink" href="#confval-picker.ignoreUnconfiguredStations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If enabled, the picker will not add stations that are not
+configured with a detecStream in global bindings.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.limitStationAcquisition">
+<code class="sig-name descname">picker.limitStationAcquisition</code><a class="headerlink" href="#confval-picker.limitStationAcquisition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Limit the data acquisition to the number of nearest
+stations given by “picker.limitStationAcquisitionCount”.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.limitStationAcquisitionCount">
+<code class="sig-name descname">picker.limitStationAcquisitionCount</code><a class="headerlink" href="#confval-picker.limitStationAcquisitionCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Limit the data acquisituion to the given number of
+the nearest stations. Requires to activate
+“picker.limitStationAcquisition”.
+Default is <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.loadStrongMotion">
+<code class="sig-name descname">picker.loadStrongMotion</code><a class="headerlink" href="#confval-picker.loadStrongMotion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If enabled, acceleration data is loaded for co-located
+stations where picked on velocity data.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.loadAllComponents">
+<code class="sig-name descname">picker.loadAllComponents</code><a class="headerlink" href="#confval-picker.loadAllComponents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Load all three components by default. If disabled, additional
+components are fetched upon request.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.showAllComponents">
+<code class="sig-name descname">picker.showAllComponents</code><a class="headerlink" href="#confval-picker.showAllComponents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If enabled, all three components are shown in the picker
+zoom trace. The distance is limited to what is configured
+in “picker.allComponentsMaximumDistance”.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.allComponentsMaximumDistance">
+<code class="sig-name descname">picker.allComponentsMaximumDistance</code><a class="headerlink" href="#confval-picker.allComponentsMaximumDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>deg</em></p>
+<p>The distance limit for the “picker.showAllComponents” flag.
+Default is <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.usePerStreamTimeWindows">
+<code class="sig-name descname">picker.usePerStreamTimeWindows</code><a class="headerlink" href="#confval-picker.usePerStreamTimeWindows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If enabled, data is requested around the P pick for each stations.
+Otherwise origin time is used and the time window for all stations
+is the same.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.removeAutomaticPicksFromStationAfterManualReview">
+<code class="sig-name descname">picker.removeAutomaticPicksFromStationAfterManualReview</code><a class="headerlink" href="#confval-picker.removeAutomaticPicksFromStationAfterManualReview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>After picking and pushing the solution back to scolv all automatic arrivals
+are removed from a station if a manual pick exists.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.removeAllAutomaticPicksAfterManualReview">
+<code class="sig-name descname">picker.removeAllAutomaticPicksAfterManualReview</code><a class="headerlink" href="#confval-picker.removeAllAutomaticPicksAfterManualReview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>After picking and pushing the solution back to scolv all automatic arrivals
+are removed from all stations regardless if a manual pick exists or not.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.preOffset">
+<code class="sig-name descname">picker.preOffset</code><a class="headerlink" href="#confval-picker.preOffset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>The data time span added to the left of either origin time or
+first arrival depending on the usePerStreamTimeWindows flag.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.postOffset">
+<code class="sig-name descname">picker.postOffset</code><a class="headerlink" href="#confval-picker.postOffset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>The data time span added to the right of the requested time window.
+Default is <code class="docutils literal notranslate"><span class="pre">120</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.minimumTimeWindow">
+<code class="sig-name descname">picker.minimumTimeWindow</code><a class="headerlink" href="#confval-picker.minimumTimeWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Minimum data time window length.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.alignmentPosition">
+<code class="sig-name descname">picker.alignmentPosition</code><a class="headerlink" href="#confval-picker.alignmentPosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>s</em></p>
+<p>Defines the relative position of the alignment when traces are
+aligned at a phase. This value is bound
+to interval [0:1] where 0 is the left side and 1 is right
+side of the trace window.
+Default is <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.repickerStart">
+<code class="sig-name descname">picker.repickerStart</code><a class="headerlink" href="#confval-picker.repickerStart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>s</em></p>
+<p>Start of the re-picker time window relative the cursor position on the trace.
+Default is <code class="docutils literal notranslate"><span class="pre">-10</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.repickerEnd">
+<code class="sig-name descname">picker.repickerEnd</code><a class="headerlink" href="#confval-picker.repickerEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>s</em></p>
+<p>End of the re-picker time window relative the cursor position on the trace.
+Default is <code class="docutils literal notranslate"><span class="pre">30</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.filters">
+<code class="sig-name descname">picker.filters</code><a class="headerlink" href="#confval-picker.filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>List of filters available in the picker. Format:
+“name1;filter-definition1”, “name2;filter-definition2”</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.velocityChannelCodes">
+<code class="sig-name descname">picker.velocityChannelCodes</code><a class="headerlink" href="#confval-picker.velocityChannelCodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>A list of channel codes to be used when searching for
+velocity channels. Usually this information is part of the
+meta data. In case it is not, this list is used.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.accelerationChannelCodes">
+<code class="sig-name descname">picker.accelerationChannelCodes</code><a class="headerlink" href="#confval-picker.accelerationChannelCodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>A list of channel codes to be used when searching for
+acceleration channels. Usually this information is part of the
+meta data. In case it is not, this list is used.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.showPhases">
+<code class="sig-name descname">picker.showPhases</code><a class="headerlink" href="#confval-picker.showPhases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Phases for which theoretical arrival times are shown.
+Default is <code class="docutils literal notranslate"><span class="pre">P,Pn,Pg,pP,sP,S,Sg</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.phases">
+<code class="sig-name descname">picker.phases</code><a class="headerlink" href="#confval-picker.phases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>A list of phases that is available for picking in the Picking menu.
+The phases are not accessible through hot keys as for
+“picker.phases.favourites”.
+The phases are considered if the more complex phase group definition
+“picker.phases.groups” is not provided.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.uncertainties">
+<code class="sig-name descname">picker.uncertainties</code><a class="headerlink" href="#confval-picker.uncertainties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Unit: <em>s</em></p>
+<p>List of pre-defined pick uncertainties.
+The format of each list item is either a double value or a pair of
+double values for asymmetric uncertainties, e.g.
+“val1”,”(val2,val3)”.
+This parameter is only used if “picker.uncertainties.preferred”
+is undefined.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>picker.phases.*</strong>
+<em>Phases defined for picking. The phase phases can be selected</em>
+<em>from the Picking menu of the picker window.</em>
+<em>Make sure, the locator can handle all defined phases.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-picker.phases.favourites">
+<code class="sig-name descname">picker.phases.favourites</code><a class="headerlink" href="#confval-picker.phases.favourites" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Phase types available for rapid picking by hot keys and
+in the Picking menu. Separate the types by comma.
+Default is <code class="docutils literal notranslate"><span class="pre">P,Pn,Pg,pP,S,Sg,sP</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.phases.groups">
+<code class="sig-name descname">picker.phases.groups</code><a class="headerlink" href="#confval-picker.phases.groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>List of defined phase type profiles to be considered.
+Separate profiles by comma.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>picker.phases.groups.*</strong>
+<em>Definiton of phase type profiles. The profiles and phase types</em>
+<em>can be selected from the Picking menu of the picker window</em>
+<em>but not with hot keys.</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>picker.phases.groups.$name.*</strong>
+$name is a placeholder for the name to be used and needs to be added to <a class="reference internal" href="#confval-picker.phases.groups"><code class="xref std std-confval docutils literal notranslate"><span class="pre">picker.phases.groups</span></code></a> to become active.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>picker.phases.groups <span class="o">=</span> a,b
+picker.phases.groups.a <span class="o">=</span> ...
+picker.phases.groups.b <span class="o">=</span> ...
+<span class="c1"># c is not active because it has not been added</span>
+<span class="c1"># to the list of picker.phases.groups</span>
+picker.phases.groups.c <span class="o">=</span> ...
+</pre></div>
+</div>
+</div>
+<dl class="confval">
+<dt id="confval-picker.phases.groups.$name">
+<code class="sig-name descname">picker.phases.groups.$name</code><a class="headerlink" href="#confval-picker.phases.groups.$name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>List of phase types. Separate types by comma.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>picker.uncertainties.*</strong>
+<em>Define uncertainty profiles. Once defined,</em>
+<em>they can be selected in the scolv picker settings [F3].</em>
+<em>The profiles override uncertainties defined in “uncertainties”.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-picker.uncertainties.preferred">
+<code class="sig-name descname">picker.uncertainties.preferred</code><a class="headerlink" href="#confval-picker.uncertainties.preferred" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Pick uncertainty profiles to be loaded. The first profile
+will be used by default.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>picker.uncertainties.profile.$name.*</strong>
+$name is a placeholder for the name to be used and needs to be added to <a class="reference internal" href="#confval-picker.uncertainties.preferred"><code class="xref std std-confval docutils literal notranslate"><span class="pre">picker.uncertainties.preferred</span></code></a> to become active.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>picker.uncertainties.preferred <span class="o">=</span> a,b
+picker.uncertainties.profile.a <span class="o">=</span> ...
+picker.uncertainties.profile.b <span class="o">=</span> ...
+<span class="c1"># c is not active because it has not been added</span>
+<span class="c1"># to the list of picker.uncertainties.preferred</span>
+picker.uncertainties.profile.c <span class="o">=</span> ...
+</pre></div>
+</div>
+</div>
+<dl class="confval">
+<dt id="confval-picker.uncertainties.profile.$name">
+<code class="sig-name descname">picker.uncertainties.profile.$name</code><a class="headerlink" href="#confval-picker.uncertainties.profile.$name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Unit: <em>s</em></p>
+<p>List of pre-defined pick uncertainties.
+The format of each list item is either a double value or a pair of
+double values for asymmetric uncertainties, e.g.
+“val1”,”(val2,val3)”.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>picker.integration.*</strong>
+<em>Settings related to waveform integration which may be</em>
+<em>required if the desired waveform unit is changed and the</em>
+<em>sensor data must be integrated once or multiple times.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-picker.integration.preFilter">
+<code class="sig-name descname">picker.integration.preFilter</code><a class="headerlink" href="#confval-picker.integration.preFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>An optional pre-filter which is applied prior to the
+numerical integration to stabilize the result. This
+filter is applied for each integration step or just
+once depending on the parameter “applyOnce”.
+Multiple integrations are necessary if acceleration
+data should be converted to displacement.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.integration.applyOnce">
+<code class="sig-name descname">picker.integration.applyOnce</code><a class="headerlink" href="#confval-picker.integration.applyOnce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Whether to apply the pre-filter only prior the first
+integration step or prior to each step.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>amplitudePicker.*</strong>
+<em>Parameters controlling the amplitude picker window for computing station magnitudes.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-amplitudePicker.preOffset">
+<code class="sig-name descname">amplitudePicker.preOffset</code><a class="headerlink" href="#confval-amplitudePicker.preOffset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time span in seconds to be added to the left of the used
+amplitude time window.
+Default is <code class="docutils literal notranslate"><span class="pre">300</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-amplitudePicker.postOffset">
+<code class="sig-name descname">amplitudePicker.postOffset</code><a class="headerlink" href="#confval-amplitudePicker.postOffset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time span in seconds to be added to the right of the used
+amplitude time window.
+Default is <code class="docutils literal notranslate"><span class="pre">300</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-amplitudePicker.filters">
+<code class="sig-name descname">amplitudePicker.filters</code><a class="headerlink" href="#confval-amplitudePicker.filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>A list of filters used for the amplitude picker. Format:
+“name1;filter-definition1”, “name2;filter-definition2”</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>display.*</strong>
+<em>Display custom information in the Location tab.</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>display.origin.*</strong>
+<em>Origin information</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-display.origin.addons">
+<code class="sig-name descname">display.origin.addons</code><a class="headerlink" href="#confval-display.origin.addons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Name(s) of quality addon(s) to be considered.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>display.origin.comment.*</strong>
+<em>Display origin comments.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-display.origin.comment.id">
+<code class="sig-name descname">display.origin.comment.id</code><a class="headerlink" href="#confval-display.origin.comment.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>ID of the origin comment to be considered.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-display.origin.comment.default">
+<code class="sig-name descname">display.origin.comment.default</code><a class="headerlink" href="#confval-display.origin.comment.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Value to be shown in case no valid origin comment is found.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-display.origin.comment.label">
+<code class="sig-name descname">display.origin.comment.label</code><a class="headerlink" href="#confval-display.origin.comment.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Label of the value to be shown.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>display.origin.addon.$name.*</strong>
+$name is a placeholder for the name to be used and needs to be added to <a class="reference internal" href="#confval-display.origin.addons"><code class="xref std std-confval docutils literal notranslate"><span class="pre">display.origin.addons</span></code></a> to become active.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>display.origin.addons <span class="o">=</span> a,b
+display.origin.addon.a.value1 <span class="o">=</span> ...
+display.origin.addon.b.value1 <span class="o">=</span> ...
+<span class="c1"># c is not active because it has not been added</span>
+<span class="c1"># to the list of display.origin.addons</span>
+display.origin.addon.c.value1 <span class="o">=</span> ...
+</pre></div>
+</div>
+</div>
+<dl class="confval">
+<dt id="confval-display.origin.addon.$name.label">
+<code class="sig-name descname">display.origin.addon.$name.label</code><a class="headerlink" href="#confval-display.origin.addon.$name.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the label text of the information panel in the
+Location tab of the parameter evaluated by this addon.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-display.origin.addon.$name.script">
+<code class="sig-name descname">display.origin.addon.$name.script</code><a class="headerlink" href="#confval-display.origin.addon.$name.script" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Path to script to execute.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">scolv [options]</strong></p>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scolv-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-auto-shutdown">
+<code class="sig-name descname">--auto-shutdown</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-auto-shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable/disable self-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with –start-stop-msg for the master module).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-shutdown-master-module">
+<code class="sig-name descname">--shutdown-master-module</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-shutdown-master-module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the master-module used for auto-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-shutdown-master-username">
+<code class="sig-name descname">--shutdown-master-username</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-shutdown-master-username" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the master-username of the messaging used for
+auto-shutdown. If “shutdown-master-module” is given as well this
+parameter is ignored.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scolv-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id5">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="messaging">
+<h3>Messaging<a class="headerlink" href="#messaging" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scolv-u">
+<code class="sig-name descname">-u</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--user</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.username"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.username</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-host">
+<code class="sig-name descname">-H</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--host</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.server"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.server</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-t">
+<code class="sig-name descname">-t</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--timeout</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.timeout"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.timeout</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-g">
+<code class="sig-name descname">-g</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--primary-group</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-g" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.primaryGroup"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.primaryGroup</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-subscribe-group">
+<code class="sig-name descname">-S</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--subscribe-group</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-subscribe-group" title="Permalink to this definition">¶</a></dt>
+<dd><p>A group to subscribe to. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-content-type">
+<code class="sig-name descname">--content-type</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-content-type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.contentType"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.contentType</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-start-stop-msg">
+<code class="sig-name descname">--start-stop-msg</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-start-stop-msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets sending of a start- and a stop message.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="database">
+<h3>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scolv-db-driver-list">
+<code class="sig-name descname">--db-driver-list</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-db-driver-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all supported database drivers.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-d">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--database</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>The database connection string, format: <a class="reference external" href="service://user:pwd&#64;host/database">service://user:pwd&#64;host/database</a>.
+“service” is the name of the database driver which can be
+queried with “–db-driver-list”.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-config-module">
+<code class="sig-name descname">--config-module</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-config-module" title="Permalink to this definition">¶</a></dt>
+<dd><p>The configmodule to use.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-inventory-db">
+<code class="sig-name descname">--inventory-db</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-inventory-db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the inventory from the given database or file, format: [<a class="reference external" href="service://]location">service://]location</a></p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-db-disable">
+<code class="sig-name descname">--db-disable</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-db-disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not use the database at all</p>
+</dd></dl>
+
+</div>
+<div class="section" id="records">
+<h3>Records<a class="headerlink" href="#records" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scolv-record-driver-list">
+<code class="sig-name descname">--record-driver-list</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-record-driver-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all supported record stream drivers</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-i">
+<code class="sig-name descname">-I</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--record-url</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>The recordstream source URL, format: [<a class="reference external" href="service://">service://</a>]location[#type].
+“service” is the name of the recordstream driver which can be
+queried with “–record-driver-list”. If “service”
+is not given “<a class="reference external" href="file://">file://</a>” is used.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-record-file">
+<code class="sig-name descname">--record-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-record-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify a file as record source.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-record-type">
+<code class="sig-name descname">--record-type</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-record-type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify a type for the records being read.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="cities">
+<h3>Cities<a class="headerlink" href="#cities" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scolv-city-xml">
+<code class="sig-name descname">--city-xml</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-city-xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>The path to the cities XML file. This overrides the default
+paths. Compare with the global parameter “citiesXML”</p>
+</dd></dl>
+
+</div>
+<div class="section" id="user-interface">
+<h3>User interface<a class="headerlink" href="#user-interface" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scolv-f">
+<code class="sig-name descname">-F</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--full-screen</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the application filling the entire screen. This only works
+with GUI applications.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-n">
+<code class="sig-name descname">-N</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--non-interactive</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use non-interactive presentation mode. This only works with GUI applications.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scolv-o">
+<code class="sig-name descname">-O</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--origin</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-o" title="Permalink to this definition">¶</a></dt>
+<dd><p>Preload origin with given origin ID</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-e">
+<code class="sig-name descname">-E</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--event</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Preload event with given event ID</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-offline">
+<code class="sig-name descname">--offline</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scolv-offline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switch to offline mode</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scolv-load-event-db">
+<code class="sig-name descname">--load-event-db</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scolv-load-event-db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of days to load from database</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scolv</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#modes-of-operation">Modes of Operation</a></li>
+<li><a class="reference internal" href="#location-tab">Location Tab</a><ul>
+<li><a class="reference internal" href="#summary-widget">Summary widget</a></li>
+<li><a class="reference internal" href="#diagrams">Diagrams</a></li>
+<li><a class="reference internal" href="#arrival-table">Arrival table</a></li>
+<li><a class="reference internal" href="#waveform-review-picker">Waveform review (Picker)</a></li>
+<li><a class="reference internal" href="#relocate-events">Relocate events</a></li>
+<li><a class="reference internal" href="#compute-magnitudes">Compute magnitudes</a></li>
+<li><a class="reference internal" href="#commit-a-solution">Commit a solution</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#magnitudes-tab">Magnitudes Tab</a><ul>
+<li><a class="reference internal" href="#station-magnitudes">Station magnitudes</a></li>
+<li><a class="reference internal" href="#network-magnitudes">Network magnitudes</a></li>
+<li><a class="reference internal" href="#summary-magnitude">Summary magnitude</a></li>
+<li><a class="reference internal" href="#waveform-review">Waveform review</a><ul>
+<li><a class="reference internal" href="#show-raw-data">Show raw data</a></li>
+<li><a class="reference internal" href="#processing-settings">Processing settings</a></li>
+<li><a class="reference internal" href="#secondary-filters">Secondary filters</a></li>
+<li><a class="reference internal" href="#calculate-amplitudes">Calculate amplitudes</a></li>
+<li><a class="reference internal" href="#pick-amplitudes">Pick amplitudes</a></li>
+<li><a class="reference internal" href="#add-stations-in-range">Add stations in range</a></li>
+<li><a class="reference internal" href="#remove-bad-stations">Remove bad stations</a></li>
+<li><a class="reference internal" href="#confirm-the-amplitudes">Confirm the amplitudes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#event-tab">Event Tab</a><ul>
+<li><a class="reference internal" href="#origin-list">Origin list</a></li>
+<li><a class="reference internal" href="#magnitude-list">Magnitude list</a></li>
+<li><a class="reference internal" href="#focal-mechanism-list">Focal Mechanism list</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#events-tab">Events Tab</a><ul>
+<li><a class="reference internal" href="#events-table">Events table</a></li>
+<li><a class="reference internal" href="#event-filtering">Event filtering</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#custom-actions">Custom Actions</a><ul>
+<li><a class="reference internal" href="#origin-comments">Origin comments</a><ul>
+<li><a class="reference internal" href="#id2">Location tab</a></li>
+<li><a class="reference internal" href="#id3">Event tab</a></li>
+<li><a class="reference internal" href="#id4">Events tab</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#external-scripts">External scripts</a><ul>
+<li><a class="reference internal" href="#custom-buttons">Custom buttons</a></li>
+<li><a class="reference internal" href="#add-information-to-location-tab">Add information to Location tab</a></li>
+<li><a class="reference internal" href="#add-information-to-event-tab">Add information to Event tab</a></li>
+<li><a class="reference internal" href="#add-information-to-events-tab">Add information to Events tab</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#settings">Settings</a><ul>
+<li><a class="reference internal" href="#global">Global</a></li>
+<li><a class="reference internal" href="#picker">Picker</a></li>
+<li><a class="reference internal" href="#magnitude-review">Magnitude review</a></li>
+<li><a class="reference internal" href="#units-and-precisions">Units and precisions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hotkeys">Hotkeys</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#messaging">Messaging</a></li>
+<li><a class="reference internal" href="#database">Database</a></li>
+<li><a class="reference internal" href="#records">Records</a></li>
+<li><a class="reference internal" href="#cities">Cities</a></li>
+<li><a class="reference internal" href="#user-interface">User interface</a></li>
+<li><a class="reference internal" href="#options">Options</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scmv.html"
+                        title="previous chapter">scmv</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scqcv.html"
+                        title="next chapter">scqcv</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scolv.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

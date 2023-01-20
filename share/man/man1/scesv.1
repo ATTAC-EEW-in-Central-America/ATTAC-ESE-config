@@ -1,0 +1,646 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCESV" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scesv \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBEvent summary view\fP
+.SH DESCRIPTION
+.sp
+scesv is the summary display of the event parameters. It shows the primary information
+about the current event including location, time, strength, type and processing status.
+Additional to the current event older events can also be chosen from the eventlist in the
+events tab.
+.sp
+The two tabs of scesv are shown in \fI\%Eventlist tab\fP and \fI\%Summary tab\fP\&.
+The Events tab shows the eventlist of the time span defined on the bottom side of
+the window. A the Events tab is also available for other GUIs, such as scolv
+it can be configured in the global module configuration.
+The description of the Events tab in scolv provides more
+details.
+.INDENT 0.0
+.INDENT 2.5
+[image]
+Eventlist tab
+Tab1\-2: Summary/Events tab, EventList: list of the last events with summarized information,
+List options: Show fake events, Reading 1: spinbox to limit timespan of displayed events (in days),
+Reading 2: spinboxes to limit timespan of displayed events (specified dates), Status: connection status
+.UNINDENT
+.UNINDENT
+.sp
+The actual (default) or selected event (from eventlist) is shown in the (\fI\%Summary tab\fP).
+Here the information are highlighted in four sections:
+.TS
+center;
+|l|l|.
+_
+T{
+section
+T}	T{
+description
+T}
+_
+T{
+Time
+T}	T{
+orign time in UTC and relative to now
+T}
+_
+T{
+Region
+T}	T{
+a map of the region and location with the event and stations
+T}
+_
+T{
+Magnitude
+T}	T{
+different magnitude types, the values and counts
+T}
+_
+T{
+Hypocenter
+T}	T{
+origin information with location, depth, azimuthal gap etc.
+T}
+_
+.TE
+.INDENT 0.0
+.INDENT 2.5
+[image]
+Summary tab
+Tab1\-2: Summary/Events tab, Origin Time: origin time in UTC and relative to now, Map: map with region
+and location and stations, Magnitude: different magnitude types with values and counts,
+Origin Info: hypocenter information with position, phase count and azimuthal gap,
+Event: earthquake location, Station: station with ray\-path, Details: "Show Details" button to open
+detailed information in scolv, Event Type: event type combo box to set event type, Status: connection status
+.UNINDENT
+.UNINDENT
+.SH HOTKEYS
+.TS
+center;
+|l|l|.
+_
+T{
+Hotkey
+T}	T{
+Description
+T}
+_
+T{
+\fBF2\fP
+T}	T{
+Setup connection dialog
+T}
+_
+T{
+\fBF6\fP
+T}	T{
+Show propagation of P and S wave
+T}
+_
+T{
+\fBF8\fP
+T}	T{
+Toggle auto update
+T}
+_
+T{
+\fBF9\fP
+T}	T{
+Show raypaths and associated stations
+T}
+_
+T{
+\fBF10\fP
+T}	T{
+Toggle tabs
+T}
+_
+T{
+\fBF11\fP
+T}	T{
+Toggle fullscreen
+T}
+_
+T{
+Mouse wheel
+T}	T{
+Zoom map in/out
+T}
+_
+T{
+Double click
+T}	T{
+Center map
+T}
+_
+.TE
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scesv.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scesv.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scesv.cfg\fP
+.fi
+.sp
+.sp
+scesv inherits global options\&.
+.INDENT 0.0
+.TP
+.B loadEventDB
+Type: \fIdouble\fP
+.sp
+Unit: \fIdays\fP
+.sp
+Number of days to preload if scesv is started.
+Default is \fB1\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B showLastAutomaticSolution
+Type: \fIboolean\fP
+.sp
+If enabled, the last automatic solution is displayed next to the
+current solution in the summary panel. If the last automatic
+solution differs from the current solution it is displayed
+in red. If both solutions match it is displayed in gray.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B showOnlyMostRecentEvent
+Type: \fIboolean\fP
+.sp
+If enabled only the most recent event is shown even if an update of
+an older event is being received.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B recenterMap
+Type: \fIboolean\fP
+.sp
+If enabled, the map is centered around the most recent event event.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B enableFixAutomaticSolutions
+Type: \fIboolean\fP
+.sp
+If enabled, an additional button is displayed which allows to switch back
+the latest automatic solution. This button triggers an command for
+scevent to prioritize automatic solutions until the next manual
+solution is available.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B visibleMagnitudes
+Type: \fIlist:string\fP
+.sp
+A list of magnitude types to be displayed.
+Default is \fBM,MLv,mb,mB,Mw(mB)\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B button0
+Type: \fIstring\fP
+.sp
+Label of button0 which triggers script0.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B button1
+Type: \fIstring\fP
+.sp
+Label of button1 which triggers script1.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B ignoreOtherEvents
+Type: \fIboolean\fP
+.sp
+If the event type is either "other" or "not existing"
+and this flag is true then the event will not be shown.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B scripts.script0
+Type: \fIstring\fP
+.sp
+Path to a script if button0 is clicked.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B scripts.script1
+Type: \fIstring\fP
+.sp
+Path to a script if button1 is clicked.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B scripts.script0.exportMap
+Type: \fIboolean\fP
+.sp
+If enabled, the current map is exported to file. The filename is appened to the parameter list of script0. The script has to take ownership of the file.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B scripts.script0.oldStyle
+Type: \fIboolean\fP
+.sp
+If enabled, the parameter list of script0 is eventID, arrivalCount,
+magnitude, description.
+.sp
+If disabled, the parameter list of script0 is eventID, preferredOriginID,
+preferredMagnitudeID, preferredFocalMechanismID.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B scripts.script1.exportMap
+Type: \fIboolean\fP
+.sp
+If enabled, the current map is exported to file. The filename is appened to the parameter list of script1. The script has to take ownership of the file.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B scripts.script1.oldStyle
+Type: \fIboolean\fP
+.sp
+If enabled, the parameter list of script1 is eventID, arrivalCount,
+magnitude, description.
+.sp
+If disabled, the parameter list of script1 is eventID, preferredOriginID,
+preferredMagnitudeID, preferredFocalMechanismID.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B summary.borders
+Type: \fIboolean\fP
+.sp
+Draw borders in the summary panel.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdisplay.*\fP
+\fIAdjust content or display custom information in the Summary tab.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.lonmin
+Type: \fIdouble\fP
+.sp
+Unit: \fIdeg\fP
+.sp
+Minimum longitude of initially displayed map region.
+Default is \fB\-180\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.lonmax
+Type: \fIdouble\fP
+.sp
+Unit: \fIdeg\fP
+.sp
+Maximum longitude of initially displayed map region.
+Default is \fB180\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.latmin
+Type: \fIdouble\fP
+.sp
+Unit: \fIdeg\fP
+.sp
+Minimum latitude of initially displayed map region.
+Default is \fB\-90\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.latmax
+Type: \fIdouble\fP
+.sp
+Unit: \fIdeg\fP
+.sp
+Maximum latitude of initially displayed map region.
+Default is \fB90\fP\&.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdisplay.event.*\fP
+\fIEvent information\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.event.comment.id
+Type: \fIstring\fP
+.sp
+ID of the event comment to be considered.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.event.comment.default
+Type: \fIstring\fP
+.sp
+Value to be shown in case no valid event comment is found.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.event.comment.label
+Type: \fIstring\fP
+.sp
+Label of the value to be shown.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdisplay.origin.*\fP
+\fIOrigin information\fP
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdisplay.origin.comment.*\fP
+\fIDisplay origin comments.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.origin.comment.id
+Type: \fIstring\fP
+.sp
+ID of the origin comment to be considered.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.origin.comment.default
+Type: \fIstring\fP
+.sp
+Value to be shown in case no valid origin comment is found.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B display.origin.comment.label
+Type: \fIstring\fP
+.sp
+Label of the value to be shown.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBpoi.*\fP
+\fIDisplay information related to a point of interest (POI)\fP
+\fIread from the cities XML file.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B poi.maxDist
+Type: \fIdouble\fP
+.sp
+Unit: \fIdeg\fP
+.sp
+Maximum distance in degrees of a POI to be taken into account.
+Default is \fB20\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B poi.minPopulation
+Type: \fIdouble\fP
+.sp
+The minimum population of a POI to be taken into account.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B poi.message
+Type: \fIstring\fP
+.sp
+Message conversion string that converts a POI into the text
+displayed under the region label. There are different placeholders
+that can be used: @dist@, @dir@, @poi@ and @region@.
+.UNINDENT
+.SH COMMAND-LINE
+.sp
+\fBscesv [options]\fP
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Messaging
+.INDENT 0.0
+.TP
+.B \-u, \-\-user arg
+Overrides configuration parameter \fBconnection.username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-H, \-\-host arg
+Overrides configuration parameter \fBconnection.server\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-t, \-\-timeout arg
+Overrides configuration parameter \fBconnection.timeout\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-g, \-\-primary\-group arg
+Overrides configuration parameter \fBconnection.primaryGroup\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S, \-\-subscribe\-group arg
+A group to subscribe to. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-content\-type arg
+Overrides configuration parameter \fBconnection.contentType\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-stop\-msg arg
+Sets sending of a start\- and a stop message.
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-module arg
+The configmodule to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-inventory\-db arg
+Load the inventory from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.SS Cities
+.INDENT 0.0
+.TP
+.B \-\-city\-xml arg
+The path to the cities XML file. This overrides the default
+paths. Compare with the global parameter "citiesXML"
+.UNINDENT
+.SS User interface
+.INDENT 0.0
+.TP
+.B \-F, \-\-full\-screen
+Starts the application filling the entire screen. This only works
+with GUI applications.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-N, \-\-non\-interactive
+Use non\-interactive presentation mode. This only works with GUI applications.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

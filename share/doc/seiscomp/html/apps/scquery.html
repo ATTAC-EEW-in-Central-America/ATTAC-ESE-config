@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scquery &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="scsendjournal" href="scsendjournal.html" />
+    <link rel="prev" title="scorgls" href="scorgls.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="scsendjournal.html" title="scsendjournal"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scorgls.html" title="scorgls"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/utilities.html" accesskey="U">Utilities</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="scquery">
+<span id="id1"></span><h1>scquery<a class="headerlink" href="#scquery" title="Permalink to this headline">¶</a></h1>
+<p><strong>Read database objects and writes them to the command line.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p><em>scquery</em> reads objects such as event information from the <cite>SeisComP</cite> database based
+on custom queries and writes them to stdout.
+It extends <a class="reference internal" href="scevtls.html#scevtls"><span class="std std-ref">scevtls</span></a> and <a class="reference internal" href="scorgls.html#scorgls"><span class="std std-ref">scorgls</span></a> which are limited to searching event
+and origin IDs, respectively, by time.</p>
+<p>scquery takes into account the <a class="reference internal" href="#scquery-queries"><span class="std std-ref">query profiles</span></a>
+defined in</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">&#64;SYSTEMCONFIGDIR&#64;/queries.cfg</span></code> or</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">&#64;CONFIGDIR&#64;/queries.cfg</span></code></p></li>
+</ul>
+<p>while parameters in the latter take priority.</p>
+</div>
+<div class="section" id="module-setup">
+<h2>Module Setup<a class="headerlink" href="#module-setup" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic" id="scquery-config">
+<li><p>Create the query profiles in <code class="file docutils literal notranslate"><span class="pre">queries.cfg</span></code> in &#64;SYSTEMCONFIGDIR&#64; or
+&#64;CONFIGDIR&#64;. The file contains your database queries. Examples for
+MariaDB/MySQL and PostgreSQL are found in the section <a class="reference internal" href="#scquery-queries"><span class="std std-ref">Queries</span></a>.</p></li>
+<li><p><strong>Optional:</strong> Add the database connection parameter to the configuration file
+<code class="file docutils literal notranslate"><span class="pre">scquery.cfg</span></code> or <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code> in &#64;CONFIGDIR&#64; or to &#64;SYSTEMCONFIGDIR&#64;:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">database</span> <span class="o">=</span> mysql://sysop:sysop@localhost/seiscomp
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>If the database connection is configured, the database option <a class="reference internal" href="global.html#confval-database"><code class="xref std std-confval docutils literal notranslate"><span class="pre">-d</span></code></a>
+in the section <a class="reference internal" href="#scquery-examples"><span class="std std-ref">Examples</span></a> can be omitted or used to
+override the configuration.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="examples">
+<span id="scquery-examples"></span><h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Choose any query profile defined in the <a class="reference internal" href="#scquery-queries"><span class="std std-ref">queries.cfg</span></a>. Provide
+the required parameters in the same order as in the database request. The required
+parameters are indicated by hashes, e.g. ##latMin##.</p>
+<ol class="arabic">
+<li><p>List all available query profiles using the command-line option <code class="xref std std-confval docutils literal notranslate"><span class="pre">showqueries</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scquery -d localhost/seiscomp --showqueries
+</pre></div>
+</div>
+</li>
+<li><p>Profile <strong>event_filter</strong>: Fetch all event IDs and event parameters for events
+with magnitude ranging from 2.5 to 5 in central Germany between 2014 and 2017:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scquery -d localhost/seiscomp eventFilter <span class="m">50</span> <span class="m">52</span> <span class="m">11</span>.5 <span class="m">12</span>.5 <span class="m">2</span>.5 <span class="m">5</span> <span class="m">2014</span>-01-01 <span class="m">2018</span>-01-01 &gt; events_vogtland.txt
+</pre></div>
+</div>
+</li>
+<li><p>Profile <strong>eventByAuthor</strong>: Fetch all event IDs where the preferred origin was
+provided by a specific author for events 2.5 to 5 with 6 to 20 phases in central
+Germany between 2014 and 2017:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scquery -d localhost/seiscomp eventByAuthor <span class="m">50</span> <span class="m">52</span> <span class="m">11</span>.5 <span class="m">12</span>.5 <span class="m">6</span> <span class="m">20</span> <span class="m">2</span>.5 <span class="m">5</span> <span class="m">2014</span>-01-01 <span class="m">2018</span>-01-01 scautoloc &gt; events_vogtland.txt
+</pre></div>
+</div>
+</li>
+<li><p>Profile <strong>eventType</strong>: Fetch all event IDs and event times from events
+with the given event type and within the provided time interval:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scquery -d localhost/seiscomp eventType explosion <span class="s1">&#39;2017-11-01 00:00:00&#39;</span> <span class="s1">&#39;2018-11-01 00:00:00&#39;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="queries">
+<span id="scquery-queries"></span><h2>Queries<a class="headerlink" href="#queries" title="Permalink to this headline">¶</a></h2>
+<p>Example queries for <a class="reference internal" href="#scquery-mariadb"><span class="std std-ref">MariaDB/MySQL</span></a> and <a class="reference internal" href="#scquery-psql"><span class="std std-ref">PostgreSQL</span></a> are given
+below.</p>
+<div class="section" id="mariadb-mysql">
+<span id="scquery-mariadb"></span><h3>MariaDB/MySQL<a class="headerlink" href="#mariadb-mysql" title="Permalink to this headline">¶</a></h3>
+<p><strong>General event queries</strong></p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">queries</span> <span class="o">=</span> eventFilter, eventUncertainty, eventByAuthor, eventWithStationCount, phaseCountPerAuthor, eventType
+
+query.eventFilter.description <span class="o">=</span> <span class="s2">&quot;Returns all events (lat, lon, mag, time) that fall into a certain region and a magnitude range&quot;</span>
+query.eventFilter <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value AS OT, Origin.latitude_value,Origin.longitude_value, Origin.depth_value, Magnitude.magnitude_value, Magnitude.type FROM Origin,PublicObject as POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject as PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID=Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value &gt;= ##latMin## AND Origin.latitude_value &lt;= ##latMax## AND Origin.longitude_value &gt;= ##lonMin## AND Origin.longitude_value &lt;= ##lonMax## AND Magnitude.magnitude_value &gt;= ##minMag## AND Magnitude.magnitude_value &lt;= ##maxMag## AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+
+query.eventUncertainty.description <span class="o">=</span> <span class="s2">&quot;Returns all events (eventsIDs, time, lat, lat error, lon, lon error, depth, depth error, magnitude, region name) in the form of an event catalog&quot;</span>
+query.eventUncertainty <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value AS OT, ROUND(Origin.latitude_value, 3), ROUND(Origin.latitude_uncertainty, 3), ROUND(Origin.longitude_value, 3), ROUND(Origin.longitude_uncertainty, 3), ROUND(Origin.depth_value, 3), ROUND(Origin.depth_uncertainty, 3), ROUND(Magnitude.magnitude_value, 1), EventDescription.text FROM Event, PublicObject AS PEvent, EventDescription, Origin, PublicObject AS POrigin, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND Event.preferredOriginID = POrigin.publicID AND Event.preferredMagnitudeID = PMagnitude.publicID AND Event._oid = EventDescription._parent_oid AND EventDescription.type = &#39;region name&#39; AND Event.type = &#39;##type##&#39; AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+
+query.eventByAuthor.description <span class="o">=</span> <span class="s2">&quot;Get events by preferred origin author etc&quot;</span>
+query.eventByAuthor <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value AS OT, Origin.latitude_value AS lat,Origin.longitude_value AS lon, Origin.depth_value AS dep, Magnitude.magnitude_value AS mag, Magnitude.type AS mtype, Origin.quality_usedPhaseCount AS phases, Event.type AS type, Event.typeCertainty AS certainty, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value &gt;= ##latMin## AND Origin.latitude_value &lt;= ##latMax## AND Origin.longitude_value &gt;= ##lonMin## AND Origin.longitude_value &lt;= ##lonMax## AND Origin.quality_usedPhaseCount &gt;= ##minPhases## AND Origin.quality_usedPhaseCount &lt;= ##maxPhases## AND Magnitude.magnitude_value &gt;= ##minMag## AND Magnitude.magnitude_value &lt;= ##maxMag## AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39; AND Origin.creationInfo_author like &#39;##author##&#39;;&quot;</span>
+
+query.eventWithStationCount.description <span class="o">=</span> <span class="s2">&quot;Get events by preferred origin author etc&quot;</span>
+query.eventWithStationCount <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value AS OT, Origin.latitude_value AS lat, Origin.longitude_value AS lon, Origin.depth_value AS dep, Magnitude.magnitude_value AS mag, Magnitude.type AS mtype, Origin.quality_usedStationCount AS stations, Event.type AS type, Event.typeCertainty AS certainty, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+
+query.phaseCountPerAuthor.description <span class="o">=</span> <span class="s2">&quot;Get phase count per author FROM #EventID#&quot;</span>
+query.phaseCountPerAuthor <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.creationInfo_author, MAX(Origin.quality_usedPhaseCount) FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, OriginReference WHERE Origin._oid = POrigin._oid AND Event._oid = PEvent._oid AND OriginReference._parent_oid = Event._oid AND OriginReference.originID = POrigin.publicID AND PEvent.publicID = &#39;##EventID##&#39; group by Origin.creationInfo_author;&quot;</span>
+
+query.eventType.description <span class="o">=</span> <span class="s2">&quot;Returns all eventIDs FROM event WHERE the type is flagged AS &#39;event type&#39;&quot;</span>
+query.eventType <span class="o">=</span> <span class="s2">&quot;SELECT pe.publicID, o.time_value AS OT FROM PublicObject pe, PublicObject po, Event e, Origin o WHERE pe._oid = e._oid AND po._oid = o._oid AND e.preferredOriginID = po.publicID AND e.type = &#39;##type##&#39; AND o.time_value &gt;= &#39;##startTime##&#39; AND o.time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+</pre></div>
+</div>
+<p><strong>More examples and statistics</strong></p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">queries</span> <span class="o">=</span> time, mag_time, space_time, all, space_mag_time, event, fm_space_time, picks, stationPicks, assoc_picks, pref_assoc_picks, sta_net_mag, sta_net_mag_type, delta_sta_net_mag, delta_sta_net_mag_type
+
+query.time.description <span class="o">=</span> <span class="s2">&quot;Events in time range&quot;</span>
+query.time <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+
+query.mag_time.description <span class="o">=</span> <span class="s2">&quot;Events in magnitude-time range&quot;</span>
+query.mag_time <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Magnitude.magnitude_value &gt;= ##minMag## AND Magnitude.magnitude_value &lt;= ##maxMag## AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+
+query.space_time.description <span class="o">=</span> <span class="s2">&quot;Events in space-time range&quot;</span>
+query.space_time <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value &gt;= ##latMin## AND Origin.latitude_value &lt;= ##latMax## AND Origin.longitude_value &gt;= ##lonMin## AND Origin.longitude_value &lt;= ##lonMax## AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+
+query.all.description <span class="o">=</span> <span class="s2">&quot;Events in space-magnitude-time-quality range by author&quot;</span>
+query.all <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value &gt;= ##latMin## AND Origin.latitude_value &lt;= ##latMax## AND Origin.longitude_value &gt;= ##lonMin## AND Origin.longitude_value &lt;= ##lonMax## AND Origin.quality_usedPhaseCount &gt;= ##minPhases## AND Origin.quality_usedPhaseCount &lt;= ##maxPhases## AND Magnitude.magnitude_value &gt;= ##minMag## AND Magnitude.magnitude_value &lt;= ##maxMag## AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39; AND Origin.creationInfo_author like &#39;##author##%&#39;;&quot;</span>
+
+query.space_mag_time.description <span class="o">=</span> <span class="s2">&quot;Events in space-magnitude-time range&quot;</span>
+query.space_mag_time <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, Origin.quality_usedPhaseCount, Origin.quality_usedStationCount, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value &gt;= ##latMin## AND Origin.latitude_value &lt;= ##latMax## AND Origin.longitude_value &gt;= ##lonMin## AND Origin.longitude_value &lt;= ##lonMax## AND Magnitude.magnitude_value &gt;= ##minMag## AND Magnitude.magnitude_value &lt;= ##maxMag## AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+
+query.fm_space_time.description <span class="o">=</span> <span class="s2">&quot;Events with focal mechanisms in space-time range&quot;</span>
+query.fm_space_time <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.time_value, ROUND(Origin.latitude_value, 4), ROUND(Origin.longitude_value, 4), ROUND(Origin.depth_value, 1), ROUND(Magnitude.magnitude_value, 1), Magnitude.type, MomentTensor.doubleCouple, MomentTensor.variance, Event.typeCertainty, Event.type, Origin.creationInfo_author FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude, FocalMechanism, PublicObject AS PFocalMechanism, MomentTensor WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.publicID = Event.preferredMagnitudeID AND FocalMechanism._oid = PFocalMechanism._oid AND PFocalMechanism.publicID = Event.preferredFocalMechanismID AND MomentTensor._parent_oid = FocalMechanism._oid AND POrigin.publicID = Event.preferredOriginID AND Origin.latitude_value &gt;= ##latMin## AND Origin.latitude_value &lt;= ##latMax## AND Origin.longitude_value &gt;= ##lonMin## AND Origin.longitude_value &lt;= ##lonMax## AND Origin.time_value &gt;= &#39;##startTime##&#39; AND Origin.time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+
+query.event.description <span class="o">=</span> <span class="s2">&quot;List authors and number of origins for event&quot;</span>
+query.event <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.publicID, Origin.creationInfo_author, MAX(Origin.quality_usedPhaseCount) FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, OriginReference WHERE Origin._oid = POrigin._oid AND Event._oid = PEvent._oid AND OriginReference._parent_oid = Event._oid AND OriginReference.originID = POrigin.publicID AND PEvent.publicID = &#39;##EventID##&#39; group by Origin.creationInfo_author;&quot;</span>
+
+query.picks.description <span class="o">=</span> <span class="s2">&quot;List number of picks per station in a certain timespan&quot;</span>
+query.picks <span class="o">=</span> <span class="s2">&quot;SELECT waveformID_networkCode AS Network, waveformID_stationCode AS Station, COUNT(_oid) AS Picks, MIN(time_value) AS Start, MAX(time_value) AS End FROM Pick WHERE time_value &gt;= &#39;##startTime##&#39; AND time_value &lt;= &#39;##endTime##&#39; GROUP BY waveformID_networkCode, waveformID_stationCode;&quot;</span>
+
+query.stationPicks.description <span class="o">=</span> <span class="s2">&quot;List the picks and phase hints per station in a certain timespan&quot;</span>
+query.stationPicks <span class="o">=</span> <span class="s2">&quot;SELECT PPick.publicID, Pick.phaseHint_code FROM Pick, PublicObject AS PPick WHERE Pick._oid = PPick._oid AND waveformID_networkCode = &#39;##netCode##&#39; AND waveformID_stationCode = &#39;##staCode##&#39; AND time_value &gt;= &#39;##startTime##&#39; AND time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+
+query.assoc_picks.description <span class="o">=</span> <span class="s2">&quot;List number of associated picks per station in a certain time span&quot;</span>
+query.assoc_picks <span class="o">=</span> <span class="s2">&quot;SELECT Pick.waveformID_networkCode AS Network, Pick.waveformID_stationCode AS Station, COUNT(DISTINCT(Pick._oid)) AS Picks, MIN(Pick.time_value) AS Start, MAX(Pick.time_value) AS End FROM Pick, PublicObject PPick, Arrival WHERE Pick._oid = PPick._oid AND PPick.publicID = Arrival.pickID AND Pick.time_value &gt;= &#39;##startTime##&#39; AND Pick.time_value &lt;= &#39;##endTime##&#39; GROUP BY Pick.waveformID_networkCode, Pick.waveformID_stationCode;&quot;</span>
+
+query.pref_assoc_picks.description <span class="o">=</span> <span class="s2">&quot;List number of associated picks of preferred origins per station for certain time span&quot;</span>
+query.pref_assoc_picks <span class="o">=</span> <span class="s2">&quot;SELECT Pick.waveformID_networkCode AS Network, Pick.waveformID_stationCode AS Station, COUNT(DISTINCT(Pick._oid)) AS Picks, MIN(Pick.time_value) AS Start, MAX(Pick.time_value) AS End FROM Pick, PublicObject PPick, Arrival, Origin, PublicObject POrigin, Event WHERE Event.preferredOriginID = POrigin.publicID AND Origin._oid = POrigin._oid AND Origin._oid = Arrival._parent_oid AND Pick._oid = PPick._oid AND PPick.publicID = Arrival.pickID AND Pick.time_value &gt;= &#39;##startTime##&#39; AND Pick.time_value &lt;= &#39;##endTime##&#39; GROUP BY Pick.waveformID_networkCode, Pick.waveformID_stationCode;&quot;</span>
+
+query.sta_net_mag.description <span class="o">=</span> <span class="s2">&quot;Compares station magnitudes of a particular station with the network magnitude in a certain time span&quot;</span>
+query.sta_net_mag <span class="o">=</span> <span class="s2">&quot;SELECT StationMagnitude.waveformID_networkCode AS Network, StationMagnitude.waveformID_stationCode AS Station, StationMagnitude.magnitude_value AS StaMag, Magnitude.magnitude_value AS NetMag, Magnitude.type AS NetMagType, StationMagnitude.creationInfo_creationTime AS CreationTime FROM StationMagnitude, PublicObject PStationMagnitude, StationMagnitudeContribution, Magnitude WHERE StationMagnitude._oid = PStationMagnitude._oid AND StationMagnitudeContribution.stationMagnitudeID = PStationMagnitude.publicID AND StationMagnitudeContribution._parent_oid = Magnitude._oid AND StationMagnitude.waveformID_networkCode = &#39;##netCode##&#39; AND StationMagnitude.waveformID_stationCode = &#39;##staCode##&#39; AND StationMagnitude.creationInfo_creationTime &gt;= &#39;##startTime##&#39; AND StationMagnitude.creationInfo_creationTime &lt;= &#39;##endTime##&#39; ORDER BY StationMagnitude.creationInfo_creationTime;&quot;</span>
+
+query.sta_net_mag_type.description <span class="o">=</span> <span class="s2">&quot;Compares station magnitudes of a particular station with the network magnitude of specific type in a certain time span&quot;</span>
+query.sta_net_mag_type <span class="o">=</span> <span class="s2">&quot;SELECT StationMagnitude.waveformID_networkCode AS Network, StationMagnitude.waveformID_stationCode AS Station, StationMagnitude.magnitude_value AS StaMag, Magnitude.magnitude_value AS NetMag, Magnitude.type AS NetMagType, StationMagnitude.creationInfo_creationTime AS CreationTime FROM StationMagnitude, PublicObject PStationMagnitude, StationMagnitudeContribution, Magnitude WHERE StationMagnitude._oid = PStationMagnitude._oid AND StationMagnitudeContribution.stationMagnitudeID = PStationMagnitude.publicID AND StationMagnitudeContribution._parent_oid = Magnitude._oid AND StationMagnitude.waveformID_networkCode = &#39;##netCode##&#39; AND StationMagnitude.waveformID_stationCode = &#39;##staCode##&#39; AND StationMagnitude.creationInfo_creationTime &gt;= &#39;##startTime##&#39; AND StationMagnitude.creationInfo_creationTime &lt;= &#39;##endTime##&#39; AND Magnitude.type = &#39;##magType##&#39; ORDER BY StationMagnitude.creationInfo_creationTime;&quot;</span>
+
+query.delta_sta_net_mag.description <span class="o">=</span> <span class="s2">&quot;Calculates delta values of station and network magnitudes for all stations in a certain time span&quot;</span>
+query.delta_sta_net_mag <span class="o">=</span> <span class="s2">&quot;SELECT StationMagnitude.waveformID_networkCode AS Network, StationMagnitude.waveformID_stationCode AS Station, AVG(StationMagnitude.magnitude_value - Magnitude.magnitude_value) AS DeltaAvg, MIN(StationMagnitude.magnitude_value - Magnitude.magnitude_value) AS DeltaMin, MAX(StationMagnitude.magnitude_value - Magnitude.magnitude_value) AS DeltaMax, MIN(StationMagnitude.creationInfo_creationTime) AS Start, MAX(StationMagnitude.creationInfo_creationTime) AS End FROM StationMagnitude, PublicObject PStationMagnitude, StationMagnitudeContribution, Magnitude WHERE StationMagnitude._oid = PStationMagnitude._oidStationMagnitudeContribution.stationMagnitudeID = PStationMagnitude.publicIDStationMagnitudeContribution._parent_oid = Magnitude._oidStationMagnitude.creationInfo_creationTime &gt;= &#39;##startTime##&#39;StationMagnitude.creationInfo_creationTime &lt;= &#39;##endTime##&#39; GROUP BY StationMagnitude.waveformID_networkCode, StationMagnitude.waveformID_stationCode;&quot;</span>
+
+query.delta_sta_net_mag_type.description <span class="o">=</span> <span class="s2">&quot;Calculates delta values of station and network magnitudes for all stations and all magnitude types in a certain time span&quot;</span>
+query.delta_sta_net_mag_type <span class="o">=</span> <span class="s2">&quot;SELECT StationMagnitude.waveformID_networkCode AS Network, StationMagnitude.waveformID_stationCode AS Station, AVG(StationMagnitude.magnitude_value - Magnitude.magnitude_value) AS DeltaAvg, MIN(StationMagnitude.magnitude_value - Magnitude.magnitude_value) AS DeltaMin, MAX(StationMagnitude.magnitude_value - Magnitude.magnitude_value) AS DeltaMax, Magnitude.type AS NetMagType, MIN(StationMagnitude.creationInfo_creationTime) AS Start, MAX(StationMagnitude.creationInfo_creationTime) AS End FROM StationMagnitude, PublicObject PStationMagnitude, StationMagnitudeContribution, Magnitude WHERE StationMagnitude._oid = PStationMagnitude._oid AND StationMagnitudeContribution.stationMagnitudeID = PStationMagnitude.publicID AND StationMagnitudeContribution._parent_oid = Magnitude._oid AND StationMagnitude.creationInfo_creationTime &gt;= &#39;##startTime##&#39; AND StationMagnitude.creationInfo_creationTime &lt;= &#39;##endTime##&#39; GROUP BY StationMagnitude.waveformID_networkCode, StationMagnitude.waveformID_stationCode, Magnitude.type;&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="postgresql">
+<span id="scquery-psql"></span><h3>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h3>
+<p>In contrast to queries for objects in <a class="reference internal" href="#scquery-mariadb"><span class="std std-ref">MariaDB/MySQL</span></a> the
+string <code class="docutils literal notranslate"><span class="pre">m_</span></code> must be added to the value and publicID database columns as shown
+below for the query “eventFilter”.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">queries</span> <span class="o">=</span> eventFilter
+
+query.eventFilter.description <span class="o">=</span> <span class="s2">&quot;Returns all events (lat, lon, mag, time) that fall into a certain region and a magnitude range&quot;</span>
+query.eventFilter <span class="o">=</span> <span class="s2">&quot;SELECT PEvent.m_publicID, Origin.m_time_value AS OT, Origin.m_latitude_value, Origin.m_longitude_value, Origin.m_depth_value, Magnitude.m_magnitude_value, Magnitude.m_type FROM Origin, PublicObject AS POrigin, Event, PublicObject AS PEvent, Magnitude, PublicObject AS PMagnitude WHERE Event._oid = PEvent._oid AND Origin._oid = POrigin._oid AND Magnitude._oid = PMagnitude._oid AND PMagnitude.m_publicID = Event.m_preferredMagnitudeID AND POrigin.m_publicID = Event.m_preferredOriginID AND Origin.m_latitude_value &gt;= ##latMin## AND Origin.m_latitude_value &lt;= ##latMax## AND Origin.m_longitude_value &gt;= ##lonMin## AND Origin.m_longitude_value &lt;= ##lonMax## AND Magnitude.m_magnitude_value &gt;= ##minMag## AND Magnitude.m_magnitude_value &lt;= ##maxMag## AND Origin.m_time_value &gt;= &#39;##startTime##&#39; AND Origin.m_time_value &lt;= &#39;##endTime##&#39;;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="scquery-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/scquery.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/scquery.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/scquery.cfg</span></code></div>
+</div>
+<p>scquery inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">scquery [OPTIONS] [query name] [query parameters]</strong></p>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scquery-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scquery-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scquery-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scquery-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scquery-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id2">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scquery-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scquery-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scquery-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scquery-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="database">
+<h3>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scquery-db-driver-list">
+<code class="sig-name descname">--db-driver-list</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-db-driver-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all supported database drivers.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-d">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--database</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scquery-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>The database connection string, format: <a class="reference external" href="service://user:pwd&#64;host/database">service://user:pwd&#64;host/database</a>.
+“service” is the name of the database driver which can be
+queried with “–db-driver-list”.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="commands">
+<h3>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scquery-showqueries">
+<code class="sig-name descname">--showqueries</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-showqueries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the queries defined in queries.cfg</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-print-column-name">
+<code class="sig-name descname">--print-column-name</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-print-column-name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the name of each output column in a header</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-print-header">
+<code class="sig-name descname">--print-header</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-print-header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the query parameters and the query filter description
+as a header of the query output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-delimiter">
+<code class="sig-name descname">--delimiter</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-delimiter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Column delimiter. If found, this character will be escaped
+in output values. Default: ‘|’</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scquery-query">
+<code class="sig-name descname">-Q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--query</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scquery-query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the given query from the command line.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scquery</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#module-setup">Module Setup</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#queries">Queries</a><ul>
+<li><a class="reference internal" href="#mariadb-mysql">MariaDB/MySQL</a></li>
+<li><a class="reference internal" href="#postgresql">PostgreSQL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#database">Database</a></li>
+<li><a class="reference internal" href="#commands">Commands</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scorgls.html"
+                        title="previous chapter">scorgls</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scsendjournal.html"
+                        title="next chapter">scsendjournal</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scquery.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

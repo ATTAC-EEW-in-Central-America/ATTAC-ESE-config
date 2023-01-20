@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scchkcfg &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sccnv" href="sccnv.html" />
+    <link rel="prev" title="scbulletin" href="scbulletin.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="sccnv.html" title="sccnv"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scbulletin.html" title="scbulletin"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/utilities.html" accesskey="U">Utilities</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="scchkcfg">
+<span id="id1"></span><h1>scchkcfg<a class="headerlink" href="#scchkcfg" title="Permalink to this headline">¶</a></h1>
+<p><strong>Checks a module configuration.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>scchkcfg checks for case-sensitivity issues of parameter names of a module
+configuration. It reads all defined stages (see <a class="reference internal" href="global.html#global-modules"><span class="std std-ref">Modules</span></a>) and
+checks for each parameter read if it exists again with a different spelling.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ scchkcfg scautopick
+Read configuration files OK
+No possible conflict detected
+</pre></div>
+</div>
+<p>scchkcfg checks only for possible conflicts since it does not know what parameters
+a module will read eventually.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ scchkcfg scautopick
+Read configuration files OK
+Conflict <span class="c1">#1</span>
+ connection.server    /home/sysop/seiscomp/etc/global.cfg:8
+ connection.Server    /home/sysop/.seiscomp/scautopick.cfg:1
+<span class="m">1</span> conflict detected
+</pre></div>
+</div>
+<p>In this case everything is ok and the conflict needs to be fixed.
+<code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.Server</span></code> is not a valid parameter name
+(but <a class="reference internal" href="global.html#confval-connection.server"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.server</span></code></a> is) in
+<code class="file docutils literal notranslate"><span class="pre">/home/sysop/.seiscomp/scautopick.cfg</span></code> and thus will not be used.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ scchkcfg scautopick
+Read configuration files OK
+Conflict <span class="c1">#1</span>
+ module.trunk.global.amplitudes.mb.signalEnd    <span class="se">\</span>
+      /home/sysop/.seiscomp/scautopick.cfg:1
+ module.trunk.global.amplitudes.mB.signalEnd    <span class="se">\</span>
+      /home/sysop/.seiscomp/scautopick.cfg:2
+<span class="m">1</span> conflict detected
+</pre></div>
+</div>
+<p>In this case the configuration is OK and this is an example why the case-sensitivity
+has changed from previous versions: mb != mB. scchkcfg detects a possible
+conflicts but does not know that this case is well defined. But it helps the user to
+decide whether it needs a fix or not.</p>
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">scchkcfg {mod-name} [standalone]</strong></p>
+<p>Reads the configuration of {mod-name} and checks for case-sensitivity
+issues. If standalone is not given, it checks all 6 configurations
+files (including global.cfg), 3 otherwise.</p>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scchkcfg</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scbulletin.html"
+                        title="previous chapter">scbulletin</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sccnv.html"
+                        title="next chapter">sccnv</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scchkcfg.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

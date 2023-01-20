@@ -1,0 +1,178 @@
+<!doctype html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scanloc documentation &#8212; scanloc: Phase Associator  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/gempa.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <script type="text/javascript" src="_static/gempa.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="shortcut icon" href="_static/scanloc.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="base/introduction.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <img class="background" src="_static/icon.png"/>
+        <div class="content">
+           <span class="title">scanloc: Phase Associator </span>
+           <span class="version">2022.88#fcbc3b22d</span></h1>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="base/introduction.html" title="Introduction"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="#">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="appname-documentation">
+<h1><cite>scanloc</cite> documentation<a class="headerlink" href="#appname-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This is the documentation for the <cite>scanloc</cite> package in version 2022.88#fcbc3b22d.</p>
+<div class="four column layout"><img alt="scolv with P and S picks" src="_images/scolv-location-tab.png" />
+<img alt="fake events" src="_images/cluster-reference-traveltime.png" />
+<img alt="0-weight pipeline" src="_images/zeroweight_pipeline.png" />
+<img alt="debugger for S picker" src="_images/s-picker-debugger1.png" />
+<p>scanloc accociates P and S phases and locates the event</p>
+<p>Phase association is based on advanced cluster search</p>
+<p>Phase picks accross pipelines can be associated</p>
+<p>A graphical debugger supports tuning for accurate S-phase picks</p>
+</div><div class="section" id="about">
+<h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="base/introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="base/introduction.html#applications">Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base/introduction.html#examples-from-science">Examples from science</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="apps/scanloc.html">scanloc</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apps/scanloc.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps/scanloc.html#workflow">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps/scanloc.html#internal-origins-and-events">Internal Origins and Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps/scanloc.html#locating-origins">Locating Origins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps/scanloc.html#scoring-origins">Scoring Origins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps/scanloc.html#association-of-teleseismic-phases">Association of Teleseismic Phases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps/scanloc.html#examples-and-playbacks">Examples and Playbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps/scanloc.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps/scanloc.html#command-line">Command Line</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="base/auxiliary.html">Auxiliary Scripts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="base/auxiliary.html#dump-picks">dump_picks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base/auxiliary.html#playback-picks">playback_picks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="base/locsat-tables.html">Dense Travel-Time Tables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="base/locsat-tables.html#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="base/sphase-detector.html">Advanced S-Phase Detector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="base/sphase-detector.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base/sphase-detector.html#picker-configuration">Picker configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base/sphase-detector.html#picker-tuning-debugger">Picker tuning: Debugger</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="base/glossary.html">Glossary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="base/glossary.html#seiscomp-terms">SeisComP terms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base/glossary.html#scientific-and-technical-terms">Scientific and technical terms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="base/references.html">References</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="software-history">
+<h2>Software History<a class="headerlink" href="#software-history" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="base/changelog.html">Change Log</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="#">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><cite>scanloc</cite> documentation</a><ul>
+<li><a class="reference internal" href="#about">About</a></li>
+<li><a class="reference internal" href="#software-history">Software History</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="base/introduction.html"
+                        title="next chapter">Introduction</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="content">
+        Release <b></b> version <b>2022.88#fcbc3b22d</b>
+          <div class="copyright">
+            &copy; Copyright <a href="https://www.gempa.de">2014, gempa GmbH.</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

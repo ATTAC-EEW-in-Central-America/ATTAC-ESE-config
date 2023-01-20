@@ -1,0 +1,470 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCVSMAGLOG" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scvsmaglog \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBLogs VS magnitude messages.\fP
+.SH DESCRIPTION
+.sp
+Part of the VS package.
+.sp
+\fIscvsmaglog\fP is part of a new SeisComP implementation of the
+\fI\%Virtual Seismologist\fP [1]
+(VS) Earthquake Early Warning algorithm (Cua, 2005; Cua and Heaton, 2007) released
+under the \fI\%SED Public License for SeisComP Contributions\fP [2]\&. It requires
+the Python package \fI\%dateutil\fP [3] to be installed.
+.sp
+It logs the VS magnitude messages received from scvsmag and, once an event
+has timed out, generates report files. These report files are saved to disk and
+can also be sent via email.
+.sp
+It also implements an \fI\%ActiveMQ\fP [4] interface which
+provides the possibility to send alert messages in real\-time. Currently,
+messages can be sent in three different formats (SeisComPML, QuakeML, ShakeAlertML).
+The recommended client to display these alert messages is the \fI\%Earthquake Early Warning Display (EEWD)\fP [5]
+an OpenSource user interface developed within the
+European REAKT project and based on the
+the \fI\%UserDisplay\fP [6]\&.
+The UserDisplay is not openly available, however, people with permission to run
+the UserDisplay can use it to receive alert messages from \fIscvsmaglog\fP\&.
+.sp
+To receive alerts with the EEWD set the format to \fIqml1.2\-rt\fP, to receive alerts
+with the UserDisplay set the format to \fIshakealert\fP\&. There are currently no clients
+which can digest SeisComPML. Using pipelines alerts can be sent out in more
+than one format.
+.sp
+The real\-time ActiveMQ interface requires the Python packages
+\fI\%stompy\fP [7] and \fI\%lxml\fP [8] to
+be installed.
+.sp
+It is beyond the scope of this documentation to explain the complete setup of an
+ActiveMQ broker. However, since scvsmaglog uses the STOMP protocol to send
+messages to the broker it is essential to add the following line
+to configuration of the ActiveMQ broker.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+<connector>
+<serverTransport uri="stomp://your\-server\-name:your\-port"/>
+</connector>
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Please refer to \fI\%ActiveMQ\fP [4] for setting up an ActiveMQ broker.
+.SH REPORTS
+.sp
+Below is an example of the first few lines of a report file:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+Mag.|Lat.  |Lon.  |tdiff |Depth |creation time (UTC)      |origin time (UTC)        |likeh.|#st.(org.) |#st.(mag.)
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+3.42| 47.15|  8.52| 12.73| 25.32|2012\-02\-11T22:45:39.0000Z|2012\-02\-11T22:45:26.2729Z|  0.99|          6|         6
+3.43| 47.15|  8.52| 13.73| 25.32|2012\-02\-11T22:45:40.0000Z|2012\-02\-11T22:45:26.2729Z|  0.99|          6|         6
+3.56| 47.15|  8.54| 14.70| 25.73|2012\-02\-11T22:45:41.0000Z|2012\-02\-11T22:45:26.3032Z|  0.99|         10|        10
+3.64| 47.16|  8.54| 15.58| 24.32|2012\-02\-11T22:45:42.0000Z|2012\-02\-11T22:45:26.4178Z|  0.99|         12|        12
+3.54| 47.16|  8.53| 16.45| 22.40|2012\-02\-11T22:45:43.0000Z|2012\-02\-11T22:45:26.5547Z|  0.99|         14|        14
+3.67| 47.15|  8.54| 17.29| 20.40|2012\-02\-11T22:45:44.0000Z|2012\-02\-11T22:45:26.7142Z|  0.99|         16|        16
+3.66| 47.16|  8.54| 18.34| 21.31|2012\-02\-11T22:45:45.0000Z|2012\-02\-11T22:45:26.6562Z|  0.99|         18|        18
+3.75| 47.16|  8.54| 19.27| 19.91|2012\-02\-11T22:45:46.0000Z|2012\-02\-11T22:45:26.7326Z|  0.99|         19|        19
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fICreation time\fP is the time the VS magnitude message was generated, \fItdiff\fP is the
+time difference between \fIcreation time\fP and \fIorigin time\fP in seconds, \fIlikeh\fP is the
+likelihood that this event is a real event (see documentation of scvsmag), # \fIst.(org)\fP
+is the number of stations that contributed to the origin and # \fIst.(mag)\fP the number of envelope streams
+that contributed to the magnitude.
+.SH REFERENCES
+.IP [1] 5
+\fI\%http://www.seismo.ethz.ch/en/research\-and\-teaching/products\-software/EEW/Virtual\-Seismologist/\fP
+.IP [2] 5
+\fI\%http://www.seismo.ethz.ch/static/seiscomp_contrib/license.txt\fP
+.IP [3] 5
+\fI\%https://pypi.python.org/pypi/python\-dateutil/\fP
+.IP [4] 5
+\fI\%http://activemq.apache.org/\fP
+.IP [5] 5
+\fI\%http://www.seismo.ethz.ch/en/research\-and\-teaching/products\-software/EEW/earthquake\-early\-warning\-display\-eewd/\fP
+.IP [6] 5
+\fI\%http://www.eew.caltech.edu/research/userdisplay.html\fP
+.IP [7] 5
+\fI\%https://pypi.python.org/pypi/stompy/\fP
+.IP [8] 5
+\fI\%http://lxml.de/\fP
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scvsmaglog.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scvsmaglog.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scvsmaglog.cfg\fP
+.fi
+.sp
+.sp
+scvsmaglog inherits global options\&.
+.INDENT 0.0
+.TP
+.B email.activate
+Type: \fIboolean\fP
+.sp
+Send email notifications.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.smtpserver
+Type: \fIstring\fP
+.sp
+URL of the smtp server to send the report files to.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.port
+Type: \fIint\fP
+.sp
+Port where the SMTP server accepts connections.
+Default is \fB25\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.usetls
+Type: \fIboolean\fP
+.sp
+Whether to use TLS when connecting to the smtp server.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.usessl
+Type: \fIboolean\fP
+.sp
+Whether to use SSL when connecting to the smtp server.
+Note, only \(aqemail.usetls\(aq or \(aquser.ssl\(aq can be true.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.authenticate
+Type: \fIboolean\fP
+.sp
+Whether the smtp server requires authentication (username + password).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.credentials
+Type: \fIfile\fP
+.sp
+If the smtp server requires authentication you have to specify a file that contains
+username and password in the format:
+.sp
+username=your\-username
+.sp
+password=your\-password
+.sp
+Make sure that you set the file permission as restrictive as
+possible.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.senderaddress
+Type: \fIstring\fP
+.sp
+Email address that will appear as sender in the report email.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.subject
+Type: \fIstring\fP
+.sp
+Any string that should be prepended to the email\(aqs subject string.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.host
+Type: \fIstring\fP
+.sp
+Host as it is supposed to appear in the email\(aqs subject string.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.recipients
+Type: \fIlist:string\fP
+.sp
+A list of email addresses that receive the report emails.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B email.magThresh
+Type: \fIdouble\fP
+.sp
+Only send a notification email if the magnitude threshold is exceeded.
+Default is \fB0.0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B report.activate
+Type: \fIboolean\fP
+.sp
+Save reports to disk.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B report.eventbuffer
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Time in seconds that events and the related objects are buffered.
+Default is \fB3600\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B report.directory
+Type: \fIdir\fP
+.sp
+Directory to save reports to.
+Default is \fB~/.seiscomp/log/VS_reports\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B ActiveMQ.hostname
+Type: \fIstring\fP
+.sp
+Server name that runs the ActiveMQ broker.
+Default is \fBlocalhost\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B ActiveMQ.port
+Type: \fIint\fP
+.sp
+Port on which ActiveMQ broker accepts stomp messages.
+Default is \fB61619\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B ActiveMQ.username
+Type: \fIstring\fP
+.sp
+Username with which messages are sent.
+Default is \fByour\-ActiveMQ\-username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B ActiveMQ.password
+Type: \fIstring\fP
+.sp
+Password with which messages are sent.
+Default is \fByour\-ActiveMQ\-password\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B ActiveMQ.topic
+Type: \fIstring\fP
+.sp
+ActiveMQ broker topic to send alerts to.
+Default is \fB/topic/your\-topic\-for\-alerts\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B ActiveMQ.hbtopic
+Type: \fIstring\fP
+.sp
+ActiveMQ broker topic to send heart beats to.
+Default is \fB/topic/your\-topic\-for\-heart\-beats\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B ActiveMQ.messageFormat
+Type: \fIstring\fP
+.sp
+ActiveMQ message format; can be either \(aqqml1.2\-rt\(aq, \(aqshakealert\(aq, or \(aqsc3ml\(aq.
+Default is \fBqml1.2\-rt\fP\&.
+.UNINDENT
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Messaging
+.INDENT 0.0
+.TP
+.B \-u, \-\-user arg
+Overrides configuration parameter \fBconnection.username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-H, \-\-host arg
+Overrides configuration parameter \fBconnection.server\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-t, \-\-timeout arg
+Overrides configuration parameter \fBconnection.timeout\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-g, \-\-primary\-group arg
+Overrides configuration parameter \fBconnection.primaryGroup\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S, \-\-subscribe\-group arg
+A group to subscribe to. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-stop\-msg arg
+Sets sending of a start\- and a stop message.
+.UNINDENT
+.SS Reports
+.INDENT 0.0
+.TP
+.B \-\-savedir path
+Directory to save reports to.
+.UNINDENT
+.SS Mode
+.INDENT 0.0
+.TP
+.B \-\-playback
+Disable database connection.
+.UNINDENT
+.SH AUTHOR
+Swiss Seismological Service
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

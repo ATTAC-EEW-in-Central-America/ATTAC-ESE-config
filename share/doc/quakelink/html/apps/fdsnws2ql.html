@@ -1,0 +1,814 @@
+<!doctype html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>fdsnws2ql &#8212; QuakeLink: Earthquake Distribution Server  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/gempa.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/gempa.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/quakelink.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ql2ql" href="ql2ql.html" />
+    <link rel="prev" title="quakelink" href="quakelink.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <img class="background" src="../_static/icon.png"/>
+        <div class="content">
+           <span class="title">QuakeLink: Earthquake Distribution Server </span>
+           <span class="version">2022.192#cea9050e2</span></h1>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="ql2ql.html" title="ql2ql"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="quakelink.html" title="quakelink"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../base/plugins.html" accesskey="U">Server</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="fdsnws2ql">
+<span id="id1"></span><h1>fdsnws2ql<a class="headerlink" href="#fdsnws2ql" title="Permalink to this headline">¶</a></h1>
+<p><strong>Imports event information from FDSN Web services into a QuakeLink server.</strong></p>
+<div class="section" id="module-configuration">
+<h2>Module Configuration<a class="headerlink" href="#module-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/fdsnws2ql.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/fdsnws2ql.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/fdsnws2ql.cfg</span></code></div>
+</div>
+<p>fdsnws2ql inherits <span class="xref std std-ref">global options</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Modules/plugins may require a license file. The default path to license
+files is <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/licenses/</span></code> which can be overridden by global
+configuration of the parameter <code class="xref std std-confval docutils literal notranslate"><span class="pre">gempa.licensePath</span></code>. Example:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>gempa.licensePath = @CONFIGDIR@/licenses
+</pre></div>
+</div>
+</div>
+<dl class="confval">
+<dt id="confval-server">
+<code class="sig-name descname">server</code><a class="headerlink" href="#confval-server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Host name and optional port of QuakeLink server to push data
+to.
+Default is <code class="docutils literal notranslate"><span class="pre">localhost:18011</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-ssl">
+<code class="sig-name descname">ssl</code><a class="headerlink" href="#confval-ssl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Use secure socket layer (SSL) for server connection.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-backlog">
+<code class="sig-name descname">backlog</code><a class="headerlink" href="#confval-backlog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>d</em></p>
+<p>Maximum event age given by origin time in days. Events older
+than the specified
+value are neither fetched nor processed and are removed from
+the host specific event journal.
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-interval">
+<code class="sig-name descname">interval</code><a class="headerlink" href="#confval-interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval in seconds to request event updates from FDSNWS source.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-requestTimeout">
+<code class="sig-name descname">requestTimeout</code><a class="headerlink" href="#confval-requestTimeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>s</em></p>
+<p>HTTP request timeout. Abort the request if no bytes have
+been received for the specified number of seconds.
+Default is <code class="docutils literal notranslate"><span class="pre">10.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-hosts">
+<code class="sig-name descname">hosts</code><a class="headerlink" href="#confval-hosts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Registration of FDSNWS host profiles.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>significantChange.*</strong>
+<em>Parameters defining a significant event change which</em>
+<em>triggers an event update.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-significantChange.time">
+<code class="sig-name descname">significantChange.time</code><a class="headerlink" href="#confval-significantChange.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.coordinates">
+<code class="sig-name descname">significantChange.coordinates</code><a class="headerlink" href="#confval-significantChange.coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.depth">
+<code class="sig-name descname">significantChange.depth</code><a class="headerlink" href="#confval-significantChange.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.author">
+<code class="sig-name descname">significantChange.author</code><a class="headerlink" href="#confval-significantChange.author" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.catalog">
+<code class="sig-name descname">significantChange.catalog</code><a class="headerlink" href="#confval-significantChange.catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.contributor">
+<code class="sig-name descname">significantChange.contributor</code><a class="headerlink" href="#confval-significantChange.contributor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.contributorID">
+<code class="sig-name descname">significantChange.contributorID</code><a class="headerlink" href="#confval-significantChange.contributorID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.magType">
+<code class="sig-name descname">significantChange.magType</code><a class="headerlink" href="#confval-significantChange.magType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.magnitude">
+<code class="sig-name descname">significantChange.magnitude</code><a class="headerlink" href="#confval-significantChange.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.magAuthor">
+<code class="sig-name descname">significantChange.magAuthor</code><a class="headerlink" href="#confval-significantChange.magAuthor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.locationName">
+<code class="sig-name descname">significantChange.locationName</code><a class="headerlink" href="#confval-significantChange.locationName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.eventType">
+<code class="sig-name descname">significantChange.eventType</code><a class="headerlink" href="#confval-significantChange.eventType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>significantChange.precision.*</strong>
+<em>Numerical differences in source parameters defining a</em>
+<em>significant event change. The corresponding significant</em>
+<em>change flag must be enabled for a parameter change to</em>
+<em>be considered.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-significantChange.precision.time">
+<code class="sig-name descname">significantChange.precision.time</code><a class="headerlink" href="#confval-significantChange.precision.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Origin time
+Default is <code class="docutils literal notranslate"><span class="pre">1e-02</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.precision.coordinates">
+<code class="sig-name descname">significantChange.precision.coordinates</code><a class="headerlink" href="#confval-significantChange.precision.coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Epicenter
+Default is <code class="docutils literal notranslate"><span class="pre">1e-06</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.precision.depth">
+<code class="sig-name descname">significantChange.precision.depth</code><a class="headerlink" href="#confval-significantChange.precision.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km</em></p>
+<p>Hypocenter depth
+Default is <code class="docutils literal notranslate"><span class="pre">1e-03</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-significantChange.precision.magnitude">
+<code class="sig-name descname">significantChange.precision.magnitude</code><a class="headerlink" href="#confval-significantChange.precision.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Event magnitude
+Default is <code class="docutils literal notranslate"><span class="pre">1e-02</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.*</strong>
+<em>Add host profiles defining connections to FDSNWS</em>
+<em>servers. For considering a profile add its name to the</em>
+<em>parameter “hosts”.</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.*</strong>
+<em>Configure profile parameters depending on the FDSNWS server.</em>
+$name is a placeholder for the name to be used and needs to be added to <a class="reference internal" href="ql2ql.html#confval-hosts"><code class="xref std std-confval docutils literal notranslate"><span class="pre">hosts</span></code></a> to become active.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">hosts</span> <span class="o">=</span> a,b
+host.a.value1 <span class="o">=</span> ...
+host.b.value1 <span class="o">=</span> ...
+<span class="c1"># c is not active because it has not been added</span>
+<span class="c1"># to the list of hosts</span>
+host.c.value1 <span class="o">=</span> ...
+</pre></div>
+</div>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.url">
+<code class="sig-name descname">host.$name.url</code><a class="headerlink" href="#confval-host.$name.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>URL of the FDSNWS service.</p>
+<p>Format: [http[s]://][user:pwd&#64;][host][:port][path].</p>
+<p>If the path is empty the default path /fdsnws/event/1/query will be added automatically.
+Default is <code class="docutils literal notranslate"><span class="pre">http://localhost</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.updatedAfter">
+<code class="sig-name descname">host.$name.updatedAfter</code><a class="headerlink" href="#confval-host.$name.updatedAfter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Defines whether updatedAfter requests are supported
+by this service. If this parameter is set to true,
+all subsequent requests will use the previous
+request time to filter for new event solutions since
+the last request.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.requestHandler">
+<code class="sig-name descname">host.$name.requestHandler</code><a class="headerlink" href="#confval-host.$name.requestHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Plugin implementing custom request and response handling.
+The last component of the path is interpreted as a class
+name which must be derived from
+fdsnws2ql.plugin.RequestHandler in
+$SEISCOMP_ROOT/lib/python/fdsnws2ql/plugin.py
+Default is <code class="docutils literal notranslate"><span class="pre">fdsnws2ql.plugins.fdsnws.FDSNWS</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.filter.*</strong>
+<em>Defines filter parameters for events to import.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.filter.eventTypes">
+<code class="sig-name descname">host.$name.filter.eventTypes</code><a class="headerlink" href="#confval-host.$name.filter.eventTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Limit to events with a specified eventType. The
+parameter value can be a single item, a
+comma-separated list of items. Allowed values
+are from SCML or ‘unknown’ if eventType
+is not given. The SeisComPML event types are
+converted to QuakeML event types before sending
+the request and are converted back to SeisComP
+ML types when the response is evaluated.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.catalog">
+<code class="sig-name descname">host.$name.filter.catalog</code><a class="headerlink" href="#confval-host.$name.filter.catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Limit to events from a specified catalog.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.contributor">
+<code class="sig-name descname">host.$name.filter.contributor</code><a class="headerlink" href="#confval-host.$name.filter.contributor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Limit to events contributed by a specified contributor.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.filter.boundingBox.*</strong>
+<em>The bounding box limiting the epicentral area.</em>
+<em>Do not use along with boundingCircle.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.filter.boundingBox.minLatitude">
+<code class="sig-name descname">host.$name.filter.boundingBox.minLatitude</code><a class="headerlink" href="#confval-host.$name.filter.boundingBox.minLatitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Minimum latitude.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.boundingBox.maxLatitude">
+<code class="sig-name descname">host.$name.filter.boundingBox.maxLatitude</code><a class="headerlink" href="#confval-host.$name.filter.boundingBox.maxLatitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Maximum latitude.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.boundingBox.minLongitude">
+<code class="sig-name descname">host.$name.filter.boundingBox.minLongitude</code><a class="headerlink" href="#confval-host.$name.filter.boundingBox.minLongitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Minimum longitude.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.boundingBox.maxLongitude">
+<code class="sig-name descname">host.$name.filter.boundingBox.maxLongitude</code><a class="headerlink" href="#confval-host.$name.filter.boundingBox.maxLongitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Maximum longitude.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.filter.boundingCircle.*</strong>
+<em>The bounding circle limiting the epicentral area.</em>
+<em>Depending on the definition of</em>
+<em>minRadius and maxRadius the region described</em>
+<em>here might be included or excluded by a circle</em>
+<em>or bound by two concentric circles.</em>
+**
+<em>Do not use along with boundingBox.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.filter.boundingCircle.latitude">
+<code class="sig-name descname">host.$name.filter.boundingCircle.latitude</code><a class="headerlink" href="#confval-host.$name.filter.boundingCircle.latitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Center latitude</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.boundingCircle.longitude">
+<code class="sig-name descname">host.$name.filter.boundingCircle.longitude</code><a class="headerlink" href="#confval-host.$name.filter.boundingCircle.longitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Center longitude</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.boundingCircle.minRadius">
+<code class="sig-name descname">host.$name.filter.boundingCircle.minRadius</code><a class="headerlink" href="#confval-host.$name.filter.boundingCircle.minRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Minimum epicentral distance from center</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.boundingCircle.maxRadius">
+<code class="sig-name descname">host.$name.filter.boundingCircle.maxRadius</code><a class="headerlink" href="#confval-host.$name.filter.boundingCircle.maxRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Maximum epicentral distance from center</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.filter.depth.*</strong>
+<em>Limits request by hypocenter depth.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.filter.depth.min">
+<code class="sig-name descname">host.$name.filter.depth.min</code><a class="headerlink" href="#confval-host.$name.filter.depth.min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km</em></p>
+<p>Minimum depth</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.depth.max">
+<code class="sig-name descname">host.$name.filter.depth.max</code><a class="headerlink" href="#confval-host.$name.filter.depth.max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km</em></p>
+<p>Maximum depth</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.filter.magnitude.*</strong>
+<em>Limits request by event magnitude.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.filter.magnitude.min">
+<code class="sig-name descname">host.$name.filter.magnitude.min</code><a class="headerlink" href="#confval-host.$name.filter.magnitude.min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Minimum magnitude</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.magnitude.max">
+<code class="sig-name descname">host.$name.filter.magnitude.max</code><a class="headerlink" href="#confval-host.$name.filter.magnitude.max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Maximum magnitude</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.filter.magnitude.type">
+<code class="sig-name descname">host.$name.filter.magnitude.type</code><a class="headerlink" href="#confval-host.$name.filter.magnitude.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Specifies a magnitude type to use for testing
+the minimum and maximum limits.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.content.*</strong>
+<em>Defines the details for the event content to generate</em>
+<em>or to fetch.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.content.fetchXML">
+<code class="sig-name descname">host.$name.content.fetchXML</code><a class="headerlink" href="#confval-host.$name.content.fetchXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If set to true, an additional request for XML
+data is made for each updated event. Otherwise a
+minimal SCML
+is constructed from the key event parameters
+present in the text format.</p>
+<p>Activate this option only if the complete event
+data set including all origins, etc. is required
+by your processing modules.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.content.text.*</strong>
+<em>Parameters controlling the event construction</em>
+<em>from the text format summary parameters.</em>
+<em>The parameters are ignored if the parameter</em>
+<em>“fetchXML” is true (active).</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.content.text.agencyID">
+<code class="sig-name descname">host.$name.content.text.agencyID</code><a class="headerlink" href="#confval-host.$name.content.text.agencyID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>By default the agency of the event and origin
+is set to the value of the contributor column.
+This parameter allows to set a custom agency ID.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.content.text.evaluationMode">
+<code class="sig-name descname">host.$name.content.text.evaluationMode</code><a class="headerlink" href="#confval-host.$name.content.text.evaluationMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Origin evaluation mode.
+Default is <code class="docutils literal notranslate"><span class="pre">manual</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.content.text.evaluationStatus">
+<code class="sig-name descname">host.$name.content.text.evaluationStatus</code><a class="headerlink" href="#confval-host.$name.content.text.evaluationStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Origin evaluation status.
+Default is <code class="docutils literal notranslate"><span class="pre">confirmed</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.content.xml.*</strong>
+<em>Defines the details for XML content to fetch.</em>
+<em>This section requires the parameter</em>
+<em>“fetchXML” to be enabled.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.content.xml.sc3ml">
+<code class="sig-name descname">host.$name.content.xml.sc3ml</code><a class="headerlink" href="#confval-host.$name.content.xml.sc3ml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Some FDSNWS services allow to query event
+information in the native SCML format.
+Activate this option to save the conversion
+step between QuakeML and SCML if sc3ml is
+supported by the server.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.content.xml.include.*</strong>
+<em>Defines SCML structures to include in requests.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.content.xml.include.allOrigins">
+<code class="sig-name descname">host.$name.content.xml.include.allOrigins</code><a class="headerlink" href="#confval-host.$name.content.xml.include.allOrigins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Request all origins for events.
+Default is data center
+dependent but is suggested to be the
+preferred origin only.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.content.xml.include.allMagnitudes">
+<code class="sig-name descname">host.$name.content.xml.include.allMagnitudes</code><a class="headerlink" href="#confval-host.$name.content.xml.include.allMagnitudes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Request all magnitudes for events.
+Default is data center
+dependent but is suggested to be the
+preferred magnitude only.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.content.xml.include.arrivals">
+<code class="sig-name descname">host.$name.content.xml.include.arrivals</code><a class="headerlink" href="#confval-host.$name.content.xml.include.arrivals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Request all phase arrivals.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>host.$name.content.xml.xslt.*</strong>
+<em>Parameters controlling the QuakeML to SCML conversion</em>
+<em>using a XSLT script shipped with the SeisComP installation.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-host.$name.content.xml.xslt.version">
+<code class="sig-name descname">host.$name.content.xml.xslt.version</code><a class="headerlink" href="#confval-host.$name.content.xml.xslt.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>SCML schema version used during export.
+If not specified, the largest version
+available under &#64;DATADIR&#64;/xml/ is used.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.content.xml.xslt.idPrefix">
+<code class="sig-name descname">host.$name.content.xml.xslt.idPrefix</code><a class="headerlink" href="#confval-host.$name.content.xml.xslt.idPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>ID prefix to remove from publicID attributes
+and references thereof. The QuakeML schema enforces
+a strict ID schema which causes problems in SeisComP
+applications during processing and visualization.
+E.g., when fetching events from service.iris.edu
+you might want to set this parameter to
+‘smi:service.iris.edu/fdsnws/event/1/query?’</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-host.$name.content.xml.xslt.custom">
+<code class="sig-name descname">host.$name.content.xml.xslt.custom</code><a class="headerlink" href="#confval-host.$name.content.xml.xslt.custom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Path of a custom XSLT conversion script.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="command-line-options">
+<h2>Command-Line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--daemon</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run as daemon. This means the application will fork itself and
+doesn’t need to be started with &amp;.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id2">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-print-component">
+<code class="sig-name descname">--print-component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-print-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each log entry print the component right after the
+log level. By default the component output is enabled
+for file output but disabled for console output.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-trace">
+<code class="sig-name descname">--trace</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trace mode: –verbosity=4 –console=1 –print-component=1 –print-context=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fdsnws2ql</a><ul>
+<li><a class="reference internal" href="#module-configuration">Module Configuration</a></li>
+<li><a class="reference internal" href="#command-line-options">Command-Line Options</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quakelink.html"
+                        title="previous chapter">quakelink</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ql2ql.html"
+                        title="next chapter">ql2ql</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/fdsnws2ql.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="content">
+        Release <b></b> version <b>2022.192#cea9050e2</b>
+          <div class="copyright">
+            &copy; Copyright <a href="https://www.gempa.de">2013, gempa GmbH.</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,2856 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCQCV" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scqcv \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBQuality control view.\fP
+.SH DESCRIPTION
+.sp
+scqcv provides both, a brief overview of the seismometer network status and a
+detailed view of specific stream parameters. Quality Control (QC) parameters,
+determined by scqc and sent via messaging system, are received and displayed.
+.sp
+scqcv allows to interactively disable or to enable streams for automatic data processing
+based on the observed QC reports.
+.SH DETAILED QC REPORTS PER STATION
+.sp
+\fI\%Tabulator view of scqcv\fP shows the tabular view of the QC report messages.
+Each QC parameter is shown in a column. The default sorting by stream code can
+be changed by pressing a header field of a parameter. A widget displaying the
+currently received waveform data is shown by pressing the cell with the streamID.
+Positioning the mouse over the parameter cell a ToolTip indicates
+more detailed information on the selected parameter. Typing a regular
+expression in the "StreamIDFilter" text entry field results in a stream code
+filter, only displaying the matching stream codes with QC parameter. Green
+colored fields indicate that the QC parameter values lie within the configured
+"good" interval. Red colors indicate that the QC parameters lie outside the
+tolerated value interval \-\- this stream might have an issue. All \fI\%colors are
+configurable\fP\&.
+Click on the table header to sort by the selected value or drag the columns to
+another position. The order of the columns is controlled by \fI\%parameter\fP\&.
+By clicking on a streamID, the past waveforms are displayed at length configured
+by \fI\%streamWidget.length\fP\&.
+.sp
+To \fBdisable / enable\fP a station click on the respective station field in the
+\fIenabled\fP column.
+.INDENT 0.0
+.INDENT 2.5
+[image]
+Tabulator view of scqcv.UNINDENT
+.UNINDENT
+.SH STATION OVERVIEW
+.sp
+\fI\%Status overview of scqcv with a stream widget\fP shows the status overview grouped by network code.
+The status is color coded and the color is derived from a
+\fI\%score\fP per station.
+.sp
+The more the color usually varies from green to dark red, the worse the waveform data might be.
+A dark red color indicates a stream with low quality, e.g. high latency.
+Light to darker red
+represents a badness sum of related QC parameters. Colors are subject to
+changes in near future and are configurable. Pressing a stream code item opens a
+single line table
+with detailed information of the selected stream. Again it is possible to open
+a real time waveform widget by pressing the leading header field indicating
+the stream code.
+.sp
+Typing a regular expression in the bottom text entry field
+results in a stream code filter, only displaying the matching stream codes.
+Disabled stations are crossed out. Click on a stream field to view the detailed
+QC parameters where stations can also be enabled / disabled.
+.INDENT 0.0
+.INDENT 2.5
+[image]
+Status overview of scqcv with a stream widget.UNINDENT
+.UNINDENT
+.sp
+The compact status overview allows a quick impression of the present status of
+all received streams (\fI\%Compact status overview of scqcv\fP). Functionality is equal to the
+status overview grouped by network.
+.sp
+Switch between compact view and
+network seperated view by clicking the checkbox in the bottom line.
+.INDENT 0.0
+.INDENT 2.5
+[image]
+Compact status overview of scqcv.UNINDENT
+.UNINDENT
+.SS Scoring
+.sp
+The score is formed per station as the sum of the counts for the parameters defined,
+e.g., by \fBscore.default\fP\&. The counts are defined per QC parameter by the
+\fIcount\fP parameter of the applicable range, e.g. \fI\%timing.range.$name.count\fP\&.
+.SH SETUP
+.sp
+While some important parameters can be configured using scconfig the configuration
+of others is available by examples in the extensive default configuration of scqcv in
+\fI@DEFAULTCONFIGDIR/scqcv.cfg@\fP
+.sp
+Apply your setup to scqcv.cfg in @SYSTEMCONFIGDIR@ or in @CONFIGDIR@.
+If the parameters are not configured, the defaults configuration will be considered.
+.SS Message groups and QC parameters
+.sp
+Select the desired parameters from the list below. "#" disables a parameter.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+connection.primaryGroup = QC
+connection.subscription = QC, CONFIG
+
+parameter =  "latency           : latency",\e
+                             "delay             : delay",\e
+                             "timing quality    : timing",\e
+                             "offset            : offset",\e
+                             "rms               : rms",\e
+                             "gaps count        : gap",\e
+                             "overlaps count    : overlap",\e
+                             "availability      : availability",\e
+                             "spikes count      : spike"
+#                            "gaps interval     : gapInterval",\e
+#                            "gaps length       : gapLength",\e
+#                            "spikes interval   : spikeInterval",\e
+#                            "spikes amplitude  : spikeAmplitude"
+#                            "overlaps interval : overlapInterval",\e
+#                            "overlaps length   : overlapLength"
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Stream selection
+.sp
+By default all streams configured by the global bindings will be displayed. To limit
+the streams or to use a specific list configure \fBstreams.codes\fP and
+\fI\%streams.cumulative\fP\&.
+.sp
+Example configuration or the AM network:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+# List of channels to display. By default the global configuration is used
+# which can be overwritten with this parameter.
+streams.codes = AM.*.*.*
+
+# Add new streams from WfQ automatically to the list of stream configured in
+# streams.codes.
+streams.cumulative = false
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Properties of QC parameters
+.sp
+Configure intervals, values and format and background colors for QC parameters to
+display in \fBscqcv.cfg\fP\&.
+.sp
+In the configuration the QC parameter is referred to by its unique ConfigName. You may
+generate structures for each parameter starting with its ConfigName. The structures
+contain all configuration parameters. Example for the QC parameter \fItiming quality\fP
+referred to as \fItiming\fP:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+timing.ranges = sane, inter, bad
+timing.format = int
+timing.expire = 600
+timing.useAbsoluteValue = false
+
+timing.range.sane = 90.0, 100.0
+timing.range.inter = 50.0, 90.0
+
+timing.range.bad.count = \-100
+timing.range.bad.color = darkred
+
+timing.range.inter.count = \-1
+timing.range.inter.color = yellow
+
+timing.range.sane.count = 0
+timing.range.sane.color = green
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The mapping of parameter names to ConfigName is configurable by
+\fI\%parameter\fP but the default mapping is available in
+\fB@DEFAULTCONFIGDIR@/scqcv.cfg\fP\&.
+.SS Default mapping of parameter names.
+.TS
+center;
+|l|l|.
+_
+T{
+Parameter name
+T}	T{
+ConfigName
+T}
+_
+T{
+latency
+T}	T{
+latency
+T}
+_
+T{
+delay
+T}	T{
+delay
+T}
+_
+T{
+timing quality
+T}	T{
+timing
+T}
+_
+T{
+offset
+T}	T{
+offset
+T}
+_
+T{
+rms
+T}	T{
+rms
+T}
+_
+T{
+gaps count
+T}	T{
+gap
+T}
+_
+T{
+overlaps count
+T}	T{
+overlap
+T}
+_
+T{
+availability
+T}	T{
+availability
+T}
+_
+T{
+spikes count
+T}	T{
+spike
+T}
+_
+T{
+gaps interval
+T}	T{
+gapInterval
+T}
+_
+T{
+gaps length
+T}	T{
+gapLength
+T}
+_
+T{
+spikes interval
+T}	T{
+spikeInterval
+T}
+_
+T{
+spikes amplitude
+T}	T{
+spikeAmplitude
+T}
+_
+T{
+overlaps interval
+T}	T{
+overlapInterval
+T}
+_
+T{
+overlaps length
+T}	T{
+overlapLength
+T}
+_
+.TE
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scqcv.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scqcv.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scqcv.cfg\fP
+.fi
+.sp
+.sp
+scqcv inherits global options\&.
+.INDENT 0.0
+.TP
+.B parameter
+Type: \fIlist:string\fP
+.sp
+List of QC parameters to be displayed in the details table. Read the scqc documentation
+for a list of available QC parameters and the default configuration
+of scqcv $SEISCOMP_ROOT/etc/defaults/scqcv.cfg for more examples.
+.sp
+Format: "Parameter name : ConfigName"
+.sp
+Example: "delay : delay","spikes count : spike","spikes amplitude : spikeAmplitude"
+Refer to the parameters by their ConfigName to configure the attributes.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B streams.codes
+Type: \fIlist:string\fP
+.sp
+The list of channel codes to be displayed. List items may
+contain wildcards and are separated by comma.
+The list is  intersected with all channels configured in inventory.
+.sp
+Examples:
+.sp
+default : display all streams configured by global bindings
+.sp
+default, PF.BON.00.HH? : display default and all HH streams of PF.BON.00
+.UNINDENT
+.INDENT 0.0
+.TP
+.B streams.cumulative
+Type: \fIboolean\fP
+.sp
+Add new streams automatically to the streams
+configured in streams.codes when waveform QC parameters are
+provided for these streams.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBstreamWidget.*\fP
+\fIControl the stream widget which opens when clicking on a stream\fP
+\fIname in the detailed table.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B streamWidget.length
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Length of data to be displayed.
+Default is \fB600\fP\&.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBscore.*\fP
+\fIParameters controlling the overall QC score of a station.\fP
+\fIThe score is computed from the valid count parameter of the\fP
+\fIdefined ranges.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B score.default.ranges
+Type: \fIlist:string\fP
+.sp
+Ranges to be considered for forming the score. Set the
+count parameter om the respective range section for
+controlling the contribution of this range.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdefault.*\fP
+\fIDefault configuration for all QC parameters. The configuration\fP
+\fIcan be extended to each QC parameter by placing\fP
+\fI"default" with the parameter name in scqcv.cfg. Examples for\fP
+\fIsome QC parameters are given below.\fP
+**
+\fIRead the scqc documentation for a list of available QC\fP
+\fIparameters and the default configuration of scqcv\fP
+\fI$SEISCOMP_ROOT/etc/defaults/scqcv.cfg for more examples.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered.
+The range profiles define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+Default is \fBbad, sane\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdefault.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdefault.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+default.range.a.value1 = ...
+default.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+default.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B default.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBavailability.*\fP
+\fIParameters controlling the display of the QC parameter \(aqavailability\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBavailability.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBavailability.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+availability.range.a.value1 = ...
+availability.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+availability.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B availability.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdelay.*\fP
+\fIParameters controlling the display of the QC parameter \(aqdelay\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdelay.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBdelay.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+delay.range.a.value1 = ...
+delay.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+delay.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B delay.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBgap.*\fP
+\fIParameters controlling the display of the QC parameter \(aqgaps count\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBgap.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBgap.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+gap.range.a.value1 = ...
+gap.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+gap.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gap.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBgapLength.*\fP
+\fIParameters controlling the display of the QC parameter \(aqgaps length\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBgapLength.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBgapLength.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+gapLength.range.a.value1 = ...
+gapLength.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+gapLength.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapLength.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBgapInterval.*\fP
+\fIParameters controlling the display of the QC parameter \(aqgaps interval\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBgapInterval.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBgapInterval.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+gapInterval.range.a.value1 = ...
+gapInterval.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+gapInterval.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B gapInterval.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBlatency.*\fP
+\fIParameters controlling the display of the QC parameter \(aqlatency\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBlatency.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBlatency.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+latency.range.a.value1 = ...
+latency.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+latency.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B latency.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoffset.*\fP
+\fIParameters controlling the display of the QC parameter \(aqoffset\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoffset.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoffset.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+offset.range.a.value1 = ...
+offset.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+offset.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B offset.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoverlap.*\fP
+\fIParameters controlling the display of the QC parameter \(aqoverlaps count\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoverlap.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoverlap.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+overlap.range.a.value1 = ...
+overlap.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+overlap.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlap.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoverlapInterval.*\fP
+\fIParameters controlling the display of the QC parameter \(aqoverlaps interval\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoverlapInterval.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoverlapInterval.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+overlapInterval.range.a.value1 = ...
+overlapInterval.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+overlapInterval.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapInterval.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoverlapLength.*\fP
+\fIParameters controlling the display of the QC parameter \(aqoverlaps length\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoverlapLength.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBoverlapLength.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+overlapLength.range.a.value1 = ...
+overlapLength.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+overlapLength.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B overlapLength.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBrms.*\fP
+\fIParameters controlling the display of the QC parameter \(aqrms\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBrms.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBrms.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+rms.range.a.value1 = ...
+rms.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+rms.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rms.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBspike.*\fP
+\fIParameters controlling the display of the QC parameter \(aqspikes count\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBspike.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBspike.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+spike.range.a.value1 = ...
+spike.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+spike.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spike.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBspikeAmplitude.*\fP
+\fIParameters controlling the display of the QC parameter \(aqspikes amplitude\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBspikeAmplitude.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBspikeAmplitude.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+spikeAmplitude.range.a.value1 = ...
+spikeAmplitude.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+spikeAmplitude.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeAmplitude.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBspikeInterval.*\fP
+\fIParameters controlling the display of the QC parameter \(aqspikes interval\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBspikeInterval.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBspikeInterval.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+spikeInterval.range.a.value1 = ...
+spikeInterval.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+spikeInterval.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B spikeInterval.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBtiming.*\fP
+\fIParameters controlling the display of the QC parameter \(aqtiming quality\(aq\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.ranges
+Type: \fIlist:string\fP
+.sp
+Names of range profile to be considered
+The range profiles s define the background color table
+fields depending on the field value. Add the default
+ranges for which different intervals and the color are
+configured.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.format
+Type: \fIstring\fP
+.sp
+Values are: int, float, percent, timeSpan
+.sp
+Displays raw values if unset.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.expire
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Default time in seconds, how long a value is displayed in scqcv
+if no update is received. Setting to 0 means, show value until
+updated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.useAbsoluteValue
+Type: \fIboolean\fP
+.sp
+Activate to display absolute values (modulus).
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBtiming.range.*\fP
+\fIRange parameters overriding parameters from the general\fP
+\fIrange section below. Unset values or range profiles\fP
+\fIundefined here will be inherited from the general range\fP
+\fIsection.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBtiming.range.$name.*\fP
+$name is a placeholder for the name to be used and needs to be added to \fBranges\fP to become active.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+ranges = a,b
+timing.range.a.value1 = ...
+timing.range.b.value1 = ...
+# c is not active because it has not been added
+# to the list of ranges
+timing.range.c.value1 = ...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B timing.range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBrange.*\fP
+\fIRange parameters defining default values which can be overridden\fP
+\fIper QC parameter in the section of this parameter.\fP
+\fIMore ranges can be added by adjusting scqcv.cfg e.g. in\fP
+\fI@SYSTEMCONFIGDIR@/.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B range.sane
+Type: \fIlist:double\fP
+.sp
+Value interval for range sane
+.UNINDENT
+.INDENT 0.0
+.TP
+.B range.inter
+Type: \fIlist:double\fP
+.sp
+Value interval for range inter
+.UNINDENT
+.INDENT 0.0
+.TP
+.B range.bad
+Type: \fIlist:double\fP
+.sp
+Value interval for range bad
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBrange.$name.*\fP
+$name is a placeholder for the name to be used.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B range.$name.count
+Type: \fIdouble\fP
+.sp
+Contribution of this range for computing the score.
+The range must be considered.
+Default is \fB0\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B range.$name.color
+Type: \fIstring\fP
+.sp
+A color defined by the color definitions below.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B range.$name.action
+Type: \fIstring\fP
+.sp
+Possible values: enableStream, disableStream
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBcolor.*\fP
+\fIColor definitions. More colors can be added by adjusting\fP
+\fIscqcv.cfg e.g. in @SYSTEMCONFIGDIR@/.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.yellow
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.green
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.blue
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.grey
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.grey1
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.darkred
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.yellow
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red01
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red02
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red03
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red04
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red05
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red06
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red07
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red08
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red09
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.INDENT 0.0
+.TP
+.B color.red10
+Type: \fIlist:string\fP
+.sp
+Color names or R, G, B, alpha values
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBformat.*\fP
+\fIFormat describtions for showing values. The format parameter\fP
+\fIis defined seprately for earch parameter but the actual format\fP
+\fIcan be adjusted here.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B format.float
+Type: \fIint\fP
+.sp
+Number of decimal values shown for parameters of format float.
+Default is \fB2\fP\&.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Examples &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Getting the Source Code" href="build.html" />
+    <link rel="prev" title="seiscomp.client" href="api-python-client.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="build.html" title="Getting the Source Code"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="api-python-client.html" title="seiscomp.client"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="sdk.html" >Software Development Kit</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="sdk-python.html" accesskey="U">Python</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="examples">
+<span id="sdk-python-examples"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="simple-messaging-client">
+<h2>Simple messaging client<a class="headerlink" href="#simple-messaging-client" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
+<p>Example client that connects to the messaging, listens for event
+objects and dumps the event IDs.</p>
+</div>
+<div class="section" id="goal">
+<h3>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h3>
+<p>Illustrate the basic messaging concepts.</p>
+</div>
+<div class="section" id="script">
+<h3>Script<a class="headerlink" href="#script" title="Permalink to this headline">¶</a></h3>
+<p>This script was demonstrated at the <cite>SeisComP</cite> workshop in Erice. It should be
+relatively self-explanatory, but full understanding does require certain knowlege
+of Python.</p>
+<p>The script does nothing but</p>
+<ul class="simple">
+<li><p>connect to a <cite>SeisComP</cite> messaging server</p></li>
+<li><p>subscribe to messages sent to messaging group “EVENT”</p></li>
+<li><p>listen to these messages</p></li>
+<li><p>dump the event IDs to the screen</p></li>
+</ul>
+<div class="section" id="event-listener-py">
+<h4>event-listener.py<a class="headerlink" href="#event-listener-py" title="Permalink to this headline">¶</a></h4>
+<p>No actual real-world use case but a truly minimum example for a <cite>SeisComP</cite> application.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env seiscomp-python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">seiscomp</span> <span class="k">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">datamodel</span>
+<span class="kn">from</span> <span class="nn">seiscomp.client</span> <span class="k">import</span> <span class="n">Protocol</span>
+
+
+<span class="k">class</span> <span class="nc">EventListener</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMessagingEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDatabaseEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPrimaryMessagingGroup</span><span class="p">(</span><span class="n">Protocol</span><span class="o">.</span><span class="n">LISTENER_GROUP</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addMessagingSubscription</span><span class="p">(</span><span class="s2">&quot;EVENT&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLoggingToStdErr</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">doSomethingWithEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1">#################################</span>
+            <span class="c1"># Include your custom code here #</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;event.publicID = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">publicID</span><span class="p">()))</span>
+            <span class="c1">#################################</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">updateObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentID</span><span class="p">,</span> <span class="n">scobject</span><span class="p">):</span>
+        <span class="c1"># called if an updated object is received</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">scobject</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;received update for event </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">publicID</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">doSomethingWithEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">addObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentID</span><span class="p">,</span> <span class="n">scobject</span><span class="p">):</span>
+        <span class="c1"># called if a new object is received</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">scobject</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;received new event </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">publicID</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">doSomethingWithEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># does not need to be reimplemented. it is just done to illustrate</span>
+        <span class="c1"># how to override methods</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hi! The EventListener is now running.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">EventListener</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">),</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Note that the EventListener class is derived from the application class
+seiscomp.client.Application from which it inherits most of the functionality.
+For instance the ability to connect to the messaging and to the database are
+both provided by seiscomp.client.Application; the EventListener only has to
+enable messaging and database usage in the __init__ routine. The real action
+takes place in the doSomethingWithEvent routine, which is called by both
+updateObject and addObject, depending on whether the event object received is a
+newly added or just and updated event.</p>
+</div>
+</div>
+</div>
+<div class="section" id="inventory-examples">
+<h2>Inventory examples<a class="headerlink" href="#inventory-examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Summary<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Various Python example scripts that retrieve inventory information from the
+database.</p>
+</div>
+<div class="section" id="id2">
+<h3>Goal<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Illustrate the usefulness of simple Python scripts to retrieve inventory
+information.</p>
+</div>
+<div class="section" id="scripts">
+<h3>Scripts<a class="headerlink" href="#scripts" title="Permalink to this headline">¶</a></h3>
+<p>The scripts in this section all deal with inventory access. All need to be
+invoked with the command-line <code class="docutils literal notranslate"><span class="pre">-d</span></code> option to specify the <cite>SeisComP</cite> database
+from which the information is to be read. For example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python configured-streams.py -d localhost
+</pre></div>
+</div>
+<div class="section" id="configured-streams-py">
+<h4>configured-streams.py<a class="headerlink" href="#configured-streams-py" title="Permalink to this headline">¶</a></h4>
+<p>Print a list of all streams configured on a <cite>SeisComP</cite> system.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env seiscomp-python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">seiscomp</span> <span class="k">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">datamodel</span>
+
+
+<span class="k">class</span> <span class="nc">ListStreamsApp</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMessagingEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDatabaseEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLoggingToStdErr</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDaemonEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1">#       self.setLoadInventoryEnabled(True)</span>
+
+    <span class="k">def</span> <span class="nf">validateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">validateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dbr</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">DatabaseReader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">())</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">GMT</span><span class="p">()</span>
+            <span class="n">inv</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">Inventory</span><span class="p">()</span>
+            <span class="n">dbr</span><span class="o">.</span><span class="n">loadNetworks</span><span class="p">(</span><span class="n">inv</span><span class="p">)</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">inet</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inv</span><span class="o">.</span><span class="n">networkCount</span><span class="p">()):</span>
+                <span class="n">network</span> <span class="o">=</span> <span class="n">inv</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">inet</span><span class="p">)</span>
+                <span class="n">dbr</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">ista</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">stationCount</span><span class="p">()):</span>
+                    <span class="n">station</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">station</span><span class="p">(</span><span class="n">ista</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="n">station</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="n">station</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">now</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+                    <span class="k">for</span> <span class="n">iloc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">station</span><span class="o">.</span><span class="n">sensorLocationCount</span><span class="p">()):</span>
+                        <span class="n">location</span> <span class="o">=</span> <span class="n">station</span><span class="o">.</span><span class="n">sensorLocation</span><span class="p">(</span><span class="n">iloc</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">istr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">streamCount</span><span class="p">()):</span>
+                            <span class="n">stream</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="n">istr</span><span class="p">)</span>
+                            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">network</span><span class="o">.</span><span class="n">code</span><span class="p">(),</span> <span class="n">station</span><span class="o">.</span><span class="n">code</span><span class="p">(),</span>
+                                           <span class="n">location</span><span class="o">.</span><span class="n">code</span><span class="p">(),</span> <span class="n">stream</span><span class="o">.</span><span class="n">code</span><span class="p">()))</span>
+
+            <span class="k">for</span> <span class="n">net</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">cha</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:2}</span><span class="s2"> </span><span class="si">{:5}</span><span class="s2"> </span><span class="si">{:2}</span><span class="s2"> </span><span class="si">{:3}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">cha</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">ListStreamsApp</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">),</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="station-coordinates-py">
+<h4>station-coordinates.py<a class="headerlink" href="#station-coordinates-py" title="Permalink to this headline">¶</a></h4>
+<p>Print the coordinates of all stations configured on a <cite>SeisComP</cite> system.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env seiscomp-python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">seiscomp</span> <span class="k">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">datamodel</span>
+
+
+<span class="k">class</span> <span class="nc">InvApp</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMessagingEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDatabaseEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLoggingToStdErr</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">validateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">validateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">GMT</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">dbr</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">DatabaseReader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">())</span>
+            <span class="n">inv</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">Inventory</span><span class="p">()</span>
+            <span class="n">dbr</span><span class="o">.</span><span class="n">loadNetworks</span><span class="p">(</span><span class="n">inv</span><span class="p">)</span>
+            <span class="n">nnet</span> <span class="o">=</span> <span class="n">inv</span><span class="o">.</span><span class="n">networkCount</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">inet</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nnet</span><span class="p">):</span>
+                <span class="n">net</span> <span class="o">=</span> <span class="n">inv</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">inet</span><span class="p">)</span>
+                <span class="n">dbr</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+                <span class="n">nsta</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">stationCount</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">ista</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsta</span><span class="p">):</span>
+                    <span class="n">sta</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">station</span><span class="p">(</span><span class="n">ista</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">elev</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="n">elevation</span><span class="p">()</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="n">elev</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;NaN&quot;</span><span class="p">)</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:2}</span><span class="s2"> </span><span class="si">{:5}</span><span class="s2"> </span><span class="si">{:9.4f}</span><span class="s2"> </span><span class="si">{:9.4f}</span><span class="s2"> </span><span class="si">{:6.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">net</span><span class="o">.</span><span class="n">code</span><span class="p">(),</span> <span class="n">sta</span><span class="o">.</span><span class="n">code</span><span class="p">(),</span> <span class="n">sta</span><span class="o">.</span><span class="n">latitude</span><span class="p">(),</span> <span class="n">sta</span><span class="o">.</span><span class="n">longitude</span><span class="p">(),</span> <span class="n">elev</span><span class="p">)</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">now</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="n">lines</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">InvApp</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">),</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="channel-gains-py">
+<h4>channel-gains.py<a class="headerlink" href="#channel-gains-py" title="Permalink to this headline">¶</a></h4>
+<p>Print channel gains for all streams configured on a <cite>SeisComP</cite> system.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env seiscomp-python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">seiscomp</span> <span class="k">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">datamodel</span>
+
+
+<span class="k">class</span> <span class="nc">InvApp</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMessagingEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDatabaseEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLoggingToStdErr</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">validateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">validateParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">GMT</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">dbq</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">DatabaseQuery</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">())</span>
+            <span class="n">inv</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">Inventory</span><span class="p">()</span>
+            <span class="n">dbq</span><span class="o">.</span><span class="n">loadNetworks</span><span class="p">(</span><span class="n">inv</span><span class="p">)</span>
+            <span class="n">nnet</span> <span class="o">=</span> <span class="n">inv</span><span class="o">.</span><span class="n">networkCount</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">inet</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nnet</span><span class="p">):</span>
+                <span class="n">network</span> <span class="o">=</span> <span class="n">inv</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">inet</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">working on network </span><span class="si">{:2}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">code</span><span class="p">()))</span>
+                <span class="n">dbq</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+                <span class="n">nsta</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">stationCount</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">ista</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsta</span><span class="p">):</span>
+                    <span class="n">station</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">station</span><span class="p">(</span><span class="n">ista</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="n">station</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="n">station</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">now</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+                    <span class="c1"># now we know that this is an operational station</span>
+                    <span class="k">for</span> <span class="n">iloc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">station</span><span class="o">.</span><span class="n">sensorLocationCount</span><span class="p">()):</span>
+                        <span class="n">location</span> <span class="o">=</span> <span class="n">station</span><span class="o">.</span><span class="n">sensorLocation</span><span class="p">(</span><span class="n">iloc</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">istr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">streamCount</span><span class="p">()):</span>
+                            <span class="n">stream</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="n">istr</span><span class="p">)</span>
+                            <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:2}</span><span class="s2"> </span><span class="si">{:5}</span><span class="s2"> </span><span class="si">{:2}</span><span class="s2"> </span><span class="si">{:3}</span><span class="s2"> </span><span class="si">{:g}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">network</span><span class="o">.</span><span class="n">code</span><span class="p">(),</span> <span class="n">station</span><span class="o">.</span><span class="n">code</span><span class="p">(),</span> <span class="n">location</span><span class="o">.</span><span class="n">code</span><span class="p">(),</span>
+                                <span class="n">stream</span><span class="o">.</span><span class="n">code</span><span class="p">(),</span> <span class="n">stream</span><span class="o">.</span><span class="n">gain</span><span class="p">())</span>
+                            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="n">lines</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">InvApp</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">),</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="simple-waveform-client">
+<h2>Simple waveform client<a class="headerlink" href="#simple-waveform-client" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>Summary<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Example client that connects to a RecordStream service and dumps the content
+to stdout.</p>
+</div>
+<div class="section" id="id4">
+<h3>Goal<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Illustrate the basic RecordStream concepts.</p>
+</div>
+<div class="section" id="id5">
+<h3>Script<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="waveform-client-py">
+<h4>waveform-client.py<a class="headerlink" href="#waveform-client-py" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env seiscomp-python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">seiscomp</span> <span class="k">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">client</span>
+
+
+<span class="k">class</span> <span class="nc">App</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">StreamApplication</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">StreamApplication</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span>
+        <span class="c1"># Do not connect to messaging and do not use database at all</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMessagingEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDatabaseEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">StreamApplication</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># For testing purposes we subscribe to the last 5 minutes of data.</span>
+        <span class="c1"># To use real-time data, do not define an end time and configure</span>
+        <span class="c1"># a real-time capable backend such as Seedlink.</span>
+
+        <span class="c1"># First, query now</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">GMT</span><span class="p">()</span>
+        <span class="c1"># Substract 5 minutes for the start time</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="n">core</span><span class="o">.</span><span class="n">TimeSpan</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Set the start time in our RecordStream</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordStream</span><span class="p">()</span><span class="o">.</span><span class="n">setStartTime</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+        <span class="c1"># And the end time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordStream</span><span class="p">()</span><span class="o">.</span><span class="n">setEndTime</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
+
+        <span class="c1"># Now add some streams to fetch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordStream</span><span class="p">()</span><span class="o">.</span><span class="n">addStream</span><span class="p">(</span><span class="s2">&quot;GE&quot;</span><span class="p">,</span> <span class="s2">&quot;MORC&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;BHZ&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordStream</span><span class="p">()</span><span class="o">.</span><span class="n">addStream</span><span class="p">(</span><span class="s2">&quot;GE&quot;</span><span class="p">,</span> <span class="s2">&quot;MORC&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;BHN&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># handleRecord is called when a new record is being read from the</span>
+    <span class="c1"># RecordStream</span>
+    <span class="k">def</span> <span class="nf">handleRecord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rec</span><span class="p">):</span>
+        <span class="c1"># Print the streamID which is a join of NSLC separated with &#39;.&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">streamID</span><span class="p">())</span>
+        <span class="c1"># Print the records start time in ISO format</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">startTime</span><span class="p">()</span><span class="o">.</span><span class="n">iso</span><span class="p">()))</span>
+        <span class="c1"># Print the sampling frequency</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:f}</span><span class="s2"> Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">samplingFrequency</span><span class="p">()))</span>
+        <span class="c1"># If data is available</span>
+        <span class="k">if</span> <span class="n">rec</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
+            <span class="c1"># Print the number of samples</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">{:d}</span><span class="s2"> samples&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">data</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="p">()))</span>
+            <span class="c1"># Try to extract a float array. If the samples are of other</span>
+            <span class="c1"># data types, use rec.dataType() to query the type and use</span>
+            <span class="c1"># the appropriate array classes.</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">FloatArray</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+            <span class="c1"># Print the samples</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  data: </span><span class="si">{:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">())])))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  no data&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">),</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The command-line option <code class="docutils literal notranslate"><span class="pre">-I</span></code> can be used to configure the record
+stream backend when running the test application.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python testrec.py -I slink://localhost:18000
+</pre></div>
+</div>
+<p>or to ask Arclink for data</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python testrec.py -I arclink://localhost:18001
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="waveform-client-and-record-filtering">
+<h2>Waveform client and record filtering<a class="headerlink" href="#waveform-client-and-record-filtering" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h3>Summary<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>Example client that connects to a RecordStream service, filters the records
+with a given <cite>SeisComP</cite> filter and dumps the content to stdout.</p>
+</div>
+<div class="section" id="id7">
+<h3>Goal<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>Illustrate the recordfilter concepts.</p>
+</div>
+<div class="section" id="id8">
+<h3>Script<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="waveform-filter-py">
+<h4>waveform-filter.py<a class="headerlink" href="#waveform-filter-py" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env seiscomp-python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">seiscomp</span> <span class="k">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">math</span><span class="p">,</span> <span class="n">logging</span>
+
+
+<span class="k">class</span> <span class="nc">App</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">StreamApplication</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">StreamApplication</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span>
+        <span class="c1"># Do not connect to messaging and do not use database at all</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMessagingEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDatabaseEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">StreamApplication</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># For testing purposes we subscribe to the last 5 minutes of data.</span>
+        <span class="c1"># To use real-time data, do not define an end time and configure</span>
+        <span class="c1"># a real-time capable backend such as Seedlink.</span>
+
+        <span class="c1"># First, query now</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">GMT</span><span class="p">()</span>
+        <span class="c1"># Substract 5 minutes for the start time</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="n">core</span><span class="o">.</span><span class="n">TimeSpan</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Set the start time in our RecordStream</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordStream</span><span class="p">()</span><span class="o">.</span><span class="n">setStartTime</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+        <span class="c1"># And the end time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordStream</span><span class="p">()</span><span class="o">.</span><span class="n">setEndTime</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
+
+        <span class="c1"># Now add some streams to fetch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordStream</span><span class="p">()</span><span class="o">.</span><span class="n">addStream</span><span class="p">(</span><span class="s2">&quot;GE&quot;</span><span class="p">,</span> <span class="s2">&quot;MORC&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;BHZ&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordStream</span><span class="p">()</span><span class="o">.</span><span class="n">addStream</span><span class="p">(</span><span class="s2">&quot;GE&quot;</span><span class="p">,</span> <span class="s2">&quot;MORC&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;BHN&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create IIR filter instance that deals with data (samples)</span>
+        <span class="n">filterIIR</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">InPlaceFilterF</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="s2">&quot;BW(4,1,10&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filterIIR</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to create filter&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Create a record filter that applies the given IIR filter to</span>
+        <span class="c1"># each record fed. Deals with gaps and sps changes on record basis.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recordFilter</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">RecordIIRFilterF</span><span class="p">(</span><span class="n">filterIIR</span><span class="p">)</span>
+
+        <span class="c1"># Demultiplexes record volumes and runs the passed filter</span>
+        <span class="c1"># on each stream.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">demuxer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">RecordDemuxFilter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recordFilter</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># handleRecord is called when a new record is being read from the</span>
+    <span class="c1"># RecordStream</span>
+    <span class="k">def</span> <span class="nf">handleRecord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_rec</span><span class="p">):</span>
+        <span class="c1"># Feed the raw record into the demuxer and filter it</span>
+        <span class="n">rec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">demuxer</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">raw_rec</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rec</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Print the streamID which is a join of NSLC separated with &#39;.&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">streamID</span><span class="p">())</span>
+        <span class="c1"># Print the records start time in ISO format</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">{:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">startTime</span><span class="p">()</span><span class="o">.</span><span class="n">iso</span><span class="p">()))</span>
+        <span class="c1"># Print the sampling frequency</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">{:f}</span><span class="s2"> Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">samplingFrequency</span><span class="p">()))</span>
+        <span class="c1"># If data is available</span>
+        <span class="k">if</span> <span class="n">rec</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
+            <span class="c1"># Print the number of samples</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">{:d}</span><span class="s2"> samples&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">data</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="p">()))</span>
+            <span class="c1"># Try to extract a float array. If the samples are of other</span>
+            <span class="c1"># data types, use rec.dataType() to query the type and use</span>
+            <span class="c1"># the appropriate array classes.</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">FloatArray</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+            <span class="c1"># Print the samples</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  data: </span><span class="si">{:s}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">())])))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  no data&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">),</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#simple-messaging-client">Simple messaging client</a><ul>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#script">Script</a><ul>
+<li><a class="reference internal" href="#event-listener-py">event-listener.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#inventory-examples">Inventory examples</a><ul>
+<li><a class="reference internal" href="#id1">Summary</a></li>
+<li><a class="reference internal" href="#id2">Goal</a></li>
+<li><a class="reference internal" href="#scripts">Scripts</a><ul>
+<li><a class="reference internal" href="#configured-streams-py">configured-streams.py</a></li>
+<li><a class="reference internal" href="#station-coordinates-py">station-coordinates.py</a></li>
+<li><a class="reference internal" href="#channel-gains-py">channel-gains.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#simple-waveform-client">Simple waveform client</a><ul>
+<li><a class="reference internal" href="#id3">Summary</a></li>
+<li><a class="reference internal" href="#id4">Goal</a></li>
+<li><a class="reference internal" href="#id5">Script</a><ul>
+<li><a class="reference internal" href="#waveform-client-py">waveform-client.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waveform-client-and-record-filtering">Waveform client and record filtering</a><ul>
+<li><a class="reference internal" href="#id6">Summary</a></li>
+<li><a class="reference internal" href="#id7">Goal</a></li>
+<li><a class="reference internal" href="#id8">Script</a><ul>
+<li><a class="reference internal" href="#waveform-filter-py">waveform-filter.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api-python-client.html"
+                        title="previous chapter">seiscomp.client</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="build.html"
+                        title="next chapter">Getting the Source Code</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base/sdk-python-examples.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

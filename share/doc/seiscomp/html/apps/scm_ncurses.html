@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>ncurses &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Filter grammar" href="../base/filter-grammar.html" />
+    <link rel="prev" title="email" href="scm_email.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="../base/filter-grammar.html" title="Filter grammar"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scm_email.html" title="email"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../toc/extensions.html" >Extensions</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/extensions/scm.html" accesskey="U">scm</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="ncurses">
+<span id="scm-ncurses"></span><h1>ncurses<a class="headerlink" href="#ncurses" title="Permalink to this headline">¶</a></h1>
+<p>Ncurses output plugin for scm which presents an interactive table of
+processes.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The output is a table where each row contains the information of a
+certain connected client. The rows are sorted in descending order based on the
+contents of the name column. Other columns can be interactively selected with
+the left and right arrow key. The r key changes the sorting to ascending order.
+The displayed parameter are the name of the binary (prog), the name of the
+client (name), the name of the host name from which the client is connected
+(host), the available memory on the clients host in kb (hmem), the clients
+memory usage in kb (cmem), the percentage of the clients memory usage (mem),
+the CPU usage (cpu), the amount of queued messages to be processed by the
+client (q), the average number of messages in the queue (mq), the connection
+time of the client to the master (uptime), the elapsed time since the last
+client update (resp).</p>
+<div class="figure align-default" id="id1">
+<img alt="../_images/scm_curses.png" src="../_images/scm_curses.png" />
+<p class="caption"><span class="caption-text">top like perspective of ncurses plugin</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="plugin">
+<h2>Plugin<a class="headerlink" href="#plugin" title="Permalink to this headline">¶</a></h2>
+<p>The Ncurses plugin is installed under <code class="file docutils literal notranslate"><span class="pre">share/plugins/monitor/mncursesplugin.so</span></code>.</p>
+<p>To add the plugin to <a class="reference internal" href="scm.html#scm"><span class="std std-ref">scm</span></a>, add it to the plugin list:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">plugins</span> <span class="o">=</span> <span class="si">${</span><span class="nv">plugins</span><span class="si">}</span>, mncursesplugin
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ncurses</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#plugin">Plugin</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scm_email.html"
+                        title="previous chapter">email</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../base/filter-grammar.html"
+                        title="next chapter">Filter grammar</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scm_ncurses.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

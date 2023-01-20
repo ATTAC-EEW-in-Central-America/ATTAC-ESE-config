@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>import_inv &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="inv2dlsv" href="inv2dlsv.html" />
+    <link rel="prev" title="fdsnxml2inv" href="fdsnxml2inv.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="inv2dlsv.html" title="inv2dlsv"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="fdsnxml2inv.html" title="fdsnxml2inv"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/inventory.html" accesskey="U">Inventory</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="import-inv">
+<span id="id1"></span><h1>import_inv<a class="headerlink" href="#import-inv" title="Permalink to this headline">¶</a></h1>
+<p><strong>Import inventory information from various sources.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>import_inv is a wrapper for inventory converters. Inventory converters convert
+an input format such as</p>
+<table class="colwidths-given docutils align-left">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Format</p></th>
+<th class="head"><p>Converter</p></th>
+<th class="head"><p>Conversion</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>scml</p></td>
+<td><p><span class="xref std std-ref">scml2inv</span></p></td>
+<td><p><a class="reference internal" href="../base/concepts/inventory.html#concepts-inventory"><span class="std std-ref">SeisComP inventory XML</span></a>, schema: <code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/share/xml/</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>sc3</p></td>
+<td><p><span class="xref std std-ref">sc32inv</span></p></td>
+<td><p>Alias for scml for backwards compatibility to SeisComP3</p></td>
+</tr>
+<tr class="row-even"><td><p>arclink</p></td>
+<td><p><span class="xref std std-ref">arclink2inv</span></p></td>
+<td><p>Arclink inventory XML</p></td>
+</tr>
+<tr class="row-odd"><td><p>dlsv</p></td>
+<td><p><a class="reference internal" href="dlsv2inv.html#dlsv2inv"><span class="std std-ref">dlsv2inv</span></a></p></td>
+<td><p><a class="reference external" href="http://www.iris.edu/data/dataless.htm">dataless SEED</a></p></td>
+</tr>
+<tr class="row-even"><td><p>fdsnxml</p></td>
+<td><p><a class="reference internal" href="fdsnxml2inv.html#fdsnxml2inv"><span class="std std-ref">fdsnxml2inv</span></a></p></td>
+<td><p><a class="reference external" href="http://www.fdsn.org/xml/station/">FDSN StationXML</a></p></td>
+</tr>
+</tbody>
+</table>
+<p>to SeisComP inventory XML which is read by the trunk config module to
+synchronize the local inventory file pool with the central inventory database.</p>
+<p>For printing all available formats call</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ import_inv <span class="nb">help</span> formats
+</pre></div>
+</div>
+<p>When <strong class="program">import_inv help formats</strong> is called it globs for
+<code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/bin/*2inv</span></code>.
+If another format needs to be converted, it is very easy to provide a new
+converter.</p>
+<div class="section" id="converter-interface">
+<h3>Converter interface<a class="headerlink" href="#converter-interface" title="Permalink to this headline">¶</a></h3>
+<p>For making a new converter work with import_inv it must implement an interface
+on shell level. Furthermore the converter program must be named
+<code class="file docutils literal notranslate"><em><span class="pre">format</span></em><span class="pre">2inv</span></code> and must live in <code class="file docutils literal notranslate"><span class="pre">SEISCOMP_ROOT/bin</span></code>.</p>
+<p>The converter program must take the input location (file, directory, URL, …)
+as first parameter and the output file (SeisComP XML) as second parameter. The
+output file must be optional and default to stdout.</p>
+<p>To add a new converter for a new format, e.g. Excel, place the new converter
+program at <code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/bin/excel2inv</span></code>.</p>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>Convert inventory file in FDSN StationXML format (fdsnxml) and copy the content to
+<code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/inventoy/inventory.xml</span></code>. The call will invoke
+<a class="reference internal" href="fdsnxml2inv.html#fdsnxml2inv"><span class="std std-ref">fdsnxml2inv</span></a> for actually making the conversion:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ import_inv fdsnxml inventory_fdsn.xml <span class="nv">$SEISCOMP_ROOT</span>/etc/inventoy/inventory.xml
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="import-inv-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/import_inv.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/import_inv.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/import_inv.cfg</span></code></div>
+</div>
+<p>import_inv inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">import_inv [FORMAT] input [output]</strong></p>
+<p><strong class="program">import_inv help [topic]</strong></p>
+<p>The first form takes the format as first parameter and the input
+and output location. The input location is either a file or directory
+depending on the format and its converter. If the output is not
+given it defaults to seiscomp/etc/inventory/{input}.xml. To write
+the output to stdout, “-” must be used.</p>
+<p>The second form provides help on a particular topic. The only topic
+currently supported is “formats” which prints all available input
+formats.</p>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-import-inv-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-import-inv-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-import-inv-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--daemon</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-import-inv-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run as daemon. This means the application will fork itself and
+doesn’t need to be started with &amp;.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-auto-shutdown">
+<code class="sig-name descname">--auto-shutdown</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-auto-shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable/disable self-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with –start-stop-msg for the master module).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-shutdown-master-module">
+<code class="sig-name descname">--shutdown-master-module</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-shutdown-master-module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the master-module used for auto-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-shutdown-master-username">
+<code class="sig-name descname">--shutdown-master-username</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-shutdown-master-username" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the master-username of the messaging used for
+auto-shutdown. If “shutdown-master-module” is given as well this
+parameter is ignored.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-import-inv-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id2">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-import-inv-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-import-inv-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-import-inv-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-import-inv-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-import-inv-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">import_inv</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
+<li><a class="reference internal" href="#converter-interface">Converter interface</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fdsnxml2inv.html"
+                        title="previous chapter">fdsnxml2inv</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="inv2dlsv.html"
+                        title="next chapter">inv2dlsv</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/import_inv.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

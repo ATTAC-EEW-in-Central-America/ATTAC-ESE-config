@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>System management &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorials" href="tutorials.html" />
+    <link rel="prev" title="Getting Started with SeisComP" href="getting-started.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="tutorials.html" title="Tutorials"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="getting-started.html" title="Getting Started with SeisComP"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="system-management">
+<span id="id1"></span><h1>System management<a class="headerlink" href="#system-management" title="Permalink to this headline">¶</a></h1>
+<p>The installation contains modules for data acquisition, data
+archiving, processing, distribution and much more. To control all these
+modules and to update their configuration the central program <strong class="program">seiscomp</strong>
+is used with commands and options.</p>
+<p><strong class="program">seiscomp</strong> is a Python script installed in
+<code class="file docutils literal notranslate"><span class="pre">seiscomp/bin/seiscomp</span></code>.
+The graphical tool <a class="reference internal" href="../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a> is a user-friendly wrapper
+tool for many commands in <strong class="program">seiscomp</strong>.</p>
+<p>The entire management framework is built upon Python which is portable to different
+platforms. To make <strong class="program">seiscomp</strong> work, ensure that Python is installed on
+your system.</p>
+<p><strong class="program">seiscomp</strong> of a particular installation can be called from anywhere in
+the file system with its full path. It will source the environment of the
+installation automatically. Thus, it is possible to control different
+installations on one computer.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>seiscomp should never run with root privileges unless you know exactly what
+you are doing.</p>
+<p><strong class="program">seiscomp</strong> refuses to work when run with root privileges and issues
+an error. To run it with root privileges the command-line option
+<code class="docutils literal notranslate"><span class="pre">--asroot</span></code> must be given as first parameter, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seiscomp</span> <span class="o">--</span><span class="n">asroot</span> <span class="n">start</span> <span class="n">seedlink</span>
+</pre></div>
+</div>
+</div>
+<p>To get an overview of all available commands, issue</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp/bin/seiscomp <span class="nb">help</span>
+</pre></div>
+</div>
+<p>This will print all commands. To get help for a particular command, append
+it to the <code class="docutils literal notranslate"><span class="pre">help</span></code> command.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp/bin/seiscomp <span class="nb">help</span> <span class="o">[</span>command<span class="o">]</span>
+</pre></div>
+</div>
+<div class="section" id="seiscomp-commands">
+<span id="sec-management-commands"></span><h2>seiscomp Commands<a class="headerlink" href="#seiscomp-commands" title="Permalink to this headline">¶</a></h2>
+<p>The <em>seiscomp</em> script can be executed with additional commands:</p>
+<ul>
+<li><p><strong>alias</strong> create|remove [new-name] [module name]</p>
+<p>Manages module aliases.</p>
+</li>
+<li><p><strong>check</strong> [module list]</p>
+<p>Checks if all passed modules are still running if they have been started.
+If no modules are listed, all modules are checked.</p>
+</li>
+<li><p><strong>disable</strong> [module list]</p>
+<p>The opposite of enable. Removes the file <code class="file docutils literal notranslate"><span class="pre">etc/init/[module].auto</span></code> for
+each module passed.</p>
+</li>
+<li><p><strong>enable</strong> [module list]</p>
+<p>Enables a module to be started and checked automatically when either <strong class="command">start</strong>
+or <strong class="command">check</strong> is called without arguments. This creates a file <code class="file docutils literal notranslate"><span class="pre">etc/init/[module].auto</span></code>
+for each module passed.</p>
+</li>
+<li><p><strong>exec</strong> [cmd]</p>
+<p>Executes a module.</p>
+</li>
+<li><p><strong>help</strong> [command]</p>
+<p>Prints help on commands.</p>
+</li>
+<li><p><strong>install-deps</strong> [packages]</p>
+<p>Installs 3rd party packages on which <cite>SeisComP</cite> depends such as MariaDB or MySQL.
+This is currently only supported for major Linux distributions. A list of packages
+needs to be given. Available packages are: <strong>base</strong>, <strong>GUI</strong>,
+<strong>mariadb-server</strong>, <strong>postgresql-server</strong>, <strong>fdsnws</strong>.</p>
+<ol class="arabic">
+<li><p>Install only base system dependencies:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp install-deps base
+</pre></div>
+</div>
+</li>
+<li><p>Install base system dependencies and MariaDB/MySQL/PostgreSQL server:</p>
+<p>MariaDB</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seiscomp</span> <span class="n">install</span><span class="o">-</span><span class="n">deps</span> <span class="n">base</span> <span class="n">mariadb</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+</div>
+<p>MySQL. Install either MariaDB or MySQL, not both at the same time!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seiscomp</span> <span class="n">install</span><span class="o">-</span><span class="n">deps</span> <span class="n">base</span> <span class="n">mysql</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+</div>
+<p>PostgreSQL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seiscomp</span> <span class="n">install</span><span class="o">-</span><span class="n">deps</span> <span class="n">base</span> <span class="n">postgresql</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+</div>
+</li>
+<li><p>Install also gui and fdsnws dependencies:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp install-deps gui fdsnws
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li><p><strong>list</strong> modules|aliases|enabled|disabled</p>
+<p>Lists items.</p>
+</li>
+<li><p><strong>print</strong> crontab|env</p>
+<p>Prints pre-defined parameters.</p>
+</li>
+<li><p><strong>restart</strong> [module list]</p>
+<p>Restarts all the given modules. If no module is passed, all running and enabled modules
+are first stopped and then restarted.</p>
+</li>
+<li><p><strong>setup</strong></p>
+<p>Initializes the configuration of all available modules. Each module implements
+its own setup handler which is called at this point. The initialization takes
+the installation directory into account and should be repeated when copying
+the system to another directory.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>setup might overwrite previous settings with default values.</p>
+</div>
+</li>
+<li><p><strong>shell</strong></p>
+<p>Starts the interactive <cite>SeisComP</cite> <a class="reference internal" href="#system-management-shell"><span class="std std-ref">shell</span></a>, an
+approach to make configuration and manipulation of bindings more easy on the
+command line.</p>
+</li>
+<li><p><strong>start</strong> [module list]</p>
+<p>Starts all modules in [module list]. If no module is named, all enabled modules are
+started.</p>
+</li>
+<li><p><strong>status</strong> [module list]</p>
+<p>Prints the status of some, started, enabled or all modules.</p>
+</li>
+<li><p><strong>stop</strong> [module list]</p>
+<p>Stops all modules in [module list]. If no module name is given, all running modules are
+stopped.</p>
+</li>
+<li><p><strong>update-config</strong> [module list]</p>
+<p>Updates the configuration. Modules should be able to read the configuration
+files in <code class="file docutils literal notranslate"><span class="pre">etc</span></code> directly, but some modules such as Seedlink need an additional
+step to convert the configuration to their native format. Furthermore all
+trunk station bindings and the inventory need to be synchronized with the
+database. If no module list is given, update-config is called for all available
+modules. Otherwise only the modules passed are updated.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="seiscomp-shell">
+<span id="system-management-shell"></span><h2>SeisComP Shell<a class="headerlink" href="#seiscomp-shell" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>SeisComP</cite> shell can be started with</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp shell
+</pre></div>
+</div>
+<p>which will open a command prompt. The shell is a helper to manage module station
+bindings. Instead of manipulating hundreds of files using difficult commands
+such as <strong class="command">sed</strong> in Bash scripts, shell can be used. It supports:</p>
+<ul class="simple">
+<li><p>list available stations</p></li>
+<li><p>list available profiles of a module</p></li>
+<li><p>list modules to which a station is bound</p></li>
+<li><p>bind stations to modules</p></li>
+<li><p>delete bindings</p></li>
+<li><p>track configuration of a station</p></li>
+</ul>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">================================================================================</span>
+seiscomp <span class="nv">shell</span>
+<span class="o">================================================================================</span>
+
+Welcome to the SeisComP interactive shell. You can get <span class="nb">help</span> about
+available commands with <span class="s1">&#39;help&#39;</span>. <span class="s1">&#39;exit&#39;</span> leaves the shell.
+
+$
+</pre></div>
+</div>
+<p>Enter <strong class="command">help</strong> to get a list of supported commands. The results of all
+commands issued are written to disk immediately and <strong>not buffered</strong>.</p>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p>Assigning the scautopick global profile to all GE stations</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">set</span> profile scautopick global GE.*
+</pre></div>
+</div>
+</li>
+<li><p>Replace all profiles with station configuration for scautopick from GE
+network</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ remove profile scautopick global GE.*
+</pre></div>
+</div>
+</li>
+<li><p>Show bindings for station GE.MORC</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ print station GE.MORC
+<span class="o">[</span>global<span class="o">]</span>
+/home/sysop/seiscomp/etc/key/global/profile_BH
+--------------------------------------------------------------------------------
+<span class="nv">detecStream</span> <span class="o">=</span> BH
+--------------------------------------------------------------------------------
+
+<span class="o">[</span>seedlink<span class="o">]</span>
+/home/sysop/seiscomp/etc/key/seedlink/profile_geofon
+--------------------------------------------------------------------------------
+<span class="nv">sources</span> <span class="o">=</span> chain
+sources.chain.address <span class="o">=</span> geofon.gfz-potsdam.de
+sources.chain.port <span class="o">=</span> <span class="m">18000</span>
+--------------------------------------------------------------------------------
+
+<span class="o">[</span>scautopick<span class="o">]</span>
+/home/sysop/seiscomp/etc/key/scautopick/profile_default
+--------------------------------------------------------------------------------
+<span class="nv">detecEnable</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="nv">detecFilter</span> <span class="o">=</span> <span class="s2">&quot;RMHP(10)&gt;&gt;ITAPER(30)&gt;&gt;BW(4,0.7,2)&gt;&gt;STALTA(2,80)&quot;</span>
+<span class="nv">trigOn</span> <span class="o">=</span> <span class="m">3</span>
+<span class="nv">trigOff</span> <span class="o">=</span> <span class="m">1</span>.5
+<span class="nv">timeCorr</span> <span class="o">=</span> -0.8
+--------------------------------------------------------------------------------
+
+<span class="o">[</span>slarchive<span class="o">]</span>
+/home/sysop/seiscomp/etc/key/slarchive/profile_1day
+--------------------------------------------------------------------------------
+<span class="nv">selectors</span> <span class="o">=</span> BHZ.D
+<span class="nv">keep</span> <span class="o">=</span> <span class="m">1</span>
+--------------------------------------------------------------------------------
+</pre></div>
+</div>
+<p>This helps to see immediately in which file a certain parameter is
+defined and what module the station is bound to.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="module-init-scripts">
+<span id="system-management-init"></span><h2>Module Init Scripts<a class="headerlink" href="#module-init-scripts" title="Permalink to this headline">¶</a></h2>
+<p>All modules which can run in the background as daemon modules have init scripts.
+The init scripts are placed in <code class="file docutils literal notranslate"><span class="pre">etc/init</span></code>. <strong class="program">seiscomp</strong>
+loads all .py files and tries to find a class called Module. This class is
+then instantiated with the environment object passed as only parameter
+to the constructor. If no error occurred then the module is registered.</p>
+<p>The name of the init script is ignored and not used furthermore. Only the
+name in the Module object is important. It is important to note that only
+one module can be placed in one init script.</p>
+<p>The Module class must implement the interface used by <strong class="program">seiscomp</strong>.
+See <a class="reference internal" href="#seiscomp.Kernel.Module" title="seiscomp.Kernel.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">seiscomp.Kernel.Module</span></code></a> for more details.</p>
+<p>A simple default implementation looks like this which is available as a
+template and can be used directly by using the same name as the module’s
+name. The module’s name in this template is derived from the filename, but this
+isn’t a general rule as stated before.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seiscomp.Kernel</span>
+
+<span class="k">class</span> <span class="nc">Module</span><span class="p">(</span><span class="n">seiscomp</span><span class="o">.</span><span class="n">Kernel</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="n">seiscomp</span><span class="o">.</span><span class="n">Kernel</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">moduleName</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><cite>SeisComP</cite> provides a Python module (<a class="reference internal" href="#module-seiscomp.Kernel" title="seiscomp.Kernel"><code class="xref py py-mod docutils literal notranslate"><span class="pre">seiscomp.Kernel</span></code></a>) that allows to
+write init scripts in an easy way.</p>
+<div class="section" id="python-kernel-module">
+<h3>Python kernel module<a class="headerlink" href="#python-kernel-module" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>SeisComP</cite> setup kernel module provides interfaces to write init handlers
+for modules used by <strong class="program">seiscomp</strong> in Python.</p>
+<span class="target" id="module-seiscomp.Kernel"></span><dl class="class">
+<dt id="seiscomp.Kernel.Module">
+<em class="property">class </em><code class="sig-prename descclassname">seiscomp.Kernel.</code><code class="sig-name descname">Module</code><span class="sig-paren">(</span><em class="sig-param">env</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#seiscomp.Kernel.Module" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> – The passes environment from <strong class="program">seiscomp</strong> which is
+stored in self.env.</p></li>
+<li><p><strong>name</strong> – The module name which must be passed by derived classes.
+It is stored in self.name.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The module interface which implements the basic default operations.
+Each script can define its own handlers to customize the behaviour.</p>
+<dl class="method">
+<dt id="seiscomp.Kernel.Module.isRunning">
+<code class="sig-name descname">isRunning</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seiscomp.Kernel.Module.isRunning" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Boolean</p>
+</dd>
+</dl>
+<p>Checks if a module is running. The default implementation returns True
+if the lockfile if not locked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="seiscomp.Kernel.Module.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seiscomp.Kernel.Module.start" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Integer</p>
+</dd>
+</dl>
+<p>Starts a module and returns 0 if no error occured and 1 otherwise. This
+method is called from <strong class="program">seiscomp start</strong>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="seiscomp.Kernel.Module.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seiscomp.Kernel.Module.stop" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Integer</p>
+</dd>
+</dl>
+<p>Stops a module and returns 0 if no error occured and 1 otherwise. This
+method is called from <strong class="program">seiscomp stop</strong>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="seiscomp.Kernel.Module.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seiscomp.Kernel.Module.check" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Integer</p>
+</dd>
+</dl>
+<p>Check is the same as start. The decision whether to check a module
+or not is made <strong class="program">seiscomp</strong> which check the existence
+of the corresponding run file. Returns 1 is case of error, 0 otherwise.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="seiscomp.Kernel.Module.status">
+<code class="sig-name descname">status</code><span class="sig-paren">(</span><em class="sig-param">shouldRun</em><span class="sig-paren">)</span><a class="headerlink" href="#seiscomp.Kernel.Module.status" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>shouldRun</strong> – Boolean parameter that indicates if the module should
+run or not. This is evaluated by <strong class="program">seiscomp</strong>.</p>
+</dd>
+</dl>
+<p>Prints the status of the module to stdout. Either is CSV format or as free
+text. This depends on self.env._csv. The default implementations calls</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">logStatus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">isRunning</span><span class="p">(),</span> <span class="n">shouldRun</span><span class="p">,</span>\
+                   <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">isModuleEnabled</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">or</span> \
+                   <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CoreModule</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="seiscomp.Kernel.Module.updateConfig">
+<code class="sig-name descname">updateConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seiscomp.Kernel.Module.updateConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the configuration and bindings based on the module’s .cfg files
+and <code class="file docutils literal notranslate"><span class="pre">etc/key/[modname]</span></code>. A <a class="reference internal" href="glossary.html#term-trunk"><span class="xref std std-term">trunk</span></a> module does not need to
+do anything here. Stand-alone modules need to implement this method to
+convert the configuration to their native format.</p>
+<p>This is called from <strong class="program">seiscomp update-config</strong>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="seiscomp.Kernel.Module.printCrontab">
+<code class="sig-name descname">printCrontab</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seiscomp.Kernel.Module.printCrontab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints crontab entries to stdout. The default implementation does not
+print anything.</p>
+<p>This is called from <strong class="program">seiscomp print crontab</strong>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="seiscomp.Kernel.CoreModule">
+<em class="property">class </em><code class="sig-prename descclassname">seiscomp.Kernel.</code><code class="sig-name descname">CoreModule</code><span class="sig-paren">(</span><em class="sig-param">seiscomp.Kernel.Module</em><span class="sig-paren">)</span><a class="headerlink" href="#seiscomp.Kernel.CoreModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>The core module interface. A core module is a normal module but is started
+before all modules and stopped afterwards. Core modules are always enabled
+and will be started with <strong class="program">seiscomp start</strong> unless a CoreModule
+implementation applies additional checks in <a class="reference internal" href="#seiscomp.Kernel.Module.start" title="seiscomp.Kernel.Module.start"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Module.start()</span></code></a>.</p>
+<p><a class="reference internal" href="../apps/scmaster.html#scmaster"><span class="std std-ref">scmaster</span></a> is a core module which is a requirement for all <a class="reference internal" href="glossary.html#term-trunk"><span class="xref std std-term">trunk</span></a>
+modules.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="seiscomp.Kernel.Environment">
+<em class="property">class </em><code class="sig-prename descclassname">seiscomp.Kernel.</code><code class="sig-name descname">Environment</code><a class="headerlink" href="#seiscomp.Kernel.Environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access to the setup environment.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">System management</a><ul>
+<li><a class="reference internal" href="#seiscomp-commands">seiscomp Commands</a></li>
+<li><a class="reference internal" href="#seiscomp-shell">SeisComP Shell</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-init-scripts">Module Init Scripts</a><ul>
+<li><a class="reference internal" href="#python-kernel-module">Python kernel module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="getting-started.html"
+                        title="previous chapter">Getting Started with <cite>SeisComP</cite></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorials.html"
+                        title="next chapter">Tutorials</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base/management.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

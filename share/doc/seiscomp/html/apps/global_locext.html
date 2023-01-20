@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>LocExt &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GUI" href="global_gui.html" />
+    <link rel="prev" title="MN" href="global_mn.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_gui.html" title="GUI"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_mn.html" title="MN"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../toc/extensions.html" >Extensions</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/extensions/global.html" accesskey="U">global</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="locext">
+<span id="global-locext"></span><h1>LocExt<a class="headerlink" href="#locext" title="Permalink to this headline">¶</a></h1>
+<p>Locator which forwards the processing to external scripts</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The ExternalLocator implements a wrapper for scripts which do the actual location
+process. The input and output are represented as XML and communicated via the
+input/output channels of the called process: stdin and stdout.</p>
+</div>
+<div class="section" id="plugin">
+<h2>Plugin<a class="headerlink" href="#plugin" title="Permalink to this headline">¶</a></h2>
+<p>To enable the ExternalLocator the plugin <code class="docutils literal notranslate"><span class="pre">locext</span></code> must be loaded.</p>
+</div>
+<div class="section" id="commandline-parameters">
+<h2>Commandline Parameters<a class="headerlink" href="#commandline-parameters" title="Permalink to this headline">¶</a></h2>
+<p>There are several commandline parameters passed to the script depending on
+the locator configuration. The following table summarizes them.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>–max-dist=X</p></td>
+<td><p>The cut-off distance if set</p></td>
+</tr>
+<tr class="row-odd"><td><p>–ignore-initial-location</p></td>
+<td><p>Whether to ignore the initial origin location or not</p></td>
+</tr>
+<tr class="row-even"><td><p>–fixed-depth=X</p></td>
+<td><p>The depth in km to be fixed if enabled</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="input">
+<h2>Input<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h2>
+<p>The input document written to stdin of the child process is a valid SeisComP
+XML document containing <code class="docutils literal notranslate"><span class="pre">EventParameters</span></code>. The event parameters hold exactly
+one origin to be relocated and all picks references from the origins arrivals.</p>
+<p>Example:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;seiscomp xmlns=&quot;http://geofon.gfz-potsdam.de/ns/seiscomp3-schema/0.11&quot; version=&quot;0.11&quot;&gt;
+  &lt;EventParameters&gt;
+    &lt;pick ...&gt;...&lt;/pick&gt;
+    &lt;pick ...&gt;...&lt;/pick&gt;
+    ...
+    &lt;origin ...&gt;
+      ...
+      &lt;arrival&gt;
+        ...
+      &lt;/arrival&gt;
+      &lt;arrival&gt;
+        ...
+      &lt;/arrival&gt;
+      ...
+    &lt;/origin&gt;
+  &lt;/EventParameters&gt;
+&lt;/seiscomp&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<p>The output is read from stdout and is expected to be a SeisComP XML document
+just containing an origin.</p>
+<p>Example:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;seiscomp</span> <span class="na">xmlns=</span><span class="s">&quot;http://geofon.gfz-potsdam.de/ns/seiscomp3-schema/0.11&quot;</span> <span class="na">version=</span><span class="s">&quot;0.11&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Origin</span> <span class="na">publicID=</span><span class="s">&quot;...&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/Origin&gt;</span>
+<span class="nt">&lt;/seiscomp&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-configuration">
+<h2>Example Configuration<a class="headerlink" href="#example-configuration" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Define the external locator by global configuration e.g. in <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>plugins = ${plugins}, locext
+
+ExternalLocator.profiles = locator1:&quot;python /path/to/locator/script1.py&quot;,\
+                           locator2:&quot;/path/to/other/locator/script1.sh&quot;
+</pre></div>
+</div>
+<p>with</p>
+<ul class="simple">
+<li><p><em>locator1</em>/<em>locator2</em>: The names of the profiles as shown in <a class="reference internal" href="scolv.html#scolv"><span class="std std-ref">scolv</span></a>
+or use in ther modules like <a class="reference internal" href="screloc.html#screloc"><span class="std std-ref">screloc</span></a> for calling the external locator,</p></li>
+<li><p><em>script1.py</em>/<em>script2.sh</em>: The names of Python/Bash scripts with full path
+called by the profile to execute the locator given within the scripts.</p></li>
+</ul>
+</li>
+<li><p>Once defined, the external locator can be further configured and called
+within <a class="reference internal" href="scolv.html#scolv"><span class="std std-ref">scolv</span></a> or by other modules e.g. <a class="reference internal" href="screloc.html#screloc"><span class="std std-ref">screloc</span></a>.</p></li>
+</ol>
+</div>
+<div class="section" id="configuration">
+<span id="global-locext-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>ExternalLocator.*</strong>
+<em>Locator parameters: ExternalLocator</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-ExternalLocator.profiles">
+<code class="sig-name descname">ExternalLocator.profiles</code><a class="headerlink" href="#confval-ExternalLocator.profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>A list of profiles defined as tuples of name
+and path to a script separated by colon.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">LocExt</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#plugin">Plugin</a></li>
+<li><a class="reference internal" href="#commandline-parameters">Commandline Parameters</a></li>
+<li><a class="reference internal" href="#input">Input</a></li>
+<li><a class="reference internal" href="#output">Output</a></li>
+<li><a class="reference internal" href="#example-configuration">Example Configuration</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="global_mn.html"
+                        title="previous chapter">MN</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="global_gui.html"
+                        title="next chapter">GUI</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/global_locext.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

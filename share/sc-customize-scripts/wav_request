@@ -1,0 +1,95 @@
+#!/bin/bash
+## script para solicitar formas de ondas
+### elaborado por DIEGO CASTRO enero 2021
+
+
+_solicitud_wav_(){
+	if [[ -z $1 ]]
+	then
+		echo "NO INGRESASTE UN ID"
+		exit
+	else
+		EVENT=$1
+		if [[ ! -d  $TOP_DIR ]]
+		then
+			mkdir -p $TOP_DIR
+		elif [[ -e $TOP_DIR/${EVENT}.mseed ]]
+		then
+			echo -e "\nPATH DE LA FORMA DE ONDA"
+			echo "$TOP_DIR/${EVENT}.mseed"
+		else
+			echo -e "\nHACIENDO SOLICITUD AL EVENTO $EVENT"
+			cd $TOP_DIR
+			scevtstreams -v -E $EVENT \
+				-d mysql://sysop:sysop@${SERVIDOR}/${DATA_BASE} \
+				-m 45,90 -R --all-stations |\
+	                        scart -dsv -l - $ARCHIVE > $EVENT.mseed
+
+		fi
+	fi
+
+}
+
+
+
+if [[ ! -e ${HOME}/.seiscomp.bash ]]
+then
+	echo "no hay variables de entorno bye"
+	exit 0
+else
+	source  ${HOME}/.seiscomp.bash
+
+	SERVIDOR=localhost
+	DATA_BASE=seiscomp
+	TOP_DIR=/media/HDD/seiscomp/wav
+	ARCHIVE=/media/HDD/seiscomp/archive
+	if [[ ! -e $TOP_DIR ]]
+	then
+		mkdir -p $TOP_DIR
+		cd $TOP_DIR
+	else
+		cd $TOP_DIR
+	fi
+
+
+
+	while test $# -gt 0
+	do
+		case "$1" in
+			-h | --help)
+				shift
+				echo "DOCUMENTACION"
+				exit 0 ;;
+
+			-I | --id )
+				shift
+				TOP_DIR=$(pwd)
+				export TOP_DIR
+				if test $# -gt 0
+				then
+					EVENT=$1
+					export EVET
+					if [[ -s ${TOP_DIR}/${EVENT}.mseed ]]
+					then
+						echo "${TOP_DIR}/${EVENT}.mseed"
+					else
+						_solicitud_wav_ "$EVENT"
+					fi
+					exit 0
+				else
+					echo "NO INGRESASTE ID BYE"
+					exit
+				fi
+				;;
+
+			*)
+				echo "usage -I [arg] "
+				exit
+				;;
+		esac
+	done
+	echo "DOCUMENTACION"
+fi
+
+
+

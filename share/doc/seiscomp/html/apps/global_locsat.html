@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>LOCSAT &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="FixedHypocenter" href="global_fixedhypocenter.html" />
+    <link rel="prev" title="ML" href="global_ml.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_fixedhypocenter.html" title="FixedHypocenter"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_ml.html" title="ML"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../toc/extensions.html" >Extensions</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/extensions/global.html" accesskey="U">global</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="locsat">
+<span id="global-locsat"></span><h1>LOCSAT<a class="headerlink" href="#locsat" title="Permalink to this headline">¶</a></h1>
+<p>Locator in SeisComP for computing source time and hypocenter
+coordinates from phase picks.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>LOCSAT is a locator in SeisComP for computing source time and hypocenter
+coordinates from phase picks considering:</p>
+<ul class="simple">
+<li><p>Pick time,</p></li>
+<li><p>Backazimuth,</p></li>
+<li><p>Slowness.</p></li>
+</ul>
+<p>The LOCSAT locator interface implements a wrapper for the LocSAT locator
+by <span id="id1">Bratt and Nagy [<a class="reference internal" href="../base/references.html#id18" title="S.R. Bratt and W. Nagy. The locsat program. Science Applications International Corporation (SAIC), San Diego, 1991.">16</a>]</span> (according to the README file shipped with the
+LocSAT distribution) referred to as <strong>LOCSAT</strong> in <cite>SeisComP</cite>.</p>
+</div>
+<div class="section" id="travel-time-tables">
+<h2>Travel-time tables<a class="headerlink" href="#travel-time-tables" title="Permalink to this headline">¶</a></h2>
+<p><cite>SeisComP</cite> ships with two predefined travel time tables: tab and iasp91.
+LOCSAT travel time tables are located under <code class="file docutils literal notranslate"><span class="pre">share/locsat/tables/</span></code>.</p>
+<p>The default profile is <em>iasp91</em>.</p>
+</div>
+<div class="section" id="travel-time-interface">
+<h2>Travel-time interface<a class="headerlink" href="#travel-time-interface" title="Permalink to this headline">¶</a></h2>
+<p>LOCSAT provides an interface for computing travel times based on coordinates and depth.</p>
+<p>Use “LOCSAT” as a value for the travel-time interface when configurable, e.g. by
+<a class="reference internal" href="global_fixedhypocenter.html#global-fixedhypocenter"><span class="std std-ref">FixedHypocenter</span></a>.</p>
+</div>
+<div class="section" id="configuration-in-scname-modules">
+<h2>Configuration in <cite>SeisComP</cite> modules<a class="headerlink" href="#configuration-in-scname-modules" title="Permalink to this headline">¶</a></h2>
+<p>Use “LOCSAT” as a value for the locator type or interface when configurable, e.g. by
+<a class="reference internal" href="screloc.html#screloc"><span class="std std-ref">screloc</span></a> or <a class="reference internal" href="scolv.html#scolv"><span class="std std-ref">scolv</span></a>.</p>
+</div>
+<div class="section" id="station-corrections">
+<h2>Station corrections<a class="headerlink" href="#station-corrections" title="Permalink to this headline">¶</a></h2>
+<p>LOCSAT does not support station corrections natively. At least checking
+the code:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">sta_cor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>    <span class="cm">/* FIX !!!!!!*/</span>
+</pre></div>
+</div>
+<p>However the <cite>SeisComP</cite> wrapper adds this feature. It allows to define a
+<code class="file docutils literal notranslate"><span class="pre">.stacor</span></code> file which defines corrections of observation times
+in seconds. A correction is <strong>subtracted</strong> (not added) from
+the observation time to be compatible with the NonLinLoc <span id="id2">[<a class="reference internal" href="../base/references.html#id143" title="A. Lomax. The NonLinLoc Software Guide. Manual. URL: http://alomax.free.fr/nlloc/.">21</a>]</span>
+station correction definitions.</p>
+<p>Each LOCSAT profile (travel time table) can have an associated station
+correction file. To use station corrections for the iasp91 tables, the file
+<code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/share/locsat/tables/iasp91.stacor</span></code> needs to be created.</p>
+<p>A station correction table takes the form:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># LOCDELAY code phase numReadings delay</span>
+LOCDELAY GE.MORC P <span class="m">1</span> -0.1
+</pre></div>
+</div>
+<p>with</p>
+<ul class="simple">
+<li><p><strong>code</strong> (<em>string</em>) station code (after all alias evaluations)</p></li>
+<li><p><strong>phase</strong> (<em>string</em>) phase type (any of the available travel time tables)</p></li>
+<li><p><strong>numReadings</strong> (<em>integer</em>) number of residuals used to calculate mean residual/delay
+(not used by NLLoc, included for compatibility with the format of a summary,
+phase statistics file)</p></li>
+<li><p><strong>delay</strong> (<em>float</em>) delay in seconds, subtracted from observed time</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The fourth column (numReadings) is ignored and just provided for compatibility
+reasons with <a class="reference internal" href="global_nonlinloc.html#global-nonlinloc"><span class="std std-ref">NonLinLoc</span></a>.</p>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="global-locsat-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>LOCSAT.*</strong>
+<em>Locator parameters: LOCSAT</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-LOCSAT.profiles">
+<code class="sig-name descname">LOCSAT.profiles</code><a class="headerlink" href="#confval-LOCSAT.profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Defines a list of available LOCSAT travel-time tables.
+Default is <code class="docutils literal notranslate"><span class="pre">iasp91,</span> <span class="pre">tab</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-LOCSAT.depthInit">
+<code class="sig-name descname">LOCSAT.depthInit</code><a class="headerlink" href="#confval-LOCSAT.depthInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>km</em></p>
+<p>The initial depth estimate for LOCSAT.
+Default is <code class="docutils literal notranslate"><span class="pre">20.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-LOCSAT.usePickUncertainties">
+<code class="sig-name descname">LOCSAT.usePickUncertainties</code><a class="headerlink" href="#confval-LOCSAT.usePickUncertainties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Whether to use pick time untertainties for arrival deltim rather
+than a fixed time error. If true then the uncertainties are
+retrieved from each individual pick object. If they are not
+defined then the default pick time uncertainty will be used
+as fallback.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-LOCSAT.defaultTimeError">
+<code class="sig-name descname">LOCSAT.defaultTimeError</code><a class="headerlink" href="#confval-LOCSAT.defaultTimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>s</em></p>
+<p>The default pick time uncertainty assigned to LOCSAT’s arrival deltim
+attribute if pick uncertainties are not going to be used or
+if they are absent. A time uncertainty of 0 s may result in
+errors of the SVD decomposition in LOCSAT.
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-LOCSAT.degreesOfFreedom">
+<code class="sig-name descname">LOCSAT.degreesOfFreedom</code><a class="headerlink" href="#confval-LOCSAT.degreesOfFreedom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Number of degrees of freedom.
+Default is <code class="docutils literal notranslate"><span class="pre">9999</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-LOCSAT.confLevel">
+<code class="sig-name descname">LOCSAT.confLevel</code><a class="headerlink" href="#confval-LOCSAT.confLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Confidence level between 0.5 and 1.0.
+Default is <code class="docutils literal notranslate"><span class="pre">0.9</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-LOCSAT.enableConfidenceEllipsoid">
+<code class="sig-name descname">LOCSAT.enableConfidenceEllipsoid</code><a class="headerlink" href="#confval-LOCSAT.enableConfidenceEllipsoid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Compute the confidence ellipsoid from covariance matrix in 3D.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">LOCSAT</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#travel-time-tables">Travel-time tables</a></li>
+<li><a class="reference internal" href="#travel-time-interface">Travel-time interface</a></li>
+<li><a class="reference internal" href="#configuration-in-scname-modules">Configuration in <cite>SeisComP</cite> modules</a></li>
+<li><a class="reference internal" href="#station-corrections">Station corrections</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="global_ml.html"
+                        title="previous chapter">ML</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="global_fixedhypocenter.html"
+                        title="next chapter">FixedHypocenter</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/global_locsat.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

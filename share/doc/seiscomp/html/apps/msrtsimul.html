@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>msrtsimul &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="scardac" href="scardac.html" />
+    <link rel="prev" title="caps_plugin" href="caps_plugin.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="scardac.html" title="scardac"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="caps_plugin.html" title="caps_plugin"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/acquisition.html" accesskey="U">Acquisition</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="msrtsimul">
+<span id="id1"></span><h1>msrtsimul<a class="headerlink" href="#msrtsimul" title="Permalink to this headline">¶</a></h1>
+<p><strong>MiniSEED real time playback and simulation</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>msrtsimul simulates a real-time data acquisition by injecting miniSEED data from a
+file into the seedlink buffer via the mseedfifo plugin for seedlink. It can be
+used for simulating real-time conditions in playbacks for whole-system
+demonstrations, user training, etc.</p>
+<p>The data are played back as if they were recorded at current time. Therefore, creation
+times and the actual data times including pick times, event times etc. will be <strong>faked</strong>.
+<a class="reference internal" href="#sec-msrtsimul-historic"><span class="std std-ref">Historic playbacks</span></a> allow keeping the actual data times.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For real-time playbacks, the data must be sorted by time. This requirement
+may be violated. Use <a class="reference internal" href="scmssort.html#scmssort"><span class="std std-ref">scmssort</span></a> to sort the data by time.</p>
+</div>
+<div class="section" id="non-default-seedlink-pipes">
+<h3>Non-default seedlink pipes<a class="headerlink" href="#non-default-seedlink-pipes" title="Permalink to this headline">¶</a></h3>
+<p>By default, msrtsimul writes the data into the mseedfifo pipe
+<em>$SEISCOMP_ROOT/var/run/seedlink/mseedfifo</em>.
+If the data are to be written into the pipe of a <strong class="program">seedlink</strong> alias or
+into any other pipe, the pipe name must be adjusted. Use the option</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--seedlink</span></code> to replace <em>seedlink</em> by another name, e.g. a seedlink instance
+created as an alias, <strong>seedlink-test</strong>. This would write into
+<em>$SEISCOMP_ROOT/var/run/seedlink-test/mseedfifo</em>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--stdout</span></code> to write to standard output and then redirect to any other location.</p></li>
+</ul>
+</div>
+<div class="section" id="historic-playbacks">
+<span id="sec-msrtsimul-historic"></span><h3>Historic playbacks<a class="headerlink" href="#historic-playbacks" title="Permalink to this headline">¶</a></h3>
+<p>You may use msrtsimul with the <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">historic</span></code> option to maintain the time of the records,
+thus the times of picks, amplitudes, origins, etc. but not the creation times.
+Applying <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">historic</span></code> will feed the data into the seedlink buffer at the time
+of the records. The time of the system is untouched. GUI, processing modules, logging,
+etc. will run with current system time. The historic mode allows to process waveforms
+with the stream inventory valid at the time when the data were recorded including
+streams closed at current time.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When repeating historic playbacks, the waveforms are fed multiple times to the
+seedlink buffer and the resulting picks are also repeated with the same pick
+times. This may confuse the real-time system. Therefore, seedlink and other modules
+creating or processing picks should be
+stopped, the seedlink buffer should be cleared and the processing
+modules should be restarted to clear the buffers before starting the
+historic playbacks. Make sure <a class="reference internal" href="scautopick.html#scautopick"><span class="std std-ref">scautopick</span></a> is configured or started with
+the <code class="docutils literal notranslate"><span class="pre">--playback</span></code> option. Example:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>$ seiscomp stop
+$ rm -rf $SEISCOMP_ROOT/var/lib/seedlink/buffer
+$ seiscomp start
+$ msrtsimul ...
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="seedlink-setup">
+<h3>seedlink setup<a class="headerlink" href="#seedlink-setup" title="Permalink to this headline">¶</a></h3>
+<p>For supporting msrtsimul activate the <a class="reference internal" href="seedlink.html#confval-msrtsimul"><code class="xref std std-confval docutils literal notranslate"><span class="pre">msrtsimul</span></code></a> parameter in the
+seedlink module configuration (<code class="file docutils literal notranslate"><span class="pre">seedlink.cfg</span></code>), update the configuration
+and restart seedlink before running msrtsimul:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>$ seiscomp update-config seedlink
+$ seiscomp restart seedlink
+$ msrtsimul ...
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p>Playback miniSEED waveforms in real time with verbose output:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ msrtsimul -v miniSEED-file
+</pre></div>
+</div>
+</li>
+<li><p>Playback miniSEED waveforms in historic mode. This may require <a class="reference internal" href="scautopick.html#scautopick"><span class="std std-ref">scautopick</span></a>
+to be started with the option <em>playback</em>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ msrtsimul -v -m historic miniSEED-file
+</pre></div>
+</div>
+</li>
+<li><p>Feed the data into the buffer of a specific seedlink instance, e.g. <em>seedlink-test</em>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ msrtsimul -v --seedlink seedlink-test miniSEED-file
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="msrtsimul-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/msrtsimul.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/msrtsimul.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/msrtsimul.cfg</span></code></div>
+</div>
+<p>msrtsimul inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">msrtsimul [OPTION] miniSEED-file</strong></p>
+<div class="section" id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-msrtsimul-c">
+<code class="sig-name descname">-c</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--stdout</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-msrtsimul-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>write on standard output. The output my be redirected to a
+specific mseedfifo path.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-msrtsimul-d">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--delays</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-msrtsimul-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>add artificial delays</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-msrtsimul-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--speed</code><code class="sig-prename descclassname"> float</code><a class="headerlink" href="#cmdoption-msrtsimul-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>speed factor. 1 is normal speed.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-msrtsimul-j">
+<code class="sig-name descname">-j</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--jump</code><code class="sig-prename descclassname"> float</code><a class="headerlink" href="#cmdoption-msrtsimul-j" title="Permalink to this definition">¶</a></dt>
+<dd><p>minutes to skip at the beginning</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-msrtsimul-test">
+<code class="sig-name descname">--test</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-msrtsimul-test" title="Permalink to this definition">¶</a></dt>
+<dd><p>test mode</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-msrtsimul-m">
+<code class="sig-name descname">-m</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--mode</code><code class="sig-prename descclassname"> string</code><a class="headerlink" href="#cmdoption-msrtsimul-m" title="Permalink to this definition">¶</a></dt>
+<dd><p>playback mode: choose between ‘realtime’ and ‘historic’</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-msrtsimul-seedlink">
+<code class="sig-name descname">--seedlink</code><code class="sig-prename descclassname"> string</code><a class="headerlink" href="#cmdoption-msrtsimul-seedlink" title="Permalink to this definition">¶</a></dt>
+<dd><p>the seedlink module name. Useful if a seedlink alias or
+non-standard names are used. Replaces ‘seedlink’
+in the standard mseedfifo path.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-msrtsimul-v">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--verbose</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-msrtsimul-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>verbose mode</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-msrtsimul-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-msrtsimul-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>display this help message</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">msrtsimul</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
+<li><a class="reference internal" href="#non-default-seedlink-pipes">Non-default seedlink pipes</a></li>
+<li><a class="reference internal" href="#historic-playbacks">Historic playbacks</a></li>
+<li><a class="reference internal" href="#seedlink-setup">seedlink setup</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#options">Options</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="caps_plugin.html"
+                        title="previous chapter">caps_plugin</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scardac.html"
+                        title="next chapter">scardac</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/msrtsimul.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

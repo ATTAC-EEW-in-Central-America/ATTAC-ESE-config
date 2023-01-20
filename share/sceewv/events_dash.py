@@ -168,8 +168,8 @@ def prepare_data(startTime, endTime, magValue):
 			continue
 		if dayPath >= startTime and dayPath <= endTime:
 			for item in files:
-				# print(root)
-				# print(item)
+				#print(root)
+				#print(item)
 				checkExt = 0
 				status = 1
 				prefMagType = None
@@ -195,7 +195,7 @@ def prepare_data(startTime, endTime, magValue):
 				delayPtime = ""
 				prefOriTime = None
 				prefOriDepth = None
-				data = json.load(f)
+				data = json.loads(f.read())
 	#			dictMag.append(data)
 				for iOri in range(len(data["origins"])):
 					creTime.append(data["origins"][iOri]["CreationTime"])
@@ -242,8 +242,8 @@ def prepare_data(startTime, endTime, magValue):
 									break
 								prefMagType = magType
 								prefMagVal = round(mag,2)
-	#								dictPref[len(dictPref)-1]["Magnitude"] = "%s %s"%(magType,round(mag,2))
-					except:
+##									dictPref[len(dictPref)-1]["Magnitude"] = "%s %s"%(magType,round(mag,2))
+					except Exception as e:
 						pass
 #						print("No mag in file %s origin %s" % (fil,data["origins"][iOri]["ID"]))
 					try:
@@ -275,7 +275,10 @@ def prepare_data(startTime, endTime, magValue):
 					status = None
 					Fn_vect.append(prefOriTime)
 				elif EvalOri == 1 and EvalMag == 1:
-					continue
+					EvalEve = "Fn"
+					status = None
+					Fn_vect.append(prefOriTime)
+#					continue
 
 				dictPref.append(prefOri)
 				dictPref[len(dictPref)-1]["Magnitude"] = "%s %s"%(prefMagType,prefMagVal)

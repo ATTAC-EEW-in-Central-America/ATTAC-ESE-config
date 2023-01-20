@@ -1,0 +1,14 @@
+#!/bin/bash
+export PATH="/opt/seiscomp/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/VS/bin"
+
+CONFIG="/home/insivumeh/.telegram_send"
+FILE="/opt/VS/reportes/sismo/reporte_sismo.pdf"
+CAPTION="BOLETIN SISMOLÓGICO"
+
+
+if [ "$2" = "1" ]
+then
+	echo "EEW ha creado un evento $3" &> /tmp/sc-telegram.log
+	/usr/local/bin/telegram-send --config "$CONFIG"  --format html "<b>MENSAJE DE PRUEBA</b> EEW HA CREADO UN SISMO"&>> /tmp/sc-telegram.log
+fi
+

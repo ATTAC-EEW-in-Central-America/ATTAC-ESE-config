@@ -1,0 +1,36 @@
+#!/bin/bash
+export PATH="/opt/seiscomp/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/VS/bin"
+
+CONFIG="/home/insivumeh/Documents/insivumeh_sismo_group.conf"
+FILE="/opt/VS/reportes/sismo/reporte_sismo.pdf"
+CAPTION="BOLETIN SISMOLOGICO"
+
+
+if [ "$2" = "1" ]
+then
+#	echo "$1" | sed 's/,/, ,/g'   | festival --tts
+	echo "New event $3" &> /tmp/${3}.log
+	if [ "$4" > "20" ]
+	then
+		/usr/local/bin/telegram-send --config "$CONFIG"  --format html "<b>¡nuevo sismo registrado!</b> desde la maquina virtual id $3 , magnitud $5 ,Numero d estaciones $4"&>> /tmp/${3}.log
+		/opt/VS/bin/nuevo_sismo -u "dacr" -s ${3} &>> /tmp/${3}.log
+		/usr/local/bin/telegram-send --config "$CONFIG" -f "$FILE" --caption "$CAPTION" &>> /tmp/${3}.log
+		/opt/VS/reportes/IMM/IMM -sc ${3} --analisis PGV >> /tmp/${3}.log
+		/usr/local/bin/telegram-send --config "$CONFIG" -f "/opt/VS/reportes/IMM/${3}_PGV.dir/pdf/reporte_IMM_PGV.pdf" >> /tmp/${3}.log
+		/opt/VS/reportes/IMM/IMM -sc ${3} --analisis PGA >> /tmp/${3}.log
+		/usr/local/bin/telegram-send --config "$CONFIG" -f "/opt/VS/reportes/IMM/${3}_PGA.dir/pdf/reporte_IMM_PGA.pdf" >> /tmp/${3}.log
+		/usr/local/bin/telegram-send --config "$CONFIG" -f "/tmp/${3}.log"
+	else
+		/usr/local/bin/telegram-send --config "$CONFIG"  --format html "<b>¡nuevo sismo registrado!</b> desde la maquina virtual id $3 , magnitud $5 ,Numero d estaciones $4"&>> /tmp/${3}.log
+		/bin/sleep 15
+		/opt/VS/bin/nuevo_sismo -u "dacr" -s ${3} &>> /tmp/${3}.log
+		/usr/local/bin/telegram-send --config "$CONFIG" -f "$FILE" --caption "$CAPTION" &>> /tmp/${3}.log
+		/bin/sleep 15
+		/opt/VS/reportes/IMM/IMM -sc ${3} --analisis PGV >> /tmp/${3}.log
+		/usr/local/bin/telegram-send --config "$CONFIG" -f "/opt/VS/reportes/IMM/${3}_PGV.dir/pdf/reporte_IMM_PGV.pdf" >> /tmp/${3}.log
+		/opt/VS/reportes/IMM/IMM -sc ${3} --analisis PGA >> /tmp/${3}.log
+		/usr/local/bin/telegram-send --config "$CONFIG" -f "/opt/VS/reportes/IMM/${3}_PGA.dir/pdf/reporte_IMM_PGA.pdf" >> /tmp/${3}.log
+		/usr/local/bin/telegram-send --config "$CONFIG" -f "/tmp/${3}.log"
+	fi
+fi
+

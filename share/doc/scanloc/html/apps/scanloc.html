@@ -1,0 +1,1779 @@
+<!doctype html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scanloc &#8212; scanloc: Phase Associator  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/gempa.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/gempa.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/scanloc.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Auxiliary Scripts" href="../base/auxiliary.html" />
+    <link rel="prev" title="Introduction" href="../base/introduction.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <img class="background" src="../_static/icon.png"/>
+        <div class="content">
+           <span class="title">scanloc: Phase Associator </span>
+           <span class="version">2022.88#fcbc3b22d</span></h1>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="../base/auxiliary.html" title="Auxiliary Scripts"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="../base/introduction.html" title="Introduction"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="scanloc">
+<span id="id1"></span><h1>scanloc<a class="headerlink" href="#scanloc" title="Permalink to this headline">¶</a></h1>
+<p><strong>Module for locating local earthquakes and man-made seismicity by DBSCAN
+cluster search.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="low-threshold-monitoring">
+<h3>Low-threshold monitoring<a class="headerlink" href="#low-threshold-monitoring" title="Permalink to this headline">¶</a></h3>
+<p><em>scanloc</em> associates detected P and S phases from local and regional earthquakes
+and other seismic events for locating. It determines initial hypocenter
+solutions by cluster search based on DBSCAN <span id="id2">[<a class="reference internal" href="../base/references.html#id87" title="DBSCAN. Data clustering algorithm. URL: http://en.wikipedia.org/wiki/DBSCAN.">1</a>]</span>. Additional P and S phases are associated
+to existing internal solutions from cluster search or solutions incoming through the messaging
+system from external modules.</p>
+<p>Due to the clustering and subsequent phase association scanloc facilitates low-threshold
+monitoring of high- and low-rate seismicity with high accuracy.</p>
+<div class="figure align-center" id="id21">
+<span id="fig-scolv-location-tab"></span><a class="reference internal image-reference" href="../_images/scolv-location-tab.png"><img alt="../_images/scolv-location-tab.png" src="../_images/scolv-location-tab.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Figure 1: scolv Location tab with an automatic earthquake solution from scanloc based on
+P and S phases.</span><a class="headerlink" href="#id21" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="teleseismic-events">
+<h3>Teleseismic events<a class="headerlink" href="#teleseismic-events" title="Permalink to this headline">¶</a></h3>
+<p>For teleseismic events <em>scanloc</em> can also be used to:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#scanloc-assoc"><span class="std std-ref">Associate more picks from P and S phases</span></a> to external origins,</p></li>
+<li><p>Suppress fake events due to detections from large earthquakes recorded by dense local networks at teleseismic distances.
+A <a class="reference internal" href="#scanloc-zero-weight"><span class="std std-ref">dedicated section</span></a> explains the setup and the requirements.</p></li>
+</ul>
+</div>
+<div class="section" id="travel-time-tables">
+<h3>Travel-time tables<a class="headerlink" href="#travel-time-tables" title="Permalink to this headline">¶</a></h3>
+<p>The scanloc package ships with <a class="reference internal" href="../base/locsat-tables.html#scanloc-ttt"><span class="std std-ref">densely sampled travel-time tables</span></a> for
+LOCSAT <span id="id3">[<a class="reference internal" href="../base/references.html#id132" title="LOCSAT. SeisComP locator. URL: https://docs.gempa.de/seiscomp/current/apps/global_locsat.html.">4</a>]</span> based on the IASP91 Earth model to enhance locating local earthquakes.</p>
+</div>
+<div class="section" id="s-phases">
+<h3>S phases<a class="headerlink" href="#s-phases" title="Permalink to this headline">¶</a></h3>
+<p>In order to deliver high-quality picks from S phases, the <a class="reference internal" href="#scanloc"><span class="std std-ref">scanloc</span></a> package
+also includes the <em>saic</em> plugin with the enhanced <a class="reference internal" href="../base/sphase-detector.html#scanloc-spicker"><span class="std std-ref">S-phase picker</span></a>.
+The S-phase picker can be applied to detect S phases on the horizontal components
+or on the vertical component in case of 1-component sensors. In addition the scanloc
+package comes with the <a class="reference internal" href="../base/sphase-detector.html#scanloc-spick-debugger"><span class="std std-ref">graphical debugger for the S-phase picker</span></a>
+provided by the <em>spickdbg</em> plugin.</p>
+</div>
+<div class="section" id="auxiliary-tools">
+<h3>Auxiliary tools<a class="headerlink" href="#auxiliary-tools" title="Permalink to this headline">¶</a></h3>
+<p>The scanloc package also ships with auxiliary Python script for
+<a class="reference internal" href="#scanloc-example"><span class="std std-ref">real-time or non-real-time playbacks</span></a> or tuning. Read the
+<a class="reference internal" href="../base/auxiliary.html#sec-scanloc-aux-tools"><span class="std std-ref">dedicated section</span></a> for more details.</p>
+</div>
+</div>
+<div class="section" id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Buffering of <a class="reference internal" href="#scanloc-buffer"><span class="std std-ref">picks and origins</span></a>,</p></li>
+<li><p><a class="reference internal" href="#scanloc-clustering"><span class="std std-ref">Clustering</span></a> of P picks:</p>
+<ul class="simple">
+<li><p>cluster formation,</p></li>
+<li><p>splitting of clusters in case of multiple P picks from the same station.</p></li>
+</ul>
+<p>Clustering is skipped in case of an external origin.</p>
+</li>
+<li><p><a class="reference internal" href="#scanloc-assoc"><span class="std std-ref">Association</span></a> of P and S picks to clusters and external
+origins.</p></li>
+<li><p><a class="reference internal" href="#scanloc-locator"><span class="std std-ref">Locating origins</span></a> and formation of
+<a class="reference internal" href="#scanloc-internal"><span class="std std-ref">internal events</span></a>,</p></li>
+<li><p>Evaluation and <a class="reference internal" href="#scanloc-send"><span class="std std-ref">sending</span></a> of origins.</p></li>
+</ol>
+<div class="figure align-center" id="id22">
+<span id="fig-scanloc-workflow"></span><a class="reference internal image-reference" href="../_images/workflow.png"><img alt="../_images/workflow.png" src="../_images/workflow.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Figure 2: Simplified work flow of scanloc.</span><a class="headerlink" href="#id22" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="pick-and-origin-buffering">
+<span id="scanloc-buffer"></span><h3>Pick and origin buffering<a class="headerlink" href="#pick-and-origin-buffering" title="Permalink to this headline">¶</a></h3>
+<p>The entry point of <em>scanloc</em> is the addObject method which handles incoming
+objects from the messaging system. By default it is subscribed to the messaging
+group <strong>PICK</strong> and <strong>LOCATION</strong>. Depending on which object type (pick or origin)
+is incoming different working steps are proceeded.</p>
+<ul class="simple">
+<li><p>In case a <strong>pick</strong> arrives, <em>scanloc</em></p>
+<ul>
+<li><p>tests the evaluation status. Rejected picks are ignored unless the
+command-line option <code class="docutils literal notranslate"><span class="pre">--allow-rejected-picks</span></code> is given.</p></li>
+<li><p>adds the pick to the pick buffer keeping it for the time given by
+<a class="reference internal" href="#confval-buffer.pickKeep"><code class="xref std std-confval docutils literal notranslate"><span class="pre">buffer.pickKeep</span></code></a> or <code class="docutils literal notranslate"><span class="pre">--pick-keep</span></code>,</p></li>
+<li><p>tries to use the pick for <a class="reference internal" href="#scanloc-clustering"><span class="std std-ref">clustering</span></a>,</p></li>
+<li><p>checks if the pick can be <a class="reference internal" href="#scanloc-assoc"><span class="std std-ref">associate to origins</span></a> in the
+origin buffer exceeding a configurable <a class="reference internal" href="#confval-minScore"><code class="xref std std-confval docutils literal notranslate"><span class="pre">minScore</span></code></a>.
+In case the pick can be associated, the scores for all new origins are
+calculated and the origin with the highest score is selected.</p></li>
+</ul>
+</li>
+<li><p>In case an <strong>origin</strong> arrives, <em>scanloc</em></p>
+<ul>
+<li><p>tests the evaluation mode. Manual origins are ignored unless
+<a class="reference internal" href="#confval-buffer.ignoreManualOrigins"><code class="xref std std-confval docutils literal notranslate"><span class="pre">buffer.ignoreManualOrigins</span></code></a> = <em>false</em>,</p></li>
+<li><p>adds the origin to the origin buffer keeping it the time given by
+<a class="reference internal" href="#confval-buffer.originKeep"><code class="xref std std-confval docutils literal notranslate"><span class="pre">buffer.originKeep</span></code></a> or <code class="docutils literal notranslate"><span class="pre">--origin-keep</span></code> seconds,</p></li>
+<li><p>tries to <a class="reference internal" href="#scanloc-assoc"><span class="std std-ref">associate additional picks</span></a> to the origin.</p></li>
+</ul>
+</li>
+</ul>
+<p>Adjust the <code class="xref std std-confval docutils literal notranslate"><span class="pre">buffer.*</span></code> parameters according to the times these objects
+are required for processing.</p>
+</div>
+<div class="section" id="clustering">
+<span id="scanloc-clustering"></span><h3>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h3>
+<p>In case the pick cannot be associated, the cluster search is started. The
+cluster search is based on the algorithm DBSCAN <span id="id4">[<a class="reference internal" href="../base/references.html#id87" title="DBSCAN. Data clustering algorithm. URL: http://en.wikipedia.org/wiki/DBSCAN.">1</a>]</span> which
+takes the required number of neighbours (<a class="reference internal" href="#confval-clusterSearch.minSize"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.minSize</span></code></a>)
+and <a class="reference internal" href="#confval-clusterSearch.maxSearchDist"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxSearchDist</span></code></a> as configuration parameters.</p>
+<p>The algorithm forms clusters of picks by searching for neighboring stations
+that have picks. <a class="reference internal" href="#scanloc-internal"><span class="std std-ref">Internal origins</span></a> are formed from clusters.
+The number of origins from cluster search is limited by the configuration parameter
+<a class="reference internal" href="#confval-clusterSearch.maxOrigins"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxOrigins</span></code></a>.</p>
+<p>The cluster search considers picks from stations by <img class="math" src="../_images/math/a0f7bb243fde3a3e3a53ae61efc07ae562a153dc.png" alt="distance"/> with:</p>
+<div class="math">
+<p><img src="../_images/math/88d3937322452b1c5ebc09f4bc31275d6db09cae.png" alt="distance \le maxSearchDist"/></p>
+</div><p>where maxSearchDist is given by the configurable parameter <a class="reference internal" href="#confval-clusterSearch.maxSearchDist"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxSearchDist</span></code></a>.
+<img class="math" src="../_images/math/a0f7bb243fde3a3e3a53ae61efc07ae562a153dc.png" alt="distance"/> is the vector sum of the time difference <img class="math" src="../_images/math/b4ed9c2e208e08edeca8b1550ec0840acd090276.png" alt="\Delta t"/>
+between the picks in units of seconds and of a potential travel time
+<img class="math" src="../_images/math/fcc9d39292b3558ec56e26ed0bc3889a4d125579.png" alt="tt"/> between the stations in units of seconds:</p>
+<div class="math">
+<p><img src="../_images/math/c2d20bc51c248e11f726c9cef7d2c0ef81c9ef0f.png" alt="distance = \sqrt{\Delta t^2 + tt^2}"/></p>
+</div><p>and</p>
+<div class="math">
+<p><img src="../_images/math/f9c4e2bfa55c8d83af847c5cd16bc1c418720d6b.png" alt="tt = \Delta x / v"/></p>
+</div><p>where <img class="math" src="../_images/math/7c3282642d867109f551c02c4946b913e5c0a430.png" alt="\Delta x"/> is the spatial distance between the stations in units of km and
+<img class="math" src="../_images/math/02d98909b5d6acd6a7ff927d4d42790bdd407d58.png" alt="v"/> is the <a class="reference internal" href="#confval-clusterSearch.averageVelocity"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.averageVelocity</span></code></a> in units of km/s. Therefore
+<img class="math" src="../_images/math/a0f7bb243fde3a3e3a53ae61efc07ae562a153dc.png" alt="distance"/> and <a class="reference internal" href="#confval-clusterSearch.maxSearchDist"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxSearchDist</span></code></a> take units of seconds.</p>
+<p>As the cluster search is done over time and location, the additional configurable
+velocity parameter, <a class="reference internal" href="#confval-clusterSearch.averageVelocity"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.averageVelocity</span></code></a>, is required to transform
+the input parameters of the cluster search in the same dimension (time).
+The velocity should represent the average apparent horizontal P-wave velocity of
+the crust.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When the number of buffered cluster origins reaches <a class="reference internal" href="#confval-clusterSearch.maxOrigins"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxOrigins</span></code></a>,
+no more new origins can be formed and warnings are issued. Adjust accordingly:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#confval-clusterSearch.maxOrigins"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxOrigins</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="#confval-buffer.pickKeep"><code class="xref std std-confval docutils literal notranslate"><span class="pre">buffer.pickKeep</span></code></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="limiting-in-time">
+<span id="sec-scanloc-cluster-time"></span><h4>Limiting in time<a class="headerlink" href="#limiting-in-time" title="Permalink to this headline">¶</a></h4>
+<p>In real time picks are received in the order of their creation times. They are
+considered for clustering if their pick times are within a time window
+before the <strong>cluster reference time</strong>. The time window is defined by
+<a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a> but the <strong>cluster reference time</strong> is defined
+either by the</p>
+<ul class="simple">
+<li><p>Pick time of the latest pick of the received picks when
+<a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = ‘LastPick’ (default),</p></li>
+<li><p>Pick time of the latest received pick which defines are group of <a class="reference internal" href="#confval-clusterSearch.minSize"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.minSize</span></code></a>
+picks within <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a> when
+<a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = ‘MaxPickDelay’. <strong>This mode is relevant
+if only very few stations with significantly different data delay provide the
+picks.</strong> Otherwise picks may not be available for clustering at the same time
+preventing to form clusters and new origins.</p></li>
+</ul>
+<p>Thus, when setting <a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = ‘MaxPickDelay’ re-setting
+the cluster reference time is delayed depending on the amount and density of incoming picks.
+With this option picks which have a larger delay can be considered. Such delays
+occur e.g. due to larger data delays or larger record lengths.</p>
+<div class="math">
+<p><img src="../_images/math/97e3b6969ef8fad3f176377107b51a556602002a.png" alt="pick delay = creationTime - pickTime"/></p>
+</div><p>where</p>
+<ul class="simple">
+<li><p><img class="math" src="../_images/math/e77d42ccf592a5fa184b785dd7527f144b4a7176.png" alt="pick.creationTime"/>:time at which the pick was made,</p></li>
+<li><p><img class="math" src="../_images/math/fbbbd8002afdc67319658bde3d2b163aeba8285c.png" alt="pickTime"/>: actual time of the phase arrival.</p></li>
+</ul>
+<p>Picks available within a trapezoid-like time window are considered for
+clustering.
+For a pick with zero delay, the cluster reference time is initially set and picks
+within the <strong>blue trapezoid</strong> (figure below) are considered.
+Normally, picks have some delay which delays defining the trapezoid. This makes accessible
+other picks available with some delay, too, allowing these picks to be considered
+(<strong>green trapezoid</strong>). Subsequently, the trapezoid is extended until the
+cluster reference time is updated.
+This may be the next pick with a larger pick time
+(<strong>olive trapezoid</strong>, <a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = ‘LastPick’) or
+the time of the pick which is preceded by at least <a class="reference internal" href="#confval-clusterSearch.minSize"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.minSize</span></code></a>
+picks within <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a> (<strong>yellow trapezoid</strong>,
+<a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = ‘MinPickDelay’).
+Thus, picks which have a long delay do not fall within the relevant trapezoid and
+cannot be considered for clustering as they are not available at the time of clustering.</p>
+<p>The trapezoid is set with respect to the cluster reference time, CRT1 in the figure below,
+considering the delay of the defining pick and the time until the next relevant
+pick which updates the reference time (CRT2):</p>
+<ul class="simple">
+<li><p>CRT2 with <a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = ‘LastPick’ or</p></li>
+<li><p>Deleyed CRT2 since <a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = ‘MaxPickDelay’.</p></li>
+</ul>
+<p>The longer the time until the update, the
+more picks with larger delays can be considered for clustering, e.g. the delayed
+clustered pick in the figure below.</p>
+<div class="figure align-center" id="id23">
+<a class="reference internal image-reference" href="../_images/cluster-reference.png"><img alt="../_images/cluster-reference.png" src="../_images/cluster-reference.png" style="width: 18cm;" /></a>
+<p class="caption"><span class="caption-text">Figure 3: Pick time vs. pick delay time for of picks for clustering.
+The cluster reference time determines the trapezoid within which picks can be
+considered for clustering.
+Here, the delayed clustered pick only becomes part of the cluster with
+<a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = ‘MaxPickDelay’.</span><a class="headerlink" href="#id23" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>For small and similar delays of all P picks, <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a>
+can be directly read from travel-time curves. A small margin should be added
+account for differences in delay.</p></li>
+<li><p>In offline XML playbacks, the creation times may not be representative of
+real-time conditions. Therefore, pick times may be used for the timing instead
+of creation times. Read the section <a class="reference internal" href="#scanloc-example"><span class="std std-ref">Examples and Playbacks</span></a> for more details
+and the consequences.</p></li>
+</ul>
+</div>
+<p>If picks arrive with a larger delay than others, there is a risk that they cannot
+be condsidered anymore for the cluster. When only few picks are available the events
+may then be missed. To overcome the issue, you may increase <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a>
+or set the parameter <a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = “MaxPickDelay”.
+While increasing <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a> may slow down the clustering
+and increase the risk to cluster unrelated picks,
+<a class="reference internal" href="#confval-clusterSearch.referenceTimeMode"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.referenceTimeMode</span></code></a> = “MaxPickDelay” will only increase the
+cluster reference time if at least <a class="reference internal" href="#confval-clusterSearch.minSize"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.minSize</span></code></a> P picks are
+available in the considered time window. Run <strong class="program">scanloc</strong> on the command line
+with the <code class="docutils literal notranslate"><span class="pre">--cluster-search-log-file</span></code> to learn about the cluster reference
+times and the considered picks. For more options read the section <a class="reference internal" href="#sec-scanloc-tuning"><span class="std std-ref">Tuning and optimization</span></a>.</p>
+<p>Within one cluster, the difference in the pick times between the
+cluster reference time and any other pick must thus not exceed <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a>.
+Otherwise the pick is rejected from clustering. The parameter <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a>
+has a big impact on the performance of the cluster search. Choosing the parameter
+as small as possible will speed up scanloc and will reduce the complexity of the
+cluster search.</p>
+<p>The DBSCAN algorithm can deliver multiple pick clusters. The cluster search can
+be disabled using <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Maximum allowed difference between P pick and cluster reference time(latest pick time).</span>
+<span class="c1"># The cluster search ignores all picks which exceed the value. Using &quot;-1&quot; enables all picks</span>
+<span class="c1"># regardless of the delay. Unit: seconds.</span>
+
+clusterSearch.maxPickDelay <span class="o">=</span> <span class="m">0</span>
+</pre></div>
+</div>
+<p>Then, only external origins can be considered for <a class="reference internal" href="#scanloc-assoc"><span class="std std-ref">phase association</span></a>.</p>
+</div>
+<div class="section" id="limiting-in-space">
+<h4>Limiting in space<a class="headerlink" href="#limiting-in-space" title="Permalink to this headline">¶</a></h4>
+<p>The cluster search can be constraint to stations within a region given by the
+coordinate of a central point and the radius around that point. The region constraint
+is configured through <a class="reference internal" href="#confval-clusterSearch.regionFilter"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.regionFilter</span></code></a>. Applying this parameter
+will disregard picks from stations outside the region for cluster search increasing
+the speed and the complexity. Nevertheless, the excluded picks are available for
+<a class="reference internal" href="#scanloc-assoc"><span class="std std-ref">phase association</span></a>.</p>
+<p>For running the cluster search in several regions in parallel, different instances
+of scanloc taking picks from the same of different pickers can be created and started.</p>
+</div>
+<div class="section" id="cluster-splitting">
+<h4>Cluster splitting<a class="headerlink" href="#cluster-splitting" title="Permalink to this headline">¶</a></h4>
+<p>Clusters may contain P picks from the same station. Therefore, the clusters are
+split separating clusters with only one pick per stations. All new clusters are
+considered new origins. By activating <a class="reference internal" href="#confval-clusterSearch.checkOrigins"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.checkOrigins</span></code></a>, all
+new clusters are checked again
+and clusters not meeting the configured cluster criteria are removed from the buffer.
+The check imposes an additional overhead on the cluster search but it typically
+lowers the chance for fake solutions and it also lowers the load on the
+<a class="reference internal" href="#scanloc-assoc"><span class="std std-ref">phase association</span></a>.</p>
+</div>
+<div class="section" id="tuning-and-optimization">
+<span id="sec-scanloc-tuning"></span><h4>Tuning and optimization<a class="headerlink" href="#tuning-and-optimization" title="Permalink to this headline">¶</a></h4>
+<p>Use the option <code class="xref std std-confval docutils literal notranslate"><span class="pre">cluster-search-log-file</span></code> to store detailed information
+on the clustering process in a file, e.g. <em>cluster.log</em>. The given values can be
+used to optimize the cluster search parameters.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scanloc --ep picks.xml -d <span class="o">[</span>database<span class="o">]</span> --cluster-search-log-file cluster.log &gt; origins.xml
+</pre></div>
+</div>
+<p>For optimizing the configuration of the parameter <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a>
+use the default value first:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>clusterSearch.maxPickDelay <span class="o">=</span> -1
+</pre></div>
+</div>
+<p>The given output file contains the clusters with the pick details. After each cluster
+the maximum time interval between the first and the last pick
+in the cluster is provided. A summary at the end of the file shows the largest value, e.g.:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>+ cluster source: -69.6279, -21.4715, <span class="m">1231891115</span>.191
+ + pick ID: *20090113.235827.36-AIC-CX.PB01..HHZ X: -69.4874 Y: -21.0432 time: <span class="m">1231891107</span>.368 distance: <span class="m">14</span>.715 s
+ + pick ID:  <span class="m">20090113</span>.235832.91-AIC-CX.PB02..HHZ X: -69.8960 Y: -21.3197 time: <span class="m">1231891112</span>.918 distance: <span class="m">8</span>.443 s
+ + pick ID:  <span class="m">20090113</span>.235839.53-AIC-CX.PB07..HHZ X: -69.8862 Y: -21.7267 time: <span class="m">1231891119</span>.538 distance: <span class="m">10</span>.677 s
+ + pick ID:  <span class="m">20090113</span>.235840.94-AIC-CX.PB09..HHZ X: -69.2419 Y: -21.7964 time: <span class="m">1231891120</span>.940 distance: <span class="m">14</span>.645 s
+   + <span class="m">1</span> split cluster
+     + cluster
+       + <span class="m">20090113</span>.235827.36-AIC-CX.PB01..HHZ
+       + <span class="m">20090113</span>.235832.91-AIC-CX.PB02..HHZ
+       + <span class="m">20090113</span>.235839.53-AIC-CX.PB07..HHZ
+       + <span class="m">20090113</span>.235840.94-AIC-CX.PB09..HHZ
+       + maximum pick <span class="nb">time</span> interval <span class="k">for</span> this cluster: <span class="m">13</span>.572 s
+     + end
+   + end
+  + end
+ + end
+ + summary:
+   + maxPickDelay: maximum experienced value: <span class="m">40</span>.840 s
+</pre></div>
+</div>
+<p>The summary value can be used as a lower proxy to set <a class="reference internal" href="#confval-clusterSearch.maxPickDelay"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxPickDelay</span></code></a>.</p>
+</div>
+<div class="section" id="locating">
+<h4>Locating<a class="headerlink" href="#locating" title="Permalink to this headline">¶</a></h4>
+<p>Clusters are located by the configured <a class="reference internal" href="#scanloc-locator"><span class="std std-ref">locator</span></a>. If the
+location fails, the origin is ignored unless <a class="reference internal" href="#confval-clusterSearch.preliminary"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.preliminary</span></code></a>
+is active. Then, preliminary values are chosen:</p>
+<ul class="simple">
+<li><p>Origin location is the center of the detecting stations,</p></li>
+<li><p>Origin time is the time of the first phase pick,</p></li>
+<li><p>Status is set to <cite>preliminary</cite>.</p></li>
+</ul>
+<p>The status will be unset if more phases can be associated and the new origin can
+be located.</p>
+</div>
+</div>
+<div class="section" id="phase-association">
+<span id="scanloc-assoc"></span><h3>Phase Association<a class="headerlink" href="#phase-association" title="Permalink to this headline">¶</a></h3>
+<p>When a cluster of P picks meeting <a class="reference internal" href="#confval-association.minPhase"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.minPhase</span></code></a> is found
+or an external origins arrives, <strong class="program">scanloc</strong> associates additional picks
+from P and S waves which are <a class="reference internal" href="#scanloc-buffer"><span class="std std-ref">buffered</span></a>.
+The new set of picks are used for <a class="reference internal" href="#scanloc-locator"><span class="std std-ref">relocating</span></a>.</p>
+<p>In case the buffered pick is a P pick the algorithm
+directly attempts to associate the pick solely based on the residual. It tries
+to relocate
+the solution after each successful association. P picks with travel-time
+residuals larger than <a class="reference internal" href="#confval-association.maxResidual"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.maxResidual</span></code></a> are rejected.
+After the P-picks are associated and relocated, <em>scanloc</em> tries to associate the
+S picks. This association is not based
+on the residual but on the P pick referenced by the S pick. The S pick is
+only associated in case the reference P pick is already associated to the
+origin. Also after each S pick a relocation is done. In case the relocation
+fails or the event residual is larger than <a class="reference internal" href="#confval-maxRMS"><code class="xref std std-confval docutils literal notranslate"><span class="pre">maxRMS</span></code></a>,
+the S pick is associated with a weight of 0. The score of the resulting
+origin is compared with scores of origins belonging to the same event. In case
+the score is higher than the rest of the origins, the origin is send out.</p>
+<p>In addition to origins from the cluster search, <em>scanloc</em> can also treat external
+origins that are created by other associators, e.g. <strong class="program">scautoloc</strong>
+<span id="id5">[<a class="reference internal" href="../base/references.html#id178" title="scautopick. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scautopick.html.">10</a>]</span>.
+In case an such origin is received <em>scanloc</em> tries to associate all picks in the
+buffer to the origin. The association and the following processes are the same as
+described above. See figure <a class="reference internal" href="#fig-scanloc-workflow"><span class="std std-ref">Simplified work flow of scanloc.</span></a> for an overview.</p>
+<p>Only picks from stations within a configured time window and a maximum epicentral
+distance range are considered. The time windows are computed from the predicted
+arrival times of P and S waves and the margins given by <a class="reference internal" href="#confval-association.maxPResidual"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.maxPResidual</span></code></a>
+and <a class="reference internal" href="#confval-association.maxPResidual"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.maxPResidual</span></code></a>, respectively.
+The maximum expicentral distance is configured for all stations by
+<a class="reference internal" href="#confval-association.maxDist"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.maxDist</span></code></a>. However, this parameter can be overruled per
+network and station by providing a station table in a file. The file name is
+configured by
+<a class="reference internal" href="#confval-association.stationConfig"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.stationConfig</span></code></a>. As in scautoloc each line of the table
+consists of the network code, the station code, a switch and the maximum epicentral
+distance in degrees. Wildcards can be used for the network and the station code.
+The switch causes the associator to consider (=1) or to ignore (=0) a network or
+a station.
+The last occurrence of an item in a table overrules previous ones, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>* * <span class="m">1</span> <span class="m">180</span>
+GR * <span class="m">1</span> <span class="m">60</span>
+GR GRA1 <span class="m">1</span> <span class="m">20</span>
+Z3 * <span class="m">0</span> <span class="m">180</span>
+</pre></div>
+</div>
+<p>For associating the picks, travel times from look-up tables are used. The
+<a class="reference internal" href="#confval-association.tableType"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.tableType</span></code></a> and the <a class="reference internal" href="#confval-association.table"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.table</span></code></a> can be
+configured to provide specific tables which may be more appropriate for specific
+regions. Currently, only travel-time tables of <a class="reference internal" href="#confval-association.tableType"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.tableType</span></code></a>
+from LOCSAT and libtau are supported. scanloc provides
+<a class="reference internal" href="../base/locsat-tables.html#scanloc-ttt"><span class="std std-ref">densely-sampled travel-time tables</span></a> for LOCSAT.</p>
+<p>Travel times from other sources can be considered by a plugin exposing
+the travel times to the travel-time interface.
+The considered table must provide the time for all considered phases.</p>
+<p>Example configuration (<code class="file docutils literal notranslate"><span class="pre">scanloc.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Type of travel-time tables for phase association. May be different from locator.</span>
+<span class="c1"># Use e.g. libtau or LOCSAT.</span>
+association.tableType <span class="o">=</span> LOCSAT
+
+<span class="c1"># Name of travel-time table used for phase association. May be different from locator</span>
+<span class="c1"># profile.</span>
+association.table <span class="o">=</span> iasp91_scanloc
+</pre></div>
+</div>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><a class="reference internal" href="#confval-association.tableType"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.tableType</span></code></a></p></th>
+<th class="head"><p>location of <a class="reference internal" href="#confval-association.table"><code class="xref std std-confval docutils literal notranslate"><span class="pre">tables</span></code></a></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>libtau</p></td>
+<td><p>&#64;DATADIR&#64;/ttt</p></td>
+</tr>
+<tr class="row-odd"><td><p>LOCSAT</p></td>
+<td><p>&#64;DATADIR&#64;/locsat/tables</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Travel-time tables used during association and location may be different.
+Therefore the travel-time residuals visible after relocating may be different
+from the travel-time residuals considered during association.
+The differences must be considered when configuring <a class="reference internal" href="#confval-association.maxPResidual"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.maxPResidual</span></code></a>
+and <a class="reference internal" href="#confval-association.maxSResidual"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.maxSResidual</span></code></a>.</p>
+</div>
+<p>In order to make the alternative locator available to <em>scanloc</em>, the respective
+plugin must be loaded. The list of available locators can be provided by <em>scanloc</em>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp <span class="nb">exec</span> scanloc --locator-list
+</pre></div>
+</div>
+<p><strong>Note:</strong> Computational speed can be an issue when alternative locators are used
+and when many picks are to be tested during association. In this case <em>scanloc</em>
+can be configured with LocSAT but screloc <span id="id6">[<a class="reference internal" href="../base/references.html#id216" title="screloc. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/screloc.html.">16</a>]</span> may be used
+along with the preferred locator and profile to relocate the origin. The locator
+NonLinLoc <span id="id7">[<a class="reference internal" href="../base/references.html#id152" title="A. Lomax. The NonLinLoc Software Guide. Manual. URL: http://alomax.free.fr/nlloc/.">17</a>]</span> is certainly too slow for being used in
+<strong class="program">scanloc</strong> but is a good option for <strong class="program">screloc</strong>.</p>
+</div>
+<div class="section" id="status-of-origins">
+<span id="scanloc-origin-status"></span><h3>Status of origins<a class="headerlink" href="#status-of-origins" title="Permalink to this headline">¶</a></h3>
+<p>The status of origins can be set during pick processing</p>
+<ul class="simple">
+<li><p>Normally, the status of origins is <strong>unset</strong>.</p></li>
+<li><p>The status of origins from cluster search which cannot be relocated is <strong>preliminary</strong>.</p></li>
+<li><p>The status of origins which can be located is set to <strong>unset</strong> if the origin status
+of the origin was previously set.</p></li>
+</ul>
+<p>However, the evaluation status may be later changed at
+different times by different modules, e.g. the gempa module <strong class="program">sceval</strong>.
+In order to track this history a journal entry is created and sent
+when running scanloc with a connection to the messaging or added to the
+XML output long with the origins.
+In future versions of SeisComP such journal entries will be made accessible in
+<strong class="program">scolv</strong>.</p>
+</div>
+<div class="section" id="sending-of-origins">
+<span id="scanloc-send"></span><h3>Sending of origins<a class="headerlink" href="#sending-of-origins" title="Permalink to this headline">¶</a></h3>
+<p>Before sending a new <a class="reference internal" href="#scanloc-internal"><span class="std std-ref">internal origin</span></a> to the messaging
+or to XML output (–ep) it is tested against the configuration:</p>
+<ul class="simple">
+<li><p>Picks are removed when their travel-time residual &gt; <a class="reference internal" href="#confval-association.maxResidual"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.maxResidual</span></code></a>
+and origins are <a class="reference internal" href="#scanloc-locator"><span class="std std-ref">relocated</span></a>,</p></li>
+<li><p>Origins are skipped when the score &lt; <a class="reference internal" href="#confval-minScore"><code class="xref std std-confval docutils literal notranslate"><span class="pre">minScore</span></code></a>,</p></li>
+<li><p>Origins are skipped when the depth &gt; <a class="reference internal" href="#confval-ignoreDepth"><code class="xref std std-confval docutils literal notranslate"><span class="pre">ignoreDepth</span></code></a>.</p></li>
+</ul>
+<p>The remaining internal origins are evaluated based on <a class="reference internal" href="#scanloc-scoring"><span class="std std-ref">scoring</span></a>.
+The best origin of the same <a class="reference internal" href="#scanloc-internal"><span class="std std-ref">internal event</span></a> is the one
+which has the highest score at the time of availability. When meeting the parameters
+<a class="reference internal" href="#confval-ignoreDepth"><code class="xref std std-confval docutils literal notranslate"><span class="pre">ignoreDepth</span></code></a>, <a class="reference internal" href="#confval-maxRMS"><code class="xref std std-confval docutils literal notranslate"><span class="pre">maxRMS</span></code></a> and <a class="reference internal" href="#confval-minScore"><code class="xref std std-confval docutils literal notranslate"><span class="pre">minScore</span></code></a> it is sent to the
+SeisComP messaging <span id="id8">[<a class="reference internal" href="../base/references.html#id140" title="messaging. SeisComP concept. URL: https://docs.gempa.de/seiscomp/current/base/concepts/messaging.html.">6</a>]</span> or to stdout in case of XML playbacks
+(<cite>–ep</cite>).</p>
+<p>The sending of origins may be delayed allowing to find new origins with higher score.
+The delay reduces the amount of origins in the SeisComP system and the load of other modules.
+It is controlled by the <code class="xref std std-confval docutils literal notranslate"><span class="pre">publication.*</span></code> configuration parameters.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In XML-based playbacks, the <code class="xref std std-confval docutils literal notranslate"><span class="pre">publication.*</span></code> configuration parameters
+are ignored and all origins are sent.</p>
+</div>
+</div>
+</div>
+<div class="section" id="internal-origins-and-events">
+<span id="scanloc-internal"></span><h2>Internal Origins and Events<a class="headerlink" href="#internal-origins-and-events" title="Permalink to this headline">¶</a></h2>
+<p><em>scanloc</em> forms</p>
+<ul class="simple">
+<li><p><strong>Internal origins</strong> from the locations and the associated picks (arrivals) of
+new arrival sets,</p></li>
+<li><p><strong>Internal events</strong> are formed from the internal origins based on the
+<code class="xref std std-confval docutils literal notranslate"><span class="pre">eventAssociation.*</span></code> parameters. Only if the <a class="reference internal" href="#scanloc-scoring"><span class="std std-ref">score</span></a>
+of a new origin exceeds the score of the last sent origin of the same internal
+event, the new origin is <a class="reference internal" href="#scanloc-send"><span class="std std-ref">send out</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="locating-origins">
+<span id="scanloc-locator"></span><h2>Locating Origins<a class="headerlink" href="#locating-origins" title="Permalink to this headline">¶</a></h2>
+<p>scanloc locates internal origins based on the configuration by the <code class="xref std std-confval docutils literal notranslate"><span class="pre">locator.*</span></code>
+parameters.
+Consider a fast locator (<a class="reference internal" href="#confval-locator.type"><code class="xref std std-confval docutils literal notranslate"><span class="pre">locator.type</span></code></a>), e.g. LOCSAT or Hypo71 <span id="id9">[<a class="reference internal" href="../base/references.html#id115" title="Hypo71. SeisComP locator. URL: https://docs.gempa.de/seiscomp/current/apps/global_hypo71.html.">2</a>]</span>
+and appropriate travel-time tables <a class="reference internal" href="#confval-locator.profile"><code class="xref std std-confval docutils literal notranslate"><span class="pre">locator.profile</span></code></a>,
+e.g. the provided <a class="reference internal" href="../base/locsat-tables.html#scanloc-ttt"><span class="std std-ref">dense travel-time tables</span></a>.
+If the location fails and <a class="reference internal" href="#confval-locator.fixDepth"><code class="xref std std-confval docutils literal notranslate"><span class="pre">locator.fixDepth</span></code></a> is active, the location
+depth is fixed to <a class="reference internal" href="#confval-defaultDepth"><code class="xref std std-confval docutils literal notranslate"><span class="pre">defaultDepth</span></code></a> and the origin is relocated.</p>
+<p>Example configuration (<code class="file docutils literal notranslate"><span class="pre">scanloc.cfg</span></code>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># The locator type to use</span>
+locator.type <span class="o">=</span> LOCSAT
+
+<span class="c1"># The locator profile to use</span>
+locator.profile <span class="o">=</span> iasp91_scanloc
+</pre></div>
+</div>
+</div>
+<div class="section" id="scoring-origins">
+<span id="scanloc-scoring"></span><h2>Scoring Origins<a class="headerlink" href="#scoring-origins" title="Permalink to this headline">¶</a></h2>
+<p>Each <a class="reference internal" href="#scanloc-internal"><span class="std std-ref">internal origin</span></a> is evaluated by calculating a
+<img class="math" src="../_images/math/10c5221591d4858b98791acd7585140f948bfd16.png" alt="score"/>.
+The <img class="math" src="../_images/math/10c5221591d4858b98791acd7585140f948bfd16.png" alt="score"/> is calculated as a weighted sum from the number of associated
+P and S picks (pCount and pCount), of loosely associated P and S picks
+(p0Count and s0Count) which are not used for locating, depth (depthFactor) and
+residual (residualFactor):</p>
+<div class="math">
+<p><img src="../_images/math/4cf4759b694d6a3ff5517b52d2e660bcff85c73f.png" alt="score =\  &amp;score.weights.p \times pCount + score.weights.p0 \times p0Count \\
+             +\ &amp;score.weights.s \times sCount + score.weights.s0 \times s0Count \\
+             +\ &amp;score.weights.depth \times depthFactor \\
+             +\ &amp;score.weights.residual \times residualFactor;"/></p>
+</div><p>The weight factors  <a class="reference internal" href="#confval-score.weights.p"><code class="xref std std-confval docutils literal notranslate"><span class="pre">score.weights.p</span></code></a> , <a class="reference internal" href="#confval-score.weights.p0"><code class="xref std std-confval docutils literal notranslate"><span class="pre">score.weights.p0</span></code></a> ,
+<a class="reference internal" href="#confval-score.weights.s"><code class="xref std std-confval docutils literal notranslate"><span class="pre">score.weights.s</span></code></a> , <a class="reference internal" href="#confval-score.weights.s0"><code class="xref std std-confval docutils literal notranslate"><span class="pre">score.weights.s0</span></code></a>
+<a class="reference internal" href="#confval-score.weights.depth"><code class="xref std std-confval docutils literal notranslate"><span class="pre">score.weights.depth</span></code></a> and <a class="reference internal" href="#confval-score.weights.residual"><code class="xref std std-confval docutils literal notranslate"><span class="pre">score.weights.residual</span></code></a>
+can be configured.</p>
+<p>The values for depthFactor and residualFactor are derived from considered
+depth and residual and the configured values for
+<a class="reference internal" href="#confval-ignoreDepth"><code class="xref std std-confval docutils literal notranslate"><span class="pre">ignoreDepth</span></code></a> and <a class="reference internal" href="#confval-association.maxResidual"><code class="xref std std-confval docutils literal notranslate"><span class="pre">association.maxResidual</span></code></a>.
+Higher weight is given to origins with shallower depth. Adjust
+<a class="reference internal" href="#confval-score.weights.depth"><code class="xref std std-confval docutils literal notranslate"><span class="pre">score.weights.depth</span></code></a> to form the score
+independent of depth, e.g. in regions with shallow and deep seismicity:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>score.weights.depth = 0
+</pre></div>
+</div>
+</div>
+<div class="section" id="association-of-teleseismic-phases">
+<span id="scanloc-zero-weight"></span><h2>Association of Teleseismic Phases<a class="headerlink" href="#association-of-teleseismic-phases" title="Permalink to this headline">¶</a></h2>
+<p>Dense local networks used to monitor local seismicity are often able to catch
+also a significant number of phases from earthquakes at teleseismic distances.
+Such phases include Pdiff or PKP.
+Especially PKP may contain a significant amount of energy at higher frequencies.
+Therefore PKP is often detected by networks that are tuned to detect
+local earthquakes.
+Due to the steep incidence and the low horizontal slowness of these phases, they
+are sometimes located as fake deep earthquakes below the network.
+<em>scanloc</em> can be used to suppress this type of fake events.</p>
+<p>In a 2-pipeline setup, <em>scanloc</em> can associcate such teleseismic phases recorded
+by the local network with origins that were found by the pipeline for
+monitoring teleseismic earthquakes. Then <strong class="program">scevent</strong> <span id="id10">[<a class="reference internal" href="../base/references.html#id194" title="scevent. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scevent.html.">13</a>]</span>
+will associate
+the origins from the teleseismic pipeline with the fake origins from the
+pipeline for local monitoring to the same event. The assumption is that the origins
+from the teleseismic pipeline win over the origins from pipeline for local monitoring
+because they have more associated arrivals. In this case the origins from pipeline
+for teleseismic monitoring that has most phases becomes the preferred origin for
+the event. This <a class="reference internal" href="#scanloc"><span class="std std-ref">scanloc</span></a> feature requires an extended license.</p>
+<p><em>Setup of a 2-pipeline system</em></p>
+<ol class="arabic">
+<li><p>Generate a 2-pipeline system involving at least scautopick <span id="id11">[<a class="reference internal" href="../base/references.html#id178" title="scautopick. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scautopick.html.">10</a>]</span>,
+<strong class="program">scanloc</strong> and scevent <span id="id12">[<a class="reference internal" href="../base/references.html#id194" title="scevent. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scevent.html.">13</a>]</span> :</p>
+<ul class="simple">
+<li><p><strong>Pipeline 1</strong> monitors teleseismic earthquakes using <strong class="program">scautopick</strong>,
+<strong class="program">scautoloc</strong>, <strong class="program">scanloc</strong> and default message groups.</p></li>
+<li><p><strong>Pipeline 2</strong> monitors local earthquakes using <em>l1autopick</em>, <em>l1autoloc</em>
+and <em>l1scanloc</em> using the message groups L1PICK and L1LOCATION.</p></li>
+</ul>
+</li>
+<li><p>Let <em>scanloc</em> not perform cluster search (<a class="reference internal" href="#confval-clusterSearch.maxOrigins"><code class="xref std std-confval docutils literal notranslate"><span class="pre">clusterSearch.maxOrigins</span></code></a> = 0)
+but allow <em>scanloc</em> to only associate P picks from pipelines 2 based on origins
+from <strong class="program">scautoloc</strong> (connection.subscriptions = “LOCATION, L1PICK” in the global
+module parameters). Configure <em>scanloc</em> to associate the picks from pipeline 2
+as picks with zero weight when they are, e.g., in the PKP or Pdiff distance
+range. Use one zeroWeight profiles per phase.</p>
+<p>In order to facilitate association of teleseismic picks, the picks and the origins
+must be kept in memory for sufficient time. Increase <a class="reference internal" href="#confval-buffer.pickKeep"><code class="xref std std-confval docutils literal notranslate"><span class="pre">buffer.pickKeep</span></code></a>
+and <a class="reference internal" href="#confval-buffer.originKeep"><code class="xref std std-confval docutils literal notranslate"><span class="pre">buffer.originKeep</span></code></a> accordingly, e.g. to 1800 s.</p>
+<p>In this way zero-weight picks will not be used for locating the event but are
+part of the origin and can be considered by <em>scevent</em>.</p>
+</li>
+<li><p>Configure <em>scevent</em> to listen to the message groups from both pipelines (e.g.
+LOCATION and L1LOCATION) and activate the <em>scevent</em> module parameter
+<em>eventAssociation.allowLooseAssociatedArrivals</em> (<code class="file docutils literal notranslate"><span class="pre">scevent.cfg</span></code>).</p>
+<div class="figure align-center" id="id24">
+<a class="reference internal image-reference" href="../_images/zeroweight_pipeline.png"><img alt="../_images/zeroweight_pipeline.png" src="../_images/zeroweight_pipeline.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-text">Figure 4: Parameter exchange in a 2-pipeline system. The messaging system, responsible
+for the parameter exchange, is representated by the circles, indicating the
+message groups. Teleseismic monitoring is configured with scautopick,
+scanloc, scautoloc and local monitoring with l1autopick,
+l1scanloc, l1autoloc.</span><a class="headerlink" href="#id24" title="Permalink to this image">¶</a></p>
+</div>
+</li>
+</ol>
+<p><em>Playback using picks and amplitudes from 2-pipeline system (real-event examples)</em></p>
+<div class="figure align-center" id="id25">
+<span id="fig-zeroweight1"></span><a class="reference internal image-reference" href="../_images/scolv_zeroweight1.png"><img alt="../_images/scolv_zeroweight1.png" src="../_images/scolv_zeroweight1.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-text">Figure 5: Location tab in <em>scolv</em> with zero-weight picks associated by <em>scanloc</em> as PKP phases.</span><a class="headerlink" href="#id25" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id26">
+<span id="fig-zeroweight2"></span><a class="reference internal image-reference" href="../_images/scolv_zeroweight2.png"><img alt="../_images/scolv_zeroweight2.png" src="../_images/scolv_zeroweight2.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-text">Figure 6: Event tab in <em>scolv</em> showing the origins from the pipelines for local and
+teleseseismic monitoring. The preferred origin located near the Solomon
+Islands is shown in bold on top. Fake origins in Europe located by pipeline
+for local monitoring based on PKP phases falsely considered P phases are
+associated to the event but do not form the preferred origin at any time.</span><a class="headerlink" href="#id26" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="examples-and-playbacks">
+<span id="scanloc-example"></span><h2>Examples and Playbacks<a class="headerlink" href="#examples-and-playbacks" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Run <em>scanloc</em> during real-time processing:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp start scanloc
+</pre></div>
+</div>
+</li>
+<li><p>Run <em>scanloc</em>  on the command line for pick playbacks or debugging output:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scanloc --debug
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In playbacks of picks in XML files the performance of scanloc may differ
+from real-time operation based on messaging:</p>
+<ul>
+<li><p>In real-time operation, the picks are made e.g. by <strong class="program">scautopick</strong> at
+some time and considered by scanloc according to
+their creation times. Delayed picks may become irrelevant for the processing.
+Configure <a class="reference internal" href="#confval-buffer.pickKeep"><code class="xref std std-confval docutils literal notranslate"><span class="pre">buffer.pickKeep</span></code></a> and <a class="reference internal" href="#confval-buffer.originKeep"><code class="xref std std-confval docutils literal notranslate"><span class="pre">buffer.originKeep</span></code></a> accordingly.</p>
+<p>However, the <strong>creation times of picks may be obscured</strong> when created in a
+<strong class="program">scautopick</strong> playback and picks may have almost identical creation times
+independent of their pick times.</p>
+</li>
+<li><p><a class="reference internal" href="#sec-scanloc-rt-playbacks"><span class="std std-ref">In message-based playbacks</span></a>, picks are
+provided to scanloc via the messaging system. When created in real time,
+the <strong>creation times</strong> of picks form a
+realistic time reference for scanloc and is therefore considered.</p></li>
+<li><p><a class="reference internal" href="#sec-scanloc-xml-playbacks"><span class="std std-ref">In offline XML playbacks</span></a> (<code class="docutils literal notranslate"><span class="pre">--ep</span></code>),
+scanloc considers picks by default according to their actual <strong>pick times</strong>.
+For picks created in an offline playback this is most reasonable as creation
+time is not a valid time reference anymore.
+<strong>However, referencing to pick time may result in a behavior which is
+different from real-time conditions.</strong></p>
+<p>Therefore, for mimicking real-time conditions in playbacks of picks obtained
+in real-time conditions consider the command-line option <code class="docutils literal notranslate"><span class="pre">--timing</span> <span class="pre">creationTime</span></code>.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="real-time-xml-playbacks">
+<span id="sec-scanloc-rt-playbacks"></span><h3>Real-time XML playbacks<a class="headerlink" href="#real-time-xml-playbacks" title="Permalink to this headline">¶</a></h3>
+<p>Real-time playbacks are useful to test the behavior of scanloc in real time based
+on picks generated before. This type of playbacks is supported by
+<a class="reference internal" href="../base/auxiliary.html#sec-scanloc-aux-tools"><span class="std std-ref">auxialiary scripts</span></a> shipped with the scanloc package.</p>
+<ul>
+<li><p>Use phase picks obtained in real-time</p>
+<ol class="arabic">
+<li><p>Read real-time picks from the database and store them in <code class="file docutils literal notranslate"><span class="pre">picks.xml</span></code> for later playback:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>dump_picks -r -90,-180,90,180 -d <span class="o">[</span>database<span class="o">]</span> -t <span class="s2">&quot;2015-08-17 08:03:00.00~2015-08-17 08:04:00.00&quot;</span> -o picks.xml
+</pre></div>
+</div>
+</li>
+<li><p>Play back picks stored in XML format at normal speed (with seiscomp
+messaging), start <em>scanloc</em> separately for debug messages on the command line
+<strong>considering default timing by creation time of the picks</strong>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp stop
+seiscomp start scmaster scamp scmag scevent
+
+scanloc --debug
+playback_picks picks.xml
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li><p>Play back picks with amplitudes originating from different
+pipelines <span id="id13">[<a class="reference internal" href="../base/references.html#id163" title="pipeline. SeisComP3 wiki. URL: https://www.SeisComP3.org/wiki/recipes/multiple-pick-loc-pipeline.">7</a>]</span> at normal speed (with SeisComP messaging).
+Picks and amplitudes in XML format
+are sent to the separated message groups PICK, AMPLITUDE and L1PICK.
+scanloc and l1scanloc listen to picks from PICK and L1PICKS, respectively.
+scautoloc <span id="id14">[<a class="reference internal" href="../base/references.html#id179" title="scautoloc. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scautoloc.html.">9</a>]</span> additionally needs the pick amplitudes from the
+subscribed amplitude groups.</p>
+<ol class="arabic simple">
+<li><p>Create the pick XML files including the pick amplitudes in an offline playback
+by the modules as in your 2-pipeline system.</p></li>
+<li><p>Start all required modules including the scanloc instances</p></li>
+<li><p>Execute <em>playback_picks</em> with <code class="docutils literal notranslate"><span class="pre">--timing</span> <span class="pre">pickTime</span></code> for sending the picks and
+amplitudes created by different pickers at different times.</p></li>
+</ol>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scautopick --ep --playback -I <span class="o">[</span>your_file<span class="o">]</span> -d <span class="o">[</span>database<span class="o">]</span> &gt; picks.xml
+l1autopick --ep --playback -I <span class="o">[</span>your_file<span class="o">]</span> -d <span class="o">[</span>database<span class="o">]</span> &gt; l1picks.xml
+
+seiscomp start scmaster scamp scmag scevent scautoloc l1autoloc scanloc l1scanloc
+
+playback_picks picks.xml:PICK:AMPLITUDE l1picks.xml:L1PICK:AMPLITUDE --timing pickTime
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="offline-xml-playbacks">
+<span id="sec-scanloc-xml-playbacks"></span><h3>Offline XML playbacks<a class="headerlink" href="#offline-xml-playbacks" title="Permalink to this headline">¶</a></h3>
+<p>In offline XML playbacks (<code class="docutils literal notranslate"><span class="pre">--ep</span></code>), the picks are provided to scanloc in an XML file.
+scanloc write the results in XML format to stdout which can be re-directed into XML files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When picks are created in an offline playback use scanloc with default timing
+based on pick time corresponding to <code class="docutils literal notranslate"><span class="pre">--timing</span> <span class="pre">pickTime</span></code>! Otherwise you may
+use scanloc with the command-line option <code class="docutils literal notranslate"><span class="pre">--timing</span> <span class="pre">creationTime</span></code>.</p>
+</div>
+<ul>
+<li><p>Play back picks stored in XML format to locate events and to determined
+the magnitude. Intermediate results are stored in XML files.</p>
+<ol class="arabic">
+<li><p>Events do not exist in the database, use scdb <span id="id15">[<a class="reference internal" href="../base/references.html#id187" title="scdb. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scdb.html.">11</a>]</span> to populate the database
+with events in <code class="file docutils literal notranslate"><span class="pre">events.xml</span></code>.
+The messaging system is not running.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scautopick --ep --playback -I <span class="o">[</span>your_file<span class="o">]</span> -d <span class="o">[</span>database<span class="o">]</span> &gt; picks.xml
+scanloc --ep picks.xml -d <span class="o">[</span>database<span class="o">]</span> &gt; origins.xml
+scamp --ep origins.xml -d <span class="o">[</span>database<span class="o">]</span> -I <span class="o">[</span>your_file<span class="o">]</span> &gt; amps.xml
+scmag --ep amps.xml -d <span class="o">[</span>database<span class="o">]</span> &gt; mags.xml
+scevent --ep mags.xml -d <span class="o">[</span>database<span class="o">]</span> &gt; events.xml
+
+scdb -i events.xml -d <span class="o">[</span>database<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>New events not existing yet in the database shall be created, existing ones
+shall be updated with new origins. Run the messaging system and all
+modules that shall process the new parameters of the origin, e.g.
+scamp <span id="id16">[<a class="reference internal" href="../base/references.html#id177" title="scamp. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scamp.html.">8</a>]</span> scmag <span id="id17">[<a class="reference internal" href="../base/references.html#id203" title="scmag. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scmag.html.">14</a>]</span> , scevent <span id="id18">[<a class="reference internal" href="../base/references.html#id194" title="scevent. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scevent.html.">13</a>]</span>.
+Use scdispatch <span id="id19">[<a class="reference internal" href="../base/references.html#id189" title="scdispatch. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scdispatch.html.">12</a>]</span> to send the new objects to
+the messaging system. Get the picks from a scautopick playback or use
+<em>dump_picks</em>. Execute scanloc with the appropriate timing.**</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># either</span>
+scanloc --ep picks.xml -d <span class="o">[</span>database<span class="o">]</span> &gt; origins.xml
+<span class="c1"># or</span>
+scanloc --ep picks.xml -d <span class="o">[</span>database<span class="o">]</span> --timing creationTime &gt; origins.xml
+
+seiscomp start scmaster scamp scmag scevent
+scdispatch -H host -i origins.xml
+</pre></div>
+</div>
+<p>Instead of the origins, other parameters created by the
+procedures in (1.) may be dispatched, e.g. <code class="file docutils literal notranslate"><span class="pre">mags.xml</span></code>.</p>
+</li>
+</ol>
+</li>
+<li><p>Play back picks stored in XML format, without a database.</p>
+<ol class="arabic">
+<li><p>Store the station inventory and the
+binding configuration from a database in an XML file.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scxmldump -fI -o inventory.xml -d <span class="o">[</span>database<span class="o">]</span>
+scxmldump -fC -o config.xml -d <span class="o">[</span>database<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>Continue with the examples above replacing the database parameter
+<code class="docutils literal notranslate"><span class="pre">-d</span> <span class="pre">[database]</span></code> with <code class="docutils literal notranslate"><span class="pre">--inventory-db</span> <span class="pre">inventory.xml</span> <span class="pre">--config-db</span> <span class="pre">config.xml</span></code>.</p></li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/scanloc.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/scanloc.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/scanloc.cfg</span></code></div>
+</div>
+<p>scanloc inherits <span class="xref std std-ref">global options</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Modules/plugins may require a license file. The default path to license
+files is <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/licenses/</span></code> which can be overridden by global
+configuration of the parameter <code class="xref std std-confval docutils literal notranslate"><span class="pre">gempa.licensePath</span></code>. Example:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>gempa.licensePath = @CONFIGDIR@/licenses
+</pre></div>
+</div>
+</div>
+<dl class="confval">
+<dt id="confval-ignoreOrigins">
+<code class="sig-name descname">ignoreOrigins</code><a class="headerlink" href="#confval-ignoreOrigins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Ignore external origins received from messaging or from XML
+playback.</p>
+<p>Default: Accept external origins from messaging and associate
+more phases.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-defaultDepth">
+<code class="sig-name descname">defaultDepth</code><a class="headerlink" href="#confval-defaultDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km</em></p>
+<p>Default used for locating.
+Default is <code class="docutils literal notranslate"><span class="pre">5.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-ignoreDepth">
+<code class="sig-name descname">ignoreDepth</code><a class="headerlink" href="#confval-ignoreDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km</em></p>
+<p>Depths larger than ignoreDepth will be ignored.
+Default is <code class="docutils literal notranslate"><span class="pre">650.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-maxRMS">
+<code class="sig-name descname">maxRMS</code><a class="headerlink" href="#confval-maxRMS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Maximum allowed overall residual.
+Default is <code class="docutils literal notranslate"><span class="pre">1.5</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-minScore">
+<code class="sig-name descname">minScore</code><a class="headerlink" href="#confval-minScore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Score to be reached to send origin.
+Default is <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-buffer.pickKeep">
+<code class="sig-name descname">buffer.pickKeep</code><a class="headerlink" href="#confval-buffer.pickKeep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time to keep picks in the internal buffer. Time comparison
+is based on the pick times. In non-real time
+playbacks the time to keep picks is usually compressed.
+Default is <code class="docutils literal notranslate"><span class="pre">180.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-buffer.ignoreManualOrigins">
+<code class="sig-name descname">buffer.ignoreManualOrigins</code><a class="headerlink" href="#confval-buffer.ignoreManualOrigins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Ignore manual external origins received from messaging or
+from XML playback.</p>
+<p>The parameter “ignoreOrigins” must be inactive for
+this option to be effective.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-buffer.originKeep">
+<code class="sig-name descname">buffer.originKeep</code><a class="headerlink" href="#confval-buffer.originKeep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time to keep origins in the internal buffer. Time comparison
+is based on the origin times. In non-real time
+playbacks the time to keep orgins is usually compressed.
+Default is <code class="docutils literal notranslate"><span class="pre">180.0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>clusterSearch.*</strong>
+<em>Parameters controlling the cluster search based on P phase</em>
+<em>picks.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-clusterSearch.minSize">
+<code class="sig-name descname">clusterSearch.minSize</code><a class="headerlink" href="#confval-clusterSearch.minSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Minimum number of core points (P picks) to form a cluster.
+Default is <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-clusterSearch.maxPickDelay">
+<code class="sig-name descname">clusterSearch.maxPickDelay</code><a class="headerlink" href="#confval-clusterSearch.maxPickDelay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Maximum allowed difference between P picks and cluster reference
+time (latest pick time). Optimum values can be derived from
+travel times.The cluster search ignores all
+picks which exceed the value. Using “-1” enables all picks
+regardless of the delay.
+Default is <code class="docutils literal notranslate"><span class="pre">-1.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-clusterSearch.referenceTimeMode">
+<code class="sig-name descname">clusterSearch.referenceTimeMode</code><a class="headerlink" href="#confval-clusterSearch.referenceTimeMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Mode to set the cluster reference time. Read the documentation
+for the details. Available modes:</p>
+<p>LastPick: The pick time of the last incoming P pick is the
+cluster reference time.</p>
+<p>MaxPickDelay: Setting the cluster reference time is delayed
+until clusterSearch.minSize picks are available.
+Default is <code class="docutils literal notranslate"><span class="pre">LastPick</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-clusterSearch.regionFilter">
+<code class="sig-name descname">clusterSearch.regionFilter</code><a class="headerlink" href="#confval-clusterSearch.regionFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:double</em></p>
+<p>Cluster only picks which sensor locations are inside
+the defined region. The region is defined by latitude,
+longitude and a radius in km. By default the region filter
+is disabled.</p>
+<p>Example: 50.1,12.3,20</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-clusterSearch.averageVelocity">
+<code class="sig-name descname">clusterSearch.averageVelocity</code><a class="headerlink" href="#confval-clusterSearch.averageVelocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km/s</em></p>
+<p>Average velocity used for distance calculation.
+Default is <code class="docutils literal notranslate"><span class="pre">4.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-clusterSearch.maxSearchDist">
+<code class="sig-name descname">clusterSearch.maxSearchDist</code><a class="headerlink" href="#confval-clusterSearch.maxSearchDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Maximum allowed distance over all core points and
+maximum allowed distance for neighborhood search. Both account
+for traveltime difference, inter-station distance and the
+configured averageVelocity.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-clusterSearch.maxOrigins">
+<code class="sig-name descname">clusterSearch.maxOrigins</code><a class="headerlink" href="#confval-clusterSearch.maxOrigins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>uint</em></p>
+<p>Maximum allowed origins derived from cluster search. Set this
+option to zero to disable the cluster search completly.
+Default is <code class="docutils literal notranslate"><span class="pre">128</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-clusterSearch.preliminary">
+<code class="sig-name descname">clusterSearch.preliminary</code><a class="headerlink" href="#confval-clusterSearch.preliminary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Send origins based on cluster search as preliminary origins
+if the location fails. Otherwise those origins are ignored.
+Consider activating “checkOrigins”.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-clusterSearch.checkOrigins">
+<code class="sig-name descname">clusterSearch.checkOrigins</code><a class="headerlink" href="#confval-clusterSearch.checkOrigins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Check, if derived origins fulfill the cluster search criteria
+anymore. Activating this option may lower the number of events
+and suppress fake events.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-clusterSearch.ignorePicks">
+<code class="sig-name descname">clusterSearch.ignorePicks</code><a class="headerlink" href="#confval-clusterSearch.ignorePicks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>By default the algorithm creates a new arrival set when there
+is already a pick with the same stream id assigned.
+Use this option to ignore surrounding picks.
+Default is <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>association.*</strong>
+<em>Parameters controlling the association of P and S phases to cluster</em>
+<em>origins or external origins.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-association.minPhase">
+<code class="sig-name descname">association.minPhase</code><a class="headerlink" href="#confval-association.minPhase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Number picks in cluster origin to be reached for starting to
+associate more P nd S picks.
+Default is <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.maxDist">
+<code class="sig-name descname">association.maxDist</code><a class="headerlink" href="#confval-association.maxDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km</em></p>
+<p>Maximum epicentral distance to associate P and S picks.
+Default is <code class="docutils literal notranslate"><span class="pre">1000.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.stationConfig">
+<code class="sig-name descname">association.stationConfig</code><a class="headerlink" href="#confval-association.stationConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>path</em></p>
+<p>The station configuration file contains lines consisting of
+network code, station code, weight (0 or 1) and maximum
+association distance given in degree. The maximum association
+distance is the distance in degrees from the origin up to
+which this station may contribute to a new origin. This
+parameter overrides the global parameter association.maxDist.
+If this distance is 180 deg, this station may contribute to
+new origins world-wide. However, if the distance is only 10
+degree, the range of this station is limited. This is a helpful
+setting in case of mediocre stations in a region where there
+are numerous good and reliable stations nearby. The station
+will then not pose a risk for locations generated
+outside the maximum association distance. The last item found
+in the list overrules previous ones.
+Network and station codes may be wildcards (*)
+for convenience. E.g.:</p>
+<p>* * 1 10</p>
+<p>GE * 1 180</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.maxPResidual">
+<code class="sig-name descname">association.maxPResidual</code><a class="headerlink" href="#confval-association.maxPResidual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Maximum allowed difference between measured and predicted arrival
+times for associating P phases to origin.
+Larger values allow significant correction of initial locations.
+Default is <code class="docutils literal notranslate"><span class="pre">4.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.maxSResidual">
+<code class="sig-name descname">association.maxSResidual</code><a class="headerlink" href="#confval-association.maxSResidual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Maximum allowed difference between measured and predicted arrival
+time for associating S phases to origins. Larger values allow
+significant correction of initial locations.
+Default is <code class="docutils literal notranslate"><span class="pre">4.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.maxResidual">
+<code class="sig-name descname">association.maxResidual</code><a class="headerlink" href="#confval-association.maxResidual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Maximum allowed time residuals of picks after association and
+relocation. Picks will be removed at exceedance starting with
+largest residual and origins will be relocated.
+Default is <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.tableType">
+<code class="sig-name descname">association.tableType</code><a class="headerlink" href="#confval-association.tableType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Type of traveltime tables for phase association.
+May be different from locator. Use e.g. libtau or LOCSAT.
+Default is <code class="docutils literal notranslate"><span class="pre">LOCSAT</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.table">
+<code class="sig-name descname">association.table</code><a class="headerlink" href="#confval-association.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Name of traveltime table used for phase association.
+May be different from locator profile. Using a different
+table/profile may result in increased runtime.
+Default is <code class="docutils literal notranslate"><span class="pre">iasp91</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.zeroWeightProfiles">
+<code class="sig-name descname">association.zeroWeightProfiles</code><a class="headerlink" href="#confval-association.zeroWeightProfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>zeroWeight-profile name for associating the configured phases
+with zero weight to origins. Multiples profile names may be set
+separated by comma. The order of names determines order of
+checked phases. Each profile can have different parameters.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>association.zeroWeight.*</strong>
+<em>zeroWeight profiles containing the parameters for associating</em>
+<em>phases with zero weight to origins.</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>association.zeroWeight.$name.*</strong>
+$name is a placeholder for the name to be used and needs to be added to <code class="xref std std-confval docutils literal notranslate"><span class="pre">zeroWeight.profiles</span></code> to become active.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>zeroWeight.profiles <span class="o">=</span> a,b
+association.zeroWeight.a.value1 <span class="o">=</span> ...
+association.zeroWeight.b.value1 <span class="o">=</span> ...
+<span class="c1"># c is not active because it has not been added</span>
+<span class="c1"># to the list of zeroWeight.profiles</span>
+association.zeroWeight.c.value1 <span class="o">=</span> ...
+</pre></div>
+</div>
+</div>
+<dl class="confval">
+<dt id="confval-association.zeroWeight.$name.phaseType">
+<code class="sig-name descname">association.zeroWeight.$name.phaseType</code><a class="headerlink" href="#confval-association.zeroWeight.$name.phaseType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>String</em></p>
+<p>One phase type to be associated with zero weight.
+Examples: PKP or Pdiff.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.zeroWeight.$name.minDistance">
+<code class="sig-name descname">association.zeroWeight.$name.minDistance</code><a class="headerlink" href="#confval-association.zeroWeight.$name.minDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>degree</em></p>
+<p>Minimum epicentral distance.
+Default is <code class="docutils literal notranslate"><span class="pre">120.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-association.zeroWeight.$name.maxResidual">
+<code class="sig-name descname">association.zeroWeight.$name.maxResidual</code><a class="headerlink" href="#confval-association.zeroWeight.$name.maxResidual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Maximum time residual of the associated phase.
+Default is <code class="docutils literal notranslate"><span class="pre">5.0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>locator.*</strong>
+<em>Parameters controlling the locator for locating scanloc</em>
+<em>origins.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-locator.type">
+<code class="sig-name descname">locator.type</code><a class="headerlink" href="#confval-locator.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The locator type to be used. Use e.g. LOCSAT or Hypo71.
+Default is <code class="docutils literal notranslate"><span class="pre">LOCSAT</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-locator.profile">
+<code class="sig-name descname">locator.profile</code><a class="headerlink" href="#confval-locator.profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The locator profile to be used. Using a different profile/table
+for locating and associating may result in increased runtime.
+Default is <code class="docutils literal notranslate"><span class="pre">iasp91</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-locator.fixDepth">
+<code class="sig-name descname">locator.fixDepth</code><a class="headerlink" href="#confval-locator.fixDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If enabled, the locator fixes the depth to the configured
+default value “defaultDepth” in case that all
+previous attempts to relocate fail.
+This option may result in many more origins. It
+prevents “ignoreDepth” from beeing
+effective if “defaultDepth” &lt; “ignoreDepth”.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>eventAssociation.*</strong>
+<em>Parameters controlling the association of interal scanloc origins</em>
+<em>to internal scanloc events.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-eventAssociation.compareAllArrivalTimes">
+<code class="sig-name descname">eventAssociation.compareAllArrivalTimes</code><a class="headerlink" href="#confval-eventAssociation.compareAllArrivalTimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>This parameter is only used in conjunction with
+eventAssociation.maximumMatchingArrivalTimeDiff.
+If a station has multiple associated arrivals for a
+particular event, this flag defines if the time distance
+of a new pick to all arrivals must be within
+eventAssociation.maximumMatchingArrivalTimeDiff
+or if one matching arrival is enough.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventAssociation.minMatchingArrivals">
+<code class="sig-name descname">eventAssociation.minMatchingArrivals</code><a class="headerlink" href="#confval-eventAssociation.minMatchingArrivals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Minimum number of matching picks between two origins to be
+associated to the same event.
+Default is <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventAssociation.maxMatchingArrivalTimeDiff">
+<code class="sig-name descname">eventAssociation.maxMatchingArrivalTimeDiff</code><a class="headerlink" href="#confval-eventAssociation.maxMatchingArrivalTimeDiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>If this time window in seconds is negative, pickIDs
+are compared to find matching arrivals. A non negative
+value (including 0) compares pick times regardless
+of the pickID. Pass: |pick1.time - pick2.time| &lt;= threshold.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventAssociation.maxDist">
+<code class="sig-name descname">eventAssociation.maxDist</code><a class="headerlink" href="#confval-eventAssociation.maxDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>km</em></p>
+<p>Allowed location difference between an incoming origin compared
+with preferred origins to get associated.
+Default is <code class="docutils literal notranslate"><span class="pre">500.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventAssociation.maxTimeSpan">
+<code class="sig-name descname">eventAssociation.maxTimeSpan</code><a class="headerlink" href="#confval-eventAssociation.maxTimeSpan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>s</em></p>
+<p>Associates an origin with an existing event if the origin
+time differs not more than 60 seconds unless the
+minimumMatchingArrivals criteria matches.
+Default is <code class="docutils literal notranslate"><span class="pre">60.0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>score.*</strong>
+<em>Formula to calculate the internal origin score. Configurable are</em>
+<em>the weighting factors for the following components:</em>
+<em>used P-phase (score.weights.p), unused P-phase (score.weights.p0),</em>
+<em>used S-phase (score.weights.s), unused S-phase (score.weights.0),</em>
+<em>depth (score.weights.depth) and residual (score.weights.residual).</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-score.weights.p">
+<code class="sig-name descname">score.weights.p</code><a class="headerlink" href="#confval-score.weights.p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Defines the weight of p arrivals for scoring.
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-score.weights.p0">
+<code class="sig-name descname">score.weights.p0</code><a class="headerlink" href="#confval-score.weights.p0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Defines the weight of p arrivals with a weight of zero
+for scoring.
+Default is <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-score.weights.s">
+<code class="sig-name descname">score.weights.s</code><a class="headerlink" href="#confval-score.weights.s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Defines the weight of s arrivals for scoring.
+Default is <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-score.weights.s0">
+<code class="sig-name descname">score.weights.s0</code><a class="headerlink" href="#confval-score.weights.s0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Defines the weight of s arrivals with a weight of zero
+for scoring.
+Default is <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-score.weights.depth">
+<code class="sig-name descname">score.weights.depth</code><a class="headerlink" href="#confval-score.weights.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Defines the weight of the depth for scoring.
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-score.weights.residual">
+<code class="sig-name descname">score.weights.residual</code><a class="headerlink" href="#confval-score.weights.residual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Defines the weight of the residual for scoring
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-score.weights.increaseManual">
+<code class="sig-name descname">score.weights.increaseManual</code><a class="headerlink" href="#confval-score.weights.increaseManual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Increase the weight for manual picks by a factor of 1.001.
+This gives preference to manual picks in case
+automatic ones co-exist for the same station.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>publication.*</strong>
+<em>Parameters controlling the publication of internal scanloc</em>
+<em>events as new origins to the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-publication.intervalTimeSlope">
+<code class="sig-name descname">publication.intervalTimeSlope</code><a class="headerlink" href="#confval-publication.intervalTimeSlope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>s/count</em></p>
+<p>Parameter “a” in the equation t = aN + b.</p>
+<p>t: time interval between sending updates of an origin</p>
+<p>N: arrival count of the origin</p>
+<p>Increasing the value reduces the amount of sent origins.
+With the option –ep (playback mode) this value is set to 0.
+Default is <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-publication.intervalTimeIntercept">
+<code class="sig-name descname">publication.intervalTimeIntercept</code><a class="headerlink" href="#confval-publication.intervalTimeIntercept" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>s</em></p>
+<p>Parameter “b”  in the equation t = aN + b.</p>
+<p>t: time interval between sending updates of an origin</p>
+<p>N: arrival count of the origin</p>
+<p>Increasing the value reduces the amount of sent origins.
+With the option –ep (playback mode) this value is set to 0.
+Default is <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-publication.wakeUpInterval">
+<code class="sig-name descname">publication.wakeUpInterval</code><a class="headerlink" href="#confval-publication.wakeUpInterval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Integer interval to check the origin buffer for sending origins if no
+other origins have been created.</p>
+<p>Reducing the value may be required in EEW: it increases the
+load on scanloc but allows to send origins more rapidly.
+Default is <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="command-line">
+<h2>Command Line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">scanloc [options]</strong></p>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--daemon</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run as daemon. This means the application will fork itself and
+doesn’t need to be started with &amp;.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id20">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-print-component">
+<code class="sig-name descname">--print-component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-print-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each log entry print the component right after the
+log level. By default the component output is enabled
+for file output but disabled for console output.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-trace">
+<code class="sig-name descname">--trace</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trace mode: –verbosity=4 –console=1 –print-component=1 –print-context=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="messaging">
+<h3>Messaging<a class="headerlink" href="#messaging" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-u">
+<code class="sig-name descname">-u</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--user</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.username"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.username</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-host">
+<code class="sig-name descname">-H</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--host</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.server"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.server</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-t">
+<code class="sig-name descname">-t</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--timeout</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.timeout"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.timeout</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-g">
+<code class="sig-name descname">-g</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--primary-group</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-g" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.primaryGroup"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.primaryGroup</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-subscribe-group">
+<code class="sig-name descname">-S</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--subscribe-group</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-subscribe-group" title="Permalink to this definition">¶</a></dt>
+<dd><p>A group to subscribe to. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-start-stop-msg">
+<code class="sig-name descname">--start-stop-msg</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-start-stop-msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets sending of a start- and a stop message.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="database">
+<h3>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-db-driver-list">
+<code class="sig-name descname">--db-driver-list</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-db-driver-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all supported database drivers.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-database">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--database</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-database" title="Permalink to this definition">¶</a></dt>
+<dd><p>The database connection string, format: <a class="reference external" href="service://user:pwd&#64;host/database">service://user:pwd&#64;host/database</a>.
+“service” is the name of the database driver which can be
+queried with “–db-driver-list”.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-config-module">
+<code class="sig-name descname">--config-module</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-config-module" title="Permalink to this definition">¶</a></dt>
+<dd><p>The configmodule to use.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-inventory-db">
+<code class="sig-name descname">--inventory-db</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-inventory-db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the inventory from the given database or file, format: [<a class="reference external" href="service://]location">service://]location</a></p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-db-disable">
+<code class="sig-name descname">--db-disable</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-db-disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not use the database at all</p>
+</dd></dl>
+
+</div>
+<div class="section" id="input">
+<h3>Input<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-pick-keep">
+<code class="sig-name descname">--pick-keep</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-pick-keep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <code class="xref std std-confval docutils literal notranslate"><span class="pre">pickKeep</span></code>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-origin-keep">
+<code class="sig-name descname">--origin-keep</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-origin-keep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <code class="xref std std-confval docutils literal notranslate"><span class="pre">originKeep</span></code>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-allow-rejected-picks">
+<code class="sig-name descname">--allow-rejected-picks</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-allow-rejected-picks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow processing of picks with evaluation status ‘rejected’.
+Otherwise these picks are ignored.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-filter-pick-author">
+<code class="sig-name descname">--filter-pick-author</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-filter-pick-author" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter picks by author and only consider picks created by
+the given author. Empty string considers all authors.
+The option allows operation of
+scanloc based on picks from a specific picker module
+where only picks from one picker should be used, e.g.
+in tuning scanloc for a pipeline.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ep">
+<code class="sig-name descname">--ep</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-ep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of input XML file (SCML) with all picks and origins
+for offline processing. The database connection is not
+received from messaging and must be provided. Results
+are sent as XML to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-timing">
+<code class="sig-name descname">--timing</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-timing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Offline processing reference timing mode: Use pickTime and
+creationTime for sorting picks according to pick time and
+creation time, respectively. scanloc uses creationTime in
+real-time processing.</p>
+<p>Default: pickTime</p>
+</dd></dl>
+
+</div>
+<div class="section" id="locator">
+<h3>Locator<a class="headerlink" href="#locator" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-locator-type">
+<code class="sig-name descname">--locator-type</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-locator-type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="#confval-locator.type"><code class="xref std std-confval docutils literal notranslate"><span class="pre">locator.type</span></code></a>.
+The locator type to use. Default: LOCSAT.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-locator-profile">
+<code class="sig-name descname">--locator-profile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-locator-profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="#confval-locator.profile"><code class="xref std std-confval docutils literal notranslate"><span class="pre">locator.profile</span></code></a>.
+The locator profile to use. Default: iasp91.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-locator-list">
+<code class="sig-name descname">--locator-list</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-locator-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all registered locators.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="output">
+<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-final-only">
+<code class="sig-name descname">--final-only</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-final-only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limit result set to final origins only. This option is
+available for offline processing only.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dump-origins">
+<code class="sig-name descname">--dump-origins</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dump-origins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don’t publish origins, write them to stdout. Useful for
+tuning.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-cluster-search-log-file">
+<code class="sig-name descname">--cluster-search-log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-cluster-search-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>File name to output detailed cluster search information.
+Useful for tuning.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scanloc</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
+<li><a class="reference internal" href="#low-threshold-monitoring">Low-threshold monitoring</a></li>
+<li><a class="reference internal" href="#teleseismic-events">Teleseismic events</a></li>
+<li><a class="reference internal" href="#travel-time-tables">Travel-time tables</a></li>
+<li><a class="reference internal" href="#s-phases">S phases</a></li>
+<li><a class="reference internal" href="#auxiliary-tools">Auxiliary tools</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#workflow">Workflow</a><ul>
+<li><a class="reference internal" href="#pick-and-origin-buffering">Pick and origin buffering</a></li>
+<li><a class="reference internal" href="#clustering">Clustering</a><ul>
+<li><a class="reference internal" href="#limiting-in-time">Limiting in time</a></li>
+<li><a class="reference internal" href="#limiting-in-space">Limiting in space</a></li>
+<li><a class="reference internal" href="#cluster-splitting">Cluster splitting</a></li>
+<li><a class="reference internal" href="#tuning-and-optimization">Tuning and optimization</a></li>
+<li><a class="reference internal" href="#locating">Locating</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#phase-association">Phase Association</a></li>
+<li><a class="reference internal" href="#status-of-origins">Status of origins</a></li>
+<li><a class="reference internal" href="#sending-of-origins">Sending of origins</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#internal-origins-and-events">Internal Origins and Events</a></li>
+<li><a class="reference internal" href="#locating-origins">Locating Origins</a></li>
+<li><a class="reference internal" href="#scoring-origins">Scoring Origins</a></li>
+<li><a class="reference internal" href="#association-of-teleseismic-phases">Association of Teleseismic Phases</a></li>
+<li><a class="reference internal" href="#examples-and-playbacks">Examples and Playbacks</a><ul>
+<li><a class="reference internal" href="#real-time-xml-playbacks">Real-time XML playbacks</a></li>
+<li><a class="reference internal" href="#offline-xml-playbacks">Offline XML playbacks</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command Line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#messaging">Messaging</a></li>
+<li><a class="reference internal" href="#database">Database</a></li>
+<li><a class="reference internal" href="#input">Input</a></li>
+<li><a class="reference internal" href="#locator">Locator</a></li>
+<li><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../base/introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../base/auxiliary.html"
+                        title="next chapter">Auxiliary Scripts</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scanloc.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="content">
+        Release <b></b> version <b>2022.88#fcbc3b22d</b>
+          <div class="copyright">
+            &copy; Copyright <a href="https://www.gempa.de">2014, gempa GmbH.</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,2388 @@
+Connection established to http://172.20.9.20:8080 for waveforms
+Using the same fdsnws for waveforms and response
+starting the multiprocessing task at 2023-01-20 04:20:06
+/usr/lib/python3/dist-packages/requests/__init__.py:91: RequestsDependencyWarning: urllib3 (1.26.12) or chardet (3.0.4) doesn't match a supported version!
+  RequestsDependencyWarning)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/io/stationtxt/core.py:239: UserWarning: Failed to parse channel GI.FG13.00.SHZ due to: float() argument must be a string or a number, not 'NoneType'
+  UserWarning)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/io/stationtxt/core.py:239: UserWarning: Failed to parse channel GI.FG14.00.SHZ due to: float() argument must be a string or a number, not 'NoneType'
+  UserWarning)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/io/stationtxt/core.py:239: UserWarning: Failed to parse channel GI.PCG5.00.SHZ due to: float() argument must be a string or a number, not 'NoneType'
+  UserWarning)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/io/stationtxt/core.py:239: UserWarning: Failed to parse channel GI.STG0.00.EHZ due to: float() argument must be a string or a number, not 'NoneType'
+  UserWarning)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/io/stationtxt/core.py:239: UserWarning: Failed to parse channel GI.STG5..HHE due to: float() argument must be a string or a number, not 'NoneType'
+  UserWarning)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/io/stationtxt/core.py:239: UserWarning: Failed to parse channel GI.STG5..HHN due to: float() argument must be a string or a number, not 'NoneType'
+  UserWarning)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/io/stationtxt/core.py:239: UserWarning: Failed to parse channel GI.STG5..HHZ due to: float() argument must be a string or a number, not 'NoneType'
+  UserWarning)
+Getting waveform for:
+['AM', 'R1F53', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['AM', 'R1F53', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/AM/R1F53/EHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/AM/R1F53/EHE.D/
+Getting waveform for:
+['AM', 'R1F53', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['AM', 'R1F53', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/AM/R1F53/EHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/AM/R1F53/EHN.D/
+Getting waveform for:
+['AM', 'R1F53', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['AM', 'R1F53', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/AM/R1F53/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/AM/R1F53/EHZ.D/
+Getting waveform for:
+['AM', 'REF82', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['AM', 'REF82', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/AM/REF82/EHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/AM/REF82/EHE.D/
+Getting waveform for:
+['AM', 'REF82', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['AM', 'REF82', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/AM/REF82/EHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/AM/REF82/EHN.D/
+Getting waveform for:
+['AM', 'REF82', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['AM', 'REF82', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/AM/REF82/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/AM/REF82/EHZ.D/
+Getting waveform for:
+['AM', 'REFF7', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['AM', 'REFF7', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['AM', 'RF1CF', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['AM', 'RF1CF', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'AVCS', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'AVCS', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'AVCS', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'AVCS', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'AVCS', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'AVCS', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'AVCS', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'AVCS', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'AVCS', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'AVCS', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'AVCS', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'AVCS', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'CMSM', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'CMSM', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/CMSM/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/CMSM/HHE.D/
+Getting waveform for:
+['GI', 'CMSM', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'CMSM', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/CMSM/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/CMSM/HHN.D/
+Getting waveform for:
+['GI', 'CMSM', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'CMSM', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/CMSM/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/CMSM/HHZ.D/
+Getting waveform for:
+['GI', 'CMSM', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'CMSM', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/CMSM/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/CMSM/HNE.D/
+Getting waveform for:
+['GI', 'CMSM', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'CMSM', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/CMSM/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/CMSM/HNN.D/
+Getting waveform for:
+['GI', 'CMSM', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'CMSM', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/CMSM/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/CMSM/HNZ.D/
+Getting waveform for:
+['GI', 'CQES', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'CQES', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/CQES/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/CQES/HNE.D/
+Getting waveform for:
+['GI', 'CQES', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'CQES', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/CQES/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/CQES/HNN.D/
+Getting waveform for:
+['GI', 'CQES', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'CQES', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/CQES/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/CQES/HNZ.D/
+Getting waveform for:
+['GI', 'ESES', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'ESES', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'ESES', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'ESES', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+Getting waveform for:
+['GI', 'GUMI', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUMI', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUMI/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUMI/HNE.D/
+Getting waveform for:
+['GI', 'GUMI', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUMI', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUMI/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUMI/HNN.D/
+Getting waveform for:
+['GI', 'GUMI', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUMI', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUMI/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUMI/HNZ.D/
+Getting waveform for:
+['GI', 'GUSP', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUSP', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUSP/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUSP/HHE.D/
+Getting waveform for:
+['GI', 'GUSP', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUSP', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUSP/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUSP/HHN.D/
+Getting waveform for:
+['GI', 'GUSP', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUSP', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUSP/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUSP/HHZ.D/
+Getting waveform for:
+['GI', 'GUSP', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUSP', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUSP/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUSP/HNE.D/
+Getting waveform for:
+['GI', 'GUSP', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUSP', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUSP/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUSP/HNN.D/
+Getting waveform for:
+['GI', 'GUSP', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUSP', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUSP/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUSP/HNZ.D/
+Getting waveform for:
+['GI', 'GUVC', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUVC', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUVC/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUVC/HHE.D/
+Getting waveform for:
+['GI', 'GUVC', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUVC', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUVC/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUVC/HHN.D/
+Getting waveform for:
+['GI', 'GUVC', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUVC', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUVC/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUVC/HHZ.D/
+Getting waveform for:
+['GI', 'GUVC', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUVC', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUVC/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUVC/HNE.D/
+Getting waveform for:
+['GI', 'GUVC', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUVC', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUVC/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUVC/HNN.D/
+Getting waveform for:
+['GI', 'GUVC', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GUVC', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GUVC/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GUVC/HNZ.D/
+Getting waveform for:
+['GI', 'GVN01', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'GVN01', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'GVN01', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'GVN01', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'GVN01', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'GVN01', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'GVN02', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GVN02', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GVN02/EHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GVN02/EHE.D/
+Getting waveform for:
+['GI', 'GVN02', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GVN02', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GVN02/EHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GVN02/EHN.D/
+Getting waveform for:
+['GI', 'GVN02', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GVN02', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GVN02/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GVN02/EHZ.D/
+Getting waveform for:
+['GI', 'GVN03', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GVN03', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GVN03/EHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GVN03/EHE.D/
+Getting waveform for:
+['GI', 'GVN03', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GVN03', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GVN03/EHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GVN03/EHN.D/
+Getting waveform for:
+['GI', 'GVN03', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'GVN03', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/GVN03/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/GVN03/EHZ.D/
+Getting waveform for:
+['GI', 'GVN04', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting waveform for:
+['GI', 'ESES', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'ESES', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'ESSJ', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'ESSJ', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'ESSJ', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'ESSJ', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'ESSJ', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'ESSJ', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'ESTQ', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'ESTQ', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HHE.D/
+Getting waveform for:
+['GI', 'ESTQ', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'ESTQ', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HHN.D/
+Getting waveform for:
+['GI', 'ESTQ', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'ESTQ', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HHZ.D/
+Getting waveform for:
+['GI', 'ESTQ', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'ESTQ', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HNE.D/
+Getting waveform for:
+['GI', 'ESTQ', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'ESTQ', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HNN.D/
+Getting waveform for:
+['GI', 'ESTQ', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'ESTQ', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/ESTQ/HNZ.D/
+Getting waveform for:
+['GI', 'FG0', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'FG0', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/FG0/EHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/FG0/EHE.D/
+Getting waveform for:
+['GI', 'FG0', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'FG0', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/FG0/EHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/FG0/EHN.D/
+Getting waveform for:
+['GI', 'FG0', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'FG0', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/FG0/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/FG0/EHZ.D/
+Getting waveform for:
+['GI', 'FG3', '', 'SHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'FG3', '', 'SHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting waveform for:
+['GI', 'JUT5', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUT5', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUT5/EHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUT5/EHE.D/
+Getting waveform for:
+['GI', 'JUT5', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUT5', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUT5/EHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUT5/EHN.D/
+Getting waveform for:
+['GI', 'JUT5', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUT5', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUT5/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUT5/EHZ.D/
+Getting waveform for:
+['GI', 'JUT6', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUT6', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUT6/EHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUT6/EHE.D/
+Getting waveform for:
+['GI', 'JUT6', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUT6', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUT6/EHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUT6/EHN.D/
+Getting waveform for:
+['GI', 'JUT6', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUT6', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUT6/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUT6/EHZ.D/
+Getting waveform for:
+['GI', 'KUIZ1', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'KUIZ1', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'KUIZ1', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'KUIZ1', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'KUIZ1', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'KUIZ1', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'KUIZ2', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'KUIZ2', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HHE.D/
+Getting waveform for:
+['GI', 'KUIZ2', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'KUIZ2', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HHN.D/
+no waveform for:
+['GI', 'GVN04', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'GVN04', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'GVN04', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'GVN04', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'GVN04', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'HUBA', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'HUBA', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'HUBA', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'HUBA', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'HUBA', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'HUBA', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'HUBA', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'HUBA', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'HUBA', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'HUBA', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'HUBA', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'HUBA', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'HUCU', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'HUCU', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/HUCU/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/HUCU/HHE.D/
+Getting waveform for:
+['GI', 'HUCU', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'HUCU', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/HUCU/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/HUCU/HHN.D/
+Getting waveform for:
+['GI', 'HUCU', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'HUCU', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/HUCU/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/HUCU/HHZ.D/
+Getting waveform for:
+['GI', 'HUCU', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'HUCU', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/HUCU/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/HUCU/HNE.D/
+Getting waveform for:
+['GI', 'HUCU', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'HUCU', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/HUCU/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/HUCU/HNN.D/
+Getting waveform for:
+['GI', 'HUCU', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'HUCU', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/HUCU/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/HUCU/HNZ.D/
+Getting waveform for:
+['GI', 'HUHU', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'HUHU', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/HUHU/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/HUHU/HNE.D/
+Getting waveform for:
+['GI', 'HUHU', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'HUHU', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/HUHU/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/HUHU/HNN.D/
+Getting waveform for:
+['GI', 'HUHU', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'HUHU', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/HUHU/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/HUHU/HNZ.D/
+Getting waveform for:
+['GI', 'IZLV', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'IZLV', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'IZLV', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'IZLV', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'IZLV', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'IZLV', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'IZLV', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'IZLV', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'IZLV', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'IZLV', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'IZLV', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'IZLV', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'IZPB', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'IZPB', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/IZPB/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/IZPB/HNE.D/
+Getting waveform for:
+['GI', 'IZPB', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'IZPB', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting waveform for:
+['GI', 'KUIZ2', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'KUIZ2', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HHZ.D/
+Getting waveform for:
+['GI', 'KUIZ2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'KUIZ2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HNE.D/
+Getting waveform for:
+['GI', 'KUIZ2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'KUIZ2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HNN.D/
+Getting waveform for:
+['GI', 'KUIZ2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'KUIZ2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/KUIZ2/HNZ.D/
+Getting waveform for:
+['GI', 'PCG', '', 'SHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'PCG', '', 'SHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting waveform for:
+['GI', 'SONA', '00', 'ENZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['GI', 'SONA', '00', 'ENZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['GI', 'SROR', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'SROR', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/SROR/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/SROR/HHE.D/
+Getting waveform for:
+['GI', 'SROR', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'SROR', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/SROR/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/SROR/HHN.D/
+Getting waveform for:
+['GI', 'SROR', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'SROR', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/SROR/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/SROR/HHZ.D/
+Getting waveform for:
+['GI', 'SROR', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'SROR', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/SROR/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/SROR/HNE.D/
+Getting waveform for:
+['GI', 'SROR', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'SROR', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/SROR/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/SROR/HNN.D/
+Getting waveform for:
+['GI', 'SROR', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'SROR', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/SROR/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/SROR/HNZ.D/
+Getting waveform for:
+['GI', 'STG1', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'STG1', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/STG1/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/STG1/EHZ.D/
+Getting waveform for:
+['GI', 'TUZG', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'TUZG', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/TUZG/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/TUZG/EHZ.D/
+Getting waveform for:
+['GI', 'TUZT', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'TUZT', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/TUZT/EHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/TUZT/EHE.D/
+Getting waveform for:
+['GI', 'TUZT', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'TUZT', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/TUZT/EHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/TUZT/EHN.D/
+Getting waveform for:
+['GI', 'TUZT', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'TUZT', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/TUZT/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/TUZT/EHZ.D/
+Getting waveform for:
+['GI', 'TUZZ', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'TUZZ', '00', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/TUZZ/EHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/TUZZ/EHE.D/
+Getting waveform for:
+['GI', 'TUZZ', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'TUZZ', '00', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/TUZZ/EHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/TUZZ/EHN.D/
+Getting waveform for:
+['GI', 'TUZZ', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'TUZZ', '00', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/TUZZ/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/TUZZ/EHZ.D/
+Getting waveform for:
+['GI', 'ZAES', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'ZAES', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/ZAES/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/ZAES/HNE.D/
+Getting waveform for:
+['GI', 'ZAES', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'ZAES', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/ZAES/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/ZAES/HNN.D/
+Getting waveform for:
+['GI', 'ZAES', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'ZAES', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/ZAES/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/ZAES/HNZ.D/
+Getting waveform for:
+['MX', 'CCIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'CCIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'CCIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'CCIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'CCIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'CCIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'CMIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'CMIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'CMIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'CMIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'CMIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'CMIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'HUIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'HUIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'HUIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'HUIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'HUIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'HUIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'MYIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'MYIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'MYIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'MYIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'MYIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'MYIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'PCIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'PCIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'PCIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'PCIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'PCIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'PCIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'SCIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'SCIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'SCIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'SCIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'SCIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'SCIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'TGIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'TGIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'TGIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'TGIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'TGIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'TGIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'THIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'THIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'THIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'THIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'THIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'THIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'TUIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'TUIG', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'TUIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'TUIG', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['MX', 'TUIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['MX', 'TUIG', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'ACON', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'ACON', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+
+created /home/insivumeh/PSD/PNG/2023/GI/IZPB/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/IZPB/HNN.D/
+Getting waveform for:
+['GI', 'IZPB', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'IZPB', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/IZPB/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/IZPB/HNZ.D/
+Getting waveform for:
+['GI', 'JAMO', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JAMO', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JAMO/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JAMO/HHE.D/
+Getting waveform for:
+['GI', 'JAMO', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JAMO', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JAMO/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JAMO/HHN.D/
+Getting waveform for:
+['GI', 'JAMO', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JAMO', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JAMO/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JAMO/HHZ.D/
+Getting waveform for:
+['GI', 'JAMO', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JAMO', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JAMO/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JAMO/HNE.D/
+Getting waveform for:
+['GI', 'JAMO', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JAMO', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JAMO/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JAMO/HNN.D/
+Getting waveform for:
+['GI', 'JAMO', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JAMO', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JAMO/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JAMO/HNZ.D/
+Getting waveform for:
+['GI', 'JUAM', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUAM', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUAM/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUAM/HNE.D/
+Getting waveform for:
+['GI', 'JUAM', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUAM', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUAM/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUAM/HNN.D/
+Getting waveform for:
+['GI', 'JUAM', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUAM', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUAM/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUAM/HNZ.D/
+Getting waveform for:
+['GI', 'JUMO', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUMO', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUMO/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUMO/HNE.D/
+Getting waveform for:
+['GI', 'JUMO', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUMO', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUMO/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUMO/HNN.D/
+Getting waveform for:
+['GI', 'JUMO', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['GI', 'JUMO', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/GI/JUMO/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/GI/JUMO/HNZ.D/
+Getting waveform for:
+['NU', 'HERN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'HERN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/HERN/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/HERN/HHN.D/
+Loading /home/insivumeh/PSD/PNG/2023/NU/HERN/HHN.D//NU.HERN..HHN.D.2023.019.npz
+Processed: [UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 0, 30), UTCDateTime(2023, 1, 20, 1, 0), UTCDateTime(2023, 1, 20, 1, 30), UTCDateTime(2023, 1, 20, 2, 0), UTCDateTime(2023, 1, 20, 2, 30), UTCDateTime(2023, 1, 20, 3, 0)]
+Will add: 2023-01-20T03:30:00.000000Z 2023-01-20T04:20:05.000000Z
+Getting waveform for:
+['NU', 'HERN', '', 'HHN', UTCDateTime(2023, 1, 20, 3, 30), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'HERN', '', 'HHN', UTCDateTime(2023, 1, 20, 3, 30), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Error producing ppsd for NU.HERN..HHN. Error: PPSD instance has no metadata attached, which are needed for processing the data. When using 'PPSD.load_npz()' use 'metadata' kwarg to provide metadata.
+plotting: /home/insivumeh/PSD/PNG/2023/NU/HERN/HHN.D/
+Getting waveform for:
+['NU', 'HERN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'HERN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/HERN/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/HERN/HHZ.D/
+Loading /home/insivumeh/PSD/PNG/2023/NU/HERN/HHZ.D//NU.HERN..HHZ.D.2023.019.npz
+Processed: [UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 0, 30), UTCDateTime(2023, 1, 20, 1, 0), UTCDateTime(2023, 1, 20, 1, 30), UTCDateTime(2023, 1, 20, 2, 0), UTCDateTime(2023, 1, 20, 2, 30), UTCDateTime(2023, 1, 20, 3, 0)]
+Will add: 2023-01-20T03:30:00.000000Z 2023-01-20T04:20:05.000000Z
+Getting waveform for:
+['NU', 'HERN', '', 'HHZ', UTCDateTime(2023, 1, 20, 3, 30), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'HERN', '', 'HHZ', UTCDateTime(2023, 1, 20, 3, 30), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Error producing ppsd for NU.HERN..HHZ. Error: PPSD instance has no metadata attached, which are needed for processing the data. When using 'PPSD.load_npz()' use 'metadata' kwarg to provide metadata.
+plotting: /home/insivumeh/PSD/PNG/2023/NU/HERN/HHZ.D/
+Getting waveform for:
+['NU', 'HUEN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'HUEN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'HUEN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'HUEN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'HUEN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'HUEN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'LIMN', '10', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'LIMN', '10', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+['NU', 'ACON', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'ACON', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'ACON', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'ACON', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'APQN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'APQN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'APQN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'APQN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'APQN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'APQN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'BILN', '10', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'BILN', '10', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/BILN/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/BILN/HHE.D/
+Getting waveform for:
+['NU', 'BILN', '10', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'BILN', '10', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/BILN/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/BILN/HHN.D/
+Getting waveform for:
+['NU', 'BILN', '10', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'BILN', '10', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/BILN/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/BILN/HHZ.D/
+Getting waveform for:
+['NU', 'BLUN', '10', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'BLUN', '10', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'BLUN', '10', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'BLUN', '10', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'BLUN', '10', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'BLUN', '10', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'CARN', '00', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'CARN', '00', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'CARN', '00', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'CARN', '00', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'CARN', '00', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'CARN', '00', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'CNGN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'CNGN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/CNGN/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/CNGN/HHE.D/
+Getting waveform for:
+['NU', 'CNGN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'CNGN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/CNGN/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/CNGN/HHN.D/
+Getting waveform for:
+['NU', 'CNGN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'CNGN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/CNGN/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/CNGN/HHZ.D/
+Getting waveform for:
+['NU', 'CORN', '10', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'CORN', '10', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'CORN', '10', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'CORN', '10', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'CORN', '10', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'CORN', '10', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'CRIN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'CRIN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/CRIN/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/CRIN/HHE.D/
+Getting waveform for:
+['NU', 'CRIN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'CRIN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/CRIN/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/CRIN/HHN.D/
+Getting waveform for:
+['NU', 'CRIN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'CRIN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/CRIN/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/CRIN/HHZ.D/
+Getting waveform for:
+['NU', 'HERN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'HERN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/HERN/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/HERN/HHE.D/
+Loading /home/insivumeh/PSD/PNG/2023/NU/HERN/HHE.D//NU.HERN..HHE.D.2023.019.npz
+Processed: [UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 0, 30), UTCDateTime(2023, 1, 20, 1, 0), UTCDateTime(2023, 1, 20, 1, 30), UTCDateTime(2023, 1, 20, 2, 0), UTCDateTime(2023, 1, 20, 2, 30), UTCDateTime(2023, 1, 20, 3, 0)]
+Will add: 2023-01-20T03:30:00.000000Z 2023-01-20T04:20:05.000000Z
+Getting waveform for:
+['NU', 'HERN', '', 'HHE', UTCDateTime(2023, 1, 20, 3, 30), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting waveform for:
+['NU', 'LIMN', '10', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'LIMN', '10', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'LIMN', '10', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'LIMN', '10', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'MASN', '50', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'MASN', '50', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'MASN', '50', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'MASN', '50', 'EHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'MASN', '50', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'MASN', '50', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'MATN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'MATN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'MATN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'MATN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'MATN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['NU', 'MATN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['NU', 'MGAN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'MGAN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/MGAN/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/MGAN/HHE.D/
+Getting waveform for:
+['NU', 'MGAN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'MGAN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/MGAN/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/MGAN/HHN.D/
+Getting waveform for:
+['NU', 'MGAN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'MGAN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/MGAN/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/MGAN/HHZ.D/
+Getting waveform for:
+['NU', 'NANN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'NANN', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/NANN/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/NANN/HHE.D/
+Getting waveform for:
+['NU', 'NANN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'NANN', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/NANN/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/NANN/HHN.D/
+Getting waveform for:
+['NU', 'NANN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'NANN', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/NU/NANN/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/NU/NANN/HHZ.D/
+Getting waveform for:
+['NU', 'RCON', '', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'RCON', '', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting waveform for:
+['SV', 'CEVE', '', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'CEVE', '', 'EHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/CEVE/EHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/CEVE/EHZ.D/
+Getting waveform for:
+['SV', 'CNCH', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'CNCH', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'CNCH', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'CNCH', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'CNCH', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'CNCH', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'CNCH', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'CNCH', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'CNCH', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'CNCH', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'CNCH', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'CNCH', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'CNRM', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'CNRM', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/CNRM/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/CNRM/HNE.D/
+Getting waveform for:
+['SV', 'CNRM', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'CNRM', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/CNRM/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/CNRM/HNN.D/
+Getting waveform for:
+['SV', 'CNRM', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'CNRM', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/CNRM/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/CNRM/HNZ.D/
+Getting waveform for:
+['SV', 'CPR', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'CPR', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['NU', 'HERN', '', 'HHE', UTCDateTime(2023, 1, 20, 3, 30), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Error producing ppsd for NU.HERN..HHE. Error: PPSD instance has no metadata attached, which are needed for processing the data. When using 'PPSD.load_npz()' use 'metadata' kwarg to provide metadata.
+plotting: /home/insivumeh/PSD/PNG/2023/NU/HERN/HHE.D/
+Getting waveform for:
+['SV', 'LLGN', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'LLGN', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/LLGN/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/LLGN/HNZ.D/
+Getting waveform for:
+['SV', 'LOAL', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'LOAL', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/LOAL/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/LOAL/HNE.D/
+Getting waveform for:
+['SV', 'LOAL', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'LOAL', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/LOAL/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/LOAL/HNN.D/
+Getting waveform for:
+['SV', 'LOAL', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'LOAL', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/LOAL/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/LOAL/HNZ.D/
+Getting waveform for:
+['SV', 'LOMA', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'LOMA', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'LOMA', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'LOMA', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'LOMA', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'LOMA', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'LOMA2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'LOMA2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'LOMA2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'LOMA2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'LOMA2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'LOMA2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'MAGT', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'MAGT', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'MAGT', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'MAGT', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'MAGT', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'MAGT', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'MTO3', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'MTO3', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/MTO3/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/MTO3/HHE.D/
+Getting waveform for:
+['SV', 'MTO3', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'MTO3', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/MTO3/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/MTO3/HHN.D/
+Getting waveform for:
+['SV', 'MTO3', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'MTO3', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/MTO3/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/MTO3/HHZ.D/
+Getting waveform for:
+['SV', 'NUBE', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'NUBE', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/NUBE/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/NUBE/HHE.D/
+Getting waveform for:
+['SV', 'NUBE', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'NUBE', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/NUBE/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/NUBE/HHN.D/
+Getting waveform for:
+['SV', 'NUBE', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'NUBE', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/NUBE/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/NUBE/HHZ.D/
+Getting waveform for:
+['SV', 'P5NO', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'P5NO', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'P5NO', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'P5NO', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'P5NO', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'P5NO', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'PACA', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'PACA', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'PACA', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'PACA', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'PACA', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'PACA', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'PACA', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'PACA', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'PACA', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'PACA', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'PACA', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'PACA', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'PANC', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'PANC', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/PANC/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/PANC/HNE.D/
+Getting waveform for:
+['SV', 'PANC', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'PANC', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/PANC/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/PANC/HNN.D/
+Getting waveform for:
+['SV', 'PANC', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'PANC', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/PANC/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/PANC/HNZ.D/
+Getting waveform for:
+['SV', 'PAVA', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'PAVA', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/PAVA/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/PAVA/HHE.D/
+Getting waveform for:
+['SV', 'PAVA', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'PAVA', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/PAVA/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/PAVA/HHN.D/
+Getting waveform for:
+['SV', 'PAVA', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'PAVA', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/PAVA/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/PAVA/HHZ.D/
+Getting waveform for:
+['SV', 'QUEZ', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'QUEZ', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/QUEZ/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/QUEZ/HNE.D/
+Getting waveform for:
+['SV', 'QUEZ', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'QUEZ', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/QUEZ/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/QUEZ/HNN.D/
+Getting waveform for:
+['SV', 'QUEZ', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'QUEZ', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/QUEZ/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/QUEZ/HNZ.D/
+Getting waveform for:
+['SV', 'RBDL', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'RBDL', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/RBDL/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/RBDL/HNE.D/
+Getting waveform for:
+['SV', 'RBDL', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'RBDL', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/RBDL/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/RBDL/HNN.D/
+Getting waveform for:
+['SV', 'RBDL', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'RBDL', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/RBDL/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/RBDL/HNZ.D/
+Getting waveform for:
+['SV', 'SEM', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'SEM', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'SEM', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'SEM', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'SEM', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'SEM', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UDBS', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'UDBS', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/UDBS/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/UDBS/HNE.D/
+Getting waveform for:
+['SV', 'UDBS', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'UDBS', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/UDBS/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/UDBS/HNN.D/
+Getting waveform for:
+['SV', 'UDBS', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'UDBS', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/UDBS/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/UDBS/HNZ.D/
+Getting waveform for:
+['SV', 'UES', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'UES', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UES', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'UES', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UES', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'UES', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UESV', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'UESV', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'CPR', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'CPR', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'CPR', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'CPR', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'FAGO', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'FAGO', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/FAGO/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/FAGO/HNE.D/
+Getting waveform for:
+['SV', 'FAGO', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'FAGO', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/FAGO/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/FAGO/HNN.D/
+Getting waveform for:
+['SV', 'FAGO', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'FAGO', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/FAGO/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/FAGO/HNZ.D/
+Getting waveform for:
+['SV', 'FAGO2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'FAGO2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'FAGO2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'FAGO2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'FAGO2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'FAGO2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'FAME', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'FAME', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/FAME/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/FAME/HNE.D/
+Getting waveform for:
+['SV', 'FAME', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'FAME', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/FAME/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/FAME/HNN.D/
+Getting waveform for:
+['SV', 'FAME', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'FAME', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/FAME/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/FAME/HNZ.D/
+Getting waveform for:
+['SV', 'FAME2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'FAME2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'FAME2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'FAME2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'FAME2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'FAME2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'FAME2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'FAME2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'FAME2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'FAME2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'FAME2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'FAME2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'IGN', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'IGN', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/IGN/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/IGN/HNE.D/
+Getting waveform for:
+['SV', 'IGN', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'IGN', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/IGN/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/IGN/HNN.D/
+Getting waveform for:
+['SV', 'IGN', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'IGN', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/IGN/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/IGN/HNZ.D/
+Getting waveform for:
+['SV', 'ITCA', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'ITCA', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'ITCA', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'ITCA', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'ITCA', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'ITCA', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'JAYA', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'JAYA', '', 'HHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/JAYA/HHE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/JAYA/HHE.D/
+Getting waveform for:
+['SV', 'JAYA', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'JAYA', '', 'HHN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/JAYA/HHN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/JAYA/HHN.D/
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UESV', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'UESV', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UESV', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'UESV', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UNIC', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'UNIC', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/UNIC/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/UNIC/HNE.D/
+Getting waveform for:
+['SV', 'UNIC', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'UNIC', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/UNIC/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/UNIC/HNN.D/
+Getting waveform for:
+['SV', 'UNIC', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'UNIC', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/UNIC/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/UNIC/HNZ.D/
+Getting waveform for:
+['SV', 'UNICI', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'UNICI', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UNICI', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'UNICI', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UNICI', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'UNICI', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'UTEC', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'UTEC', '', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/UTEC/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/UTEC/HNE.D/
+Getting waveform for:
+['SV', 'UTEC', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'UTEC', '', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/UTEC/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/UTEC/HNN.D/
+Getting waveform for:
+['SV', 'UTEC', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'UTEC', '', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/UTEC/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/UTEC/HNZ.D/
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/io/stationxml/core.py:323: UserWarning: Tag '{http://www.fdsn.org/xml/station/1}Delay' has a value of NaN. It will be skipped.
+  tag, UserWarning)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/io/stationxml/core.py:323: UserWarning: Tag '{http://www.fdsn.org/xml/station/1}Correction' has a value of NaN. It will be skipped.
+  tag, UserWarning)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/signal/spectral_estimation.py:979: UserWarning: Error getting response from provided metadata:
+ValueError: If a decimation is given, all values must be specified.
+Skipping time segment(s).
+  warnings.warn(msg)
+/home/insivumeh/.local/lib/python3.7/site-packages/obspy/core/inventory/network.py:251: UserWarning: Found more than one matching response. Returning first.
+  warnings.warn(msg)
+
+Getting waveform for:
+['SV', 'JAYA', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'JAYA', '', 'HHZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/JAYA/HHZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/JAYA/HHZ.D/
+Getting waveform for:
+['SV', 'JAYA', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'JAYA', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/JAYA/HNE.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/JAYA/HNE.D/
+Getting waveform for:
+['SV', 'JAYA', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'JAYA', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/JAYA/HNN.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/JAYA/HNN.D/
+Getting waveform for:
+['SV', 'JAYA', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'JAYA', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+created /home/insivumeh/PSD/PNG/2023/SV/JAYA/HNZ.D/
+plotting: /home/insivumeh/PSD/PNG/2023/SV/JAYA/HNZ.D/
+Getting waveform for:
+['SV', 'JAYA2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'JAYA2', '00', 'HNE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'JAYA2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'JAYA2', '00', 'HNN', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'JAYA2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+no waveform for:
+['SV', 'JAYA2', '00', 'HNZ', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+Getting waveform for:
+['SV', 'JUCU', '', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+Getting response for:
+['SV', 'JUCU', '', 'EHE', UTCDateTime(2023, 1, 20, 0, 0), UTCDateTime(2023, 1, 20, 4, 20, 5)]
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.7/multiprocessing/pool.py", line 121, in worker
+    result = (True, func(*args, **kwds))
+  File "/usr/lib/python3.7/multiprocessing/pool.py", line 44, in mapstar
+    return list(map(*args))
+  File "/opt/seiscomp/share/scqcalert/utils/ppsd.py", line 184, in ppsd
+    tr = st.select(id=idVal)[0]
+  File "/home/insivumeh/.local/lib/python3.7/site-packages/obspy/core/stream.py", line 643, in __getitem__
+    return self.traces.__getitem__(index)
+IndexError: list index out of range
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/seiscomp/share/scqcalert/utils/ppsd.py", line 249, in <module>
+    pool.map(ppsd, selectedStreams)
+  File "/usr/lib/python3.7/multiprocessing/pool.py", line 268, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+  File "/usr/lib/python3.7/multiprocessing/pool.py", line 657, in get
+    raise self._value
+IndexError: list index out of range

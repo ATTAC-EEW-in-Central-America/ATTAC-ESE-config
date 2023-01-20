@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>email &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ncurses" href="scm_ncurses.html" />
+    <link rel="prev" title="text" href="scm_text.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="scm_ncurses.html" title="ncurses"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scm_text.html" title="text"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../toc/extensions.html" >Extensions</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/extensions/scm.html" accesskey="U">scm</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="email">
+<span id="scm-email"></span><h1>email<a class="headerlink" href="#email" title="Permalink to this headline">¶</a></h1>
+<p>Email plugin for scm which sends emails based on client status.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The email plugin sends emails to configured receipients if a client status
+messages passes the configured <a class="reference internal" href="#confval-memailplugin.filter"><code class="xref std std-confval docutils literal notranslate"><span class="pre">filter</span></code></a>.</p>
+</div>
+<div class="section" id="plugin">
+<h2>Plugin<a class="headerlink" href="#plugin" title="Permalink to this headline">¶</a></h2>
+<p>The email plugin is installed under <code class="file docutils literal notranslate"><span class="pre">share/plugins/monitor/memailplugin.so</span></code>.</p>
+<p>To add the plugin to <a class="reference internal" href="scm.html#scm"><span class="std std-ref">scm</span></a>, add it to the plugin list:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">plugins</span> <span class="o">=</span> <span class="si">${</span><span class="nv">plugins</span><span class="si">}</span>, memailplugin
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>An example configuration looks like this:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Send notification is a clients CPU usage exceeds 100 percent</span>
+memailplugin.filter <span class="o">=</span> <span class="s2">&quot;cpuusage&gt;100&quot;</span>
+
+<span class="c1"># Send emails, yes</span>
+memailplugin.sendEmail <span class="o">=</span> <span class="nb">true</span>
+
+<span class="c1"># Send emails to this address(es)</span>
+memailplugin.recipients <span class="o">=</span> operator@my-agency.org, operator2@my-agency.org
+
+memailplugin.reportSilentClients <span class="o">=</span> <span class="nb">false</span>
+
+<span class="c1"># Minutes before report missing clients</span>
+memailplugin.reportRequiredClients <span class="o">=</span> <span class="m">1</span>
+
+<span class="c1"># Interval to calculate mean of the message values for (in minutes)</span>
+memailplugin.filterMeanInterval <span class="o">=</span> <span class="m">1</span>
+
+<span class="c1"># List of clients we definitely require to be operative</span>
+memailplugin.requiredClients <span class="o">=</span> scautopick, scautoloc, scevent, scamp,<span class="se">\</span>
+                               scmag, scqc, scevtlog
+</pre></div>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="scm-email-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="confval">
+<dt id="confval-memailplugin.recipients">
+<code class="sig-name descname">memailplugin.recipients</code><a class="headerlink" href="#confval-memailplugin.recipients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Defines a comma separated list of email addresses to send
+notifications to.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-memailplugin.template">
+<code class="sig-name descname">memailplugin.template</code><a class="headerlink" href="#confval-memailplugin.template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Configures a custom message text that is appended to each message
+when clients passed the filter.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-memailplugin.filter">
+<code class="sig-name descname">memailplugin.filter</code><a class="headerlink" href="#confval-memailplugin.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the filter for each client status. A filter is an expression
+that can be constructed with all available status tags (scm –print-tags)
+and logical and numerical operators. See scm for more information.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-memailplugin.requiredClients">
+<code class="sig-name descname">memailplugin.requiredClients</code><a class="headerlink" href="#confval-memailplugin.requiredClients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-memailplugin.reportSilentClients">
+<code class="sig-name descname">memailplugin.reportSilentClients</code><a class="headerlink" href="#confval-memailplugin.reportSilentClients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-memailplugin.reportSilentClientsTimeSpan">
+<code class="sig-name descname">memailplugin.reportSilentClientsTimeSpan</code><a class="headerlink" href="#confval-memailplugin.reportSilentClientsTimeSpan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>min</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-memailplugin.reportRequiredClients">
+<code class="sig-name descname">memailplugin.reportRequiredClients</code><a class="headerlink" href="#confval-memailplugin.reportRequiredClients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>min</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-memailplugin.filterMeanInterval">
+<code class="sig-name descname">memailplugin.filterMeanInterval</code><a class="headerlink" href="#confval-memailplugin.filterMeanInterval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>min</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-memailplugin.sendEmail">
+<code class="sig-name descname">memailplugin.sendEmail</code><a class="headerlink" href="#confval-memailplugin.sendEmail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enables sending of emails using mailx shell command.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">email</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#plugin">Plugin</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scm_text.html"
+                        title="previous chapter">text</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scm_ncurses.html"
+                        title="next chapter">ncurses</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scm_email.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

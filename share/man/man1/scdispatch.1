@@ -1,0 +1,411 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCDISPATCH" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scdispatch \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBReads objects (event, origin, etc) from a SC3ML file and sends the objects
+to the messaging system.\fP
+.SH DESCRIPTION
+.sp
+scdispatch reads an SCML file and creates notifier objects for them that
+are sent to the corresponding messaging groups (see \fBroutingtable\fP).
+In contrast to scdb which writes SCML files directly into the database
+scdispatch uses the messaging bus. If scmaster is configured with
+the database plugin messages will end up in the database as well.
+.sp
+scdispatch can work in two modes. The first mode is used when a concrete
+operation is specified such as \fIadd\fP, \fIupdate\fP or \fIremove\fP\&. In that case all
+objects in the SCML are encapsulated in a notifier with that specific operation
+and sent to the messaging. No check is performed if the object is already in
+the database or not.
+.sp
+In the second mode scdispatch loads the corresponding objects from the database
+and calculates differences. It will then create corresponding notifiers with
+operations \fIadd\fP, \fIupdate\fP or \fIremove\fP and sent them to the messaging. That mode
+is quite close to a sync operation with the exception that top level objects
+(such as origin or event) that are not part of the input SCML are left untouched
+in the database. It can be used to synchronize event information from one system
+with another.
+.SH EXAMPLES
+.INDENT 0.0
+.IP 1. 3
+Send different objects from a SCML file because the default behavior is to merge:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scdispatch \-i test.xml
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 2. 3
+Send new objects:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scdispatch \-i test.xml \-O add
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 3. 3
+Send an update:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scdispatch \-i test.xml \-O update
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 4. 3
+Remove the objects:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scdispatch \-i test.xml \-O remove
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 5. 3
+Subsets of SCML Objects
+.sp
+It can be useful to import a subset of QuakeML objects, e.g. Origins from other
+agencies and then allow scevent to associate them to existing
+events (and possibly prefer them based on the rules in scevent) or create new
+events for the origins. If the event objects from a SCML file are not required
+to be sent to the messaging then either they should be removed (e.g. using XSLT)
+and all the remaining objects in the file added:
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scdispatch \-i test.xml \-O add
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+or the \fBevent objects\fP can be left out of the routing table, e.g.
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scdispatch \-i test.xml \-O add \e
+           \-\-routingtable Pick:PICK, \e
+                          Amplitude:AMPLITUDE, \e
+                          Origin:LOCATION,StationMagnitude:MAGNITUDE, \e
+                          Magnitude:MAGNITUDE
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBHINT:\fP
+.INDENT 3.0
+.INDENT 3.5
+The option \fB\-\-no\-event\fP is a wrapper for removing Event:EVENT from
+the routing table. With this option no event objects will be sent which may
+be useful if just the origins with magnitudes, amplitudes, arrivals, picks, etc.
+shall be integrated, e.g. after XML\-based playbacks.
+.UNINDENT
+.UNINDENT
+.IP 6. 3
+Testing
+.sp
+For testing it is useful to watch the results of dispatch with scolv or
+scxmldump\&. It is also useful to clean the database and logs to remove
+objects from persistent storage to allow repeated reloading of a file.
+.sp
+\fBNOTE:\fP
+.INDENT 3.0
+.INDENT 3.5
+The following will clear all events from the database and any other
+other object persistence. Modify the mysql command to suit your db setup.
+.UNINDENT
+.UNINDENT
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+mysql \-u root \-\-password=\(aqmy$q1\(aq \-e "DROP DATABASE IF EXISTS seiscomp; \e
+  CREATE DATABASE seiscomp CHARACTER SET utf8 COLLATE utf8_bin; \e
+  GRANT ALL ON seiscomp.* TO \(aqsysop\(aq@\(aqlocalhost\(aq IDENTIFIED BY \(aqsysop\(aq; \e
+  USE seiscomp;source seiscomp/trunk/share/db/mysql.sql;"
+
+seiscomp start
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scdispatch.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scdispatch.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scdispatch.cfg\fP
+.fi
+.sp
+.sp
+scdispatch inherits global options\&.
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Messaging
+.INDENT 0.0
+.TP
+.B \-u, \-\-user arg
+Overrides configuration parameter \fBconnection.username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-H, \-\-host arg
+Overrides configuration parameter \fBconnection.server\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-t, \-\-timeout arg
+Overrides configuration parameter \fBconnection.timeout\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-g, \-\-primary\-group arg
+Overrides configuration parameter \fBconnection.primaryGroup\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S, \-\-subscribe\-group arg
+A group to subscribe to. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-content\-type arg
+Overrides configuration parameter \fBconnection.contentType\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-stop\-msg arg
+Sets sending of a start\- and a stop message.
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-module arg
+The configmodule to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-inventory\-db arg
+Load the inventory from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-db\-disable
+Do not use the database at all
+.UNINDENT
+.SS Dispatch
+.INDENT 0.0
+.TP
+.B \-i, \-\-input flag
+File to dispatch to messaging.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-O, \-\-operation flag
+Operation to use: add, update, remove, merge or merge\-without\-remove.
+Merge and merge\-without\-remove are special operations and require
+a database connection. Both will read a corresponding object
+from the database and calculate the differences which will be
+sent to the messaging. Merge\-no\-remove behaves like merge
+with the exception that remove operations will be filtered
+out that no objects in the database will be removed.
+.sp
+If add, update or remove is specified then all objects in
+XML are sent with the given operation regardless of their
+existence in the database or not.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-routingtable flag
+Specify routing table as comma separated list of object:group pairs,
+e.g. "Origin:LOCATION,Event:EVENT". When an objects
+should be routed to a group and no table entry for that perticular
+class type is available, all parent objects are checked for
+valid routing entries and the first found is used. E.g. if only
+"Origin:LOCATION" is specified but the input file
+contains also Arrivals which are child objects of Origin then
+the routing entry of Origin is used because of the parent\-child
+relationship between Origin and Arrival.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-print\-objects
+Print names of routable objects.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-test
+Test mode. Does not send any object.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-e, \-\-no\-events
+Do not send any event object. This is a wrapper to setting a
+routing table without EVENT objects
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

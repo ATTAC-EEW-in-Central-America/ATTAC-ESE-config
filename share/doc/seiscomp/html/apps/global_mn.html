@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>MN &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="LocExt" href="global_locext.html" />
+    <link rel="prev" title="iLoc" href="global_iloc.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_locext.html" title="LocExt"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_iloc.html" title="iLoc"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../toc/extensions.html" >Extensions</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/extensions/global.html" accesskey="U">global</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="mn">
+<span id="global-mn"></span><h1>MN<a class="headerlink" href="#mn" title="Permalink to this headline">¶</a></h1>
+<p>Nuttli magnitude for Canada and other Cratonic regions</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>MN is the Nuttli magnitude <span id="id1">[<a class="reference internal" href="../base/references.html#id48" title="O.W. Nuttli. Seismic wave attenuation and magnitude relations for eastern north america. J. Geophys. Res., 5:876 - 885, 1973. doi:10.1029/JB078i005p00876.">22</a>]</span> for Canada and other Cratonic
+regions. It is implemented by the <em>nuttli</em> plugin according to the
+Geological Survey of Canada (NRCan).</p>
+<p>For measuring AMN amplitudes and for computing MN magnitudes <cite>SeisComP</cite> provides
+regionalization.</p>
+<div class="section" id="amplitude">
+<h3>Amplitude<a class="headerlink" href="#amplitude" title="Permalink to this headline">¶</a></h3>
+<p>Amplitude unit in <cite>SeisComP</cite>: <strong>meter/second</strong> (m/s)</p>
+</div>
+</div>
+<div class="section" id="settings">
+<h2>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h2>
+<p>Add the <em>nuttli</em> plugin to the list of loaded plugins e.g. in the global module configuration:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">plugins</span> <span class="o">=</span> <span class="si">${</span><span class="nv">plugins</span><span class="si">}</span>,nuttli
+</pre></div>
+</div>
+<p>Adjust MN-specific global bindings parameters in the amplitude section and set the
+region-specific calibration parameters in the global module configuration.</p>
+<div class="section" id="scamp">
+<h3>scamp<a class="headerlink" href="#scamp" title="Permalink to this headline">¶</a></h3>
+<p>Add the Nuttli amplitude type, <strong>AMN</strong>, to the range of magnitudes for which the amplitudes are
+to be calculated by <a class="reference internal" href="scamp.html#scamp"><span class="std std-ref">scamp</span></a>, e.g.:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">amplitudes</span> <span class="o">=</span> AMN
+</pre></div>
+</div>
+<p>Adjust MN-specific global bindings parameters in the amplitude section and set the
+region-specific calibration parameters in the global module configuration
+(amplitude section).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Provide <em>AMN</em> for computing Nuttli-type amplitudes.</p>
+</div>
+</div>
+<div class="section" id="scmag">
+<h3>scmag<a class="headerlink" href="#scmag" title="Permalink to this headline">¶</a></h3>
+<p>Add the Nuttli magnitude type, <strong>MN</strong>, to the range of magnitudes to be calculated by
+<a class="reference internal" href="scmag.html#scmag"><span class="std std-ref">scmag</span></a>, e.g.:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">magnitudes</span> <span class="o">=</span> MN
+</pre></div>
+</div>
+<p>Adjust MN-specific global bindings parameters in the magnitude section and define
+the region polygons in the global module configuration (magnitude section).</p>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="global-mn-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>amplitudes.MN.*</strong>
+<em>Amplitude control parameters for MN (Nuttli magnitude).</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-amplitudes.MN.velocityModel">
+<code class="sig-name descname">amplitudes.MN.velocityModel</code><a class="headerlink" href="#confval-amplitudes.MN.velocityModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The travel time table set compiled for LocSAT. The tables
+are located in “share/locsat/tables/[vmodel].*”.
+Default is <code class="docutils literal notranslate"><span class="pre">iasp91</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>magnitudes.MN.*</strong>
+<em>Regionalization of MN (Nuttli magnitude).</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-magnitudes.MN.region">
+<code class="sig-name descname">magnitudes.MN.region</code><a class="headerlink" href="#confval-magnitudes.MN.region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>path</em></p>
+<p>The path to the BNA file which defines the valid region
+for the MN magnitude. Note that the entire path from
+source to receiver must lie entirely within the polygon(s).
+Default is <code class="docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/magnitudes/MN/MN.bna</span></code>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MN</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
+<li><a class="reference internal" href="#amplitude">Amplitude</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#settings">Settings</a><ul>
+<li><a class="reference internal" href="#scamp">scamp</a></li>
+<li><a class="reference internal" href="#scmag">scmag</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="global_iloc.html"
+                        title="previous chapter">iLoc</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="global_locext.html"
+                        title="next chapter">LocExt</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/global_mn.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

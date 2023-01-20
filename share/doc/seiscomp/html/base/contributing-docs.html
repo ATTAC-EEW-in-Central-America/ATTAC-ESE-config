@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Contributing Documentation &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Style Guide for Documentation" href="style-guide.html" />
+    <link rel="prev" title="Getting the Source Code" href="build.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="style-guide.html" title="Style Guide for Documentation"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="build.html" title="Getting the Source Code"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="contributing-documentation">
+<span id="id1"></span><h1>Contributing Documentation<a class="headerlink" href="#contributing-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This is the documentation for the core processing elements and utilities that make up the <cite>SeisComP</cite> system.
+It aims to document the configuration and command line options for
+<cite>SeisComP</cite> in multiple formats (HTML, man, PDF, ePub etc) in a
+consistent way. The functionality of <cite>SeisComP</cite> differs between
+versions so the documentation is versioned along with <cite>SeisComP</cite>.
+For more general topics and tutorials please refer to the
+<a class="reference external" href="https://www.seiscomp.de/">SeisComP wiki</a> <a class="footnote-reference brackets" href="#id2" id="id3">1</a>.</p>
+<p>The documentation is written in <a class="reference external" href="https://docutils.sourceforge.net/rst.html">reStructuredText</a> <a class="footnote-reference brackets" href="#id4" id="id5">2</a> (reST) a
+simple text mark up format. The documentation is generated using <a class="reference external" href="https://sphinx.pocoo.org/index.html">Sphinx</a> <a class="footnote-reference brackets" href="#id6" id="id7">3</a>
+which is used to create the <a class="reference external" href="https://docs.python.org/">Python documentation</a> <a class="footnote-reference brackets" href="#id8" id="id9">4</a>.
+The Sphinx website has a very good
+<a class="reference external" href="https://sphinx.pocoo.org/rest.html">introduction to reST</a> <a class="footnote-reference brackets" href="#id10" id="id11">5</a> and also covers the Sphinx specific
+<a class="reference external" href="https://sphinx.pocoo.org/markup/index.html">directives</a> <a class="footnote-reference brackets" href="#id12" id="id13">6</a>.</p>
+<p>If you would like to add to this documentation or you find an error, then please
+submit a patch to <a class="reference external" href="https://github.com/SeisComP">SeisComP on GitHub</a> <a class="footnote-reference brackets" href="#id14" id="id15">7</a> or report to the
+SeisComP <a class="reference external" href="https://forum.seiscomp.de">discussion forum</a> <a class="footnote-reference brackets" href="#id16" id="id17">8</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please understand the <a class="reference internal" href="style-guide.html#documentation-style-guide"><span class="std std-ref">documentation style guide</span></a>
+before contributing documentation.</p>
+</div>
+<p>If you view the HTML version of the documentation in a browser,
+then you can use the <em>Show Source</em> link on each page to view the reST
+source. The source and the documentation files for executables (see below) are
+good starting points for a new patch.</p>
+<div class="section" id="documenting-executables">
+<h2>Documenting Executables<a class="headerlink" href="#documenting-executables" title="Permalink to this headline">¶</a></h2>
+<p>The documentation for executables is generated from two sources:</p>
+<dl>
+<dt>‘executable’.xml</dt><dd><p>An XML file that contains a brief description of the command,
+markup describing the command line parameters, and any
+configuration parameters for the executable. Each parameter should
+have a brief description of the purpose of the parameter.</p>
+<p>The description should be plain text and not contain reST markup. Where parameters are common across
+a number of executables they should be placed in the appropriate common file and referred to using
+their publicID.</p>
+<p>All XML files live in the <code class="file docutils literal notranslate"><span class="pre">doc/apps</span></code> directory of the source
+distribution or in <code class="file docutils literal notranslate"><span class="pre">etc/descriptions</span></code> of an installation.</p>
+</dd>
+<dt>‘executable’.rst</dt><dd><p>This is a text file in reST markup that gives any more-detailed description and examples for the executable.
+It is combined with the corresponding .xml to create the full documentation.
+The first entry in the file should be a paragraph giving a more
+detailed description of the executable.</p>
+</dd>
+</dl>
+<p>These two files should be placed in a <code class="file docutils literal notranslate"><span class="pre">descriptions</span></code> sub-directory of the
+respective module, e.g. <code class="file docutils literal notranslate"><span class="pre">src/seedlink/apps/seedlink/descriptions/seedlink.rst</span></code>.
+The intention is that the documentation is close to the code to make it easier for developers to keep the
+documentation up to date with code changes.</p>
+<p>For a new executable an entry should also be made in the man section of <code class="file docutils literal notranslate"><span class="pre">conf.py</span></code>.
+The man page is a short form of the documentation that is generated from only the .xml file.</p>
+</div>
+<div class="section" id="images">
+<h2>Images<a class="headerlink" href="#images" title="Permalink to this headline">¶</a></h2>
+<p>Any images should be placed in a suitable sub-directory of <code class="file docutils literal notranslate"><span class="pre">descriptions/media</span></code>.
+Read the <a class="reference internal" href="style-guide.html#documentation-style-guide"><span class="std std-ref">documentation on image styles</span></a> for more details.
+The images can then be referred to (in .rst) like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>.. figure::  media/scolv/scolv-overview.png
+   :width: 16cm
+   :align: center
+
+   Overview of the defrobnicator switches in :ref:`scolv`.
+</pre></div>
+</div>
+<p>The images will be moved to the correct location during the documentation build.</p>
+</div>
+<div class="section" id="understanding-the-xml">
+<h2>Understanding the XML<a class="headerlink" href="#understanding-the-xml" title="Permalink to this headline">¶</a></h2>
+<p>As mentioned before XML is used to generate brief descriptions of the configuration and command line parameters.
+This section describes the XML format.</p>
+<p>Any description XML uses the root element <em>seiscomp</em>:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;seiscomp&gt;</span>
+  ...
+<span class="nt">&lt;/seiscomp&gt;</span>
+</pre></div>
+</div>
+<p>Three elements are used inside the root element: <a class="reference internal" href="#xml-module"><span class="std std-ref">module</span></a>, <a class="reference internal" href="#xml-plugin"><span class="std std-ref">plugin</span></a> and <a class="reference internal" href="#xml-binding"><span class="std std-ref">binding</span></a>.
+Modules, plugins and bindings can be described in one XML or split up into one file per description. It is better to
+have things as close as possible. A module and its binding should go into one module.XML whereas plugins should
+go into separate XML files.</p>
+<div class="section" id="module">
+<span id="xml-module"></span><h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<p>A template for a description XML file can be found in <code class="file docutils literal notranslate"><span class="pre">doc/templates/app.xml</span></code>.</p>
+<p>The XML file describes the <cite>SeisComP</cite> <a class="reference internal" href="glossary.html#term-module"><span class="xref std std-term">module</span></a> with the configuration and command-line parameters.</p>
+<p>Element: <strong>module</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 10%" />
+<col style="width: 11%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>yes</p></td>
+<td><p>The name of the module. This name must be
+unique among all available modules.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>category</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>The category of the module. It is used by the
+configurator to group modules and by the
+documentation generator to create the final
+document structure. The category can contain
+slashes to introduce hierarchies.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>standalone</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>The standalone attribute is also optional and
+by default false. Standalone means that the
+module does not take the global configuration
+files (e.g. <code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code>) into
+account.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>inherit-global-bindings</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>If global bindings are inherited. The default
+is ‘false’. If ‘yes’, then all parameters of
+the global binding are also available in
+the module binding to allow overwriting them.
+Standalone modules will never inherit global
+bindings regardless the value of this
+attribute.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>description</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>A short description of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>configuration</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>The available configuration parameters. See
+element
+<a class="reference internal" href="#xml-configuration"><span class="std std-ref">configuration</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>command-line</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>The available command-line options. See
+element
+<a class="reference internal" href="#xml-command-line"><span class="std std-ref">command-line</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<p>It follows a simple example of how a module definition looks like.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;seiscomp&gt;</span>
+  <span class="nt">&lt;module</span> <span class="na">name=</span><span class="s">&quot;scevent&quot;</span> <span class="na">category=</span><span class="s">&quot;Modules/Processing&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;description&gt;</span>
+      Associates an Origin to an Event or forms a new Event if no match
+      is found. Selects the preferred magnitude.
+    <span class="nt">&lt;/description&gt;</span>
+    <span class="nt">&lt;configuration/&gt;</span>
+    <span class="nt">&lt;command-line/&gt;</span>
+  <span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;/seiscomp&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plugin">
+<span id="xml-plugin"></span><h3>Plugin<a class="headerlink" href="#plugin" title="Permalink to this headline">¶</a></h3>
+<p>A template for a description XML file can be found in <code class="file docutils literal notranslate"><span class="pre">doc/templates/plugin.xml</span></code>.</p>
+<p>The XML file describes the <cite>SeisComP</cite> <a class="reference internal" href="glossary.html#term-plugin"><span class="xref std std-term">plugin</span></a> with the configuration and command-line parameters. This is most likely the
+case when an application loads dynamically shared libraries also called plugins.</p>
+<p>Element: <strong>plugin</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>yes</p></td>
+<td><p>The name of the plugin.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>extends</strong></p></td>
+<td><p>element</p></td>
+<td><p>yes</p></td>
+<td><p>The list of names of module names that
+the plugin extends, separated by commas.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>description</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>A short description of the plugin.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>configuration</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>The available configuration parameters. See
+element
+<a class="reference internal" href="#xml-configuration"><span class="std std-ref">configuration</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Below is a simple example of how a plugin definition appears in XML.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;seiscomp&gt;</span>
+  <span class="nt">&lt;plugin</span> <span class="na">name=</span><span class="s">&quot;NonLinLoc&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;extends&gt;</span>global<span class="nt">&lt;/extends&gt;</span>
+    <span class="nt">&lt;description&gt;</span>
+      NonLinLoc locator wrapper plugin for SeisComP.
+      NonLinLoc was written by Anthony Lomax (http://alomax.free.fr/nlloc).
+    <span class="nt">&lt;/description&gt;</span>
+    <span class="nt">&lt;configuration/&gt;</span>
+    <span class="nt">&lt;command-line/&gt;</span>
+  <span class="nt">&lt;/plugin&gt;</span>
+<span class="nt">&lt;/seiscomp&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="binding">
+<span id="xml-binding"></span><h3>Binding<a class="headerlink" href="#binding" title="Permalink to this headline">¶</a></h3>
+<p>A binding template can be found in <code class="file docutils literal notranslate"><span class="pre">doc/templates/binding.xml</span></code>.</p>
+<p>It describes the set of configuration parameters to configure a station for a module.</p>
+<p>Element: <strong>binding</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>module</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>yes</p></td>
+<td><p>The name of the module this binding belongs
+to.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>description</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>A short description of the binding.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>configuration</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>The available configuration parameters. See
+element
+<a class="reference internal" href="#xml-configuration"><span class="std std-ref">configuration</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Below is an example of how a simple binding definition appears as XML.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;seiscomp&gt;</span>
+  <span class="nt">&lt;binding</span> <span class="na">module=</span><span class="s">&quot;seedlink&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;description&gt;</span>
+      Configures sources and parameters of a SeedLink station.
+    <span class="nt">&lt;/description&gt;</span>
+    <span class="nt">&lt;configuration/&gt;</span>
+  <span class="nt">&lt;/binding&gt;</span>
+<span class="nt">&lt;/seiscomp&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="xml-configuration"></span><h3>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h3>
+<p>This element is used to describe the configuration parameters (not command-line, just
+configuration file) of a module, binding and plugin.</p>
+<p>Element: <strong>configuration</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>parameter</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>A top level parameter that does not contain
+dots in the configuration file.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">param</span> <span class="o">=</span> value
+group.param <span class="o">=</span> <span class="s2">&quot;another value&quot;</span>
+</pre></div>
+</div>
+<p>Here <code class="docutils literal notranslate"><span class="pre">param</span></code> is a top level parameter
+whereas <code class="docutils literal notranslate"><span class="pre">group.param</span></code> is not. See
+<a class="reference internal" href="#xml-configuration-parameter"><span class="std std-ref">parameter</span></a>.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong>struct</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>A top level structure definition. Structures
+are different from groups and parameters
+as they can be instantiated by an arbitrary
+name.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>group</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>A parameter group that describes a logical
+grouping of parameters also called “scope” or
+“namespace”. If a parameter in the
+configuration file contains dots, then only
+the last part is a parameter all others are
+groups.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>group1.group2.param <span class="o">=</span> value
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p id="xml-configuration-parameter">Element: <strong>parameter</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>yes</p></td>
+<td><p>The name of the parameter. This name must be
+unique among all parameters of the same
+level.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>type</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>An optional description of the parameter
+type which can be interpreted by a
+configurator to provide specialized input
+widgets. It is also important for the user
+how the parameter is read by the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>unit</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>An optional unit such as “s” or “km” or
+“deg”.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>default</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>The default value the module uses if this
+parameter is not configured.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>description</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Gives a brief description of the parameter.</p></td>
+</tr>
+</tbody>
+</table>
+<p id="xml-configuration-struct">Element: <strong>struct</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>type</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>yes</p></td>
+<td><p>The name of the struct type. This name is
+used in a configurator to give a selection
+of available types to be instantiated.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>link</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>The absolute reference parameter as it would
+appear in the configuration file which
+holds all instantiated structures.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># &#39;link&#39; parameter holding all available</span>
+<span class="c1"># structures. &quot;local&quot; and &quot;teleseismic&quot;</span>
+<span class="c1"># are instances of a structure defined</span>
+<span class="c1"># below.</span>
+locator.profiles <span class="o">=</span> local, teleseismic
+
+<span class="c1"># The structure defined in locator.profile</span>
+<span class="c1"># would have &quot;locator.profiles&quot; as link</span>
+<span class="c1"># attribute.</span>
+locator.profile.local.param <span class="o">=</span> value
+locator.profile.teleseismic.param <span class="o">=</span> value
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>description</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Gives a brief description of the parameter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>parameter</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Describes a parameter in the struct. See
+<a class="reference internal" href="#xml-configuration-parameter"><span class="std std-ref">parameter</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>struct</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Describes a struct part of this struct.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>group</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Describes a group part of this struct. See
+<a class="reference internal" href="#xml-configuration-group"><span class="std std-ref">group</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<p id="xml-configuration-group">Element: <strong>group</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>yes</p></td>
+<td><p>The name of the group. This name must be
+unique among all groups of the same level.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>description</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Gives a brief description of the parameter.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>parameter</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Describes a parameter in the group. See
+<a class="reference internal" href="#xml-configuration-parameter"><span class="std std-ref">parameter</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>struct</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Describes a struct part of this group. See
+<a class="reference internal" href="#xml-configuration-struct"><span class="std std-ref">struct</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>group</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Describes a group part of this group.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Below is an example of the plugin definition for the NonLinLoc plugin. It contains
+groups, parameters and structures.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;seiscomp&gt;</span>
+  <span class="nt">&lt;plugin</span> <span class="na">name=</span><span class="s">&quot;NonLinLoc&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;extends&gt;</span>global<span class="nt">&lt;/extends&gt;</span>
+    <span class="nt">&lt;description&gt;</span>...<span class="nt">&lt;/description&gt;</span>
+    <span class="nt">&lt;configuration&gt;</span>
+      <span class="nt">&lt;group</span> <span class="na">name=</span><span class="s">&quot;NonLinLoc&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;publicID&quot;</span> <span class="na">type=</span><span class="s">&quot;string&quot;</span>
+                   <span class="na">default=</span><span class="s">&quot;NLL.@time/%Y%m%d%H%M%S.%f@.@id@&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;description&gt;</span>
+            PublicID creation pattern for an origin created by NonLinLoc.
+          <span class="nt">&lt;/description&gt;</span>
+        <span class="nt">&lt;/parameter&gt;</span>
+
+        <span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;outputPath&quot;</span> <span class="na">type=</span><span class="s">&quot;path&quot;</span> <span class="na">default=</span><span class="s">&quot;/tmp/sc3.nll&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;description&gt;</span>
+            Defines the output path for all native NonLinLoc input and
+            output files.
+          <span class="nt">&lt;/description&gt;</span>
+        <span class="nt">&lt;/parameter&gt;</span>
+
+        <span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;profiles&quot;</span> <span class="na">type=</span><span class="s">&quot;list:string&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;description&gt;</span>
+            Defines a list of active profiles to be used by the plugin.
+          <span class="nt">&lt;/description&gt;</span>
+        <span class="nt">&lt;/parameter&gt;</span>
+
+        <span class="nt">&lt;group</span> <span class="na">name=</span><span class="s">&quot;profile&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;struct</span> <span class="na">type=</span><span class="s">&quot;NonLinLoc profile&quot;</span> <span class="na">link =</span> <span class="s">&quot;NonLinLoc.profiles&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;description&gt;</span>
+              Defines a regional profile that is used if a prelocation falls
+              inside the configured region.
+            <span class="nt">&lt;/description&gt;</span>
+            <span class="nt">&lt;parameter</span> <span class="na">name=</span><span class="s">&quot;earthModelID&quot;</span> <span class="na">type=</span><span class="s">&quot;string&quot;</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;description&gt;</span>
+                earthModelID that is stored in the created origin.
+              <span class="nt">&lt;/description&gt;</span>
+            <span class="nt">&lt;/parameter&gt;</span>
+          <span class="nt">&lt;/struct&gt;</span>
+        <span class="nt">&lt;/group&gt;</span>
+      <span class="nt">&lt;/group&gt;</span>
+    <span class="nt">&lt;/configuration&gt;</span>
+  <span class="nt">&lt;/plugin&gt;</span>
+<span class="nt">&lt;/seiscomp&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="command-line">
+<span id="xml-command-line"></span><h3>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h3>
+<p>This element is used to describe the command-line options of a module. The element structure is
+much simpler than the <a class="reference internal" href="#xml-configuration"><span class="std std-ref">configuration</span></a> element. The command-line only
+contains group elements which in turn have either option or optionReference elements. Through
+the optionReference element it is possible to refer to existing command-line options. This is
+important for all modules that are using the <cite>SeisComP</cite> libraries because they share a set of
+basic command-line options inherited from the Application class.</p>
+<p>Element: <strong>command-line</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>synopsis</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Optional description of how to start the
+module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>description</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Optional description of the command-line
+and non option parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>group</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Describes an option group. See
+<a class="reference internal" href="#xml-command-line-group"><span class="std std-ref">group</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<p id="xml-command-line-group">Element: <strong>group</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>yes</p></td>
+<td><p>The name of the group. This name must be
+unique among all groups of the same level.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>option</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>An option part of this group. See
+<a class="reference internal" href="#xml-command-line-option"><span class="std std-ref">option</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>optionReference</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>A reference to an existing option using its
+publicID.</p></td>
+</tr>
+</tbody>
+</table>
+<p id="xml-command-line-option">Element: <strong>option</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>XML type</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>flag</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>semi</p></td>
+<td><p>The short option flag. Either this attribute
+or long-flag must be set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>long-flag</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>semi</p></td>
+<td><p>The long option flag. Either this attribute
+or flag must be set.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>param-ref</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>Refers to a configuration parameter name that
+this parameter overrides. Name is the full
+path, e.g. <em>connection.server</em> and not just
+<em>server</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>argument</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>The optional argument string. If argument is
+not set, the option is a switch.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>default</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>The option’s default value used if the option
+is not given though it is hard in most cases
+because command-line options very often
+redefine configuration parameters which is
+then used as a default value for the option.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>publicID</strong></p></td>
+<td><p>attrib</p></td>
+<td><p>no</p></td>
+<td><p>The optional publicID of the option to be
+able to reference it from an optionReference
+element. The publicID must be unique among
+all defined options.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>description</strong></p></td>
+<td><p>element</p></td>
+<td><p>no</p></td>
+<td><p>Gives a brief description of the option.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Below is an example of the module definition for <strong class="program">scautoloc</strong> (extract).</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;seiscomp&gt;</span>
+  <span class="nt">&lt;module</span> <span class="na">name=</span><span class="s">&quot;scautoloc&quot;</span> <span class="na">category=</span><span class="s">&quot;Modules/Processing&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;description&gt;</span>Locates seismic events.<span class="nt">&lt;/description&gt;</span>
+    <span class="nt">&lt;configuration&gt;</span>
+      ...
+    <span class="nt">&lt;/configuration&gt;</span>
+    <span class="nt">&lt;command-line&gt;</span>
+      <span class="nt">&lt;group</span> <span class="na">name=</span><span class="s">&quot;Generic&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;optionReference&gt;</span>generic#help<span class="nt">&lt;/optionReference&gt;</span>
+        <span class="nt">&lt;optionReference&gt;</span>generic#version<span class="nt">&lt;/optionReference&gt;</span>
+        <span class="nt">&lt;optionReference&gt;</span>generic#config-file<span class="nt">&lt;/optionReference&gt;</span>
+        <span class="nt">&lt;optionReference&gt;</span>generic#plugins<span class="nt">&lt;/optionReference&gt;</span>
+        <span class="nt">&lt;optionReference&gt;</span>generic#daemon<span class="nt">&lt;/optionReference&gt;</span>
+        <span class="nt">&lt;optionReference&gt;</span>generic#auto-shutdown<span class="nt">&lt;/optionReference&gt;</span>
+        <span class="nt">&lt;optionReference&gt;</span>generic#shutdown-master-module<span class="nt">&lt;/optionReference&gt;</span>
+        <span class="nt">&lt;optionReference&gt;</span>generic#shutdown-master-username<span class="nt">&lt;/optionReference&gt;</span>
+      <span class="nt">&lt;/group&gt;</span>
+
+      <span class="nt">&lt;group</span> <span class="na">name=</span><span class="s">&quot;Mode&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span> <span class="na">long-flag=</span><span class="s">&quot;test&quot;</span> <span class="na">argument=</span><span class="s">&quot;&quot;</span> <span class="na">default=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;description&gt;</span>Do not send any object<span class="nt">&lt;/description&gt;</span>
+        <span class="nt">&lt;/option&gt;</span>
+
+        <span class="nt">&lt;option</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span> <span class="na">long-flag=</span><span class="s">&quot;offline&quot;</span> <span class="na">argument=</span><span class="s">&quot;&quot;</span> <span class="na">default=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;description&gt;</span>
+            Do not connect to a messaging server. Instead a
+            station-locations.conf file can be provided. This implies
+            --test and --playback
+          <span class="nt">&lt;/description&gt;</span>
+        <span class="nt">&lt;/option&gt;</span>
+
+        <span class="nt">&lt;option</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span> <span class="na">long-flag=</span><span class="s">&quot;playback&quot;</span> <span class="na">argument=</span><span class="s">&quot;&quot;</span> <span class="na">default=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;description&gt;</span>Flush origins immediately without delay<span class="nt">&lt;/description&gt;</span>
+        <span class="nt">&lt;/option&gt;</span>
+      <span class="nt">&lt;/group&gt;</span>
+    <span class="nt">&lt;/command-line&gt;</span>
+  <span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;/seiscomp&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dd><p><a class="reference external" href="https://www.seiscomp.de/">https://www.seiscomp.de/</a></p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id5">2</a></span></dt>
+<dd><p><a class="reference external" href="https://docutils.sourceforge.net/rst.html">https://docutils.sourceforge.net/rst.html</a></p>
+</dd>
+<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id7">3</a></span></dt>
+<dd><p><a class="reference external" href="https://sphinx.pocoo.org/index.html">https://sphinx.pocoo.org/index.html</a></p>
+</dd>
+<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id9">4</a></span></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/">https://docs.python.org/</a></p>
+</dd>
+<dt class="label" id="id10"><span class="brackets"><a class="fn-backref" href="#id11">5</a></span></dt>
+<dd><p><a class="reference external" href="https://sphinx.pocoo.org/rest.html">https://sphinx.pocoo.org/rest.html</a></p>
+</dd>
+<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id13">6</a></span></dt>
+<dd><p><a class="reference external" href="https://sphinx.pocoo.org/markup/index.html">https://sphinx.pocoo.org/markup/index.html</a></p>
+</dd>
+<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id15">7</a></span></dt>
+<dd><p><a class="reference external" href="https://github.com/SeisComP">https://github.com/SeisComP</a></p>
+</dd>
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id17">8</a></span></dt>
+<dd><p><a class="reference external" href="https://forum.seiscomp.de">https://forum.seiscomp.de</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Contributing Documentation</a><ul>
+<li><a class="reference internal" href="#documenting-executables">Documenting Executables</a></li>
+<li><a class="reference internal" href="#images">Images</a></li>
+<li><a class="reference internal" href="#understanding-the-xml">Understanding the XML</a><ul>
+<li><a class="reference internal" href="#module">Module</a></li>
+<li><a class="reference internal" href="#plugin">Plugin</a></li>
+<li><a class="reference internal" href="#binding">Binding</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="build.html"
+                        title="previous chapter">Getting the Source Code</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="style-guide.html"
+                        title="next chapter">Style Guide for Documentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base/contributing-docs.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

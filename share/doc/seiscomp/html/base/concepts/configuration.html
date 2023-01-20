@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Configuration &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script type="text/javascript" src="../../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Glossary" href="../glossary.html" />
+    <link rel="prev" title="Inventory" href="inventory.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="../glossary.html" title="Glossary"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="inventory.html" title="Inventory"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../concepts.html" accesskey="U">Concepts</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="configuration">
+<span id="concepts-configuration"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="scope">
+<h2>Scope<a class="headerlink" href="#scope" title="Permalink to this headline">¶</a></h2>
+<p>This chapter describes the configuration of a processing system and how all
+the pieces gear into each other. It will cover application specific
+configuration, inventory (station metadata) and application station bindings.</p>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>SeisComP</cite> framework defines a common schema to read configuration
+parameters. This schema is used by all <a class="reference internal" href="modules.html#concepts-modules"><span class="std std-ref">SeisComP modules</span></a> with names starting with
+<strong>sc</strong>, e.g. <cite>scautopick</cite>. Other applications might be available as well
+such as third party applications which use other naming conventions.</p>
+<p>A way to discover an application that uses the <cite>SeisComP</cite> configuration schema
+is to call it with <code class="docutils literal notranslate"><span class="pre">--help</span></code>. The first lines of a typical output look
+like this:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>Generic:
+  -h <span class="o">[</span> --help <span class="o">]</span>                         produce <span class="nb">help</span> message
+  -V <span class="o">[</span> --version <span class="o">]</span>                      show version information
+  --config-file arg                     Use alternative configuration file
+</pre></div>
+</div>
+<p>The reason for that is that there are also other applications which do not
+use the <cite>SeisComP</cite> core and client libraries such Seedlink plugins, Seedlink
+itself and some others which are not part of the trunk source package. Those
+applications need translators to generate their native configuration when
+the configuration is updated (<code class="docutils literal notranslate"><span class="pre">seiscomp</span> <span class="pre">update-config</span></code>).</p>
+<p>Again, the two indicators that an application uses the following configuration
+schema are:</p>
+<ul class="simple">
+<li><p>The application name is prefixed with <strong>sc</strong>, e.g. <em>scautopick</em></p></li>
+<li><p>The output of <code class="docutils literal notranslate"><span class="pre">--help</span></code> looks like the text fragment above</p></li>
+</ul>
+<p>A typical configuration requires the following steps:</p>
+<ol class="arabic simple">
+<li><p>Generation and import of the <a class="reference internal" href="inventory.html#concepts-inventory"><span class="std std-ref">inventory</span></a> (station meta data)</p></li>
+<li><p>Configuration of <a class="reference internal" href="#global-modules-config"><span class="std std-ref">modules</span></a></p></li>
+<li><p>Configuration of <a class="reference internal" href="#global-bindings-config"><span class="std std-ref">bindings</span></a>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="modules.html#concepts-modules"><span class="std std-ref">Standalone modules</span></a> can also run without inventory.</p>
+</div>
+</div>
+<div class="section" id="inventory">
+<h2>Inventory<a class="headerlink" href="#inventory" title="Permalink to this headline">¶</a></h2>
+<p>A correct inventory is fundamental to SeisComP. Read the <a class="reference internal" href="inventory.html#concepts-inventory"><span class="std std-ref">inventory section</span></a>
+in concepts for a description. <a class="reference external" href="https://smp.gempa.de/">SMP</a> <a class="footnote-reference brackets" href="#id8" id="id9">1</a> can be used to generate the required files
+in SCML format.</p>
+</div>
+<div class="section" id="configuration-of-modules">
+<span id="concepts-configuration-configs"></span><h2>Configuration of Modules<a class="headerlink" href="#configuration-of-modules" title="Permalink to this headline">¶</a></h2>
+<p><cite>SeisComP</cite> modules provide 2 types of configurations:</p>
+<ul>
+<li><p><a class="reference internal" href="#global-modules-config"><span class="std std-ref">Module configurations</span></a> define module control parameters
+which are equally applied to all operations on waveforms, event parameters, etc.</p>
+<p><strong>All</strong> <a class="reference internal" href="modules.html#concepts-modules-daemon"><span class="std std-ref">daemon modules</span></a> and <strong>some</strong>
+<a class="reference internal" href="modules.html#concepts-modules-commandline"><span class="std std-ref">command-line tools</span></a> provide module configurations.
+<em>Module configurations are overridden by bindings configurations.</em></p>
+</li>
+<li><p><a class="reference internal" href="#global-bindings-config"><span class="std std-ref">Binding configurations</span></a> define control parameters per
+station and even stream. They are used for station- and even stream-specific definitions, e.g. the data
+acquisition from a particular station or server using <a class="reference internal" href="../../apps/seedlink.html#seedlink"><span class="std std-ref">seedlink</span></a> or the
+phase detection by <a class="reference internal" href="../../apps/scautopick.html#scautopick"><span class="std std-ref">scautopick</span></a>.</p>
+<p>In contrast to module configuration, <strong>only some</strong> <a class="reference internal" href="modules.html#concepts-modules"><span class="std std-ref">daemon modules</span></a>
+and a very few <a class="reference internal" href="../glossary.html#term-gui"><span class="xref std std-term">GUI modules</span></a> provide bindings.
+<em>Binding configurations override module configurations.</em></p>
+</li>
+</ul>
+<p>Whether or not a module considers bindings configurations can be read in the module
+configuration panel of <a class="reference internal" href="../../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a>.</p>
+<div class="two column layout"><div class="figure align-default" id="id1">
+<img alt="scconfig: no bindings configurations" src="../../_images/scconfig_no_bindings.png" />
+<p class="caption"><span class="caption-text">scconfig modules panel indicating that no bindings can be configured.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-default" id="id2">
+<img alt="scconfig: no bindings configurations" src="../../_images/scconfig_has_bindings.png" />
+<p class="caption"><span class="caption-text">scconfig modules panel indicating that bindings can be configured.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="section" id="module-configuration">
+<span id="global-modules-config"></span><h3>Module configuration<a class="headerlink" href="#module-configuration" title="Permalink to this headline">¶</a></h3>
+<p>Module configuration files are saved as <code class="docutils literal notranslate"><span class="pre">.cfg</span></code> files and an application will look
+into 6 locations to read all of its configuration parameters:</p>
+<ol class="arabic simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/defaults/global.cfg</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/defaults/[application].cfg</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/global.cfg</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/[application].cfg</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">$HOME/.seiscomp/global.cfg</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">$HOME/.seiscomp/[application].cfg</span></code></p></li>
+</ol>
+<p>The order of files also represents the order of loading. There are three
+directories involved:</p>
+<ol class="arabic simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/defaults/</span></code>: This directory ships with the distribution
+of <cite>SeisComP</cite> and should never be touched. All contained files might be
+overwritten with the next software update.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/</span></code>: This directory will never be populated by a software
+update and it is save to store global application configuration files there.
+Depending on the system setup this directory might be read-only to users.
+It is called the system configuration directory.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">$HOME/.seiscomp/</span></code>: This directory is in the user’s home directory and
+it is meant to provide configurations which override default and system
+configurations.
+It is called the user configuration directory.</p></li>
+</ol>
+<p>Furthermore there are two filenames involved: <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code> and
+<code class="file docutils literal notranslate"><span class="pre">[application].cfg</span></code>. The file <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code> will be loaded by all applications
+and it is a good place to store common parameters such as messaging
+connections or logging configurations.</p>
+<p><a class="reference internal" href="../../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a> provides a graphical interface to adjust the global and the module
+configuration parameters.</p>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="../../_images/scconfig_config_modules.png"><img alt="scconfig: module configuration" src="../../_images/scconfig_config_modules.png" style="width: 18cm;" /></a>
+<p class="caption"><span class="caption-text">scconfig modules module configuration panel.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="bindings-configuration">
+<span id="global-bindings-config"></span><h3>Bindings configuration<a class="headerlink" href="#bindings-configuration" title="Permalink to this headline">¶</a></h3>
+<p>Bindings configure parameters specific to stations and for a certain module or application.
+A station might require a custom set of parameters for e.g. data acquisition from
+a remote data logger or server, for processing or
+displaying. <cite>SeisComP</cite> design is that bindings will be stored
+in the database. All applications requiring this information read the them from the
+database.
+In this way consistent inventory and its bindings will be distributed.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Bindings can be conveniently configured in the Bindings panel of <a class="reference internal" href="../../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a>.
+Read the section <a class="reference internal" href="../../apps/scconfig.html#scconfig-bindings"><span class="std std-ref">Bindings panel</span></a> for instructions.</p>
+</div>
+<div class="figure align-center" id="id4">
+<span id="config-fig-binding"></span><img alt="../../_images/binding.png" src="../../_images/binding.png" />
+<p class="caption"><span class="caption-text">Binding</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<div class="legend">
+<p>A binding holds the configuration how a station is used in a module.</p>
+</div>
+</div>
+<p>Parameters defined in bindings override parameters in module configurations.
+Bindings configurations are saved as stations bindings or as bindings profiles with
+given names:</p>
+<ol class="arabic simple">
+<li><p><strong>Station binding parameters:</strong> <code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/key/[application]/station_NET_STA</span></code>
+is used only be one station NET.STA.</p></li>
+<li><p><strong>Binding profile parameters:</strong> <code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/key/[application]/profile_[name]</span></code>
+can be used by many stations. Then any update of this file applies to all stations
+bound to this profile.</p></li>
+</ol>
+<p>Like in this list, the actual binding parameters for each module are
+expected in either <code class="file docutils literal notranslate"><span class="pre">etc/key/$MODULE/station_$NET_$STA</span></code> or
+<code class="file docutils literal notranslate"><span class="pre">etc/key/$MODULE/profile_$PROFILE</span></code>. That depends if a profile should
+be used or not. If the station key file registers a module with a colon
+following a name then this name is the profile name. If just a module is given
+then the station binding file will be read.</p>
+<p>The bindings themselves are links from the module to the station. They are written
+into key files, e.g.</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/key/station_NET_STA</span></code></p></li>
+</ul>
+<p>Example of bindings profiles:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Binding references</span>
+global:__HH
+scautopick:default
+seedlink:geofon
+</pre></div>
+</div>
+<p>Example of bindings profiles and a station binding for slarchive:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Binding references</span>
+global:__HH
+scautopick:default
+seedlink:geofon
+slarchive
+</pre></div>
+</div>
+<p>The key files are named like <code class="file docutils literal notranslate"><span class="pre">station_$NET_$STA</span></code>, e.g. <code class="file docutils literal notranslate"><span class="pre">station_GE_MORC</span></code>.
+The names within the key files define for which modules the station registers. In the
+above example it is the <strong>global</strong>, <strong>scautopick</strong>, <strong>seedlink</strong> and slarchive.</p>
+<p>To list all modules a particular station is configured for is very simple by printing the content
+of the station key file:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ cat etc/key/station_GE_MORC
+seedlink:geofon
+global:BH
+scautopick
+</pre></div>
+</div>
+<p>Another way is a bit more complicated but at least all information is
+there. To show all stations configured for SeedLink could be done this way:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ <span class="k">for</span> i in <span class="sb">`</span>find etc/key -type f -maxdepth <span class="m">1</span> -name <span class="s2">&quot;station_*_*&quot;</span><span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+&gt; egrep -q <span class="s1">&#39;^seedlink(:.*){0,1}$&#39;</span> <span class="nv">$i</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="nv">$i</span><span class="p">;</span>
+&gt; <span class="k">done</span>
+etc/key/station_GE_MORC
+etc/key/station_GE_UGM
+</pre></div>
+</div>
+<p>Modules usually read the bindings configuration from the database but not from files.
+Therefore,  the bindings are stored in the database when executing</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp update-config
+</pre></div>
+</div>
+<p>The database tables involved are <code class="docutils literal notranslate"><span class="pre">ConfigModule</span></code>, <code class="docutils literal notranslate"><span class="pre">ConfigStation</span></code>, <code class="docutils literal notranslate"><span class="pre">Setup</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ParameterSet</span></code> and <code class="docutils literal notranslate"><span class="pre">Parameter</span></code>.</p>
+<div class="figure align-center" id="id5">
+<span id="config-fig-configdb-schema"></span><img alt="../../_images/configdb-schema.png" src="../../_images/configdb-schema.png" />
+<p class="caption"><span class="caption-text">Configuration database schema</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<p>To illustrate the contents of the objects, the XML representation
+is used below.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Config&gt;</span>
+  <span class="nt">&lt;module</span> <span class="na">publicID=</span><span class="s">&quot;Config/trunk&quot;</span> <span class="na">name=</span><span class="s">&quot;trunk&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+    ...
+  <span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;/Config&gt;</span>
+</pre></div>
+</div>
+<p>A ConfigModule with publicID <em>Config/trunk</em> is created with name <em>trunk</em>. This
+ConfigModule is managed by the global initialization script (<code class="file docutils literal notranslate"><span class="pre">etc/init/trunk.py</span></code>)
+and will be synchronized with configured bindings of all trunk modules. The
+ConfigModule trunk is the one that is actually used by all configurations unless
+configured otherwise with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scapp --config-module <span class="nb">test</span>
+</pre></div>
+</div>
+<p>Here <strong class="program">scapp</strong> would read ConfigModule <em>test</em>. Because a ConfigModule <em>test</em>
+is not managed by <strong class="program">seiscomp update-config</strong> it is up to the user to create
+it.</p>
+<p>For each station that has at least one binding, a ConfigStation object is
+attached to the ConfigModule:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Config&gt;</span>
+  <span class="nt">&lt;module</span> <span class="na">publicID=</span><span class="s">&quot;Config/trunk&quot;</span> <span class="na">name=</span><span class="s">&quot;trunk&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;station</span> <span class="na">publicID=</span><span class="s">&quot;Config/trunk/GE/UGM&quot;</span>
+             <span class="na">networkCode=</span><span class="s">&quot;GE&quot;</span> <span class="na">stationCode=</span><span class="s">&quot;UGM&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+      ...
+    <span class="nt">&lt;/station&gt;</span>
+  <span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;/Config&gt;</span>
+</pre></div>
+</div>
+<p>and finally one Setup per module:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Config&gt;</span>
+  <span class="nt">&lt;module</span> <span class="na">publicID=</span><span class="s">&quot;Config/trunk&quot;</span> <span class="na">name=</span><span class="s">&quot;trunk&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;station</span> <span class="na">publicID=</span><span class="s">&quot;Config/trunk/GE/UGM&quot;</span>
+             <span class="na">networkCode=</span><span class="s">&quot;GE&quot;</span> <span class="na">stationCode=</span><span class="s">&quot;UGM&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;setup</span> <span class="na">name=</span><span class="s">&quot;default&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;parameterSetID&gt;</span>
+          ParameterSet/trunk/Station/GE/UGM/default
+        <span class="nt">&lt;/parameterSetID&gt;</span>
+      <span class="nt">&lt;/setup&gt;</span>
+      <span class="nt">&lt;setup</span> <span class="na">name=</span><span class="s">&quot;scautopick&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;parameterSetID&gt;</span>
+          ParameterSet/trunk/Station/GE/UGM/scautopick
+        <span class="nt">&lt;/parameterSetID&gt;</span>
+      <span class="nt">&lt;/setup&gt;</span>
+    <span class="nt">&lt;/station&gt;</span>
+  <span class="nt">&lt;/module&gt;</span>
+<span class="nt">&lt;/Config&gt;</span>
+</pre></div>
+</div>
+<p>Here two setups have been created: <em>default</em> (which is a special case for
+module <em>global</em> to be backwards compatible) and <em>scautopick</em> where each
+refers to a ParameterSet by its publicID. The next XML fragment shows
+the ParameterSet referred by the scautopick setup of station GE.UGM:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Config&gt;</span>
+  <span class="nt">&lt;parameterSet</span> <span class="na">publicID=</span><span class="s">&quot;ParameterSet/trunk/Station/GE/UGM/scautopick&quot;</span>
+                <span class="na">created=</span><span class="s">&quot;...&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;baseID&gt;</span>ParameterSet/trunk/Station/GE/UGM/default<span class="nt">&lt;/baseID&gt;</span>
+    <span class="nt">&lt;moduleID&gt;</span>Config/trunk<span class="nt">&lt;/moduleID&gt;</span>
+    <span class="nt">&lt;parameter</span> <span class="na">publicID=</span><span class="s">&quot;...&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;name&gt;</span>timeCorr<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;value&gt;</span>-0.8<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;/parameter&gt;</span>
+    <span class="nt">&lt;parameter</span> <span class="na">publicID=</span><span class="s">&quot;...&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;name&gt;</span>detecFilter<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;value&gt;</span>
+        RMHP(10)<span class="ni">&amp;gt;&amp;gt;</span>ITAPER(30)<span class="ni">&amp;gt;&amp;gt;</span>BW(4,0.7,2)<span class="ni">&amp;gt;&amp;gt;</span>STALTA(2,80)
+      <span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;/parameter&gt;</span>
+    <span class="nt">&lt;parameter</span> <span class="na">publicID=</span><span class="s">&quot;...&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;name&gt;</span>trigOff<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;value&gt;</span>1.5<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;/parameter&gt;</span>
+    <span class="nt">&lt;parameter</span> <span class="na">publicID=</span><span class="s">&quot;...&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;name&gt;</span>trigOn<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;value&gt;</span>3<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;/parameter&gt;</span>
+  <span class="nt">&lt;/parameterSet&gt;</span>
+<span class="nt">&lt;/Config&gt;</span>
+</pre></div>
+</div>
+<p>The mapping to the binding configuration files is 1:1. Each parameter in
+the configuration file is exactly one parameter in the database and their
+names are matching exactly.</p>
+<p>The concept of global bindings which are specialized for each application is
+reflected by the <em>baseID</em> of the ParameterSet which points to setup <em>default</em>
+of station GE.UGM:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Config&gt;</span>
+  <span class="nt">&lt;parameterSet</span> <span class="na">publicID=</span><span class="s">&quot;ParameterSet/trunk/Station/GE/UGM/default&quot;</span>
+                <span class="na">created=</span><span class="s">&quot;...&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;moduleID&gt;</span>Config/trunk<span class="nt">&lt;/moduleID&gt;</span>
+    <span class="nt">&lt;parameter</span> <span class="na">publicID=</span><span class="s">&quot;...&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;name&gt;</span>detecStream<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;value&gt;</span>BH<span class="nt">&lt;/value&gt;</span>
+    <span class="nt">&lt;/parameter&gt;</span>
+  <span class="nt">&lt;/parameterSet&gt;</span>
+<span class="nt">&lt;/Config&gt;</span>
+</pre></div>
+</div>
+<p>This ends up with a final configuration for scautopick and station GE.UGM:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>detecStream</p></td>
+<td><p>BH</p></td>
+</tr>
+<tr class="row-odd"><td><p>timeCorr</p></td>
+<td><p>-0.8</p></td>
+</tr>
+<tr class="row-even"><td><p>detecFilter</p></td>
+<td><p>RMHP(10)&gt;&gt;ITAPER(30)&gt;&gt;BW(4,0.7,2)&gt;&gt;STALTA(2,80)</p></td>
+</tr>
+<tr class="row-odd"><td><p>trigOff</p></td>
+<td><p>1.5</p></td>
+</tr>
+<tr class="row-even"><td><p>trigOn</p></td>
+<td><p>3</p></td>
+</tr>
+</tbody>
+</table>
+<p>which is the concatenation of the two files <code class="file docutils literal notranslate"><span class="pre">etc/key/global/station_GE_UGM</span></code>
+and <code class="file docutils literal notranslate"><span class="pre">etc/key/scautopick/station_GE_UGM</span></code>. The filter grammar is explained in
+<a class="reference internal" href="../filter-grammar.html#filter-grammar"><span class="std std-ref">filter grammar section</span></a>.</p>
+<p>The <code class="file docutils literal notranslate"><span class="pre">etc/key</span></code> directory is only used to ease the configuration of bindings.
+They are finally transferred to the database or converted to other
+representations a module might require to access them. The  directory <code class="file docutils literal notranslate"><span class="pre">etc/key</span></code> is meant
+for backup and used for copying bindings from one computer to another.</p>
+<p><a class="reference internal" href="../../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a> provides a graphical interface to adjust the global and the module
+bindings parameters and to create the bindings. It populates the <code class="file docutils literal notranslate"><span class="pre">etc/key</span></code>
+directory and it takes care that they synchronize with the database when processing
+<em>Update configuration</em> in the <em>System</em> panel.</p>
+<div class="figure align-center" id="id6">
+<a class="reference internal image-reference" href="../../_images/scconfig_config_bindings.png"><img alt="scconfig: bindings configuration" src="../../_images/scconfig_config_bindings.png" style="width: 18cm;" /></a>
+<p class="caption"><span class="caption-text">scconfig modules bindings configuration panel.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="example-global-bindings">
+<h4>Example: global bindings<a class="headerlink" href="#example-global-bindings" title="Permalink to this headline">¶</a></h4>
+<p>A binding is a set of name value pairs just like a configuration file but for
+a station. In the file system a binding looks like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">detecLocid</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">detecStream</span> <span class="o">=</span> <span class="n">HH</span>
+</pre></div>
+</div>
+<p>Simple. These are actually two parameters from the global binding and it solves
+a common issue elegantly: a station might provide a couple of channels, often
+data in various sampling rates, e.g. LH, BH, SH and HH. Co-located stations
+with velocity and acceleration sensors also provide at least two channel groups,
+e.g. HL and HH. Those groups are also provided with different location code,
+e.g. 00 and 10. To process a station an application needs to know which channel
+it should process. To display a representative data channel a viewer needs to
+know which channel to show. Global bindings solve that issue by defining the
+“preferred” location code and channel code with the two parameters <cite>detecLocid</cite>
+and <cite>detecStream</cite>. The TraceView, <a class="reference internal" href="../../apps/scrttv.html#scrttv"><span class="std std-ref">scrttv</span></a> can read all available station bindings,
+compose a fully qualified channel name from network code (part of the binding),
+station code, detecLocid and detecStream. It will then lookup the inventory
+information for that channel and display it.</p>
+<p>The meta data of a binding are:</p>
+<ul class="simple">
+<li><p>network code</p></li>
+<li><p>station code</p></li>
+<li><p>module name</p></li>
+</ul>
+<p>The actual binding data are the key value pairs.</p>
+</div>
+<div class="section" id="reading-bindings">
+<h4>Reading bindings<a class="headerlink" href="#reading-bindings" title="Permalink to this headline">¶</a></h4>
+<p>Binding configuration parameters are read during a module start after the module
+configuration parameters.
+They override the module configuration.
+Like module configurations, parameters defined in the global bindings can be
+overridden in module bindings. The order of loading is:</p>
+<ol class="arabic simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/key/global/</span></code>: Global bindings configurations</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/key/[application]</span></code>:  Bindings configurations for a particular module.</p></li>
+</ol>
+<p>If the application connects to a messaging server then it will receive the database parameters,
+connect to it and read the bindings. Otherwise the user has to provide the
+database address. An application never reads the key directory. It only
+gets the bindings from the configuration tables.</p>
+<p>As with inventory information there might are cases when an application should
+not connect to a database and work offline, in particular when <code class="docutils literal notranslate"><span class="pre">--ep</span></code> is being
+used.</p>
+<p>In order to
+read the bindings configuration from XML files (again in SCML format),
+use <a class="reference internal" href="../../apps/scxmldump.html#scxmldump"><span class="std std-ref">scxmldump</span></a> to dump the configuration XML file and let
+the application use this XML file, <code class="docutils literal notranslate"><span class="pre">--config-db</span></code> must be used:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ myapp --config-db config.xml
+</pre></div>
+</div>
+<p>That will completely bypass the database (even if used for event information or
+inventory) for reading station bindings.</p>
+<p>To extract a configuration XML file from the database, <a class="reference internal" href="../../apps/scxmldump.html#scxmldump"><span class="std std-ref">scxmldump</span></a> can be used:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ scxmldump -fC -d localhost -o config.xml
+</pre></div>
+</div>
+<p>One can also create a config XML file straight from the <code class="docutils literal notranslate"><span class="pre">etc/key</span></code> directory
+with <code class="docutils literal notranslate"><span class="pre">bindings2cfg</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ bindings2cfg -o config.xml
+</pre></div>
+</div>
+<p>To create an XML file from a temporary key directory, an alternative directory
+can be specified with <code class="docutils literal notranslate"><span class="pre">--key-dir</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ bindings2cfg --key-dir /tmp/key -o config.xml
+</pre></div>
+</div>
+</div>
+<div class="section" id="summary">
+<h4>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>Bindings are maintained as key files in <code class="file docutils literal notranslate"><span class="pre">etc/key</span></code></p></li>
+<li><p>Key files are another human readable representation of bindings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seiscomp</span> <span class="pre">update-config</span></code> or <code class="docutils literal notranslate"><span class="pre">seiscomp</span> <span class="pre">update-config</span> <span class="pre">trunk</span></code> writes the
+information from <code class="file docutils literal notranslate"><span class="pre">etc/key</span></code> to the database</p></li>
+<li><p>An application never reads <code class="docutils literal notranslate"><span class="pre">etc/key</span></code></p></li>
+<li><p>Bindings are being read from the database or an XML file</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="related-tools">
+<h2>Related Tools<a class="headerlink" href="#related-tools" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../apps/scdumpcfg.html#scdumpcfg"><span class="std std-ref">scdumpcfg</span></a></p></li>
+<li><p><a class="reference internal" href="../../apps/scxmldump.html#scxmldump"><span class="std std-ref">scxmldump</span></a></p></li>
+<li><p><a class="reference internal" href="../../apps/bindings2cfg.html#bindings2cfg"><span class="std std-ref">bindings2cfg</span></a></p></li>
+<li><p><a class="reference internal" href="../../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a></p></li>
+</ul>
+<div class="section" id="format-of-parameters">
+<h3>Format of parameters<a class="headerlink" href="#format-of-parameters" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="../glossary.html#term-trunk"><span class="xref std std-term">trunk</span></a> configuration files are simple text files where each line
+is a name-value pair.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In contrast to previous versions of <cite>SeisComP</cite> the parameter names are now
+case-sensitive. To check configurations from previous versions regarding
+case-sensitivity, <strong class="program">scchkcfg</strong> can be used.</p>
+</div>
+<div class="section" id="basic">
+<h4>Basic<a class="headerlink" href="#basic" title="Permalink to this headline">¶</a></h4>
+<p>Configuration files are simple text file where each line is a name-value pair
+for one parameter.
+The parameter names are case-sensitive. The format is a simple as:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">agencyID</span> <span class="o">=</span> gempa
+recordstream.service <span class="o">=</span> slink
+recordstream.source <span class="o">=</span> localhost:18000
+</pre></div>
+</div>
+<p>In parameter groups indicated by a separating dot (“.”) the dot separates the group
+from the parameter name.</p>
+<p>Later assignments of parameters override previous ones so the order of lines in the
+configuration file is important. The file is parsed top-down.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Values are not type-checked. Type checking is part of the application
+logic and will be handled there. The configuration file parser will not raise
+an error if a string is assigned to a parameter that is expected to be an
+integer.</p>
+</div>
+</div>
+<div class="section" id="comments">
+<h4>Comments<a class="headerlink" href="#comments" title="Permalink to this headline">¶</a></h4>
+<p>Everything following an unescaped <strong>#</strong> (hash) is a comment and is going to
+be ignored. Blank lines and white spaces are ignored by the parser as well
+unless quoted or escaped. Escaping is done by prepending a backslash (<strong>\</strong>)
+to the character that needs escaping. It backslash should be part of the
+string, two backslashes should be used (<strong>\\</strong>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">agencyID</span> <span class="o">=</span> <span class="n">gempa</span>  <span class="c1"># This is a comment</span>
+
+<span class="c1"># The preceding empty line is ignored. Now the value of skyColor is replaced</span>
+<span class="c1"># with &#39;blue&#39;.</span>
+<span class="c1"># The final value of a parameter is the result of the last assignment parsed</span>
+<span class="c1"># from top to bottom.</span>
+<span class="n">agencyID</span> <span class="o">=</span> <span class="n">gempa</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lists">
+<h4>Lists<a class="headerlink" href="#lists" title="Permalink to this headline">¶</a></h4>
+<p>Values can be either scalar values or lists. List items are separated by commas.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is a list definition</span>
+<span class="n">rainbowColors</span> <span class="o">=</span> <span class="n">red</span><span class="p">,</span> <span class="n">orange</span><span class="p">,</span> <span class="n">yellow</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">indigo</span><span class="p">,</span> <span class="n">violet</span>
+</pre></div>
+</div>
+<p>If a value needs to include a comma, white space or any other special
+character it can either be escaped with backslash (‘') or quoted with double
+quotes (“). Whitespaces are removed in unquoted and unescaped values.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is a comment</span>
+
+<span class="c1"># The following list definitions have 2 items: 1,2 and 3,4</span>
+<span class="c1"># quoted values</span>
+<span class="nv">tuples</span> <span class="o">=</span> <span class="s2">&quot;1,2&quot;</span>, <span class="s2">&quot;3,4&quot;</span>
+<span class="c1"># escaped values</span>
+<span class="nv">tuples</span> <span class="o">=</span> <span class="m">1</span><span class="se">\,</span><span class="m">2</span>, <span class="m">3</span><span class="se">\,</span><span class="m">4</span>
+</pre></div>
+</div>
+<p>The value of the parameter tuples is now <cite>[“1,2”, “3,4”]</cite>.</p>
+</div>
+<div class="section" id="multi-line">
+<h4>Multi-line<a class="headerlink" href="#multi-line" title="Permalink to this headline">¶</a></h4>
+<p>Values can extend over multiple lines if a backslash is appended to each line</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Multi-line string</span>
+<span class="nv">text</span> <span class="o">=</span> <span class="s2">&quot;Hello world. &quot;</span><span class="se">\</span>
+       <span class="s2">&quot;This text spawns 3 lines in the configuration file &quot;</span><span class="se">\</span>
+       <span class="s2">&quot;but only one line in the final value.&quot;</span>
+
+<span class="c1"># Multiline list definition</span>
+<span class="nv">rainbowColors</span> <span class="o">=</span> red,<span class="se">\</span>
+                orange,<span class="se">\</span>
+                yellow,<span class="se">\</span>
+                green, blue,<span class="se">\</span>
+                indigo, violet
+</pre></div>
+</div>
+</div>
+<div class="section" id="namespaces">
+<h4>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h4>
+<p>A basic usage of variable names is to organize them in namespaces. A common
+habit is to separate namespaces and variable names with a period character:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>colors.sky <span class="o">=</span> blue
+colors.grass <span class="o">=</span> green
+</pre></div>
+</div>
+<p>Here a namespace called <code class="docutils literal notranslate"><span class="pre">colors</span></code> is used. The configuration file parser does
+not care about namespaces at all. The final name (including the periods) is what
+counts. But to avoid repeating namespaces again and again, declarations can
+be wrapped in a namespace block. See the following example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span> colors <span class="o">{</span>
+    <span class="nv">sky</span> <span class="o">=</span> blue
+    <span class="nv">grass</span> <span class="o">=</span> green
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Application code will still access <code class="docutils literal notranslate"><span class="pre">colors.sky</span></code> and <code class="docutils literal notranslate"><span class="pre">colors.grass</span></code>.
+Namespaces can be arbitrarily nested and even survive includes.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span> A <span class="o">{</span>
+    B1 <span class="o">{</span>
+       <span class="nv">var1</span> <span class="o">=</span> <span class="m">123</span>
+    <span class="o">}</span>
+
+    B2 <span class="o">{</span>
+       <span class="nv">var1</span> <span class="o">=</span> <span class="m">456</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The final list of parameter names is:</p>
+<ul class="simple">
+<li><p>A.B1.var1</p></li>
+<li><p>A.B2.var1</p></li>
+</ul>
+</div>
+<div class="section" id="variables">
+<span id="concepts-configuration-variables"></span><h4>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h4>
+<p>Environment or preceding configuration variables can be used in the configuration of
+SeisComP modules with <cite>${var}</cite>, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">homeDir</span> <span class="o">=</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>
+<span class="nv">myPath</span> <span class="o">=</span> <span class="si">${</span><span class="nv">homeDir</span><span class="si">}</span>/test
+<span class="nv">myseiscomp</span> <span class="o">=</span> <span class="si">${</span><span class="nv">SEISCOMP_ROOT</span><span class="si">}</span>
+</pre></div>
+</div>
+<p>Internal <cite>SeisComP</cite> variables can be used with <cite>&#64;var&#64;</cite>, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>autoloc.stationConfig <span class="o">=</span> @DATAGDIR@/autoloc/station.conf
+</pre></div>
+</div>
+<p>Available internal <cite>SeisComP</cite> variables are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ROOTDIR</p></td>
+<td><p>$SEISCOMP_ROOT</p></td>
+</tr>
+<tr class="row-odd"><td><p>DEFAUTLCONFIGDIR</p></td>
+<td><p>$SEISCOMP_ROOT/etc/defaults</p></td>
+</tr>
+<tr class="row-even"><td><p>SYSTEMCONFIGDIR</p></td>
+<td><p>$SEISCOMP_ROOT/etc</p></td>
+</tr>
+<tr class="row-odd"><td><p>DATADIR</p></td>
+<td><p>$SEISCOMP_ROOT/share</p></td>
+</tr>
+<tr class="row-even"><td><p>CONFIGDIR</p></td>
+<td><p>$HOME/.seiscomp</p></td>
+</tr>
+<tr class="row-odd"><td><p>LOGDIR</p></td>
+<td><p>$HOME/.seiscomp/log</p></td>
+</tr>
+</tbody>
+</table>
+<p>The list of internal <cite>SeisComP</cite> variables can also be read in the information
+panel of <a class="reference internal" href="../../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a>.</p>
+<div class="figure align-center" id="id7">
+<a class="reference internal image-reference" href="../../_images/scconfig_information.png"><img alt="scconfig: information panel" src="../../_images/scconfig_information.png" style="width: 18cm;" /></a>
+<p class="caption"><span class="caption-text">scconfig information panel indicating the internal <cite>SeisComP</cite> variables.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id9">1</a></span></dt>
+<dd><p><a class="reference external" href="https://smp.gempa.de/">https://smp.gempa.de/</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configuration</a><ul>
+<li><a class="reference internal" href="#scope">Scope</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#inventory">Inventory</a></li>
+<li><a class="reference internal" href="#configuration-of-modules">Configuration of Modules</a><ul>
+<li><a class="reference internal" href="#module-configuration">Module configuration</a></li>
+<li><a class="reference internal" href="#bindings-configuration">Bindings configuration</a><ul>
+<li><a class="reference internal" href="#example-global-bindings">Example: global bindings</a></li>
+<li><a class="reference internal" href="#reading-bindings">Reading bindings</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#related-tools">Related Tools</a><ul>
+<li><a class="reference internal" href="#format-of-parameters">Format of parameters</a><ul>
+<li><a class="reference internal" href="#basic">Basic</a></li>
+<li><a class="reference internal" href="#comments">Comments</a></li>
+<li><a class="reference internal" href="#lists">Lists</a></li>
+<li><a class="reference internal" href="#multi-line">Multi-line</a></li>
+<li><a class="reference internal" href="#namespaces">Namespaces</a></li>
+<li><a class="reference internal" href="#variables">Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="inventory.html"
+                        title="previous chapter">Inventory</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../glossary.html"
+                        title="next chapter">Glossary</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/base/concepts/configuration.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

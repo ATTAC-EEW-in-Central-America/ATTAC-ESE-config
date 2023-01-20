@@ -1,0 +1,603 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCIMPORT" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scimport \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBForward messages across two SeisComP systems.\fP
+.SH DESCRIPTION
+.sp
+scimport is responsible to forward messages from one system to another. The
+difference to scimex is that scimport does not handle the messages
+event based. scimport supports two different modes. The relay mode does a
+simple mapping from GROUP:SYSTEM_A to GROUP:SYSTEM_B. This mode is default.
+.sp
+In case GROUP is not defined in the second system the message is forwarded to
+IMPORT_GROUP. The import mode supports custom mapping and filter functionality.
+It is possible to forward GROUP1:SYSTEM_A to GROUP2:SYSTEM_B. In addition the
+forwarded objects can be filtered by:
+.INDENT 0.0
+.TP
+.B Pick
+.INDENT 7.0
+.IP \(bu 2
+Status
+.IP \(bu 2
+Mode
+.IP \(bu 2
+Phase
+.IP \(bu 2
+AgencyID
+.UNINDENT
+.TP
+.B Amplitude
+.INDENT 7.0
+.IP \(bu 2
+Amplitude
+.UNINDENT
+.TP
+.B Origin
+.INDENT 7.0
+.IP \(bu 2
+Location
+.IP \(bu 2
+Depth
+.IP \(bu 2
+AgencyID
+.IP \(bu 2
+Status
+.IP \(bu 2
+Mode
+.UNINDENT
+.TP
+.B Event
+.INDENT 7.0
+.IP \(bu 2
+Type
+.UNINDENT
+.TP
+.B StationMagnitude
+.INDENT 7.0
+.IP \(bu 2
+Type
+.UNINDENT
+.TP
+.B Magnitude
+.INDENT 7.0
+.IP \(bu 2
+Type
+.UNINDENT
+.UNINDENT
+.SH EXAMPLES
+.sp
+Example scimport.cfg
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+# The address of the importing system
+sink = sinkAddress
+
+# This option has to be set if the application runs in import mode.
+# The routing table has to be defined in the form of source_group:sink_group
+routingtable = PICK:PICK
+
+# List of sink groups to subscribe to. If this option is not set the message
+# groups will be determined automatically. If this option is set but not
+# needed for a setup it can be ignored with the option \-\-ignore\-groups
+msggroups = GROUP_ONE, GROUP_TWO
+
+# Available filter options
+filter.pick.mode     = manual
+filter.pick.status   = confirmed
+filter.pick.phase    = P
+filter.pick.agencyID = GFZ
+
+# Values: eq (==), lt (<=) ,gt (>=), *
+filter.amplitude.operator = gt
+filter.amplitude.amplitude = 100
+
+# Values: lat0:lat1 (range)
+filter.origin.latitude = \-90:90
+
+# Values: lon0:lon1 (range)
+filter.origin.longitude = \-180:180
+filter.origin.depth     = 0:100
+filter.origin.agencyID  = GFZ
+
+# Values: automatic, manual
+filter.origin.mode      = manual
+filter.origin.status    = confirmed
+
+# Values: earthquake, explosion, quarry blast, chemical explosion,
+# nuclear explosion, landslide, debris avalanche, rockslide,
+# mine collapse, volcanic eruption, meteor impact, plane crash,
+# building collapse, sonic boom, other
+filter.event.type = earthquake
+
+# Values: Whatever your magnitudes are named
+filter.stationMagnitude.type = MLv
+
+# Values: Whatever your magnitudes are named
+filter.magnitude.type = MLv
+
+# Values: latency, delay, timing quality, gaps interval, gaps length,
+# spikes interval, spikes amplitude, offset, rms
+filter.qc.type = latency
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scimport.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scimport.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scimport.cfg\fP
+.fi
+.sp
+.sp
+scimport inherits global options\&.
+.INDENT 0.0
+.TP
+.B sink
+Type: \fIstring\fP
+.sp
+URI of receiving host which runs scmaster. The URI contains
+the host name with an optional protocol and port.
+.sp
+Format: protocol://host:port
+.sp
+Examples:
+.sp
+\- proc
+.sp
+\- scmp://proc:18180
+.UNINDENT
+.INDENT 0.0
+.TP
+.B routingtable
+Type: \fIlist:string\fP
+.sp
+This option has to be set if the application runs in import mode.
+The routing table has to be defined in the form of source_group:sink_group
+.UNINDENT
+.INDENT 0.0
+.TP
+.B msggroups
+Type: \fIlist:string\fP
+.sp
+Defines a list of message groups of the source system (connection.server).
+If not specified the source system is queried for a list of message groups
+which are then used to check each subscription extracted from the routing
+table. This parameter allows to override to source query result.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B useFilter
+Type: \fIboolean\fP
+.sp
+Default is \fBtrue\fP\&.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBfilter.*\fP
+\fIDefine filter criteria before sending\fP
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBfilter.pick.*\fP
+\fICriteria for filtering picks\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.pick.mode
+Type: \fIstring\fP
+.sp
+The mode of picks to filter for. Allowed values:
+"automatic" and "manual".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.pick.status
+Type: \fIstring\fP
+.sp
+The status of picks to filter for. Allowed values:
+"preliminary", "confirmed",
+"reviewed", "final",
+"rejected" and "reported".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.pick.phase
+Type: \fIstring\fP
+.sp
+The pick phase hint to filter for. Allowed values:
+all possible phase codes.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.pick.agencyIDs
+Type: \fIlist:string\fP
+.sp
+The pick agencyIDs to filter for. Allowed values:
+all possible agency ids;
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.pick.networkCode
+Type: \fIstring\fP
+.sp
+The pick network code of the processed waveforms.
+Allowed values: all possible network codes.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBfilter.amplitude.*\fP
+\fICriteria for filtering amplitudes\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.amplitude.operator
+Type: \fIstring\fP
+.sp
+The amplitude comparison operator. Allowed values:
+"eq", "lt", "gt" and "*".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.amplitude.amplitude
+Type: \fIdouble\fP
+.sp
+The amplitude threshold to filter for. The operator
+configured with "operator" is used to compare this threshold with
+the incoming value. If "operator" is "*" then
+values will pass.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.amplitude.agencyIDs
+Type: \fIlist:string\fP
+.sp
+The amplitude agencyIDs to filter for. Allowed values:
+all possible agency ids.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBfilter.origin.*\fP
+\fICriteria for filtering origins\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.origin.latitude
+Type: \fIstring\fP
+.sp
+The latitude range in format [min]:[max].
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.origin.longitude
+Type: \fIstring\fP
+.sp
+The longitude range in format [min]:[max].
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.origin.depth
+Type: \fIstring\fP
+.sp
+The depth range in format [min]:[max].
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.origin.agencyIDs
+Type: \fIlist:string\fP
+.sp
+The origin agencyIDs to filter for. Allowed values:
+all possible agency ids;
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.origin.mode
+Type: \fIstring\fP
+.sp
+The origin evaluation mode to filter for. Allowed values:
+"automatic" and "manual".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.origin.status
+Type: \fIstring\fP
+.sp
+The origin status to filter for. Allowed values:
+"preliminary", "confirmed",
+"reviewed", "final",
+"rejected" and "reported".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.origin.arrivalcount
+Type: \fIstring\fP
+.sp
+The minimum number of arrivals of an origin to pass
+the filter.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBfilter.event.*\fP
+\fICriteria for filtering events\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.event.type
+Type: \fIstring\fP
+.sp
+The event type to filter for, e.g. "earthquake",
+"explosion" ...
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBfilter.stationMagnitude.*\fP
+\fICriteria for filtering station magnitudes\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.stationMagnitude.type
+Type: \fIstring\fP
+.sp
+The station magnitude type. Allowed values: all possible
+magnitude types such as "MLv".
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBfilter.magnitude.*\fP
+\fICriteria for filtering network magnitudes\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.magnitude.type
+Type: \fIstring\fP
+.sp
+The magnitude type. Allowed values: all possible
+magnitude types such as "MLv".
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBfilter.qc.*\fP
+\fICriteria for filtering QC parameters\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B filter.qc.type
+Type: \fIstring\fP
+.sp
+The QC parameter type. Allowed values: all possible
+types such as "latency", "delay" ...
+.UNINDENT
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Messaging
+.INDENT 0.0
+.TP
+.B \-u, \-\-user arg
+Overrides configuration parameter \fBconnection.username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-H, \-\-host arg
+Overrides configuration parameter \fBconnection.server\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-t, \-\-timeout arg
+Overrides configuration parameter \fBconnection.timeout\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-g, \-\-primary\-group arg
+Overrides configuration parameter \fBconnection.primaryGroup\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S, \-\-subscribe\-group arg
+A group to subscribe to. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-content\-type arg
+Overrides configuration parameter \fBconnection.contentType\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-stop\-msg arg
+Sets sending of a start\- and a stop message.
+.UNINDENT
+.SS Import
+.INDENT 0.0
+.TP
+.B \-o, \-\-sink
+Overrides configuration parameter \fI\%sink\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-i, \-\-import
+Switch to import mode (default is relay). Im import mode the routing
+table has to be specified whereas in relay the routing table will be
+calculated  automatically.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-no\-filter
+Disable message filtering and ignore all configured filters.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-routeunknowngroup
+Route unknown groups to the default group IMPORT_GROUP.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-ignore\-groups
+Ignore user specified groups.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-test
+Do not send any messages.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

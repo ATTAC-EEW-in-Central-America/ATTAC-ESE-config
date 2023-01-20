@@ -1,0 +1,313 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCBULLETIN" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scbulletin \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBCreate bulletins from SC3ML.\fP
+.SH DESCRIPTION
+.sp
+scbulletin transforms the parameters of an event or an origin either to autoloc1
+or to autoloc3 format.
+.SS Input Modes
+.sp
+Two modes of parameter input are possible:
+.INDENT 0.0
+.IP 1. 3
+Either one can fetch all necessary information from database directly
+.IP 2. 3
+or one can provide a representation of the origin as XML file, to transform it
+to a standard format.
+.UNINDENT
+.sp
+The first mode is the dump\-mode the second is the input\-mode. For dumping either
+choose eventID or the originID. If the eventID is choosen the preferred origin
+will be used.
+.SS Output Modes
+.sp
+Different output formats are available:
+.INDENT 0.0
+.IP 1. 3
+\fBautoloc1\fP working with \fB\-1\fP
+.IP 2. 3
+\fBautoloc3\fP working with \fB\-3\fP
+.IP 3. 3
+\fBextended autoloc3\fP working with \fB\-3 \-x\fP
+.IP 4. 3
+\fBenhanced\fP working with \fB\-1 \-e\fP or  \fB\-3 \-e\fP for high\-precision output.
+.UNINDENT
+.sp
+If called with an event or origin ID a database connection is necessary to
+fetch the corresponding object. Otherwise scbulletin will read the input source
+(defaults to stdin), grab the first found event or origin and dump it.
+.SH EXAMPLES
+.INDENT 0.0
+.IP 1. 3
+Create bulletin from event in database
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scbulletin \-d mysql://sysop:sysop@localhost/seiscomp \-E gfz2012abcd
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 2. 3
+Convert XML file to bulletin
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scbulletin < gfz2012abcd.xml
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+scbulletin \-i gfz2012abcd.xml
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scbulletin.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scbulletin.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scbulletin.cfg\fP
+.fi
+.sp
+.sp
+scbulletin inherits global options\&.
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-module arg
+The configmodule to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-inventory\-db arg
+Load the inventory from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-db\-disable
+Do not use the database at all
+.UNINDENT
+.SS Dump
+.INDENT 0.0
+.TP
+.B \-E, \-\-event arg
+ID of event that is read from database and
+transformed into a bulletin.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-O, \-\-origin arg
+ID of origin that is read from database
+and transformed into a bulletin.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-w, \-\-weight arg
+Weight threshold for printed and counted picks.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-1, \-\-autoloc1
+Use autoloc1 format for output. This is default.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-3, \-\-autoloc3
+Use autoloc3 format for output.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-x, \-\-extra
+Use a specially detailed autoloc3 format. This options works only
+in combination with the autoloc3\-flag.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-e, \-\-enhanced
+Enhanced output with higher precision. Times: milliseconds,
+distances: meter. Use for bulletins of local earthquakes.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-first\-only
+Convert only the first event/origin to bulletin. Otherwise
+all events or origins will be converted to single bulletins
+which will be concatenated.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-event\-agency\-id
+Use the agency ID of the event instead of the preferred origin.
+.UNINDENT
+.SS Input
+.INDENT 0.0
+.TP
+.B \-f, \-\-format arg
+Input format to use (xml [default], zxml (zipped xml), binary).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-i, \-\-input arg
+The input file. Default is stdin.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

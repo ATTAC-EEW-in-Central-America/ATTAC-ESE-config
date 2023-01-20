@@ -1,0 +1,486 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCAMP" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scamp \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBCalculates amplitudes on basis of incoming origins and the associated picks.\fP
+.SH DESCRIPTION
+.sp
+scamp measures several different kinds of amplitudes from waveform data.
+It listens for origins and measures amplitudes in time windows determined
+from the origin. Thus, in contrast to amplitudes measured by scautopick
+the considered time windows can depend on epicentral distance.
+The resulting amplitude objects are sent to the "AMPLITUDE"
+messaging group. scamp is the counterpart of scmag\&. Usually, all
+amplitudes are computed at once by scamp and then published.
+Only very rarely an amplitude needs to be recomputed if the location of an
+origin changes significantly. The amplitude can be reused by scmag, making
+magnitude computation and update efficient. Currently, the automatic picker
+in SeisComP, scautopick, also measures a small set of amplitudes
+(namely "snr" and "mb", the signal\-to\-noise ratio and the amplitude used in
+mb magnitude computation, respectively) for each automatic pick in fixed
+time windows. If there already exists an amplitude, e.g. a previously determined
+one by scautopick, scamp will not measure it again for the respective stream.
+.sp
+Amplitudes are also needed, however, for manual picks. scamp does this as well.
+Arrivals with weight smaller than 0.5 (default) in the corresponding Origin are
+discarded. This minimum weight can be configured with
+\fI\%amptool.minimumPickWeight\fP\&.
+.SH AMPLITUDE TYPES
+.sp
+Amplitudes of many types are currently computed for their corresponding
+magnitudes.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+In order to be used by scmag, the input amplitude names for the
+various magnitude types must typically match exactly. Exceptions:
+.INDENT 0.0
+.IP \(bu 2
+MN requires \fIAMN\fP amplitudes,
+.IP \(bu 2
+MLr requires \fIMLv\fP amplitudes.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Local distances
+.INDENT 0.0
+.TP
+.B Md
+Duration magnitude as described in HYPOINVERSE (klein\-2002).
+.TP
+.B Mjma
+Mjma is computed on displacement data using body waves of period < 30s.
+.TP
+.B ML
+Local (Richter) magnitude calculated on the horizontal components using a
+correction term to fit with the standard ML (richter\-1935).
+.TP
+.B MLc
+Local custom magnitude calculated on the horizontal components according to
+Hessian Earthquake Service and stange\-2006
+.TP
+.B MLh
+Local magnitude calculated on the horizontal components according to SED
+specifications.
+.TP
+.B MLv
+Local magnitude calculated on the vertical component using a correction term
+to fit with the standard ML.
+.TP
+.B AMN for MN
+Nuttli magnitude for Canada and other Cratonic regions (nuttli\-1973).
+.UNINDENT
+.SS Teleseismic distances
+.INDENT 0.0
+.TP
+.B mb
+Narrow band body wave magnitude measured on a WWSSN\-SP filtered trace
+.TP
+.B mBc
+Cumulative body wave magnitude
+.TP
+.B mB
+Broad band body wave magnitude after bormann\-2008
+.TP
+.B Mwp
+The body wave magnitude of tsuboi\-1995
+.TP
+.B Ms_20
+Surface\-wave magnitude at 20 s period
+.TP
+.B Ms(BB)
+Broad band surface\-wave magnitude
+.UNINDENT
+.SH ACCELERATION INPUT DATA
+.sp
+For amplitudes to be computed, the input waveforms are usually given in velocity.
+Acceleration data, e.g. from strong\-motion instruments must therefore be transformed
+to velocity. The transformation is enabled by activating the response correction.
+Activate the correction in the global bindings for all
+types or in a new Amplitude type profile for specific types.
+.sp
+Example global binding parameters for computing MLv amplitudes from accleration
+data. Here, the frequency range is limited to 0.5 \- 20 Hz:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+amplitudes.MLv.enableResponses = true
+amplitudes.MLv.resp.taper = 5
+amplitudes.MLv.resp.minFreq = 0.5
+amplitudes.MLv.resp.maxFreq = 20
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH RE-PROCESSING
+.sp
+\fIscamp\fP can be used to reprocess and to update amplitudes, e.g. when inventory paramters
+had to be changed retrospectively. Updating ampitudes requires waveform access.
+The update can be performed
+.INDENT 0.0
+.IP 1. 3
+In \fBoffline processing\fP based on XML files (\fB\-\-ep\fP). \fB\-\-reprocess\fP
+will replace exisiting amplitudes. Updated values can be dispatched to the messing by
+scdispatch making them available for further processing, e.g. by scmag\&.
+.sp
+\fBExample:\fP
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ scamp \-\-ep evtID.xml \-d [type]://[host]/[database] \-\-reprocess > evtID_update.xml
+$ scdispatch \-O merge \-H [host] \-i evtID_update.xml
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.IP 2. 3
+\fBWith messaging\fP by setting \fBstart\-time\fP or \fBend\-time\fP\&.
+All parameters are read from the database. \fB\-\-commit\fP will
+send the updated parameters to the messing system making them available for
+further processing, e.g. by scmag\&. Otherwise, XML output is generated.
+.sp
+\fBExample:\fP
+.INDENT 3.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ scamp \-u testuser \-H [host] \-\-commit \e
+        \-\-start\-time \(aq2016\-10\-15 00:00:00\(aq \-\-end\-time \(aq2016\-10\-16 19:20:00\(aq
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scamp.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scamp.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scamp.cfg\fP
+.fi
+.sp
+.sp
+scamp inherits global options\&.
+.INDENT 0.0
+.TP
+.B amplitudes
+Type: \fIlist:string\fP
+.sp
+Definition of magnitude types for which amplitudes are to be calculated.
+Default is \fBMLv, mb, mB, Mwp\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B amptool.minimumPickWeight
+Type: \fIdouble\fP
+.sp
+The minimum arrival weight within an origin to compute amplitudes for the associated pick.
+Default is \fB0.5\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B amptool.initialAcquisitionTimeout
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Timeout in seconds of the first data packet of waveform data acquisition.
+Default is \fB30\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B amptool.runningAcquisitionTimeout
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Timeout in seconds of any subsequent data packet of waveform data acquisition.
+Default is \fB2\fP\&.
+.UNINDENT
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-x, \-\-expiry time
+Time span in hours after which objects expire.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-O, \-\-origin\-id publicID
+OriginID to calculate amplitudes for and exit.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-dump\-records
+Dumps the filtered traces to ASCII when using \-O.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Messaging
+.INDENT 0.0
+.TP
+.B \-u, \-\-user arg
+Overrides configuration parameter \fBconnection.username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-H, \-\-host arg
+Overrides configuration parameter \fBconnection.server\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-t, \-\-timeout arg
+Overrides configuration parameter \fBconnection.timeout\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-g, \-\-primary\-group arg
+Overrides configuration parameter \fBconnection.primaryGroup\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S, \-\-subscribe\-group arg
+A group to subscribe to. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-content\-type arg
+Overrides configuration parameter \fBconnection.contentType\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-stop\-msg arg
+Sets sending of a start\- and a stop message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-test
+Test mode where no messages are sent.
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-module arg
+The configmodule to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-inventory\-db arg
+Load the inventory from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-db\-disable
+Do not use the database at all
+.UNINDENT
+.SS Records
+.INDENT 0.0
+.TP
+.B \-\-record\-driver\-list
+List all supported record stream drivers
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-I, \-\-record\-url arg
+The recordstream source URL, format: [\fI\%service://\fP]location[#type].
+"service" is the name of the recordstream driver which can be
+queried with "\-\-record\-driver\-list". If "service"
+is not given "\fI\%file://\fP" is used.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-record\-file arg
+Specify a file as record source.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-record\-type arg
+Specify a type for the records being read.
+.UNINDENT
+.SS Input
+.INDENT 0.0
+.TP
+.B \-\-ep file
+Defines an event parameters XML file to be read and processed. This
+implies offline mode and only processes all origins contained
+in that file. It computes amplitudes for all picks associated
+with an origin and outputs an XML file that additionally
+contains the amplitudes.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-reprocess
+Reprocess and update existing amplitudes in combination with \-\-ep.
+Manual amplitudes will be skipped.
+This option can be used, e.g. for reprocessing amplitudes with
+new inventory information. Waveform access is required.
+.UNINDENT
+.SS Reprocess
+.INDENT 0.0
+.TP
+.B \-\-force
+Forces reprocessing of all amplitudes, even manual ones.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-time time
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-end\-time time
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-commit
+Send amplitude updates to the messaging otherwise an XML
+document will be output.
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

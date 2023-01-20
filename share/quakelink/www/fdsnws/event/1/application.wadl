@@ -1,0 +1,363 @@
+<?xml version="1.0"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://www.w3.org/Submission/wadl/wadl.xsd"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns="http://wadl.dev.java.net/2009/02">
+	<resources base="/fdsnws/event/1">
+		<resource path="query">
+			<method name="GET">
+				<request>
+					<param name="starttime" style="query" type="xsd:dateTime">
+						<doc title="definition">
+							Limit to events on or after the specified start
+							time.
+						</doc>
+					</param>
+					<param name="endtime" style="query" type="xsd:dateTime">
+						<doc title="definition">
+							Limit to events on or before the specified end
+							time.
+						</doc>
+					</param>
+					<param name="minlatitude" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events with a latitude larger than or
+							equal to the specified minimum.
+						</doc>
+					</param>
+					<param name="maxlatitude" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events with a latitude smaller than or
+							equal to the specified maximum.
+						</doc>
+					</param>
+					<param name="minlongitude" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events with a longitude larger than or
+							equal to the specified minimum.
+						</doc>
+					</param>
+					<param name="maxlongitude" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events with a longitude smaller than or
+							equal to the specified maximum.
+						</doc>
+					</param>
+					<param name="latitude" style="query" type="xsd:float">
+						<doc title="definition">
+							Specify the latitude to be used for a radius
+							search.
+						</doc>
+					</param>
+					<param name="longitude" style="query" type="xsd:float">
+						<doc title="definition">
+							Specify the longitude to be used for a radius
+							search.
+						</doc>
+					</param>
+					<param name="minradius" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events within the specified minimum
+							number of degrees from the geographical point
+							defined by the latitude and longitude parameters.
+						</doc>
+					</param>
+					<param name="maxradius" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events within the specified maximum
+							number of degrees from the geographical point
+							defined by the latitude and longitude parameters.
+						</doc>
+					</param>
+					<param name="mindepth" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events with depth more than or equal to
+							the specified minimum.
+						</doc>
+					</param>
+					<param name="maxdepth" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events with depth less than or equal to
+							the specified maximum.
+						</doc>
+					</param>
+					<param name="minmagnitude" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events with a magnitude larger than or
+							equal to the specified minimum.
+						</doc>
+					</param>
+					<param name="maxmagnitude" style="query" type="xsd:float">
+						<doc title="definition">
+							Limit to events with a magnitude smaller than or
+							equal to the specified maximum.
+						</doc>
+					</param>
+					<param name="magnitudetype" style="query" type="xsd:string">
+						<doc title="definition">
+							Only include events with a preferred magnitude of a
+							specific type. Note: This implementation is not
+							according to the standard but QuakeLink only indexes
+							the preferred magnitude of each event.
+						</doc>
+					</param>
+					<param name="eventtype" style="query" type="xsd:string">
+						<doc title="definition">
+							Limit to events with a specified eventType. The
+							parameter value can be a single item or a
+							comma-separated list of items. Allowed values are
+							from QuakeML or 'unknown' if eventType is not given.
+						</doc>
+					</param>
+					<param name="includeallorigins" style="query" type="xsd:boolean" default="false">
+						<doc title="definition">
+							Specify if all origins, magnitudes and focal
+							mechanisms for the event should be included.
+							Identical to 'includeallmagnitudes'.
+						</doc>
+					</param>
+					<param name="includeallmagnitudes" style="query" type="xsd:boolean" default="false">
+						<doc title="definition">
+							Specify if all origins, magnitudes and focal
+							mechanisms for the event should be included.
+							Identical to 'includeallorigins'.
+						</doc>
+					</param>
+					<param name="includearrivals" style="query" type="xsd:boolean" default="false">
+						<doc title="definition">
+							Specify if phase arrivals should be included.
+							Identical to 'include=arrs'.
+						</doc>
+					</param>
+					<param name="eventid" style="query" type="xsd:string">
+						<doc title="definition">
+							Select a specific event by ID.
+						</doc>
+					</param>
+					<param name="limit" style="query" type="xsd:int">
+						<doc title="definition">
+							Limit the results to the specified number of events.
+						</doc>
+					</param>
+					<param name="offset" style="query" type="xsd:int" default="1">
+						<doc title="definition">
+							Return results starting at the event count
+							specified.  Note: The FDSNWS specification uses a
+							weird definition of an offset where the first
+							element is not addressed by 'offset=0' but
+							'offset=1'. So the implementation will decrement
+							the offset value by one when generating the SQL
+							database query.
+						</doc>
+					</param>
+					<param name="orderby" style="query" type="xsd:string" default="time">
+						<doc title="definition">Result order.</doc>
+						<option value="time"/>
+						<option value="time-asc"/>
+						<option value="magnitude"/>
+						<option value="magnitude-asc"/>
+						<!-- addition, non-standard options -->
+						<option value="update"/>
+						<option value="update-asc"/>
+					</param>
+					<!-- not supported
+					<param name="catalog" style="query" type="xsd:string"/>
+					-->
+					<param name="contributor" style="query" type="xsd:string">
+						<doc title="definition">
+							Limit to events contributed by a specified agency.
+						</doc>
+					</param>
+					<param name="updateafter" style="query" type="xsd:dateTime">
+						<doc title="definition">
+							Limit to events updated after the specified time.
+						</doc>
+					</param>
+					<param name="format" style="query" type="xsd:string" default="xml">
+						<doc title="definition">
+							Specify the desired output format.
+						</doc>
+						<option value="xml" mediaType="application/xml"/>
+						<option value="text" mediaType="text/plain"/>
+						<!-- additional, non standard options -->
+						<option value="qml" mediaType="application/xml"/>
+						<option value="scml" mediaType="application/xml"/>
+					</param>
+					<param name="nodata" style="query" type="xsd:int" default="204">
+						<doc title="definition">
+							Select status code for 'no data' which is either
+							'204' or '404'.
+						</doc>
+						<option value="204"/>
+						<option value="404"/>
+					</param>
+
+					<!-- additional, non standard parameters -->
+					<param name="rev" style="query" type="xsd:int">
+						<doc title="definition">
+							Request for specific event revision. May only be
+							combined with 'eventid' request parameter.
+						</doc>
+					</param>
+					<param name="author" style="query" type="xsd:string">
+						<doc title="definition">
+							Limit to events created by a specific author. The
+							availability of this option depends on the server
+							configuration.
+						</doc>
+					</param>
+					<param name="status" style="query" type="xsd:string">
+						<doc title="definition">
+							Limit events by cummulated evaluation status and
+							evaluation mode of the origin expressed by one
+							character.
+						</doc>
+						<option value="M"><doc title="manual"/></option>
+						<option value="P"><doc title="preliminary"/></option>
+						<option value="C"><doc title="confirmed"/></option>
+						<option value="V"><doc title="reviewed"/></option>
+						<option value="F"><doc title="final"/></option>
+						<option value="X"><doc title="rejected"/></option>
+						<option value="R"><doc title="reported"/></option>
+					</param>
+					<param name="estatus" style="query" type="xsd:string">
+						<doc title="definition">
+							Limit events by evaluation status of the origin.
+						</doc>
+						<option value="preliminary"/>
+						<option value="confirmed"/>
+						<option value="reviewed"/>
+						<option value="final"/>
+						<option value="rejected"/>
+						<option value="reported"/>
+					</param>
+					<param name="emode" style="query" type="xsd:string">
+						<doc title="definition">
+							Limit events by evaluation mode of the origin.
+						</doc>
+						<option value="automatic"/>
+						<option value="manual"/>
+					</param>
+					<param name="region" style="query" type="xsd:string">
+						<doc title="definition">
+							Limit events by region description.
+						</doc>
+					</param>
+					<param name="updatebefore" style="query" type="xsd:dateTime">
+						<doc title="definition">
+							Similar to 'updateafter', limit to events updated
+							before the specified time.
+						</doc>
+					</param>
+					<param name="minphases" style="query" type="xsd:int">
+						<doc title="definition">
+							Limit to events with a minimum number of phases
+							contributing to a origin solution.
+						</doc>
+					</param>
+					<param name="maxphases" style="query" type="xsd:int">
+						<doc title="definition">
+							Limit to events with a maximum number of phases
+							contributing to a origin solution.
+						</doc>
+					</param>
+					<param name="include" style="query" type="xsd:string" repeating="true">
+						<doc title="definition">
+							List of XML objects to include in result document.
+							This parameter may be repeated or individual values
+							may be defined as a comma-separated list.
+						</doc>
+						<option value="all"><doc title="all objects"/></option>
+						<option value="picks"><doc title="picks"/></option>
+						<option value="arrs"><doc title="arrivals"/></option>
+						<option value="amps"><doc title="amplitudes"/></option>
+						<option value="stamags"><doc title="station magnitudes"/></option>
+						<option value="stamts"><doc title="station moment tensor contributions"/></option>
+						<option value="nonpref"><doc title="all objects, not just the preferred"/></option>
+					</param>
+					<param name="includepicks" style="query" type="xsd:boolean" default="false">
+						<doc title="definition">
+							Adds pick information. Identical to 'include=picks'.
+						</doc>
+					</param>
+					<param name="includeamplitudes" style="query" type="xsd:boolean" default="false">
+						<doc title="definition">
+							Adds amplitude information. Identical to 'include=amps'.
+						</doc>
+					</param>
+					<param name="includestationmagnitudes" style="query" type="xsd:boolean" default="false">
+						<doc title="definition">
+							Adds station magnitude information. Identical to 'include=stamags'.
+						</doc>
+					</param>
+					<param name="includestationmomenttensorcontributions" style="query" type="xsd:boolean" default="false">
+						<doc title="definition">
+							Adds station moment tensor contributions. Identical to 'include=stamts'.
+						</doc>
+					</param>
+					<param name="native" style="query" type="xsd:boolean" default="false">
+						<doc title="definition">
+							Request native XML format disabling all other format
+							filter. The availability of this option depends
+							on the server configuration.
+						</doc>
+					</param>
+					<param name="gzip" style="query" type="xsd:boolean">
+						<doc>
+							Control gzip compression of result document.
+							If undefined the 'Accept-Encoding' HTTP header
+							is evaluated instead.
+						</doc>
+					</param>
+					<param name="download" style="query" type="xsd:boolean" default="false">
+						<doc>
+							If enabled the 'Content-Disposition' HTTP response
+							header is set to 'attachment' including a meaningful
+							file name.
+						</doc>
+					</param>
+					<param name="formatted" style="query" type="xsd:boolean" default="false">
+						<doc>
+							Controls formatted (pretty print) output.
+						</doc>
+					</param>
+				</request>
+				<response status="200">
+					<representation mediaType="application/xml"/>
+					<representation mediaType="text/plain"/>
+				</response>
+				<response status="204 400 401 403 404 413 414 500 503">
+					<representation mediaType="text/plain"/>
+				</response>
+			</method>
+		</resource>
+		<resource path="catalogs">
+			<method name="GET">
+				<response>
+					<representation mediaType="application/xml"/>
+				</response>
+			</method>
+		</resource>
+		<resource path="contributors">
+			<method name="GET">
+				<response>
+					<representation mediaType="application/xml"/>
+				</response>
+			</method>
+		</resource>
+		<resource path="version">
+			<method name="GET">
+				<response>
+					<representation mediaType="text/plain"/>
+				</response>
+			</method>
+		</resource>
+		<resource path="application.wadl">
+			<method name="GET">
+				<response>
+					<representation mediaType="application/xml"/>
+				</response>
+			</method>
+		</resource>
+	</resources>
+</application>

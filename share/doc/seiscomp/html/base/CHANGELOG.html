@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Change Log &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="change-log">
+<h1>Change Log<a class="headerlink" href="#change-log" title="Permalink to this headline">¶</a></h1>
+<p>All notable changes to SeisComP are documented here.</p>
+<div class="section" id="id1">
+<h2>4.10.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt><strong>IMPORTANT</strong><span class="classifier">Please check if your are affected by the bug concerning the scmaster</span></dt><dd><p>configuration (see below).</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>system</p>
+<ul>
+<li><p>Change Linux distribution detection which does not require the presence
+of <code class="docutils literal notranslate"><span class="pre">lsb_release</span></code> anymore. Instead it looks in <code class="docutils literal notranslate"><span class="pre">/etc/os-release</span></code> which is
+way more portable. Furthermore the RHEL based distribution directories
+have been renamed from <code class="docutils literal notranslate"><span class="pre">centos</span></code> to <code class="docutils literal notranslate"><span class="pre">rhel</span></code>.</p></li>
+<li><p>Count started/stopped modules correctly.</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Fix lat/lon order of modify origin dialog opened from zoomtrace of
+the picker.</p></li>
+</ul>
+</li>
+<li><p>scmaster</p>
+<ul>
+<li><p>Fix saving location of the generated configuration file with <code class="docutils literal notranslate"><span class="pre">seiscomp</span> <span class="pre">setup</span></code>.
+Due to a bug the file was generated in <code class="docutils literal notranslate"><span class="pre">~/.seiscomp/scmaster.cfg</span></code> whereas it
+should have been generated in <code class="docutils literal notranslate"><span class="pre">etc/scmaster.cfg</span></code>. As this is fixed now, please
+remove <code class="docutils literal notranslate"><span class="pre">~/.seiscomp/scmaster.cfg</span></code> if you were affected by the bug otherwise
+this old configuration will take precedence and new configurations will not
+have any effect. This bug has been introduced with version 4.9.0.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>4.9.3<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>trunk</p>
+<ul>
+<li><p>Fix default messaging URL from <code class="docutils literal notranslate"><span class="pre">localhost/productive</span></code> to
+<code class="docutils literal notranslate"><span class="pre">localhost/production</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>4.9.2<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>scolv</p>
+<ul>
+<li><p>Fix magnitude tab header update if the represented magnitude updates.
+It prints the current station magnitude counts rather than “0/0”.</p></li>
+</ul>
+</li>
+<li><p>scmaster</p>
+<ul>
+<li><p>Get rid of distutils in setup script</p></li>
+</ul>
+</li>
+<li><p>scqcv</p>
+<ul>
+<li><p>Allow unordered stream list</p></li>
+</ul>
+</li>
+<li><p>screloc</p>
+<ul>
+<li><p>Optionally keep track of the triggering origin ID of a relocation storing
+it as comment in the relocated origin.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>4.9.1<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>scmaster</p>
+<ul>
+<li><p>Fix setup stage if a database port has been specified explicitly</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>4.9.0<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Documentation</p>
+<ul>
+<li><p>Use a single BibTex file and a References section for most external
+references</p></li>
+</ul>
+</li>
+<li><p>Magnitudes</p>
+<ul>
+<li><p>Mwp: Fix correction for radiation pattern. The change systematically
+reduces Mwp by 0.28</p></li>
+</ul>
+</li>
+<li><p>scquery</p>
+<ul>
+<li><p>Add command-line option <code class="docutils literal notranslate"><span class="pre">--print-column-name</span></code> for printing column names
+as a header of the output</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Select locator type and profile from loaded origin if possible and if
+enabled with option <code class="docutils literal notranslate"><span class="pre">olv.locator.presetFromOrigin</span></code> (default: false)</p></li>
+</ul>
+</li>
+<li><p>scdbstrip</p>
+<ul>
+<li><p>Fix compatibility with latest PostgreSQL versions. Thanks to
+Luca Scarabello for the fix.</p></li>
+</ul>
+</li>
+<li><p>trunk</p>
+<ul>
+<li><p>Fix crash if a spatial map layer has no configured legend items but
+wants to show a legend</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>4.8.4<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>scautoloc</p>
+<ul>
+<li><p>Fix picklog configuration.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h2>4.8.3<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>seiscomp shell</p>
+<ul>
+<li><p>Remove unimplemented “add” and “edit” commands</p></li>
+</ul>
+</li>
+<li><p>seiscomp setup</p>
+<ul>
+<li><p>In newer versions (at least &gt;=13) of PostgreSQL, some of the commands
+that are run to initiate the seiscomp database need to be run as the
+database owner. Thanks to Morten Sickel for fixing it.</p></li>
+</ul>
+</li>
+<li><p>Documentation</p>
+<ul>
+<li><p>Fix Datamodel diagrams</p></li>
+<li><p>Add object cross references</p></li>
+</ul>
+</li>
+<li><p>trunk</p>
+<ul>
+<li><p>Fix XML encoding issue with text in CDATA, e.g. <code class="docutils literal notranslate"><span class="pre">Pick.phaseHint</span></code>. This
+only affects strings which contain special XML characters such as
+ampersand.</p></li>
+<li><p>Report correct module name with messaging for Python applications.
+Previous versions only reported <code class="docutils literal notranslate"><span class="pre">python</span></code> or <code class="docutils literal notranslate"><span class="pre">python3.8</span></code>.</p></li>
+</ul>
+</li>
+<li><p>scsohlog</p>
+<ul>
+<li><p>Port to Python3</p></li>
+</ul>
+</li>
+<li><p>sh2proc</p>
+<ul>
+<li><p>Port to Python3</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h2>4.8.2<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>scart</p>
+<ul>
+<li><p>Fix date in error output</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>4.8.1<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fdsnws</p>
+<ul>
+<li><p>Fix return of empty event publicID in event service when a
+PostgreSQL database is being used</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id10">
+<h2>4.8.0<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SC_API_VERSION</span> <span class="pre">14.4.0</span></code></p>
+<ul class="simple">
+<li><p>scolv</p>
+<ul>
+<li><p>Change text “(Un)fix” buttons to be more explicit</p>
+<ul>
+<li><p>Unfix -&gt; Unfix type</p></li>
+<li><p>Fix -&gt; Fix FM</p></li>
+<li><p>Fix Mw -&gt; Fix Mw type</p></li>
+</ul>
+</li>
+<li><p>Use configured magnitude digits to display Mw magnitude value</p></li>
+<li><p>Only enable creation of artificial origin in zoom trace if picking
+is disabled</p></li>
+<li><p>Fix committing of manual amplitudes in the amplitude picker</p></li>
+</ul>
+</li>
+<li><p>scmag</p>
+<ul>
+<li><p>Fix bug that caused multiple occurrences of magnitudes of the same
+type when a new set of manually computed amplitudes has been received</p></li>
+</ul>
+</li>
+<li><p>trunk</p>
+<ul>
+<li><p>Fix segmentation fault when reading malformed GeoJSON features</p></li>
+</ul>
+</li>
+<li><p>scorgls</p>
+<ul>
+<li><p>Add option to filter for author (thanks to Fred Massin / ETHZ)</p></li>
+</ul>
+</li>
+<li><p>sdmssort</p></li>
+<li><p>Fix error when two or more files are passed</p></li>
+<li><p>seedlink</p>
+<ul>
+<li><p>Fix typo in setup script</p></li>
+<li><p>Add misc plugin</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id11">
+<h2>4.7.3<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>trunk</p>
+<ul>
+<li><p>Fix MYSQL database setup script to create
+ro and rw user accounts correctly</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id12">
+<h2>4.7.2<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>trunk</p>
+<ul>
+<li><p>Update changelog</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">seiscomp</span> <span class="pre">setup</span> <span class="pre">trunk</span></code> with respect to database initialization</p></li>
+</ul>
+</li>
+<li><p>scart</p>
+<ul>
+<li><p>Do not require archive directory when writing records to stdout</p></li>
+</ul>
+</li>
+<li><p>iLoc</p>
+<ul>
+<li><p>Allow configuration of local models</p></li>
+<li><p>Add comprehensive documentation on iLoc and integration / configuration
+in SeisComP</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id13">
+<h2>4.7.1<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>trunk</p>
+<ul>
+<li><p>Fix test compilation for some distributions</p></li>
+<li><p>Update changelog</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id14">
+<h2>4.7.0<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SC_API_VERSION</span> <span class="pre">14.3.0</span></code></p>
+<ul class="simple">
+<li><p>Documentation</p>
+<ul>
+<li><p>Update SDK Python examples</p></li>
+</ul>
+</li>
+<li><p>seiscomp</p>
+<ul>
+<li><p>Add –wait parameter to set the timeout when acquiring
+the seiscomp lock</p></li>
+<li><p>Add dialog for removing obsolete configuration after
+removing alias modules</p></li>
+<li><p>Add support for additional host environment which is sourced from
+<code class="docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/etc/env/$(hostname)</span></code> if present</p></li>
+</ul>
+</li>
+<li><p>trunk</p>
+<ul>
+<li><p>Add HTTP proxy support for FDSNWS recordstream. <code class="docutils literal notranslate"><span class="pre">http_proxy</span></code>,
+<code class="docutils literal notranslate"><span class="pre">https_proxy</span></code> and <code class="docutils literal notranslate"><span class="pre">no_proxy</span></code> environment are being read and
+evaluated. Only proxy servers available with http are supported
+currently.</p></li>
+<li><p>Add new geo feature directory  <code class="docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/spatial/vector</span></code> or
+<code class="docutils literal notranslate"><span class="pre">&#64;CONFIGDIR&#64;/spatial/vector</span></code>. Load  BNA files from new geo
+feature directory. The old BNA directories are still
+supported but cause a warning which is logged.</p></li>
+<li><p>Add support for GeoJSON files (<a href="#id15"><span class="problematic" id="id16">*</span></a>.geojson) in the new geo
+feature directory.</p></li>
+<li><p>Add data scheme version information to output when starting
+a module with the option <code class="docutils literal notranslate"><span class="pre">-V</span></code></p></li>
+<li><p>Add MEDIAN() filter</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Fix display of tooltips in origin map and magnitude map</p></li>
+<li><p>Fix loading configured streams from either scolv or global
+bindings instead of the first bindings found</p></li>
+<li><p>Allow modifying origins and creating artificial origins on zoom trace
+in picker window</p></li>
+</ul>
+</li>
+<li><p>scquery</p>
+<ul>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">--print-header</span></code> option for generating information on the query as a
+header of the output</p></li>
+<li><p>Add examples for PostgreSQL</p></li>
+</ul>
+</li>
+<li><p>GUI</p>
+<ul>
+<li><p>Add azimuthal gap column to event list which is initially hidden. To
+activate it, add <code class="docutils literal notranslate"><span class="pre">AzGap&quot;</span></code> to <code class="docutils literal notranslate"><span class="pre">eventlist.visibleColumns</span></code></p></li>
+<li><p>Add units to columns of tables: Events, Events, Magnitudes</p></li>
+<li><p>Remove number of origins column in event list if origins should not be
+listed</p></li>
+<li><p>Correct issue with magnitude view map which does not show symbols
+for stations which have a magnitude but no arrival</p></li>
+</ul>
+</li>
+<li><p>scesv</p>
+<ul>
+<li><p>Add azimuthal gap to hypocenter panel</p></li>
+</ul>
+</li>
+<li><p>scqcv</p>
+<ul>
+<li><p>Make many configuration parameters available in scconfig and documentation</p></li>
+</ul>
+</li>
+<li><p>scautoloc</p>
+<ul>
+<li><p>Disable pick logging by default to optimize disk space consumption.
+Can be enabled by new option <code class="docutils literal notranslate"><span class="pre">autoloc.pickLogEnable</span></code>.</p></li>
+<li><p>Added documentation of parameters</p></li>
+<li><p>Send a journal message when setting the origin evaluation status</p></li>
+<li><p>Add IM network to default station.conf</p></li>
+</ul>
+</li>
+<li><p>iLoc</p>
+<ul>
+<li><p>Update iLoc code to version 3.3</p></li>
+</ul>
+</li>
+<li><p>scdispatch</p>
+<ul>
+<li><p>Add command-line option <code class="docutils literal notranslate"><span class="pre">-e</span></code> as a wrapper for removing the EVENT group from
+routing table</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id17">
+<h2>4.6.1<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>scolv</p>
+<ul>
+<li><p>Add number of used / unused station magnitudes to Magnitudes tab (missing
+from 4.6.0)</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id18">
+<h2>4.6.0<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Dependencies</p>
+<ul>
+<li><p>Change Debian 10 dependencies to Python3 and Qt5</p></li>
+</ul>
+</li>
+<li><p>scevent</p>
+<ul>
+<li><p>Use application name for processing-info log</p></li>
+<li><p>Add new journal action EvRefresh: Select the preferred origin, the preferred
+magnitude, update the region, call processors loaded with plugins.</p></li>
+</ul>
+</li>
+<li><p>scmssort</p>
+<ul>
+<li><p>Add new <code class="docutils literal notranslate"><span class="pre">list</span></code> option to filter miniSEED data by stream lists</p></li>
+<li><p>Add some statistics to stderr output in verbosity mode</p></li>
+</ul>
+</li>
+<li><p>scart</p>
+<ul>
+<li><p>Do not crash when requesting data for non-existing networks from SDS archive</p></li>
+<li><p>Add error output when attempting retrieve non-existing data from SDS archive</p></li>
+</ul>
+</li>
+<li><p>GUI</p>
+<ul>
+<li><p>Add number of origins per event to event list</p></li>
+<li><p>Add copy cell operation to context menu to all tables in event editor</p></li>
+</ul>
+</li>
+<li><p>scmv</p>
+<ul>
+<li><p>Report erroneous configuration of <code class="docutils literal notranslate"><span class="pre">stations.groundMotionFilter</span></code> and stop
+smoothly</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Add number of used / unused station magnitudes to Magnitudes tab</p></li>
+</ul>
+</li>
+<li><p>scheli</p>
+<ul>
+<li><p>Allow scaling of traces per maximum row amplitude</p></li>
+</ul>
+</li>
+<li><p>trunk</p>
+<ul>
+<li><p>Add support for permanent redirects to fdsnws RecordStream</p></li>
+<li><p>Fix MiniSEED reader for records without blockette 1000 and
+for records with blockette 1000 at an offset beyond the
+first 128 bytes</p></li>
+</ul>
+</li>
+<li><p>seiscomp</p>
+<ul>
+<li><p>Create aliases even if some links already exist</p></li>
+<li><p>List remaining configuration files after removing aliases</p></li>
+<li><p>Support requesting status of enabled and of started modules</p></li>
+<li><p>Support requesting list of started modules</p></li>
+</ul>
+</li>
+<li><p>scconfig</p>
+<ul>
+<li><p>Add search for parameters in bindings panel: Ctrl + f</p></li>
+</ul>
+</li>
+<li><p>sccnv</p>
+<ul>
+<li><p>Include moment tensor derived origins into output document for
+QuakeML 1.2</p></li>
+</ul>
+</li>
+<li><p>scxmldump</p>
+<ul>
+<li><p>Add -J, –journal option allowing to export the journal</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id19">
+<h2>4.5.0<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SC_API_VERSION</span> <span class="pre">14.2.0</span></code></p>
+<ul>
+<li><p>Magnitudes</p>
+<ul>
+<li><p>mb and mB: add configurable distance ranges in global bindings</p></li>
+<li><p>ML, MLv, MLh, md, MLr, Ms_20: unify the configuration in the magnitudes and
+amplitudes sections of global bindings. The number of magnitude types has
+grown over time and each magnitude had its own flavor of configuration.
+This made configurations increasingly difficult. By this change the
+configuration becomes homogeneous and easier. The corresponding parameters
+are deprecated and must be replaced by new ones either pre-pending
+<code class="docutils literal notranslate"><span class="pre">magnitudes.</span></code> or <code class="docutils literal notranslate"><span class="pre">amplitudes.</span></code> to the respective parameter.
+Warnings will be written to module logs if deprecated values are found.</p></li>
+<li><p>deprecated bindings parameter values -&gt; new values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MLh</span><span class="o">.</span><span class="n">maxavg</span>            <span class="o">-&gt;</span> <span class="n">amplitudes</span><span class="o">.</span><span class="n">MLh</span><span class="o">.</span><span class="n">params</span>
+<span class="n">MLh</span><span class="o">.</span><span class="n">ClippingThreshold</span> <span class="o">-&gt;</span> <span class="n">amplitudes</span><span class="o">.</span><span class="n">MLh</span><span class="o">.</span><span class="n">ClippingThreshold</span>
+<span class="n">MLh</span><span class="o">.</span><span class="n">params</span>            <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">MLh</span><span class="o">.</span><span class="n">params</span>
+
+<span class="n">md</span><span class="o">.</span><span class="n">maxavg</span>             <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">seismo</span>
+<span class="n">md</span><span class="o">.</span><span class="n">taper</span>              <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">taper</span>
+<span class="n">md</span><span class="o">.</span><span class="n">signal_length</span>      <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">signal_length</span>
+<span class="n">md</span><span class="o">.</span><span class="n">butterworth</span>        <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">butterworth</span>
+<span class="n">md</span><span class="o">.</span><span class="n">depthmax</span>           <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">depthmax</span>
+<span class="n">md</span><span class="o">.</span><span class="n">deltamax</span>           <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">deltamax</span>
+<span class="n">md</span><span class="o">.</span><span class="n">snrmin</span>             <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">snrmin</span>
+<span class="n">md</span><span class="o">.</span><span class="n">mdmax</span>              <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">mdmax</span>
+<span class="n">md</span><span class="o">.</span><span class="n">fma</span>                <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">fma</span>
+<span class="n">md</span><span class="o">.</span><span class="n">fmb</span>                <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">fmb</span>
+<span class="n">md</span><span class="o">.</span><span class="n">fmd</span>                <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">fmd</span>
+<span class="n">md</span><span class="o">.</span><span class="n">fmf</span>                <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">fmf</span>
+<span class="n">md</span><span class="o">.</span><span class="n">fmz</span>                <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">fmz</span>
+<span class="n">md</span><span class="o">.</span><span class="n">linearcorrection</span>   <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">linearcorrection</span>
+<span class="n">md</span><span class="o">.</span><span class="n">offset</span>             <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">offset</span>
+<span class="n">md</span><span class="o">.</span><span class="n">stacor</span>             <span class="o">-&gt;</span> <span class="n">magnitudes</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">stacor</span>
+
+<span class="n">MLr</span><span class="o">.</span><span class="n">maxavg</span>            <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">MLr</span><span class="o">.</span><span class="n">params</span>
+
+<span class="n">Ms_20</span><span class="o">.</span><span class="n">lowerPeriod</span>     <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">Ms_20</span><span class="o">.</span><span class="n">lowerPeriod</span>
+<span class="n">Ms_20</span><span class="o">.</span><span class="n">upperPeriod</span>     <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">Ms_20</span><span class="o">.</span><span class="n">upperPeriod</span>
+<span class="n">Ms_20</span><span class="o">.</span><span class="n">minDist</span>         <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">Ms_20</span><span class="o">.</span><span class="n">minDist</span>
+<span class="n">Ms_20</span><span class="o">.</span><span class="n">maxDist</span>         <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">Ms_20</span><span class="o">.</span><span class="n">maxDist</span>
+<span class="n">Ms_20</span><span class="o">.</span><span class="n">maxDepth</span>        <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">Ms_20</span><span class="o">.</span><span class="n">maxDepth</span>
+
+<span class="n">MLv</span><span class="o">.</span><span class="n">logA0</span>             <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">MLv</span><span class="o">.</span><span class="n">logA0</span>
+<span class="n">MLv</span><span class="o">.</span><span class="n">maxDistanceKm</span>     <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">MLv</span><span class="o">.</span><span class="n">maxDistanceKm</span>
+
+<span class="n">ML</span><span class="o">.</span><span class="n">logA0</span>              <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">ML</span><span class="o">.</span><span class="n">logA0</span>
+<span class="n">ML</span><span class="o">.</span><span class="n">maxDistanceKm</span>      <span class="o">-&gt;</span>  <span class="n">magnitudes</span><span class="o">.</span><span class="n">ML</span><span class="o">.</span><span class="n">maxDistanceKm</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>scinv</p>
+<ul class="simple">
+<li><p>Allow a configurable distance between station and location coordinate
+when calling scinv check</p></li>
+<li><p>Test existence of stations, locations and streams when calling scinv check</p></li>
+</ul>
+</li>
+<li><p>trunk</p>
+<ul class="simple">
+<li><p>Add CAPS RecordStream implementation with service “caps” and “capss”.
+The later establishes an SSL connection.</p></li>
+<li><p>Fix crash of distance computation if distance is close to zero</p></li>
+<li><p>Add RecordStream to retrieve data from a CAPS server, e.g. <code class="docutils literal notranslate"><span class="pre">caps://localhost</span></code></p></li>
+<li><p>Set Ms_20 minimum distance to 20 degree</p></li>
+<li><p>Fix SQLite3 database schema</p></li>
+</ul>
+</li>
+<li><p>GUI</p>
+<ul>
+<li><p>Make eventedit columns of origin and fm tables configurable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>eventedit.origin.visibleColumns = Phases, Lat, Lon, Depth, DType, RMS,\
+                                  Stat, Method, Agency, Author, Region
+eventedit.fm.visibleColumns = Depth, M, Count, Misfit, STDR, Azi.\
+                              Gap(°), Stat, DC(%), CLVD(%), ISO(%),\
+                              S1(°), D1(°), R1(°), S2(°), D2(°), R2(°),\
+                              Agency, Author
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>scbulletin</p>
+<ul class="simple">
+<li><p>Allow to flag depth as fixed (thanks to Anthony Carapetis)</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id20">
+<h2>4.4.0<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>hypo71</p>
+<ul>
+<li><p>Redirect locator output to SeisComP info output instead of stdout</p></li>
+</ul>
+</li>
+<li><p>seiscomp</p>
+<ul>
+<li><p>Fix inventory, trunk and access setup file to get the
+configured local scmaster connection correctly especially
+with encrypted connections.</p></li>
+</ul>
+</li>
+<li><p>GUI</p>
+<ul>
+<li><p>Add config support for color names according to
+<a class="reference external" href="https://www.w3.org/TR/SVG11/types.html#ColorKeywords">https://www.w3.org/TR/SVG11/types.html#ColorKeywords</a>, e.g.
+<code class="docutils literal notranslate"><span class="pre">scheme.colors.records.foreground</span> <span class="pre">=</span> <span class="pre">blue</span></code></p></li>
+</ul>
+</li>
+<li><p>scrttv</p>
+<ul>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">streams.sort.mode</span></code> to set up the initial sort mode</p></li>
+<li><p>Add grouping of streams for sorting and coloring</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id21">
+<h2>4.3.0<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>scheli</p>
+<ul class="simple">
+<li><p>Add configuration parameters to description XML allowing configuration in
+scconfig</p></li>
+</ul>
+</li>
+<li><p>scrttv</p>
+<ul class="simple">
+<li><p>Adjust default filter to filter below the Nyquist frequency of most BH?
+streams</p></li>
+<li><p>Add default values for streams configurations</p></li>
+</ul>
+</li>
+<li><p>scautoloc</p>
+<ul>
+<li><p>Adjust configuration and parameters. The legacy parameters can still be used
+but an error message will be printed:</p>
+<ul>
+<li><p>Added parameters to description:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">buffer</span><span class="o">.</span><span class="n">originKeep</span>
+<span class="n">autoloc</span><span class="o">.</span><span class="n">useManualPicks</span>
+<span class="n">autoloc</span><span class="o">.</span><span class="n">adoptManualDepth</span>
+<span class="n">autoloc</span><span class="o">.</span><span class="n">tryDefaultDepth</span>
+<span class="n">autoloc</span><span class="o">.</span><span class="n">stationLocations</span>
+</pre></div>
+</div>
+</li>
+<li><p>Renamed parameters (old -&gt; new):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">autoloc</span><span class="o">.</span><span class="n">maxAge</span>          <span class="o">-&gt;</span> <span class="n">buffer</span><span class="o">.</span><span class="n">pickKeep</span>
+<span class="n">autoloc</span><span class="o">.</span><span class="n">cleanupInterval</span> <span class="o">-&gt;</span> <span class="n">buffer</span><span class="o">.</span><span class="n">cleanupInterval</span>
+<span class="n">autoloc</span><span class="o">.</span><span class="n">locator</span><span class="o">.</span><span class="n">profile</span> <span class="o">-&gt;</span> <span class="n">locator</span><span class="o">.</span><span class="n">profile</span>
+</pre></div>
+</div>
+</li>
+<li><p>Removed parameters from description:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">autoloc</span><span class="o">.</span><span class="n">wakeupInterval</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>slarchive</p>
+<ul class="simple">
+<li><p>Allow creation of aliases</p></li>
+</ul>
+</li>
+<li><p>scmag</p>
+<ul class="simple">
+<li><p>Add medianTrimmedMean average method</p></li>
+<li><p>Remove internally cached objects if an objects has been removed
+via messaging</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul class="simple">
+<li><p>Add median trimmed mean to magnitude average method</p></li>
+<li><p>Sort event types alphabetically and status by priority</p></li>
+</ul>
+</li>
+<li><p>scart</p>
+<ul class="simple">
+<li><p>Fix loading of plugins</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id22">
+<h2>4.2.1<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Documentation</p>
+<ul>
+<li><p>Update installation and database procedures</p></li>
+</ul>
+</li>
+<li><p>Event list in GUIs</p>
+<ul>
+<li><p>Add RMS column by default</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Relabel strike/dip/rake columns in focal mechanism table
+and resize content after loading</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Relabel strike/dip/rake columns in focal mechanism table
+and resize content after loading</p></li>
+</ul>
+</li>
+<li><p>evrc plugin</p>
+<ul>
+<li><p>Fix reading origin which have no depth</p></li>
+<li><p>Fix setting no event type for region <code class="docutils literal notranslate"><span class="pre">world</span></code></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id23">
+<h2>4.2.0<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>scalert</p>
+<ul>
+<li><p>Add option to listen to picks</p></li>
+<li><p>Fix configuration of agency filter</p></li>
+</ul>
+</li>
+<li><p>scevent</p>
+<ul>
+<li><p>Sort configuration of event association parameters by topic</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Expose picker phase profiles to scconfig</p></li>
+<li><p>Adjust description of uncertainty profiles</p></li>
+</ul>
+</li>
+<li><p>fdsnxml2inv</p>
+<ul>
+<li><p>Fix conversion of polynomial responses with respect to
+<code class="docutils literal notranslate"><span class="pre">approximationType</span></code>.</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Reorder FM tab columns and allow switching visibility state</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id24">
+<h2>4.1.2<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Processing</p>
+<ul>
+<li><p>Fix crashing of processing modules such as scautopick if filter
+parameters are out of range</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id25">
+<h2>4.1.1<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>scmaster</p>
+<ul>
+<li><p>Fix reading the default configuration file in update-config</p></li>
+</ul>
+</li>
+<li><p>ew2sc</p>
+<ul>
+<li><p>Correct module name in description. E.g. scconfig has still displayed it
+as <code class="docutils literal notranslate"><span class="pre">ew2sc3</span></code>.</p></li>
+</ul>
+</li>
+<li><p>GUI</p>
+<ul>
+<li><p>Add nodal planes and some more quality parameters to event edit focal
+mechanism table</p></li>
+<li><p>Fix setting the depth type in the origin locator panel</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id26">
+<h2>4.1.0<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SC_API_VERSION</span> <span class="pre">14.1.0</span></code></p>
+<ul class="simple">
+<li><p>scmaster</p>
+<ul>
+<li><p>Add IMPORT_GROUP to default group set</p></li>
+</ul>
+</li>
+<li><p>screloc</p>
+<ul>
+<li><p>Add option to allow processing of origins with mode MANUAL in daemon mode</p></li>
+<li><p>When using <code class="docutils literal notranslate"><span class="pre">--ep</span></code> playbacks with origins defined by -O, then the processing
+is limited to the defined origins.</p></li>
+</ul>
+</li>
+<li><p>scevent</p>
+<ul>
+<li><p>Update event agencyID and author on event update if it has
+changed. This is important if scevent has been reconfigured
+with a different agencyID or author.</p></li>
+</ul>
+</li>
+<li><p>trunk</p>
+<ul>
+<li><p>The application class resets its locale to the initial
+state at exit. Not doing so could have caused encoding
+errors with init scripts</p></li>
+<li><p>Add fixed hypocenter locator</p></li>
+<li><p>Add external locator plugin (locext)</p></li>
+<li><p>Fix combined recordstream for slinkMax|rtMax|1stMax units <code class="docutils literal notranslate"><span class="pre">s</span></code> and <code class="docutils literal notranslate"><span class="pre">h</span></code></p></li>
+<li><p>Fix LOCSAT travel time computation for phases which do not provide
+a table file or with zero depth layers. Sometimes LOCSAT produced
+fake travel times for non existing phases after switching tables.</p></li>
+</ul>
+</li>
+<li><p>scevtstreams</p>
+<ul>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">--fdsnws</span></code> command line option to export list of
+channels in FDSNWS dataselect POST format</p></li>
+</ul>
+</li>
+<li><p>GUI</p>
+<ul>
+<li><p>Add option to define symbol images for layer points defined in
+either BNA or FEP</p></li>
+</ul>
+</li>
+<li><p>seedlink</p>
+<ul>
+<li><p>Fix parsing of global <code class="docutils literal notranslate"><span class="pre">backfill_buffer</span></code> variable. Up to this
+fix the variable was always considered out of bounds and apart from using
+backfill buffer settings in the bindings the global value had no effect.</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Fixed several segmentation faults in combination with offline
+mode</p></li>
+<li><p>Add origin location method column to event origin table</p></li>
+<li><p>Add shortcuts (Ctrl+pgdown, Ctrl+pgup) to select the previous and
+next event of the event list from within the locator view</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id27">
+<h2>4.0.4<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>trunk</p>
+<ul>
+<li><p>Fix ML/MLv default magnitude calibration</p></li>
+</ul>
+</li>
+<li><p>GUI</p>
+<ul>
+<li><p>Quit application if an error occurred during initialization
+and if the setup dialog is cancelled or closed by hitting
+the X icon</p></li>
+<li><p>Also accept <code class="docutils literal notranslate"><span class="pre">TP</span></code> for parameter <code class="docutils literal notranslate"><span class="pre">eventlist.visibleColumns</span></code>
+but print a warning</p></li>
+</ul>
+</li>
+<li><p>scmm</p>
+<ul>
+<li><p>Fix client disconnect handling</p></li>
+</ul>
+</li>
+<li><p>scimport</p>
+<ul>
+<li><p>Log error message if parameter <code class="docutils literal notranslate"><span class="pre">msggroups</span></code> is not defined</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id28">
+<h2>4.0.3<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>slmod</p>
+<ul>
+<li><p>Fix Python2 support</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Add origin depth type to event list and origins list</p></li>
+</ul>
+</li>
+<li><p>base</p>
+<ul>
+<li><p>Fix bug with decimation record stream which caused that
+just a subset of input data was forwarded to the client</p></li>
+<li><p>Populate SNR values of Ms(BB) and ML amplitudes</p></li>
+</ul>
+</li>
+<li><p>GUI</p>
+<ul>
+<li><p>Replace splash screen with latest logo and render text flat</p></li>
+<li><p>Rename item <code class="docutils literal notranslate"><span class="pre">TP</span></code> to <code class="docutils literal notranslate"><span class="pre">MType</span></code> of parameter
+<code class="docutils literal notranslate"><span class="pre">eventlist.visibleColumns</span></code></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id29">
+<h2>4.0.2<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>scautoloc</p>
+<ul>
+<li><p>Correct station.conf</p></li>
+</ul>
+</li>
+<li><p>trunk</p>
+<ul>
+<li><p>Add ML/MLv magnitude calibration at 100 km</p></li>
+</ul>
+</li>
+<li><p>dlsv2inv</p>
+<ul>
+<li><p>Fix crash for debug builds if a token is empty,
+e.g. empty end time</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id30">
+<h2>4.0.1<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>LOCSAT</p>
+<ul>
+<li><p>Allow to override the tables directory with the environment
+variable <code class="docutils literal notranslate"><span class="pre">SEISCOMP_LOCSAT_TABLE_DIR</span></code></p></li>
+</ul>
+</li>
+<li><p>scconfig</p>
+<ul>
+<li><p>Add application icon</p></li>
+</ul>
+</li>
+<li><p>scolv</p>
+<ul>
+<li><p>Fix bug when a magnitude is recalculated with a subset of
+station magnitudes</p></li>
+</ul>
+</li>
+<li><p>fdsnws</p>
+<ul>
+<li><p>Parse query filter parameters strictly. Thanks to Daniel
+Armbruster for providing the patch.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id31">
+<h2>4.0.0<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SC_API_VERSION</span> <span class="pre">14.0.0</span></code></p>
+<p>This is the initial release of SeisComP under a new license and with a new
+versioning scheme. Instead of using a release name and a time based version
+tag semantic versioning is now being used with a sequence of three digits:
+Major.Minor.Patch. The following rules apply for assigning a new digit:</p>
+<ul class="simple">
+<li><p>Major: Libraries introduce binary incompatible changes or there are very
+significant application changes which justify a major version bump.</p></li>
+<li><p>Minor: Libraries add new functionality and methods but binary
+compatibility within the same major release is still maintained
+with application built against a lower minor version. Significant
+application changes can also justify a minor version bump.</p></li>
+<li><p>Patch: No changes in functionality but error corrections of existing
+codes.</p></li>
+</ul>
+<p>Breaking changes:</p>
+<ul class="simple">
+<li><p>Spread has been replaced as messaging system with our own implementation
+of a messaging broker. That means that connections between SeisComP3 and
+SeisComP &gt;= 4.0.0 are not possible until a driver has been developed
+which implements Spread in SeisComP or scmp in SeisComP3.</p></li>
+<li><p>Qt5 and Python3 are now supported preferred.</p></li>
+<li><p>The SeisComP Python packages have been renamed to <code class="docutils literal notranslate"><span class="pre">seiscomp</span></code> but a
+compatibility layer for <code class="docutils literal notranslate"><span class="pre">seiscomp3</span></code> has been added.</p></li>
+<li><p>Arclink is no longer supported and has been removed completely.</p></li>
+<li><p>arclinkproxy has been removed as well and is superseded by scwfas.</p></li>
+<li><p>The installation directory is now <code class="docutils literal notranslate"><span class="pre">seiscomp</span></code> and not <code class="docutils literal notranslate"><span class="pre">seiscomp3</span></code>.</p></li>
+<li><p>The user configuration directory is now <code class="docutils literal notranslate"><span class="pre">.seiscomp</span></code> and not <code class="docutils literal notranslate"><span class="pre">.seiscomp3</span></code>.</p></li>
+<li><p>C++ compilation requires a compiler that supports at least the C++11
+standard.</p></li>
+</ul>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Change Log</a><ul>
+<li><a class="reference internal" href="#id1">4.10.0</a></li>
+<li><a class="reference internal" href="#id2">4.9.3</a></li>
+<li><a class="reference internal" href="#id3">4.9.2</a></li>
+<li><a class="reference internal" href="#id4">4.9.1</a></li>
+<li><a class="reference internal" href="#id5">4.9.0</a></li>
+<li><a class="reference internal" href="#id6">4.8.4</a></li>
+<li><a class="reference internal" href="#id7">4.8.3</a></li>
+<li><a class="reference internal" href="#id8">4.8.2</a></li>
+<li><a class="reference internal" href="#id9">4.8.1</a></li>
+<li><a class="reference internal" href="#id10">4.8.0</a></li>
+<li><a class="reference internal" href="#id11">4.7.3</a></li>
+<li><a class="reference internal" href="#id12">4.7.2</a></li>
+<li><a class="reference internal" href="#id13">4.7.1</a></li>
+<li><a class="reference internal" href="#id14">4.7.0</a></li>
+<li><a class="reference internal" href="#id17">4.6.1</a></li>
+<li><a class="reference internal" href="#id18">4.6.0</a></li>
+<li><a class="reference internal" href="#id19">4.5.0</a></li>
+<li><a class="reference internal" href="#id20">4.4.0</a></li>
+<li><a class="reference internal" href="#id21">4.3.0</a></li>
+<li><a class="reference internal" href="#id22">4.2.1</a></li>
+<li><a class="reference internal" href="#id23">4.2.0</a></li>
+<li><a class="reference internal" href="#id24">4.1.2</a></li>
+<li><a class="reference internal" href="#id25">4.1.1</a></li>
+<li><a class="reference internal" href="#id26">4.1.0</a></li>
+<li><a class="reference internal" href="#id27">4.0.4</a></li>
+<li><a class="reference internal" href="#id28">4.0.3</a></li>
+<li><a class="reference internal" href="#id29">4.0.2</a></li>
+<li><a class="reference internal" href="#id30">4.0.1</a></li>
+<li><a class="reference internal" href="#id31">4.0.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base/CHANGELOG.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

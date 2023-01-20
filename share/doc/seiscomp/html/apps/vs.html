@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>VS &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ew2sc" href="ew2sc.html" />
+    <link rel="prev" title="Processing" href="../toc/processing.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="ew2sc.html" title="ew2sc"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="../toc/processing.html" title="Processing"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/processing.html" accesskey="U">Processing</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="vs">
+<span id="id1"></span><h1>VS<a class="headerlink" href="#vs" title="Permalink to this headline">¶</a></h1>
+<p><strong>Near instantaneous estimates of earthquake magnitude.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The  <a class="reference external" href="http://www.seismo.ethz.ch/en/research-and-teaching/products-software/EEW/Virtual-Seismologist/">Virtual Seismologist</a> <a class="footnote-reference brackets" href="#id2" id="id3">1</a> in SeisComP (VS(SC)) provides near instantaneous
+estimates of earthquake magnitude as soon as SeisComP origins are available. With a
+well-configured SeisComP system running on a dense network, magnitudes for
+local events can be available within 10-20 s of origin time. VS(SC) can be a key
+component of an earthquake early warning system, and can be used to provide
+rapid earthquake notifications. With the capability to estimate magnitude
+(given a location estimate) with 3-seconds of P-wave information at a single
+station, VS(SC) magnitude estimates are tens of seconds faster than
+conventional Ml calculations, which require waiting for the peak S-wave
+amplitudes. The VS magnitude estimation relationships consist of 1) a
+relationship between observed ground motion ratios (between vertical
+acceleration and vertical displacement) and magnitude, and 2) envelope
+attenuation relationships describing how various channels of envelope
+amplitudes vary as a function of magnitude and distance. These relationships
+were derived from a Southern California dataset with events in the magnitude
+range 2.5 &lt;= M &lt;= 7.6 and the Next Generation Attenuation (NGA) strong motion
+dataset. Once a SeisComP location estimate is available, VS magnitude estimates
+can be computed with as little as 3 seconds of envelope data at a single
+station (i.e., 3 seconds after trigger time at a single station). Typically,
+usable envelope data is available at numerous stations by the time the first
+SeisComP origin is available. The VS magnitude estimates are then updated every
+second for 30 seconds (configurable). The SeisComP implementation allows for use of
+broadband high-gain seismometers (with clipping value selected) as well as
+strong motion data. For co-located stations, VS magnitudes are calculated using
+the strong motion channels if the broadband channels saturate.
+VS magnitudes in SeisComP are called MVS.</p>
+<div class="section" id="development">
+<h3>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h3>
+<p>The Virtual Seismologist method is a Bayesian approach to earthquake early
+warning (EEW) that estimates earthquake magnitude, location, and the
+distribution of peak ground shaking using observed picks and ground motion
+amplitudes, predefined prior information, and envelope attenuation
+relationships (Cua, 2005; Cua and Heaton, 2007; Cua et al., 2009). The
+application of Bayes’ theorem in EEW (Cua, 2005) states that the most probable
+source estimate at any given time is a combination of contributions from prior
+information (candidate priors include network topology or station health status,
+regional hazard maps, earthquake forecasts, and the Gutenberg-Richter
+magnitude-frequency relationship) and constraints from the available
+real-time ground motion and arrival observations. VS is envisioned as an
+intelligent, automated system capable of mimicking how human seismologists can
+make quick, relatively accurate “back-of-the-envelope” interpretations of
+real-time (and at times, incomplete) earthquake information, using a mix of
+experience, background information, and real-time data. The formulation of the
+VS Bayesian methodology, including the development of the underlying
+relationships describing the dependence of various channels of ground motion
+envelopes on magnitude and distance, and how these pieces come together in EEW
+source estimation, was the result of the PhD research of Dr. Georgia Cua with
+Prof. Thomas Heaton at Caltech, from 1998 through 2004.</p>
+<p>The first real-time VS prototype system was developed by Georgia Cua and Michael
+Fischer at ETH Zurich from 2006-2012.
+This first prototype used location estimates generated
+by the Earthworm Binder module (Dietz, 2002) as inputs to the VS magnitude
+estimation. This architecture has been undergoing continuous real-time testing
+in California (since 2008) and Switzerland (since 2010). In California, VS is
+one of the three EEW algorithms that make up the <a class="reference external" href="http://www.cisn.org/eew/">CISN ShakeAlert EEW system</a> <a class="footnote-reference brackets" href="#id4" id="id5">2</a>.
+The other algorithms are the ElarmS algorithm from
+UC Berkeley and the TauC/Pd OnSite algorithm from Caltech.
+In 2012/13, with funding from the EU projects NERA (“Network of European
+Research Infrastructures for Earthquake Risk Assessment and Mitigation”) and
+REAKT (“Strategies and Tools for Real-Time EArthquake RisK ReducTion”), VS was
+integrated into SeisComP by the Seismic Network group at the SED in ETH
+Zurich and gempa GmbH. Both real-time VS implementations (Binder- and SeisComP-based)
+focus on real-time processing of available pick and envelope data. Prior
+information is not included.</p>
+</div>
+<div class="section" id="vs-and-seiscomp">
+<h3>VS and SeisComP<a class="headerlink" href="#vs-and-seiscomp" title="Permalink to this headline">¶</a></h3>
+<p>Although the codes were effectively re-written, the basic architecture used in
+the original Earthworm-based implementation is used in SeisComP. The SeisComP modules
+scautopick, scautoloc, and scevent replace the Earthworm Binder module for
+providing location estimates. Two new VS-specific modules were developed to
+continuously calculate envelope amplitudes and to calculate and update VS
+magnitudes (MVS) once a SeisComP origin is available.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="scenvelope.html#scenvelope"><span class="std std-ref">scenvelope</span></a></p></li>
+<li><p><a class="reference internal" href="scvsmag.html#scvsmag"><span class="std std-ref">scvsmag</span></a></p></li>
+</ul>
+<p>MVS is calculated and updated (with updates attached to the preferred origin)
+each second for 30 seconds (unless configured differently) after it is first
+invoked by the availability of a new SeisComP event. If configured, Ml can also be
+calculated for these events.</p>
+<p>An additional module, <a class="reference internal" href="scvsmaglog.html#scvsmaglog"><span class="std std-ref">scvsmaglog</span></a>, creates log output and mails solutions
+once a new event is fully processed. It also provides an interface to send
+alerts in real-time.</p>
+</div>
+<div class="section" id="configuring-and-optimizing-vs-sc-for-eew">
+<h3>Configuring and optimizing VS(SC) for EEW<a class="headerlink" href="#configuring-and-optimizing-vs-sc-for-eew" title="Permalink to this headline">¶</a></h3>
+<p>The performance of VS(SC) is strongly dependent on: 1) the quality and
+density of the seismic network; 2) the configuration of the general SeisComP system.
+scautoloc requires at least 6 triggers to create an origin. Given the network
+geometry, maps of when VS estimates would be first available
+(indicative of the size of the blind zone as a function of earthquake location
+relative to stations) can be generated for regions where EEW is of interest. VS(SC)
+uses scautoloc, which was not built for EEW, so an
+additional delay of at most a few seconds is required for origin processing. VS
+magnitudes (MVS) can be expected within 1-2 seconds after a SeisComP origin is
+available. In the densest part of the Swiss network, SeisComP origins are available
+within 10-15 seconds after origin time; MVS is typically available 1-2 seconds
+later.</p>
+<p>The VS magnitude estimation relationships in Cua (2005) were derived from a
+dataset consisting of Southern California waveforms and the NGA strong motion
+dataset. In theory, customizing VS to a specific region requires deriving a set
+of envelope attenuation relationships (168 coefficients) and relationships
+between ground motion ratios and magnitude (6 coefficients) from a regional
+dataset. In practice, the VS magnitude estimation relationships derived from
+Southern California have been shown to work reasonably well in Northern
+California and Switzerland (Behr et al, 2012). The envelope and ground motion
+ratio coefficients from Cua (2005) are hard-coded in scvsmag, and should not be
+modified without full understanding of the VS methodology and potential
+consequences of the modifications.</p>
+<p>Although scautoloc can produce origins at any depth, the VS magnitude estimation
+relationships assume a depth of 3 km. For this reason, it is expected that MVS
+will systematically underestimate magnitudes for deep earthquakes. It may be
+most practical to simply add empirically derived offsets to MVS for deeper
+events, or for particular regions.</p>
+<p>Read the documentation of <a class="reference internal" href="scenvelope.html#scenvelope"><span class="std std-ref">scenvelope</span></a>, <a class="reference internal" href="scvsmag.html#scvsmag"><span class="std std-ref">scvsmag</span></a> and <a class="reference internal" href="scvsmaglog.html#scvsmaglog"><span class="std std-ref">scvsmaglog</span></a>
+for their configurations.</p>
+</div>
+<div class="section" id="understanding-vs-output">
+<h3>Understanding VS output<a class="headerlink" href="#understanding-vs-output" title="Permalink to this headline">¶</a></h3>
+<p>The VS system currently being offered is a test version. A tool for
+dissemination of results is not part of the core modules.</p>
+</div>
+<div class="section" id="false-alarms-missed-events-solution-quality">
+<h3>False alarms, missed events, solution quality<a class="headerlink" href="#false-alarms-missed-events-solution-quality" title="Permalink to this headline">¶</a></h3>
+<p>The rate of false alarms and missed events is determined by the output of the
+normal SeisComP origin chain (<a class="reference internal" href="scautopick.html#scautopick"><span class="std std-ref">scautopick</span></a>, <a class="reference internal" href="scautoloc.html#scautoloc"><span class="std std-ref">scautoloc</span></a>), and will
+be similar to the performance of the automatic setup for typical network
+operations (i.e. if you do not trust your automatic origins for the network, you
+will not trust them for VS either). A solution quality is independently estimated
+by VS, combining information on location quality and station quality.
+See <a class="reference internal" href="scvsmag.html#scvsmag"><span class="std std-ref">scvsmag</span></a> on how the VS specific solution quality is computed.</p>
+</div>
+<div class="section" id="vs-license">
+<h3>VS License<a class="headerlink" href="#vs-license" title="Permalink to this headline">¶</a></h3>
+<p>The SeisComP VS modules are free and open source, and are part of the SeisComP
+distribution from Seattle v2013.200. They are distributed under the terms of
+the <a href="#id6"><span class="problematic" id="id7">`GNU Affero General Public License`_</span></a>.</p>
+</div>
+<div class="section" id="references">
+<h3>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h3>
+<p>Dietz, L., 2002: Notes on configuring BINDER_EW: Earthworm’s phase associator, <a class="reference external" href="http://folkworm.ceri.memphis.edu/ew-doc/ovr/binder_setup.html">http://folkworm.ceri.memphis.edu/ew-doc/ovr/binder_setup.html</a> (last accessed June 2013)</p>
+<p>Cua, G., 2005: Creating the Virtual Seismologist: developments in ground motion characterization and seismic early warning. PhD thesis, California Institute of Technology, Pasadena, California.</p>
+<p>Cua, G., and T. Heaton, 2007: The Virtual Seismologist (VS) method: a Bayesian approach to earthquake early warning, in Seismic early warning, editors: P. Gasparini, G. Manfredi, J. Zschau, Springer Heidelberg, 85-132.</p>
+<p>Cua, G., M. Fischer, T. Heaton, S. Wiemer, 2009: Real-time performance of the Virtual Seismologist earthquake early warning algorithm in southern California, Seismological Research Letters, September/October 2009; 80: 740 - 747.</p>
+<p>Behr, Y., Cua, G., Clinton, J., Heaton, T., 2012: Evaluation of Real-Time Performance of the Virtual Seismologist Earthquake
+Early Warning Algorithm in Switzerland and California. Abstract 1481084 presented at 2012 Fall Meeting, AGU, San Francisco, Calif., 3-7 Dec.</p>
+<p>Behr, Y., J. F. Clinton, C. Cauzzi, E. Hauksson, K. Jónsdóttir, C. G. Marius, A. Pinar, J. Salichon, and E. Sokos (2016) The Virtual Seismologist in SeisComP: A New Implementation Strategy for Earthquake Early Warning Algorithms <a class="reference external" href="http://www.seismo.ethz.ch/research/groups/alrt/people/clintonj/publ_jc/Behr_et_all_SRL201602_VS_SC3_.pdf">http://www.seismo.ethz.ch/research/groups/alrt/people/clintonj/publ_jc/Behr_et_all_SRL201602_VS_SC3_.pdf</a>, Seismological Research Letters, March/March 2016, v. 87, p. 363-373, doi:10.1785/0220150235</p>
+<p>Behr, Y., J. Clinton, P. Kästli, C. Cauzzi, R. Racine,  M‐A. Meier (2015) Anatomy of an Earthquake Early Warning (EEW) Alert: Predicting Time Delays for an End‐to‐End EEW System, Seismological Research Letters, May/June 2015, v. 86, p. 830-840, doi:10.1785/0220140179</p>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dd><p><a class="reference external" href="http://www.seismo.ethz.ch/en/research-and-teaching/products-software/EEW/Virtual-Seismologist/">http://www.seismo.ethz.ch/en/research-and-teaching/products-software/EEW/Virtual-Seismologist/</a></p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id5">2</a></span></dt>
+<dd><p><a class="reference external" href="http://www.cisn.org/eew/">http://www.cisn.org/eew/</a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">VS</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
+<li><a class="reference internal" href="#development">Development</a></li>
+<li><a class="reference internal" href="#vs-and-seiscomp">VS and SeisComP</a></li>
+<li><a class="reference internal" href="#configuring-and-optimizing-vs-sc-for-eew">Configuring and optimizing VS(SC) for EEW</a></li>
+<li><a class="reference internal" href="#understanding-vs-output">Understanding VS output</a></li>
+<li><a class="reference internal" href="#false-alarms-missed-events-solution-quality">False alarms, missed events, solution quality</a></li>
+<li><a class="reference internal" href="#vs-license">VS License</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../toc/processing.html"
+                        title="previous chapter">Processing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ew2sc.html"
+                        title="next chapter">ew2sc</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/vs.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

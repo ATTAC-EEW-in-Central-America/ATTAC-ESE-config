@@ -1,0 +1,3202 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>GUI &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="RecordStream" href="global_recordstream.html" />
+    <link rel="prev" title="LocExt" href="global_locext.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_recordstream.html" title="RecordStream"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_locext.html" title="LocExt"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../toc/extensions.html" >Extensions</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/extensions/global.html" accesskey="U">global</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="gui">
+<span id="global-gui"></span><h1>GUI<a class="headerlink" href="#gui" title="Permalink to this headline">¶</a></h1>
+<p>The GUI configuration plugin extends the configuration of
+graphical user interfaces to various options to adjust the look
+and feel.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>All <cite>SeisComP</cite> graphical user interfaces are based on a common libraries.
+This chapter describes what configuration and styling options are available for
+all GUI applications. The GUI specific configuration options are additional to
+the standard application options. Setup the e.g. messaging connection and database
+is equal to the CLI (command line interface) applications.</p>
+</div>
+<div class="section" id="styling">
+<span id="sec-gui-styles"></span><h2>Styling<a class="headerlink" href="#styling" title="Permalink to this headline">¶</a></h2>
+<p>To adjust the look-and-feel to the host desktop system and the personal taste
+several styling options are available. Since all GUI applications are using the
+Qt4 or QT5 library, the tool “qtconfig-qt4” can used to adjust the widget theme and the
+colors. If KDE is used as desktop system, the same style is used since KDE
+bases on Qt as well.</p>
+<p>The style options supported by <cite>SeisComP</cite> (and not covered by the general Qt setup)
+have to be given in the applications (or global) configuration file. The
+parameters are configured with the <em>scheme.</em> parameters.</p>
+<p>In case of <a class="reference internal" href="#sec-gui-layers"><span class="std std-ref">map layers defined by geo feature files</span></a> the
+parameters may also be defined by <code class="file docutils literal notranslate"><span class="pre">map.cfg</span></code> in the directory of the geo
+feature file.</p>
+</div>
+<div class="section" id="configuration-syntax">
+<span id="sec-gui-syntax"></span><h2>Configuration syntax<a class="headerlink" href="#configuration-syntax" title="Permalink to this headline">¶</a></h2>
+<p>Beside the usual integer, float, boolean and string parameters GUI applications
+support also <a class="reference internal" href="#sec-gui-color"><span class="std std-ref">color</span></a>, <a class="reference internal" href="#sec-gui-colorgradient"><span class="std std-ref">color gradient</span></a>,
+<a class="reference internal" href="#sec-gui-pen"><span class="std std-ref">pen</span></a>, <a class="reference internal" href="#sec-gui-brush"><span class="std std-ref">brush</span></a>, <a class="reference internal" href="#sec-gui-font"><span class="std std-ref">font</span></a>
+and <a class="reference internal" href="#sec-gui-symbol"><span class="std std-ref">symbol</span></a> parameters. The syntax is explained below:</p>
+<div class="section" id="colors">
+<span id="sec-gui-color"></span><h3>Colors<a class="headerlink" href="#colors" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">color</span> <span class="o">=</span> red <span class="p">|</span> RRGGBBAA <span class="p">|</span> <span class="s2">&quot;rgb(red,green,blue)&quot;</span> <span class="p">|</span> <span class="s2">&quot;rgba(red,green,blue,alpha)&quot;</span>
+</pre></div>
+</div>
+<p>Colors are specified either by <a class="reference internal" href="../base/glossary.html#term-color-keyword-name"><span class="xref std std-term">color keyword names</span></a>,
+in a hexadecimal notation or in a rgb(a) notation. When using the rgb(a)
+notation it should be quoted. Otherwise the configuration
+parser would tokenize the value into 3 or 4 strings due to the comma.</p>
+</div>
+<div class="section" id="color-gradients">
+<span id="sec-gui-colorgradient"></span><h3>Color gradients<a class="headerlink" href="#color-gradients" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">gradient</span> <span class="o">=</span> <span class="m">1</span>:FF0000, <span class="m">2</span>:00FF00, <span class="m">3</span>:0000FF
+</pre></div>
+</div>
+<p>This defines a gradient from red through green to blue for the nodes 1, 2 and 3.
+Values out of range are clipped to the lower or upper bound.</p>
+</div>
+<div class="section" id="fonts">
+<span id="sec-gui-font"></span><h3>Fonts<a class="headerlink" href="#fonts" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># The font family</span>
+font.family <span class="o">=</span> <span class="s2">&quot;Arial&quot;</span>
+
+<span class="c1"># Point size</span>
+font.size <span class="o">=</span> <span class="m">12</span>
+
+<span class="c1"># Bold?</span>
+<span class="c1"># Default: false</span>
+font.bold <span class="o">=</span> <span class="nb">false</span>
+
+<span class="c1"># Italic?</span>
+<span class="c1"># Default: false</span>
+font.italic <span class="o">=</span> <span class="nb">false</span>
+
+<span class="c1"># Underline?</span>
+<span class="c1"># Default: false</span>
+font.underline <span class="o">=</span> <span class="nb">false</span>
+
+<span class="c1"># Overline?</span>
+<span class="c1"># Default: false</span>
+font.overline <span class="o">=</span> <span class="nb">false</span>
+</pre></div>
+</div>
+<p>An example to configure the SC3 base font:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scheme.fonts.base.family <span class="o">=</span> <span class="s2">&quot;Arial&quot;</span>
+scheme.fonts.base.size <span class="o">=</span> <span class="m">10</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pens">
+<span id="sec-gui-pen"></span><h3>Pens<a class="headerlink" href="#pens" title="Permalink to this headline">¶</a></h3>
+<p>Pens are used in the vector layer configuration. Pens have three attributes:
+color, style and width. Color follows the described <a class="reference internal" href="#sec-gui-color"><span class="std std-ref">color definition</span></a>, width
+is a double and the styles are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 33%" />
+<col style="width: 36%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="../_images/pen-no.png" src="../_images/pen-no.png" />
+</div>
+</td>
+<td><div class="figure align-default">
+<img alt="../_images/pen-solid.png" src="../_images/pen-solid.png" />
+</div>
+</td>
+<td><div class="figure align-default">
+<img alt="../_images/pen-dot.png" src="../_images/pen-dot.png" />
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>nopen</p></td>
+<td><p>solidline</p></td>
+<td><p>dotline</p></td>
+</tr>
+<tr class="row-odd"><td><div class="figure align-default">
+<img alt="../_images/pen-dash.png" src="../_images/pen-dash.png" />
+</div>
+</td>
+<td><div class="figure align-default">
+<img alt="../_images/pen-dashdot.png" src="../_images/pen-dashdot.png" />
+</div>
+</td>
+<td><div class="figure align-default">
+<img alt="../_images/pen-dashdotdot.png" src="../_images/pen-dashdotdot.png" />
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>dashline</p></td>
+<td><p>dashdotline</p></td>
+<td><p>dashdotdotline</p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p><em>Images from Qt 4.1 documentation: http://doc.qt.digia.com/4.1/qt.html#PenStyle-enum</em></p></td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Blue dotted pen</span>
+pen.color <span class="o">=</span> 0000ff
+pen.style <span class="o">=</span> dotline
+</pre></div>
+</div>
+</div>
+<div class="section" id="brushes">
+<span id="sec-gui-brush"></span><h3>Brushes<a class="headerlink" href="#brushes" title="Permalink to this headline">¶</a></h3>
+<p>Brushes are also used in the vector layer configuration. Brushes are used to
+fill a polygon. They have two attributes: color and style. Color follows the
+described <a class="reference internal" href="#sec-gui-color"><span class="std std-ref">color definition</span></a> and styles are:</p>
+<div class="figure align-default">
+<img alt="../_images/brush-patterns.png" src="../_images/brush-patterns.png" />
+</div>
+<p>Example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Red solid brush</span>
+brush.color <span class="o">=</span> ff0000
+brush.style <span class="o">=</span> solid
+</pre></div>
+</div>
+</div>
+<div class="section" id="symbols">
+<span id="sec-gui-symbol"></span><h3>Symbols<a class="headerlink" href="#symbols" title="Permalink to this headline">¶</a></h3>
+<p>Symbols configured by the <code class="xref std std-confval docutils literal notranslate"><span class="pre">symbol.*</span></code> parameters can be plotted on coordinate
+points defined by <a class="reference internal" href="#sec-gui-layers"><span class="std std-ref">geo feature files</span></a> or by <a class="reference internal" href="#confval-symbol.icon.hotspot.x"><code class="xref std std-confval docutils literal notranslate"><span class="pre">symbol.icon.hotspot.x</span></code></a>
+and <a class="reference internal" href="#confval-symbol.icon.hotspot.y"><code class="xref std std-confval docutils literal notranslate"><span class="pre">symbol.icon.hotspot.y</span></code></a>. The symbols can be shapes (<a class="reference internal" href="#confval-symbol.shape"><code class="xref std std-confval docutils literal notranslate"><span class="pre">symbol.shape</span></code></a>)
+or icons from a file (<a class="reference internal" href="#confval-symbol.icon"><code class="xref std std-confval docutils literal notranslate"><span class="pre">symbol.icon</span></code></a>).</p>
+</div>
+<div class="section" id="legends">
+<span id="sec-gui-legend"></span><h3>Legends<a class="headerlink" href="#legends" title="Permalink to this headline">¶</a></h3>
+<p>Legends are plotted on maps describing <a class="reference internal" href="#sec-gui-layers"><span class="std std-ref">map vector layers</span></a>.
+Styles are:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 43%" />
+<col style="width: 43%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="slmon.html#confval-title"><code class="xref std std-confval docutils literal notranslate"><span class="pre">title</span></code></a></p></td>
+<td><p>Title</p></td>
+<td><p>title = Faults</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#confval-orientation"><code class="xref std std-confval docutils literal notranslate"><span class="pre">orientation</span></code></a></p></td>
+<td><p>Orientation: vertical, horizontal</p></td>
+<td><p>orientation =  vertical</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#confval-legendArea"><code class="xref std std-confval docutils literal notranslate"><span class="pre">legendArea</span></code></a></p></td>
+<td><p>Position: topleft, topright, bottomleft, bottomright</p></td>
+<td><p>legendArea = topleft</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="map-layers">
+<span id="sec-gui-layers"></span><h2>Map Layers<a class="headerlink" href="#map-layers" title="Permalink to this headline">¶</a></h2>
+<p>Additional features may be added to maps using configurable layers:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#sec-gui-layers-vector"><span class="std std-ref">Vector layers</span></a>, e.g. points, polylines, polygons from FEP, BNA or GeoJSON files,</p></li>
+<li><p><a class="reference internal" href="#sec-gui-layers-others"><span class="std std-ref">Other Layers</span></a>, e.g. cities, grids, events, custom layers.</p></li>
+</ul>
+<p><a class="reference internal" href="#sec-gui-layers-vector"><span class="std std-ref">Vector layers</span></a> are loaded and may be visualized together with
+<a class="reference internal" href="#sec-gui-layers-others"><span class="std std-ref">other layers</span></a>. The order of the drawing is defined by <a class="reference internal" href="#confval-map.layers"><code class="xref std std-confval docutils literal notranslate"><span class="pre">map.layers</span></code></a>.</p>
+<p>The map layers can be explained on the maps by <a class="reference internal" href="#sec-gui-legend"><span class="std std-ref">configurable legends</span></a>
+and selected interactively by their <a class="reference internal" href="#sec-gui-layers-config"><span class="std std-ref">configurable category</span></a>.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/map-layers.png"><img alt="../_images/map-layers.png" src="../_images/map-layers.png" style="width: 18cm;" /></a>
+<p class="caption"><span class="caption-text">Map with layers defined by polygons, cities and legends.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="vector-layers">
+<span id="sec-gui-layers-vector"></span><h3>Vector layers<a class="headerlink" href="#vector-layers" title="Permalink to this headline">¶</a></h3>
+<div class="warning admonition">
+<p class="admonition-title">Deprecation warning</p>
+<p>The old directories <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/bna</span></code> or <code class="file docutils literal notranslate"><span class="pre">&#64;CONFIGDIR&#64;/bna</span></code>
+are still supported but superseded by <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/spatial/vector</span></code> or
+<code class="file docutils literal notranslate"><span class="pre">&#64;CONFIGDIR&#64;/spatial/vector</span></code>. The latter directories have higher priority.
+If one of the old directories has been found, a warning will be logged.</p>
+</div>
+<p><cite>SeisComP</cite> supports arbitrary polygons, polylines or points for drawing as layers
+on maps or for using by other <a class="reference internal" href="../base/glossary.html#term-plugin"><span class="xref std std-term">modules</span></a> and <a class="reference internal" href="../base/glossary.html#term-plugin"><span class="xref std std-term">plugins</span></a>.
+The polygons, polylines and points can be customized by the
+<a class="reference internal" href="#sec-gui-syntax"><span class="std std-ref">available attributes</span></a>. Currently supported data types
+are:</p>
+<ul>
+<li><p>FEP (Flinn-Engdahl polygons):</p>
+<ul>
+<li><p>used for visualization of events regions and for setting the region name of
+the event by <a class="reference internal" href="scevent.html#scevent"><span class="std std-ref">scevent</span></a>.</p></li>
+<li><p>stored in directories: <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/fep</span></code> or <code class="file docutils literal notranslate"><span class="pre">&#64;CONFIGDIR&#64;/fep</span></code></p></li>
+<li><p>file name extension: <em>.fep</em></p></li>
+<li><p>file format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">longitude1</span> <span class="n">latitude1</span>
+<span class="n">longitude2</span> <span class="n">latitude2</span>
+<span class="n">longitude3</span> <span class="n">latitude3</span>
+<span class="o">...</span>
+<span class="mf">99.0</span> <span class="mf">99.0</span> <span class="n">length</span>
+<span class="n">L</span> <span class="n">name</span>
+</pre></div>
+</div>
+<p>where the coordinates, <em>length</em> and <em>name</em> are to be replaced by actual values,</p>
+</li>
+<li><p>visibility and style can be controlled by <a class="reference internal" href="#sec-gui-layers-config"><span class="std std-ref">configuration</span></a>
+and <a class="reference internal" href="#confval-map.layers.fep.visible"><code class="xref std std-confval docutils literal notranslate"><span class="pre">map.layers.fep.visible</span></code></a>.</p></li>
+</ul>
+</li>
+<li><p>BNA polygons:</p>
+<ul>
+<li><p>used for visualization, e.g. points, polylines, polygons for faults or districts,
+respectively, and even symbols or images on maps. Some objects, like closed lines can be
+evaluated by other modules and plugins, e.g. the <a class="reference internal" href="scevent_regioncheck.html#scevent-regioncheck"><span class="std std-ref">region check</span></a>
+plugin for <a class="reference internal" href="scevent.html#scevent"><span class="std std-ref">scevent</span></a>.</p></li>
+<li><p>stored in directories or sub-directories of: <code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/share/spatial/vector</span></code>
+or <code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/spatial/vector</span></code></p></li>
+<li><p>file name extension: <em>.bna</em></p></li>
+<li><p>file format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;name 1&quot;</span><span class="p">,</span><span class="s2">&quot;rank 1&quot;</span><span class="p">,</span><span class="nb">type</span><span class="o">/</span><span class="n">length</span>
+<span class="n">longitude1</span><span class="p">,</span><span class="n">latitude1</span>
+<span class="n">longitude2</span><span class="p">,</span><span class="n">latitude2</span>
+<span class="n">longitude3</span><span class="p">,</span><span class="n">latitude3</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>where the coordinates, <em>name</em> and <em>type/length</em> are to be replaced by actual values.
+For polylines (open polygons) set type/length to the negative number of points defining
+the line, e.g. -10. Positive numbers, e.g. 10, define closed polygons. Such
+polygons are automatically closed between their end points. Thus, the end points
+do not need to be identical.</p>
+<p>The BNA file format also supports multiple vertices per line and the definition
+of islands. Please refer to <a class="reference external" href="https://www.softwright.com/faq/support/boundary_file_bna_format.html">https://www.softwright.com/faq/support/boundary_file_bna_format.html</a>
+for more format specifications.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><p>All <cite>SeisComP</cite> map applications support the drawing of polygons and a subsequent
+export to the BNA format.</p></li>
+<li><p>An extension of the header entries is possible. The extra entries can be
+used by other modules or plugins, e.g. the <a class="reference internal" href="scevent_regioncheck.html#scevent-regioncheck"><span class="std std-ref">region check</span></a>
+plugin. Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;coal&quot;</span><span class="p">,</span><span class="s2">&quot;rank 1&quot;</span><span class="p">,</span><span class="s2">&quot;eventType: mining explosion, minDepth: -5, maxDepth: 10&quot;</span><span class="p">,</span><span class="mi">6</span>
+</pre></div>
+</div>
+</li>
+<li><p>The name is extracted from the first part of the header.</p></li>
+<li><p>The rank is extracted from the second part of the header if it has the
+form “rank VALUE”, e.g. rank 12.</p></li>
+</ul>
+</div>
+</li>
+<li><p>visibility and style can be controlled by <a class="reference internal" href="#sec-gui-layers-config"><span class="std std-ref">configuration</span></a>.</p></li>
+</ul>
+</li>
+<li><p>GeoJSON features:</p>
+<ul>
+<li><p>used for visualization, e.g. points, polylines, polygons for faults or districts,
+respectively, and even symbols or images on maps.</p></li>
+<li><p>stored in directories or sub-directories of: <code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/share/spatial/vector</span></code> or <code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/spatial/vector</span></code></p></li>
+<li><p>file name extension: <em>.geojson</em></p></li>
+<li><p>file format: <a class="reference external" href="https://geojson.org/">https://geojson.org/</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently the geometry type GeometryCollection is not supported. The name
+of the feature is derived from the <cite>name</cite> property of a feature and the
+rank can be provided in a <cite>rank</cite> property with an integer value.</p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="section" id="layer-configuration">
+<span id="sec-gui-layers-config"></span><h4>Layer configuration<a class="headerlink" href="#layer-configuration" title="Permalink to this headline">¶</a></h4>
+<p>Layers may be grouped into categories and form a hierarchy. The categories of the
+geo feature data are derived from the feature directory structure, i.e. the names
+of the directories below the feature directory, e.g. <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/spatial/vector</span></code>.
+Feature data directly located within the feature directory have no special category.
+The FEP data set is assigned to the fep category.</p>
+<p>The depth of the feature directory tree is arbitrary and subfolders form
+sub-categories. E.g. the directory tree
+<code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/share/spatial/vector/coastline/europe/germany</span></code> will generate
+the categories <em>coastline</em>, <em>coastline.europe</em> and <em>coastline.europe.germany</em> which
+all may be configured individually. Every undefined property is inherited from
+the parent category.</p>
+<p>The layer properties can be configured either by</p>
+<ul class="simple">
+<li><p>Global module configuration parameters or</p></li>
+<li><p>Layer-specific configuration files (<code class="file docutils literal notranslate"><span class="pre">map.cfg</span></code>).</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The parameters in the global configuration of modules override the configurations
+in <code class="file docutils literal notranslate"><span class="pre">map.cfg</span></code> allowing a specific configuration per application.</p>
+</div>
+<p>All data set directories and sub-directories therein are scanned for an optional
+<code class="file docutils literal notranslate"><span class="pre">map.cfg</span></code> configuration file defining default drawing options. Parameters
+found in the lowest sub-directory take priority.
+This allows easy distribution of data sets and drawing properties without the
+need to change application configuration files.
+The available map layer configuration parameters are described further below.</p>
+<p>The default drawing options may be overridden in the global or application
+configuration file using the format <em>prefix.category.param</em>. If global layer
+properties are configured, then just use <em>prefix.param</em>. The prefix for layer
+configuration is <em>map.layers</em>. Due to its recursive structure the configuration
+options are not available through <a class="reference internal" href="scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a>.</p>
+</div>
+<div class="section" id="examples">
+<h4>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h4>
+<p>File and directory for plotting fault lines with specific configurations.
+The geo features are defined in <code class="file docutils literal notranslate"><span class="pre">data.bna</span></code>, configurations are in
+<code class="file docutils literal notranslate"><span class="pre">map.cfg</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>@DATADIR@/spatial/vector/
+├── maps.cfg
+├── faults/
+<span class="p">|</span>   ├── map.cfg
+<span class="p">|</span>   ├── reverse/
+<span class="p">|</span>   <span class="p">|</span>   ├── map.cfg
+<span class="p">|</span>   <span class="p">|</span>   ├── data.bna
+<span class="p">|</span>   ├── normal/
+<span class="p">|</span>   <span class="p">|</span>   ├── map.cfg
+<span class="p">|</span>   <span class="p">|</span>   ├── data.bna
+<span class="p">|</span>   ├── strike-slip/
+<span class="p">|</span>   <span class="p">|</span>   ├── map.cfg
+<span class="p">|</span>   <span class="p">|</span>   ├── data.bna
+├── others/
+<span class="p">|</span>   ├── maps.cfg
+<span class="p">|</span>   ├── data.bna
+</pre></div>
+</div>
+<p>Configuration examples for plotting the fault lines based on the example above:</p>
+<ul>
+<li><p>Legend control in <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/spatial/vector/faults/map.cfg</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># title of legend for all legend entries</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Faults&quot;</span>
+<span class="c1"># plot the legend vertically</span>
+<span class="n">orientation</span> <span class="o">=</span> <span class="n">vertical</span>
+<span class="c1"># plot the legend in the top-right corner</span>
+<span class="n">legendArea</span> <span class="o">=</span> <span class="n">topright</span>
+</pre></div>
+</div>
+</li>
+<li><p>Polygon property control in <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/spatical/vector/faults/strike-slip/map.cfg</span></code>
+common to all polygons in this directory. You may generate
+different sub-directories with different parameters inheriting the legend and other
+properties. Put this file, e.g. in the strike-slip directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># make the layer visible</span>
+<span class="n">visible</span> <span class="o">=</span> <span class="n">true</span>
+<span class="c1"># do not draw the name of the polygon</span>
+<span class="n">drawName</span> <span class="o">=</span> <span class="n">false</span>
+<span class="c1"># draw a solid line</span>
+<span class="n">pen</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">solidline</span>
+<span class="c1"># set the pen with to 1 px</span>
+<span class="n">pen</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># set the pen line to blue</span>
+<span class="n">pen</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">blue</span>
+<span class="c1"># label to be shown in legend</span>
+<span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;strike-slip&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Instead of using <code class="file docutils literal notranslate"><span class="pre">map.cfg</span></code>, the same properties can also be set per layer
+category by global parameters in module configurations, e.g. for the layer <em>strike-slip</em>
+below <em>faults</em> (<code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">map</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Faults&quot;</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">vertical</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">legendArea</span> <span class="o">=</span> <span class="n">topright</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">strike</span><span class="o">-</span><span class="n">slip</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="n">true</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">strike</span><span class="o">-</span><span class="n">slip</span><span class="o">.</span><span class="n">drawName</span> <span class="o">=</span> <span class="n">false</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">strike</span><span class="o">-</span><span class="n">slip</span><span class="o">.</span><span class="n">pen</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">solidline</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">strike</span><span class="o">-</span><span class="n">slip</span><span class="o">.</span><span class="n">pen</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">strike</span><span class="o">-</span><span class="n">slip</span><span class="o">.</span><span class="n">pen</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">blue</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">strike</span><span class="o">-</span><span class="n">slip</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;strike-slip&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h4>
+<p>Available map layer configuration parameters for each category are:</p>
+<dl class="confval">
+<dt id="confval-visible">
+<code class="sig-name descname">visible</code><a class="headerlink" href="#confval-visible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Show/hide the layer
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-title">
+<code class="sig-name descname">title</code><a class="headerlink" href="#confval-title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Title of the legend for this directory. If the title is empty
+then no legend will be created. A legend will show the label
+of its own directory and all its subdirectories.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-label">
+<code class="sig-name descname">label</code><a class="headerlink" href="#confval-label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The legend label for this directory.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-index">
+<code class="sig-name descname">index</code><a class="headerlink" href="#confval-index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The index of the label in the legend. All labels will be
+sorted by their index in ascending order.</p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-legendArea">
+<code class="sig-name descname">legendArea</code><a class="headerlink" href="#confval-legendArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The area in the map where the legend will be displayed.
+Valid values are <em>topleft</em>, <em>topright</em>, <em>bottomleft</em> and
+<em>bottomright</em>.</p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">topleft</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-orientation">
+<code class="sig-name descname">orientation</code><a class="headerlink" href="#confval-orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The orientation of the legend, either <em>vertical</em> or <em>horizontal</em>.</p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">vertical</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-drawName">
+<code class="sig-name descname">drawName</code><a class="headerlink" href="#confval-drawName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Draws the segment name in the center of the bounding box.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-rank">
+<code class="sig-name descname">rank</code><a class="headerlink" href="#confval-rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Set or override the rank of the segment. The rank defines
+the zoom level at which drawing of the segment starts.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-roughness">
+<code class="sig-name descname">roughness</code><a class="headerlink" href="#confval-roughness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Sets the roughness of a polyline or polygon while zooming. The roughness
+is somehow defined in pixels and removes successive vertices if the distance
+in pixel is less than roughness. The higher the value the less vertices
+a rendered polyline or polygon will finally have and the faster the rendering.
+If set to 0 then the feature is disabled.
+Default is <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-symbol.size">
+<code class="sig-name descname">symbol.size</code><a class="headerlink" href="#confval-symbol.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>In case of single points, this specifies the size of the symbol in pixels.</p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">8</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-symbol.shape">
+<code class="sig-name descname">symbol.shape</code><a class="headerlink" href="#confval-symbol.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>In case of single points, this specifies the shape of the symbol. Valid
+values are <em>circle</em> and <em>square</em>.</p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">circle</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-symbol.icon">
+<code class="sig-name descname">symbol.icon</code><a class="headerlink" href="#confval-symbol.icon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>In case of single points this specifies the path to an image used as
+icon to represent the map location. The image is scaled to <a class="reference internal" href="#confval-symbol.size"><code class="xref std std-confval docutils literal notranslate"><span class="pre">symbol.size</span></code></a>
+if it is larger than zero otherwise the origin size is being used.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-symbol.icon.hotspot.x">
+<code class="sig-name descname">symbol.icon.hotspot.x</code><a class="headerlink" href="#confval-symbol.icon.hotspot.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The X coordinate of the symbol image which is rendered at the map
+location longitude. This coordinate is in unscaled image space.</p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-symbol.icon.hotspot.y">
+<code class="sig-name descname">symbol.icon.hotspot.y</code><a class="headerlink" href="#confval-symbol.icon.hotspot.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The Y coordinate of the symbol image which is rendered at the map
+location latitude. This coordinate is in unscaled image space
+starting at top.</p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-debug">
+<code class="sig-name descname">debug</code><a class="headerlink" href="#confval-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If enabled, the bounding box of the segment is drawn.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-pen.width">
+<code class="sig-name descname">pen.width</code><a class="headerlink" href="#confval-pen.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Pen width.
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-pen.color">
+<code class="sig-name descname">pen.color</code><a class="headerlink" href="#confval-pen.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Pen color.
+Default is <code class="docutils literal notranslate"><span class="pre">000000ff</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-pen.style">
+<code class="sig-name descname">pen.style</code><a class="headerlink" href="#confval-pen.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Line style. Supported values are: dashdotdotline, dashdotline, dashline,
+dotline, nopen and solidline.
+Default is <code class="docutils literal notranslate"><span class="pre">solidline</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-brush.color">
+<code class="sig-name descname">brush.color</code><a class="headerlink" href="#confval-brush.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Fill color.
+Default is <code class="docutils literal notranslate"><span class="pre">000000ff</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-brush.style">
+<code class="sig-name descname">brush.style</code><a class="headerlink" href="#confval-brush.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Fill style. Supported values are:
+nobrush, solid, dense1, dense2, dense3, dense4,
+dense5, dense6, dense7, horizontal, vertical,
+cross, bdiag, fdiag and diagcross.
+Default is <code class="docutils literal notranslate"><span class="pre">nobrush</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-font.size">
+<code class="sig-name descname">font.size</code><a class="headerlink" href="#confval-font.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-font.family">
+<code class="sig-name descname">font.family</code><a class="headerlink" href="#confval-font.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-font.bold">
+<code class="sig-name descname">font.bold</code><a class="headerlink" href="#confval-font.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-font.italic">
+<code class="sig-name descname">font.italic</code><a class="headerlink" href="#confval-font.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-font.underline">
+<code class="sig-name descname">font.underline</code><a class="headerlink" href="#confval-font.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-font.overline">
+<code class="sig-name descname">font.overline</code><a class="headerlink" href="#confval-font.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-composition">
+<code class="sig-name descname">composition</code><a class="headerlink" href="#confval-composition" title="Permalink to this definition">¶</a></dt>
+<dd><p>The image composition mode. Valid values are
+<em>src-in</em>, <em>dst-in</em>, <em>src-out</em>, <em>dst-out</em>, <em>src-atop</em>,
+<em>dst-atop</em>, <em>xor</em>, <em>plus</em>, <em>multiply</em>, <em>screen</em>,
+<em>overlay</em>, <em>darken</em>, <em>lighten</em>, <em>color-dodge</em>,
+<em>color-burn</em>, <em>hard-light</em>, <em>soft-light</em>, <em>difference</em>,
+<em>exclusion</em>, <em>src-or-dst</em>, <em>src-and-dst</em>, <em>src-xor-dst</em>,
+<em>not-src-and-not-dst</em>, <em>not-src-or-not-dst</em>,
+<em>not-src-xor-dst</em>, <em>not-src</em>, <em>not-src-and-dst</em> and
+<em>src-and-not-dst</em>.</p>
+<p>An explanation can be found at the Qt
+developer documentation, e.g.
+<a class="reference external" href="https://doc.qt.io/qt-5/qpainter.html#composition-modes">https://doc.qt.io/qt-5/qpainter.html#composition-modes</a>.</p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">src-over</span></code>.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="other-layers">
+<span id="sec-gui-layers-others"></span><h3>Other Layers<a class="headerlink" href="#other-layers" title="Permalink to this headline">¶</a></h3>
+<p>Other layers may be displayed on maps depending on the application.</p>
+<ul>
+<li><p>Events layer:</p>
+<p>Event symbols are shown as an extra layer, e.g. in the Location tab of <a class="reference internal" href="scolv.html#scolv"><span class="std std-ref">scolv</span></a>.
+Activate in the global module configuration by <a class="reference internal" href="#confval-map.layers.events.visible"><code class="xref std std-confval docutils literal notranslate"><span class="pre">map.layers.events.visible</span></code></a>.</p>
+</li>
+<li><p>Cities layer:</p>
+<p>Cities are plotted based on the XML file <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/cities.xml</span></code>. Custom
+XML files, e.g. for multi-language support are provided by <a class="reference internal" href="global.html#confval-cityXML"><code class="xref std std-confval docutils literal notranslate"><span class="pre">cityXML</span></code></a>.
+Properties are configured in various global module parameters <code class="xref std std-confval docutils literal notranslate"><span class="pre">scheme.map.*</span></code>
+and <code class="xref std std-confval docutils literal notranslate"><span class="pre">scheme.colors.*</span></code>.</p>
+</li>
+<li><p>Grid layer:</p>
+<p>The latitude/longitude grid plotted on top of maps. Properties are configured
+in the global module parameters <code class="xref std std-confval docutils literal notranslate"><span class="pre">scheme.colors.map.grid.*</span></code>.</p>
+</li>
+<li><p>Custom layers:</p>
+<p>Additional custom layers may be added which can be loaded and displayed by specific
+modules or plugins. They are added by <a class="reference internal" href="#confval-map.customLayers"><code class="xref std std-confval docutils literal notranslate"><span class="pre">map.customLayers</span></code></a>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="global-gui-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>groups.*</strong>
+<em>Configures the target messaging groups for various object types.</em>
+<em>These parameters should only be touched if you know what you</em>
+<em>are doing.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-groups.pick">
+<code class="sig-name descname">groups.pick</code><a class="headerlink" href="#confval-groups.pick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the target messaging group for manual picks, e.g.
+made in scolv.
+Default is <code class="docutils literal notranslate"><span class="pre">PICK</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-groups.amplitude">
+<code class="sig-name descname">groups.amplitude</code><a class="headerlink" href="#confval-groups.amplitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the target messaging group for amplitudes, e.g.
+computed in scolv.
+Default is <code class="docutils literal notranslate"><span class="pre">AMPLITUDE</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-groups.magnitude">
+<code class="sig-name descname">groups.magnitude</code><a class="headerlink" href="#confval-groups.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the target messaging group for magnitudes. scolv does
+not use this group but sends magnitudes together with the
+origin to the origin group.
+Default is <code class="docutils literal notranslate"><span class="pre">MAGNITUDE</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-groups.location">
+<code class="sig-name descname">groups.location</code><a class="headerlink" href="#confval-groups.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the target messaging group for origins created in
+e.g. scolv.
+Default is <code class="docutils literal notranslate"><span class="pre">LOCATION</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-groups.focalMechanism">
+<code class="sig-name descname">groups.focalMechanism</code><a class="headerlink" href="#confval-groups.focalMechanism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the target messaging group for focal mechanisms created in
+e.g. scolv.
+Default is <code class="docutils literal notranslate"><span class="pre">FOCMECH</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-groups.event">
+<code class="sig-name descname">groups.event</code><a class="headerlink" href="#confval-groups.event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the target messaging group for events and event
+journal entries.
+Default is <code class="docutils literal notranslate"><span class="pre">EVENT</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-map.location">
+<code class="sig-name descname">map.location</code><a class="headerlink" href="#confval-map.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Specified the location and the structure of the map tiles to be used. This
+path is composed of zero or more directives and must include at least one
+conversion specification which starts with is introduced by the character %
+followed by a conversion specifier.  Valid specifiers are s (replaced by
+tile ID), l (tile level), c (tile column) and r (tile row). An example for
+using the OpenStreetMap file structure is /path/to/maps/%l/%c/%r.png.
+Default is <code class="docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/maps/world%s.png</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-map.format">
+<code class="sig-name descname">map.format</code><a class="headerlink" href="#confval-map.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Projection of the map tiles. Supported formats are: rectangular and mercator.
+Default is <code class="docutils literal notranslate"><span class="pre">rectangular</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-map.cacheSize">
+<code class="sig-name descname">map.cacheSize</code><a class="headerlink" href="#confval-map.cacheSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>bytes</em></p>
+<p>Cache size of the map tiles. If 0 is specified a default
+cache size of 32mb is used. The higher the cache size
+the better the performance in higher resolutions. A
+higher cache size causes less image loader calls but
+requires more client memory.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-map.type">
+<code class="sig-name descname">map.type</code><a class="headerlink" href="#confval-map.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Used to distinguish tile store implementations provided by plug-ins.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-map.customLayers">
+<code class="sig-name descname">map.customLayers</code><a class="headerlink" href="#confval-map.customLayers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Allows to add custom layers that are included via plugins.
+This is a list of layer names. A plugin must implement
+the layer interface and register itself with the
+name used in this list. The order of layers is the
+default order. The custom layers are prepended to
+the maps defaults layers such as the grid and the cities.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-map.layers">
+<code class="sig-name descname">map.layers</code><a class="headerlink" href="#confval-map.layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the order of all configured layers. This
+includes the standard layers (grid, cities) as
+well as custom layers. The name of the grid layer
+is “grid” and the name of the cities
+layer is “cities”.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>map.layers.events.*</strong>
+<em>Configuration options for the events layer that</em>
+<em>shows all events on the map that are loaded in the</em>
+<em>event list.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-map.layers.events.visible">
+<code class="sig-name descname">map.layers.events.visible</code><a class="headerlink" href="#confval-map.layers.events.visible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Show the events layer on maps. Currently only supported
+by scolv.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>map.layers.fep.*</strong>
+<em>Configuration for the fep layer showing the polygons</em>
+<em>of FEP (FLinn-Engdahl-Polygon) files on maps if they</em>
+<em>exist in &#64;DATADIR&#64;/fep or &#64;CONFIGDIR&#64;/fep.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-map.layers.fep.visible">
+<code class="sig-name descname">map.layers.fep.visible</code><a class="headerlink" href="#confval-map.layers.fep.visible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Show the fep layer on maps.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-map.layers.cities.topPopulatedPlaces">
+<code class="sig-name descname">map.layers.cities.topPopulatedPlaces</code><a class="headerlink" href="#confval-map.layers.cities.topPopulatedPlaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Maximum number of cities to be rendered. If
+cityPopulationWeight is less or equal than 0 then
+all cities are rendered ordered by population count,
+highest first.
+To show the N most populated places in the visible
+map region, set
+“scheme.map.cityPopulationWeight” to 0
+and set this parameter to N.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-map.zoom.sensitivity">
+<code class="sig-name descname">map.zoom.sensitivity</code><a class="headerlink" href="#confval-map.zoom.sensitivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Zoom sensitivity of the map
+Default is <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.*</strong>
+<em>This group defines various options for color, pen, brush, font, etc. for SeisComP</em>
+<em>graphical user interfaces. There are various conventions to</em>
+<em>define colors, fonts and gradients.</em>
+**
+<em>Colors are defined in HTML</em>
+<em>convention, e.g. as rgb values, hexadecimal numbers or color</em>
+<em>keyword names defined by W3C. If rgb or rgba is used, it must</em>
+<em>be quoted because the comma is handled as list separator by</em>
+<em>the configuration.</em>
+<em>Examples: “rgb(255,0,0)”, FF00FF40, green.</em>
+**
+<em>Gradients are configured as lists of tuples where each tuple</em>
+<em>is colon separated in the form value:color. Value is either</em>
+<em>int or double and color is again a color definition.</em>
+<em>Example: 0:yellow,10:red</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.showMenu">
+<code class="sig-name descname">scheme.showMenu</code><a class="headerlink" href="#confval-scheme.showMenu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Show menu bar.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.showStatusBar">
+<code class="sig-name descname">scheme.showStatusBar</code><a class="headerlink" href="#confval-scheme.showStatusBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Show status bar.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.tabPosition">
+<code class="sig-name descname">scheme.tabPosition</code><a class="headerlink" href="#confval-scheme.tabPosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Set position if tab bar. An unset value lets the application
+decide where to place the tab bar. This option might not be
+supported by all applications. Valid positions are: off, north,
+south, east, west</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.stationSize">
+<code class="sig-name descname">scheme.map.stationSize</code><a class="headerlink" href="#confval-scheme.map.stationSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>px</em></p>
+<p>The station symbol size (e.g. in scmv).
+Default is <code class="docutils literal notranslate"><span class="pre">8</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.originSymbolMinSize">
+<code class="sig-name descname">scheme.map.originSymbolMinSize</code><a class="headerlink" href="#confval-scheme.map.originSymbolMinSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>px</em></p>
+<p>The origin symbol minimum size. The formula to compute the
+size of the origin symbol is: 4.9*(M-1.2).
+Default is <code class="docutils literal notranslate"><span class="pre">9</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.vectorLayerAntiAlias">
+<code class="sig-name descname">scheme.map.vectorLayerAntiAlias</code><a class="headerlink" href="#confval-scheme.map.vectorLayerAntiAlias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Apply antialiasing to map layers.
+This improves the visual quality but decreases performance.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.bilinearFilter">
+<code class="sig-name descname">scheme.map.bilinearFilter</code><a class="headerlink" href="#confval-scheme.map.bilinearFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Apply bilinear filtering to maps.
+The bilinear filter improves the visual quality but decreases
+performance slightly. It is only used for static map images.
+Not while dragging.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.showGrid">
+<code class="sig-name descname">scheme.map.showGrid</code><a class="headerlink" href="#confval-scheme.map.showGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Display the latitude/longitude grid on maps
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.showCities">
+<code class="sig-name descname">scheme.map.showCities</code><a class="headerlink" href="#confval-scheme.map.showCities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Show cities defined in “citiesXML” on maps
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.cityPopulationWeight">
+<code class="sig-name descname">scheme.map.cityPopulationWeight</code><a class="headerlink" href="#confval-scheme.map.cityPopulationWeight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Controls at which zoom level a city will be visible. The
+following formula is used:
+screen_width (km) * weight &gt;= population
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.showLayers">
+<code class="sig-name descname">scheme.map.showLayers</code><a class="headerlink" href="#confval-scheme.map.showLayers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Show custom layers on maps
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.showLegends">
+<code class="sig-name descname">scheme.map.showLegends</code><a class="headerlink" href="#confval-scheme.map.showLegends" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Show map legends initially. Some applications provide
+controls to toggle the visibility in addition to this
+option.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.projection">
+<code class="sig-name descname">scheme.map.projection</code><a class="headerlink" href="#confval-scheme.map.projection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>SeisComP ships with the rectangular projection built-in.
+Other projections may be provided through plugins.
+Default is <code class="docutils literal notranslate"><span class="pre">Rectangular</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.toBGR">
+<code class="sig-name descname">scheme.map.toBGR</code><a class="headerlink" href="#confval-scheme.map.toBGR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Converts map colors from RGB color scheme to BGR.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.map.polygonRoughness">
+<code class="sig-name descname">scheme.map.polygonRoughness</code><a class="headerlink" href="#confval-scheme.map.polygonRoughness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>px</em></p>
+<p>Minimum screen distance to plot a polygon or polyline line segment.
+Default is <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.background">
+<code class="sig-name descname">scheme.colors.background</code><a class="headerlink" href="#confval-scheme.colors.background" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>A general application background color. Can be used to give
+each application a different background color. An unset value
+lets Qt decide.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.map.lines">
+<code class="sig-name descname">scheme.colors.map.lines</code><a class="headerlink" href="#confval-scheme.colors.map.lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of lines in the map (e.g. lines
+connecting the origin and a station).</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.map.outlines">
+<code class="sig-name descname">scheme.colors.map.outlines</code><a class="headerlink" href="#confval-scheme.colors.map.outlines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of station outlines in the map.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.map.stationAnnotations">
+<code class="sig-name descname">scheme.colors.map.stationAnnotations</code><a class="headerlink" href="#confval-scheme.colors.map.stationAnnotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of station annotations.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.map.cityLabels">
+<code class="sig-name descname">scheme.colors.map.cityLabels</code><a class="headerlink" href="#confval-scheme.colors.map.cityLabels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of city labels.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.map.cityOutlines">
+<code class="sig-name descname">scheme.colors.map.cityOutlines</code><a class="headerlink" href="#confval-scheme.colors.map.cityOutlines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of city outlines.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.map.cityCapital">
+<code class="sig-name descname">scheme.colors.map.cityCapital</code><a class="headerlink" href="#confval-scheme.colors.map.cityCapital" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of a capital.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.map.cityNormal">
+<code class="sig-name descname">scheme.colors.map.cityNormal</code><a class="headerlink" href="#confval-scheme.colors.map.cityNormal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of a “normal” city.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.map.grid.*</strong>
+<em>Defines the pen of the latitude/longitude grid of the map.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.map.grid.color">
+<code class="sig-name descname">scheme.colors.map.grid.color</code><a class="headerlink" href="#confval-scheme.colors.map.grid.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.
+Default is <code class="docutils literal notranslate"><span class="pre">FFFFFF</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.map.grid.style">
+<code class="sig-name descname">scheme.colors.map.grid.style</code><a class="headerlink" href="#confval-scheme.colors.map.grid.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are: NoPen, SolidLine, DashLine, DotLine, DashDotLine, DashDotDotLine.
+Default is <code class="docutils literal notranslate"><span class="pre">DotLine</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.map.grid.width">
+<code class="sig-name descname">scheme.colors.map.grid.width</code><a class="headerlink" href="#confval-scheme.colors.map.grid.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>px</em></p>
+<p>The width of the pen.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.foreground">
+<code class="sig-name descname">scheme.colors.records.foreground</code><a class="headerlink" href="#confval-scheme.colors.records.foreground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The general color of records/traces.
+Default is <code class="docutils literal notranslate"><span class="pre">808080</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.alternateForeground">
+<code class="sig-name descname">scheme.colors.records.alternateForeground</code><a class="headerlink" href="#confval-scheme.colors.records.alternateForeground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>A general trace color of the alternate trace (eg scheli).
+Default is <code class="docutils literal notranslate"><span class="pre">808080</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.background">
+<code class="sig-name descname">scheme.colors.records.background</code><a class="headerlink" href="#confval-scheme.colors.records.background" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The general background color of records/traces.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.alternateBackground">
+<code class="sig-name descname">scheme.colors.records.alternateBackground</code><a class="headerlink" href="#confval-scheme.colors.records.alternateBackground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>A general background color of the alternate trace.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.spectrogram">
+<code class="sig-name descname">scheme.colors.records.spectrogram</code><a class="headerlink" href="#confval-scheme.colors.records.spectrogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The trace color used on top of a spectrogram.
+Default is <code class="docutils literal notranslate"><span class="pre">000000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.gaps">
+<code class="sig-name descname">scheme.colors.records.gaps</code><a class="headerlink" href="#confval-scheme.colors.records.gaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of data gaps in trace views.
+Default is <code class="docutils literal notranslate"><span class="pre">FFFF0040</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.overlaps">
+<code class="sig-name descname">scheme.colors.records.overlaps</code><a class="headerlink" href="#confval-scheme.colors.records.overlaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of data overlaps in trace views.
+Default is <code class="docutils literal notranslate"><span class="pre">FF00FF40</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.alignment">
+<code class="sig-name descname">scheme.colors.records.alignment</code><a class="headerlink" href="#confval-scheme.colors.records.alignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the alignment marker in trace views.
+Default is <code class="docutils literal notranslate"><span class="pre">FF0000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.*</strong>
+<em>Properties of record borders</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.standard.*</strong>
+<em>Standard properties</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.standard.pen.*</strong>
+<em>Defines the pen of the border line.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.standard.pen.color">
+<code class="sig-name descname">scheme.colors.records.borders.standard.pen.color</code><a class="headerlink" href="#confval-scheme.colors.records.borders.standard.pen.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.standard.pen.style">
+<code class="sig-name descname">scheme.colors.records.borders.standard.pen.style</code><a class="headerlink" href="#confval-scheme.colors.records.borders.standard.pen.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are:
+NoPen, SolidLine, DashLine, DotLine, DashDotLine, DashDotDotLine.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.standard.pen.width">
+<code class="sig-name descname">scheme.colors.records.borders.standard.pen.width</code><a class="headerlink" href="#confval-scheme.colors.records.borders.standard.pen.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>px</em></p>
+<p>The width of the pen.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.standard.brush.*</strong>
+<em>Defines the brush of the enlcosed area.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.standard.brush.color">
+<code class="sig-name descname">scheme.colors.records.borders.standard.brush.color</code><a class="headerlink" href="#confval-scheme.colors.records.borders.standard.brush.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.standard.brush.style">
+<code class="sig-name descname">scheme.colors.records.borders.standard.brush.style</code><a class="headerlink" href="#confval-scheme.colors.records.borders.standard.brush.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are, e.g.:
+solid, dense1, dense7, horizontal, vertical,
+cross, bdiag, fdiag, diagcross.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.signatureValid.*</strong>
+<em>Properties for records with valid signatures</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.signatureValid.pen.*</strong>
+<em>Defines the pen of the border line.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureValid.pen.color">
+<code class="sig-name descname">scheme.colors.records.borders.signatureValid.pen.color</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureValid.pen.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureValid.pen.style">
+<code class="sig-name descname">scheme.colors.records.borders.signatureValid.pen.style</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureValid.pen.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are:
+NoPen, SolidLine, DashLine, DotLine, DashDotLine, DashDotDotLine.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureValid.pen.width">
+<code class="sig-name descname">scheme.colors.records.borders.signatureValid.pen.width</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureValid.pen.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>px</em></p>
+<p>The width of the pen.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.signatureValid.brush.*</strong>
+<em>Defines the brush of the enlcosed area.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureValid.brush.color">
+<code class="sig-name descname">scheme.colors.records.borders.signatureValid.brush.color</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureValid.brush.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureValid.brush.style">
+<code class="sig-name descname">scheme.colors.records.borders.signatureValid.brush.style</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureValid.brush.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are, e.g.:
+solid, dense1, dense7, horizontal, vertical,
+cross, bdiag, fdiag, diagcross.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.signatureInvalid.*</strong>
+<em>Properties for records with invalid signatures</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.signatureInvalid.pen.*</strong>
+<em>Defines the pen of the border line.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureInvalid.pen.color">
+<code class="sig-name descname">scheme.colors.records.borders.signatureInvalid.pen.color</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureInvalid.pen.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureInvalid.pen.style">
+<code class="sig-name descname">scheme.colors.records.borders.signatureInvalid.pen.style</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureInvalid.pen.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are:
+NoPen, SolidLine, DashLine, DotLine, DashDotLine, DashDotDotLine.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureInvalid.pen.width">
+<code class="sig-name descname">scheme.colors.records.borders.signatureInvalid.pen.width</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureInvalid.pen.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>px</em></p>
+<p>The width of the pen.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.borders.signatureInvalid.brush.*</strong>
+<em>Defines the brush of the enlcosed area.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureInvalid.brush.color">
+<code class="sig-name descname">scheme.colors.records.borders.signatureInvalid.brush.color</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureInvalid.brush.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.borders.signatureInvalid.brush.style">
+<code class="sig-name descname">scheme.colors.records.borders.signatureInvalid.brush.style</code><a class="headerlink" href="#confval-scheme.colors.records.borders.signatureInvalid.brush.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are, e.g.:
+solid, dense1, dense7, horizontal, vertical,
+cross, bdiag, fdiag, diagcross.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.offset.*</strong>
+<em>Defines the pen of the record offset line.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.offset.color">
+<code class="sig-name descname">scheme.colors.records.offset.color</code><a class="headerlink" href="#confval-scheme.colors.records.offset.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.
+Default is <code class="docutils literal notranslate"><span class="pre">C0C0FF</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.offset.style">
+<code class="sig-name descname">scheme.colors.records.offset.style</code><a class="headerlink" href="#confval-scheme.colors.records.offset.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are: NoPen, SolidLine, DashLine, DotLine, DashDotLine, DashDotDotLine.
+Default is <code class="docutils literal notranslate"><span class="pre">SolidLine</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.offset.width">
+<code class="sig-name descname">scheme.colors.records.offset.width</code><a class="headerlink" href="#confval-scheme.colors.records.offset.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>px</em></p>
+<p>The width of the pen.
+Default is <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.gridPen.*</strong>
+<em>Defines the pen of the record grid.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.gridPen.color">
+<code class="sig-name descname">scheme.colors.records.gridPen.color</code><a class="headerlink" href="#confval-scheme.colors.records.gridPen.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.
+Default is <code class="docutils literal notranslate"><span class="pre">00000020</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.gridPen.style">
+<code class="sig-name descname">scheme.colors.records.gridPen.style</code><a class="headerlink" href="#confval-scheme.colors.records.gridPen.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are: NoPen, SolidLine, DashLine, DotLine, DashDotLine, DashDotDotLine.
+Default is <code class="docutils literal notranslate"><span class="pre">DashLine</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.gridPen.width">
+<code class="sig-name descname">scheme.colors.records.gridPen.width</code><a class="headerlink" href="#confval-scheme.colors.records.gridPen.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>px</em></p>
+<p>The width of the pen.
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.subGridPen.*</strong>
+<em>Defines the pen of the secondary record grid.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.subGridPen.color">
+<code class="sig-name descname">scheme.colors.records.subGridPen.color</code><a class="headerlink" href="#confval-scheme.colors.records.subGridPen.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the pen.
+Default is <code class="docutils literal notranslate"><span class="pre">00000000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.subGridPen.style">
+<code class="sig-name descname">scheme.colors.records.subGridPen.style</code><a class="headerlink" href="#confval-scheme.colors.records.subGridPen.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>The style of the pen. Supported values are: NoPen, SolidLine, DashLine, DotLine, DashDotLine, DashDotDotLine.
+Default is <code class="docutils literal notranslate"><span class="pre">DotLine</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.subGridPen.width">
+<code class="sig-name descname">scheme.colors.records.subGridPen.width</code><a class="headerlink" href="#confval-scheme.colors.records.subGridPen.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>px</em></p>
+<p>The width of the pen.
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.records.states.*</strong>
+<em>Defines the background color of records depending on their state.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.records.states.unrequested">
+<code class="sig-name descname">scheme.colors.records.states.unrequested</code><a class="headerlink" href="#confval-scheme.colors.records.states.unrequested" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Additional data which was not requested.
+Default is <code class="docutils literal notranslate"><span class="pre">00000080</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.states.requested">
+<code class="sig-name descname">scheme.colors.records.states.requested</code><a class="headerlink" href="#confval-scheme.colors.records.states.requested" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Requested data Background color of requested data.
+Default is <code class="docutils literal notranslate"><span class="pre">ffff0080</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.states.inProgress">
+<code class="sig-name descname">scheme.colors.records.states.inProgress</code><a class="headerlink" href="#confval-scheme.colors.records.states.inProgress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Data currently loading.
+Default is <code class="docutils literal notranslate"><span class="pre">00ff0010</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.records.states.notAvailable">
+<code class="sig-name descname">scheme.colors.records.states.notAvailable</code><a class="headerlink" href="#confval-scheme.colors.records.states.notAvailable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Data which was requested but is not available.
+Default is <code class="docutils literal notranslate"><span class="pre">ff000080</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.picks.manual">
+<code class="sig-name descname">scheme.colors.picks.manual</code><a class="headerlink" href="#confval-scheme.colors.picks.manual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of manual picks.
+Default is <code class="docutils literal notranslate"><span class="pre">00FF00</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.picks.automatic">
+<code class="sig-name descname">scheme.colors.picks.automatic</code><a class="headerlink" href="#confval-scheme.colors.picks.automatic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of automatic picks.
+Default is <code class="docutils literal notranslate"><span class="pre">FF0000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.picks.undefined">
+<code class="sig-name descname">scheme.colors.picks.undefined</code><a class="headerlink" href="#confval-scheme.colors.picks.undefined" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of picks with undefined state.
+Default is <code class="docutils literal notranslate"><span class="pre">A0A0A4</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.picks.disabled">
+<code class="sig-name descname">scheme.colors.picks.disabled</code><a class="headerlink" href="#confval-scheme.colors.picks.disabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of disabled picks.
+Default is <code class="docutils literal notranslate"><span class="pre">A0A0A4</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.arrivals.manual">
+<code class="sig-name descname">scheme.colors.arrivals.manual</code><a class="headerlink" href="#confval-scheme.colors.arrivals.manual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of manual arrivals (arrivals that bind manual picks,
+e.g. residual plot of scolv, manual picker, …)
+Default is <code class="docutils literal notranslate"><span class="pre">00A000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.arrivals.automatic">
+<code class="sig-name descname">scheme.colors.arrivals.automatic</code><a class="headerlink" href="#confval-scheme.colors.arrivals.automatic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of automatic arrivals,
+Default is <code class="docutils literal notranslate"><span class="pre">A00000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.arrivals.theoretical">
+<code class="sig-name descname">scheme.colors.arrivals.theoretical</code><a class="headerlink" href="#confval-scheme.colors.arrivals.theoretical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of theoretical arrivals.
+Default is <code class="docutils literal notranslate"><span class="pre">0000A0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.arrivals.undefined">
+<code class="sig-name descname">scheme.colors.arrivals.undefined</code><a class="headerlink" href="#confval-scheme.colors.arrivals.undefined" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of arrivals binding picks with undefined state.
+Default is <code class="docutils literal notranslate"><span class="pre">A00000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.arrivals.disabled">
+<code class="sig-name descname">scheme.colors.arrivals.disabled</code><a class="headerlink" href="#confval-scheme.colors.arrivals.disabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of disabled arrivals.
+Default is <code class="docutils literal notranslate"><span class="pre">A0A0A4</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.arrivals.residuals">
+<code class="sig-name descname">scheme.colors.arrivals.residuals</code><a class="headerlink" href="#confval-scheme.colors.arrivals.residuals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>gradient</em></p>
+<p>The gradient of arrivals residuals. A gradient is defined as
+a list of tuples separated by colon where the first item is
+the value and the second is the color. Colors can be given in
+rgb notation or hexadecimal. When rgb is used double quotes are needed to
+protect the comma inside the rgb definition, e.g.
+-8:”rgb(0,0,100)”, -4:”rgb(0,0,255)”, -3:”rgb(100,100,255)”, …</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.magnitudes.set">
+<code class="sig-name descname">scheme.colors.magnitudes.set</code><a class="headerlink" href="#confval-scheme.colors.magnitudes.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of active magnitudes.
+Default is <code class="docutils literal notranslate"><span class="pre">00A000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.magnitudes.unset">
+<code class="sig-name descname">scheme.colors.magnitudes.unset</code><a class="headerlink" href="#confval-scheme.colors.magnitudes.unset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of inactive magnitudes.
+Default is <code class="docutils literal notranslate"><span class="pre">000000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.magnitudes.disabled">
+<code class="sig-name descname">scheme.colors.magnitudes.disabled</code><a class="headerlink" href="#confval-scheme.colors.magnitudes.disabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of disabled magnitudes.
+Default is <code class="docutils literal notranslate"><span class="pre">A0A0A4</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.magnitudes.residuals">
+<code class="sig-name descname">scheme.colors.magnitudes.residuals</code><a class="headerlink" href="#confval-scheme.colors.magnitudes.residuals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>gradient</em></p>
+<p>The gradient of magnitude residuals.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.stations.text">
+<code class="sig-name descname">scheme.colors.stations.text</code><a class="headerlink" href="#confval-scheme.colors.stations.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the station name.
+Default is <code class="docutils literal notranslate"><span class="pre">ffffff</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.stations.associated">
+<code class="sig-name descname">scheme.colors.stations.associated</code><a class="headerlink" href="#confval-scheme.colors.stations.associated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of associated stations (e.g. in scmv).
+Default is <code class="docutils literal notranslate"><span class="pre">82AD58</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.stations.triggering">
+<code class="sig-name descname">scheme.colors.stations.triggering</code><a class="headerlink" href="#confval-scheme.colors.stations.triggering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of triggered stations.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.stations.triggered0">
+<code class="sig-name descname">scheme.colors.stations.triggered0</code><a class="headerlink" href="#confval-scheme.colors.stations.triggered0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.stations.triggered1">
+<code class="sig-name descname">scheme.colors.stations.triggered1</code><a class="headerlink" href="#confval-scheme.colors.stations.triggered1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.stations.triggered2">
+<code class="sig-name descname">scheme.colors.stations.triggered2</code><a class="headerlink" href="#confval-scheme.colors.stations.triggered2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.stations.disabled">
+<code class="sig-name descname">scheme.colors.stations.disabled</code><a class="headerlink" href="#confval-scheme.colors.stations.disabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of disabled stations.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.stations.idle">
+<code class="sig-name descname">scheme.colors.stations.idle</code><a class="headerlink" href="#confval-scheme.colors.stations.idle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of idle stations.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.qc.*</strong>
+<em>The color of QC.delay thresholds in scmv.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.delay0">
+<code class="sig-name descname">scheme.colors.qc.delay0</code><a class="headerlink" href="#confval-scheme.colors.qc.delay0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">00ffff</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.delay1">
+<code class="sig-name descname">scheme.colors.qc.delay1</code><a class="headerlink" href="#confval-scheme.colors.qc.delay1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">00ff00</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.delay2">
+<code class="sig-name descname">scheme.colors.qc.delay2</code><a class="headerlink" href="#confval-scheme.colors.qc.delay2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">fffd00</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.delay3">
+<code class="sig-name descname">scheme.colors.qc.delay3</code><a class="headerlink" href="#confval-scheme.colors.qc.delay3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">ff6633</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.delay4">
+<code class="sig-name descname">scheme.colors.qc.delay4</code><a class="headerlink" href="#confval-scheme.colors.qc.delay4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">ff0000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.delay5">
+<code class="sig-name descname">scheme.colors.qc.delay5</code><a class="headerlink" href="#confval-scheme.colors.qc.delay5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">cccccc</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.delay6">
+<code class="sig-name descname">scheme.colors.qc.delay6</code><a class="headerlink" href="#confval-scheme.colors.qc.delay6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">999999</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.delay7">
+<code class="sig-name descname">scheme.colors.qc.delay7</code><a class="headerlink" href="#confval-scheme.colors.qc.delay7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">666666</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.qcWarning">
+<code class="sig-name descname">scheme.colors.qc.qcWarning</code><a class="headerlink" href="#confval-scheme.colors.qc.qcWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">ffff00</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.qcError">
+<code class="sig-name descname">scheme.colors.qc.qcError</code><a class="headerlink" href="#confval-scheme.colors.qc.qcError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">ff0000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.qcOk">
+<code class="sig-name descname">scheme.colors.qc.qcOk</code><a class="headerlink" href="#confval-scheme.colors.qc.qcOk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">00ff00</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.qc.qcNotSet">
+<code class="sig-name descname">scheme.colors.qc.qcNotSet</code><a class="headerlink" href="#confval-scheme.colors.qc.qcNotSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">000000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.gm.*</strong>
+<em>The color of ground motion amplitudes in scmv.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm0">
+<code class="sig-name descname">scheme.colors.gm.gm0</code><a class="headerlink" href="#confval-scheme.colors.gm.gm0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm1">
+<code class="sig-name descname">scheme.colors.gm.gm1</code><a class="headerlink" href="#confval-scheme.colors.gm.gm1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm2">
+<code class="sig-name descname">scheme.colors.gm.gm2</code><a class="headerlink" href="#confval-scheme.colors.gm.gm2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm3">
+<code class="sig-name descname">scheme.colors.gm.gm3</code><a class="headerlink" href="#confval-scheme.colors.gm.gm3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm4">
+<code class="sig-name descname">scheme.colors.gm.gm4</code><a class="headerlink" href="#confval-scheme.colors.gm.gm4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm5">
+<code class="sig-name descname">scheme.colors.gm.gm5</code><a class="headerlink" href="#confval-scheme.colors.gm.gm5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm6">
+<code class="sig-name descname">scheme.colors.gm.gm6</code><a class="headerlink" href="#confval-scheme.colors.gm.gm6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm7">
+<code class="sig-name descname">scheme.colors.gm.gm7</code><a class="headerlink" href="#confval-scheme.colors.gm.gm7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm8">
+<code class="sig-name descname">scheme.colors.gm.gm8</code><a class="headerlink" href="#confval-scheme.colors.gm.gm8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gm9">
+<code class="sig-name descname">scheme.colors.gm.gm9</code><a class="headerlink" href="#confval-scheme.colors.gm.gm9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.gm.gmNotSet">
+<code class="sig-name descname">scheme.colors.gm.gmNotSet</code><a class="headerlink" href="#confval-scheme.colors.gm.gmNotSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.recordView.selectedTraceZoom">
+<code class="sig-name descname">scheme.colors.recordView.selectedTraceZoom</code><a class="headerlink" href="#confval-scheme.colors.recordView.selectedTraceZoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The color of the selected zoom area (e.g. manual picker).
+Default is <code class="docutils literal notranslate"><span class="pre">C0C0FFC0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.legend.background">
+<code class="sig-name descname">scheme.colors.legend.background</code><a class="headerlink" href="#confval-scheme.colors.legend.background" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The map legend background color.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.legend.border">
+<code class="sig-name descname">scheme.colors.legend.border</code><a class="headerlink" href="#confval-scheme.colors.legend.border" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The map legend border color.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.legend.text">
+<code class="sig-name descname">scheme.colors.legend.text</code><a class="headerlink" href="#confval-scheme.colors.legend.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The map legend text color.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.legend.headerText">
+<code class="sig-name descname">scheme.colors.legend.headerText</code><a class="headerlink" href="#confval-scheme.colors.legend.headerText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>The map legend header color.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.originSymbol.classic">
+<code class="sig-name descname">scheme.colors.originSymbol.classic</code><a class="headerlink" href="#confval-scheme.colors.originSymbol.classic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.originSymbol.depth.gradient">
+<code class="sig-name descname">scheme.colors.originSymbol.depth.gradient</code><a class="headerlink" href="#confval-scheme.colors.originSymbol.depth.gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>gradient</em></p>
+<p>The depth gradient.
+Default is <code class="docutils literal notranslate"><span class="pre">0:FF0000,50:ffA500,100:FFFF00,250:00FF00,600:0000FF</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.originSymbol.depth.discrete">
+<code class="sig-name descname">scheme.colors.originSymbol.depth.discrete</code><a class="headerlink" href="#confval-scheme.colors.originSymbol.depth.discrete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Setting this parameter to true will not interpolate between
+the depth steps and the color for a depth &lt;= input is used.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.originStatus.*</strong>
+<em>The origin status colors (e.g. in event list).</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.originStatus.automatic">
+<code class="sig-name descname">scheme.colors.originStatus.automatic</code><a class="headerlink" href="#confval-scheme.colors.originStatus.automatic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.originStatus.manual">
+<code class="sig-name descname">scheme.colors.originStatus.manual</code><a class="headerlink" href="#confval-scheme.colors.originStatus.manual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.colors.splash.*</strong>
+<em>Defines colors used in the splash screen shown at application startup.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.colors.splash.message">
+<code class="sig-name descname">scheme.colors.splash.message</code><a class="headerlink" href="#confval-scheme.colors.splash.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Text color of the message string.
+Default is <code class="docutils literal notranslate"><span class="pre">808080</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.colors.splash.version">
+<code class="sig-name descname">scheme.colors.splash.version</code><a class="headerlink" href="#confval-scheme.colors.splash.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>color</em></p>
+<p>Text color of the version string.
+Default is <code class="docutils literal notranslate"><span class="pre">02589e</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.marker.lineWidth">
+<code class="sig-name descname">scheme.marker.lineWidth</code><a class="headerlink" href="#confval-scheme.marker.lineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>px</em></p>
+<p>The line width of the marker (e.g. picks of manual picker).</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.records.lineWidth">
+<code class="sig-name descname">scheme.records.lineWidth</code><a class="headerlink" href="#confval-scheme.records.lineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>px</em></p>
+<p>The line width of the records / traces.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.records.antiAliasing">
+<code class="sig-name descname">scheme.records.antiAliasing</code><a class="headerlink" href="#confval-scheme.records.antiAliasing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Configures antialiasing of records / traces. Antialiasing
+needs more two times to storage space as non antialiasing
+but it improves visual quality.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.records.optimize">
+<code class="sig-name descname">scheme.records.optimize</code><a class="headerlink" href="#confval-scheme.records.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Configures optimization of trace polylines. If activated
+then lines on the same pixel line or same pixel row
+collapse into single lines.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.records.borders.drawMode">
+<code class="sig-name descname">scheme.records.borders.drawMode</code><a class="headerlink" href="#confval-scheme.records.borders.drawMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Mode for drawing record borders as box or line on top or
+bottom.</p>
+<p>Supported values: “topline”,”box”,”bottomline”
+Default is <code class="docutils literal notranslate"><span class="pre">box</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.base.*</strong>
+<em>The general base font of an application. This overrides</em>
+<em>the default Qt4 application font.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.base.family">
+<code class="sig-name descname">scheme.fonts.base.family</code><a class="headerlink" href="#confval-scheme.fonts.base.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.base.size">
+<code class="sig-name descname">scheme.fonts.base.size</code><a class="headerlink" href="#confval-scheme.fonts.base.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.base.bold">
+<code class="sig-name descname">scheme.fonts.base.bold</code><a class="headerlink" href="#confval-scheme.fonts.base.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.base.italic">
+<code class="sig-name descname">scheme.fonts.base.italic</code><a class="headerlink" href="#confval-scheme.fonts.base.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.base.underline">
+<code class="sig-name descname">scheme.fonts.base.underline</code><a class="headerlink" href="#confval-scheme.fonts.base.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.base.overline">
+<code class="sig-name descname">scheme.fonts.base.overline</code><a class="headerlink" href="#confval-scheme.fonts.base.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.small.*</strong>
+<em>The smallest available font. If undefined the point size is 2 points smaller than the base font.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.small.family">
+<code class="sig-name descname">scheme.fonts.small.family</code><a class="headerlink" href="#confval-scheme.fonts.small.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.small.size">
+<code class="sig-name descname">scheme.fonts.small.size</code><a class="headerlink" href="#confval-scheme.fonts.small.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.small.bold">
+<code class="sig-name descname">scheme.fonts.small.bold</code><a class="headerlink" href="#confval-scheme.fonts.small.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.small.italic">
+<code class="sig-name descname">scheme.fonts.small.italic</code><a class="headerlink" href="#confval-scheme.fonts.small.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.small.underline">
+<code class="sig-name descname">scheme.fonts.small.underline</code><a class="headerlink" href="#confval-scheme.fonts.small.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.small.overline">
+<code class="sig-name descname">scheme.fonts.small.overline</code><a class="headerlink" href="#confval-scheme.fonts.small.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.normal.*</strong>
+<em>The default text font. If undefined the point size is 2 points larger than the base font.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.normal.family">
+<code class="sig-name descname">scheme.fonts.normal.family</code><a class="headerlink" href="#confval-scheme.fonts.normal.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.normal.size">
+<code class="sig-name descname">scheme.fonts.normal.size</code><a class="headerlink" href="#confval-scheme.fonts.normal.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.normal.bold">
+<code class="sig-name descname">scheme.fonts.normal.bold</code><a class="headerlink" href="#confval-scheme.fonts.normal.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.normal.italic">
+<code class="sig-name descname">scheme.fonts.normal.italic</code><a class="headerlink" href="#confval-scheme.fonts.normal.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.normal.underline">
+<code class="sig-name descname">scheme.fonts.normal.underline</code><a class="headerlink" href="#confval-scheme.fonts.normal.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.normal.overline">
+<code class="sig-name descname">scheme.fonts.normal.overline</code><a class="headerlink" href="#confval-scheme.fonts.normal.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.large.*</strong>
+<em>The largest text font. If undefined the point size is 6 points larger than the base font.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.large.family">
+<code class="sig-name descname">scheme.fonts.large.family</code><a class="headerlink" href="#confval-scheme.fonts.large.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.large.size">
+<code class="sig-name descname">scheme.fonts.large.size</code><a class="headerlink" href="#confval-scheme.fonts.large.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.large.bold">
+<code class="sig-name descname">scheme.fonts.large.bold</code><a class="headerlink" href="#confval-scheme.fonts.large.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.large.italic">
+<code class="sig-name descname">scheme.fonts.large.italic</code><a class="headerlink" href="#confval-scheme.fonts.large.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.large.underline">
+<code class="sig-name descname">scheme.fonts.large.underline</code><a class="headerlink" href="#confval-scheme.fonts.large.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.large.overline">
+<code class="sig-name descname">scheme.fonts.large.overline</code><a class="headerlink" href="#confval-scheme.fonts.large.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.highlight.*</strong>
+<em>Font used to highlight text. If undefined it equals the normal font except for a bold font face.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.highlight.family">
+<code class="sig-name descname">scheme.fonts.highlight.family</code><a class="headerlink" href="#confval-scheme.fonts.highlight.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.highlight.size">
+<code class="sig-name descname">scheme.fonts.highlight.size</code><a class="headerlink" href="#confval-scheme.fonts.highlight.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.highlight.bold">
+<code class="sig-name descname">scheme.fonts.highlight.bold</code><a class="headerlink" href="#confval-scheme.fonts.highlight.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.highlight.italic">
+<code class="sig-name descname">scheme.fonts.highlight.italic</code><a class="headerlink" href="#confval-scheme.fonts.highlight.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.highlight.underline">
+<code class="sig-name descname">scheme.fonts.highlight.underline</code><a class="headerlink" href="#confval-scheme.fonts.highlight.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.highlight.overline">
+<code class="sig-name descname">scheme.fonts.highlight.overline</code><a class="headerlink" href="#confval-scheme.fonts.highlight.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.heading1.*</strong>
+<em>The largest heading font. If undefined it uses a bold font face and a font size twice as large as the normal font.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading1.family">
+<code class="sig-name descname">scheme.fonts.heading1.family</code><a class="headerlink" href="#confval-scheme.fonts.heading1.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading1.size">
+<code class="sig-name descname">scheme.fonts.heading1.size</code><a class="headerlink" href="#confval-scheme.fonts.heading1.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading1.bold">
+<code class="sig-name descname">scheme.fonts.heading1.bold</code><a class="headerlink" href="#confval-scheme.fonts.heading1.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading1.italic">
+<code class="sig-name descname">scheme.fonts.heading1.italic</code><a class="headerlink" href="#confval-scheme.fonts.heading1.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading1.underline">
+<code class="sig-name descname">scheme.fonts.heading1.underline</code><a class="headerlink" href="#confval-scheme.fonts.heading1.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading1.overline">
+<code class="sig-name descname">scheme.fonts.heading1.overline</code><a class="headerlink" href="#confval-scheme.fonts.heading1.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.heading2.*</strong>
+<em>The second largest heading font. If undefined it uses a bold font face and a font size twice as large as the base font.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading2.family">
+<code class="sig-name descname">scheme.fonts.heading2.family</code><a class="headerlink" href="#confval-scheme.fonts.heading2.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading2.size">
+<code class="sig-name descname">scheme.fonts.heading2.size</code><a class="headerlink" href="#confval-scheme.fonts.heading2.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading2.bold">
+<code class="sig-name descname">scheme.fonts.heading2.bold</code><a class="headerlink" href="#confval-scheme.fonts.heading2.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading2.italic">
+<code class="sig-name descname">scheme.fonts.heading2.italic</code><a class="headerlink" href="#confval-scheme.fonts.heading2.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading2.underline">
+<code class="sig-name descname">scheme.fonts.heading2.underline</code><a class="headerlink" href="#confval-scheme.fonts.heading2.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading2.overline">
+<code class="sig-name descname">scheme.fonts.heading2.overline</code><a class="headerlink" href="#confval-scheme.fonts.heading2.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.heading3.*</strong>
+<em>The smallest heading font. If undefined it uses a bold font face and a font size 4 points larger than the base font.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading3.family">
+<code class="sig-name descname">scheme.fonts.heading3.family</code><a class="headerlink" href="#confval-scheme.fonts.heading3.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading3.size">
+<code class="sig-name descname">scheme.fonts.heading3.size</code><a class="headerlink" href="#confval-scheme.fonts.heading3.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading3.bold">
+<code class="sig-name descname">scheme.fonts.heading3.bold</code><a class="headerlink" href="#confval-scheme.fonts.heading3.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading3.italic">
+<code class="sig-name descname">scheme.fonts.heading3.italic</code><a class="headerlink" href="#confval-scheme.fonts.heading3.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading3.underline">
+<code class="sig-name descname">scheme.fonts.heading3.underline</code><a class="headerlink" href="#confval-scheme.fonts.heading3.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.heading3.overline">
+<code class="sig-name descname">scheme.fonts.heading3.overline</code><a class="headerlink" href="#confval-scheme.fonts.heading3.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.cityLabels.*</strong>
+<em>Font used for city labels. If undefined it equals the base font.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.cityLabels.family">
+<code class="sig-name descname">scheme.fonts.cityLabels.family</code><a class="headerlink" href="#confval-scheme.fonts.cityLabels.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.cityLabels.size">
+<code class="sig-name descname">scheme.fonts.cityLabels.size</code><a class="headerlink" href="#confval-scheme.fonts.cityLabels.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.cityLabels.bold">
+<code class="sig-name descname">scheme.fonts.cityLabels.bold</code><a class="headerlink" href="#confval-scheme.fonts.cityLabels.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.cityLabels.italic">
+<code class="sig-name descname">scheme.fonts.cityLabels.italic</code><a class="headerlink" href="#confval-scheme.fonts.cityLabels.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.cityLabels.underline">
+<code class="sig-name descname">scheme.fonts.cityLabels.underline</code><a class="headerlink" href="#confval-scheme.fonts.cityLabels.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.cityLabels.overline">
+<code class="sig-name descname">scheme.fonts.cityLabels.overline</code><a class="headerlink" href="#confval-scheme.fonts.cityLabels.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.splashVersion.*</strong>
+<em>Font used for version string in the splash dialog shown at application startup. If undefined it equals the base font with a bold font face and a font size of 12.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashVersion.family">
+<code class="sig-name descname">scheme.fonts.splashVersion.family</code><a class="headerlink" href="#confval-scheme.fonts.splashVersion.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashVersion.size">
+<code class="sig-name descname">scheme.fonts.splashVersion.size</code><a class="headerlink" href="#confval-scheme.fonts.splashVersion.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashVersion.bold">
+<code class="sig-name descname">scheme.fonts.splashVersion.bold</code><a class="headerlink" href="#confval-scheme.fonts.splashVersion.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashVersion.italic">
+<code class="sig-name descname">scheme.fonts.splashVersion.italic</code><a class="headerlink" href="#confval-scheme.fonts.splashVersion.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashVersion.underline">
+<code class="sig-name descname">scheme.fonts.splashVersion.underline</code><a class="headerlink" href="#confval-scheme.fonts.splashVersion.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashVersion.overline">
+<code class="sig-name descname">scheme.fonts.splashVersion.overline</code><a class="headerlink" href="#confval-scheme.fonts.splashVersion.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.fonts.splashMessage.*</strong>
+<em>Font used for the message text in the splash dialog shown at application startup. If undefined it equals the base font with a font size of 12.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashMessage.family">
+<code class="sig-name descname">scheme.fonts.splashMessage.family</code><a class="headerlink" href="#confval-scheme.fonts.splashMessage.family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the family name of the font. The name is case insensitive and may include a foundry name.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashMessage.size">
+<code class="sig-name descname">scheme.fonts.splashMessage.size</code><a class="headerlink" href="#confval-scheme.fonts.splashMessage.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Defines the point size of the font</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashMessage.bold">
+<code class="sig-name descname">scheme.fonts.splashMessage.bold</code><a class="headerlink" href="#confval-scheme.fonts.splashMessage.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashMessage.italic">
+<code class="sig-name descname">scheme.fonts.splashMessage.italic</code><a class="headerlink" href="#confval-scheme.fonts.splashMessage.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashMessage.underline">
+<code class="sig-name descname">scheme.fonts.splashMessage.underline</code><a class="headerlink" href="#confval-scheme.fonts.splashMessage.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.fonts.splashMessage.overline">
+<code class="sig-name descname">scheme.fonts.splashMessage.overline</code><a class="headerlink" href="#confval-scheme.fonts.splashMessage.overline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.precision.depth">
+<code class="sig-name descname">scheme.precision.depth</code><a class="headerlink" href="#confval-scheme.precision.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The precision of depth values.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.precision.distance">
+<code class="sig-name descname">scheme.precision.distance</code><a class="headerlink" href="#confval-scheme.precision.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The precision of distance values.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.precision.location">
+<code class="sig-name descname">scheme.precision.location</code><a class="headerlink" href="#confval-scheme.precision.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The precision of lat/lon values.
+Default is <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.precision.magnitude">
+<code class="sig-name descname">scheme.precision.magnitude</code><a class="headerlink" href="#confval-scheme.precision.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The precision of magnitude values.
+Default is <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.precision.pickTime">
+<code class="sig-name descname">scheme.precision.pickTime</code><a class="headerlink" href="#confval-scheme.precision.pickTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>The precision of pick times.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.precision.traceValues">
+<code class="sig-name descname">scheme.precision.traceValues</code><a class="headerlink" href="#confval-scheme.precision.traceValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Precision of displayed offset/amp in all trace widgets.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.precision.rms">
+<code class="sig-name descname">scheme.precision.rms</code><a class="headerlink" href="#confval-scheme.precision.rms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Precision of RMS values.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.precision.uncertainties">
+<code class="sig-name descname">scheme.precision.uncertainties</code><a class="headerlink" href="#confval-scheme.precision.uncertainties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Precision of uncertainty values, e.g. latitude errors.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.unit.distanceInKM">
+<code class="sig-name descname">scheme.unit.distanceInKM</code><a class="headerlink" href="#confval-scheme.unit.distanceInKM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Display distances in km?
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.dateTime.useLocalTime">
+<code class="sig-name descname">scheme.dateTime.useLocalTime</code><a class="headerlink" href="#confval-scheme.dateTime.useLocalTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Display times in localtime or UTC (default).
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.splash.*</strong>
+<em>Defines the appearance of the splash screen shown at application startup.</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.splash.message.*</strong>
+<em>Position of the message text.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.splash.message.align">
+<code class="sig-name descname">scheme.splash.message.align</code><a class="headerlink" href="#confval-scheme.splash.message.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Qt::Alignment bit mask. Default: AlignHCenter | AlignBottom
+Default is <code class="docutils literal notranslate"><span class="pre">44</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.splash.message.pos.*</strong>
+<em>Position in screen coordinates.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.splash.message.pos.x">
+<code class="sig-name descname">scheme.splash.message.pos.x</code><a class="headerlink" href="#confval-scheme.splash.message.pos.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>px</em></p>
+<p>Horizontal position.
+Default is <code class="docutils literal notranslate"><span class="pre">200</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.splash.message.pos.y">
+<code class="sig-name descname">scheme.splash.message.pos.y</code><a class="headerlink" href="#confval-scheme.splash.message.pos.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>px</em></p>
+<p>Vertical position.
+Default is <code class="docutils literal notranslate"><span class="pre">260</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.splash.version.*</strong>
+<em>Position of the version string</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.splash.version.align">
+<code class="sig-name descname">scheme.splash.version.align</code><a class="headerlink" href="#confval-scheme.splash.version.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Qt::Alignment bit mask. Default: AlignRight | AlignBottom
+Default is <code class="docutils literal notranslate"><span class="pre">34</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>scheme.splash.version.pos.*</strong>
+<em>Position in screen coordinates.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-scheme.splash.version.pos.x">
+<code class="sig-name descname">scheme.splash.version.pos.x</code><a class="headerlink" href="#confval-scheme.splash.version.pos.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>px</em></p>
+<p>Horizontal position.
+Default is <code class="docutils literal notranslate"><span class="pre">362</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-scheme.splash.version.pos.y">
+<code class="sig-name descname">scheme.splash.version.pos.y</code><a class="headerlink" href="#confval-scheme.splash.version.pos.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>px</em></p>
+<p>Vertical position.
+Default is <code class="docutils literal notranslate"><span class="pre">190</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>events.timeAgo.*</strong>
+<em>Defines maximum age of events to load. The value of all parameters are aggregated.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-events.timeAgo.days">
+<code class="sig-name descname">events.timeAgo.days</code><a class="headerlink" href="#confval-events.timeAgo.days" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>d</em></p>
+<p>Age in days.
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-events.timeAgo.hours">
+<code class="sig-name descname">events.timeAgo.hours</code><a class="headerlink" href="#confval-events.timeAgo.hours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>h</em></p>
+<p>Age in hours.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-events.timeAgo.minutes">
+<code class="sig-name descname">events.timeAgo.minutes</code><a class="headerlink" href="#confval-events.timeAgo.minutes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>m</em></p>
+<p>Age in minutes.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-events.timeAgo.seconds">
+<code class="sig-name descname">events.timeAgo.seconds</code><a class="headerlink" href="#confval-events.timeAgo.seconds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Age in seconds.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>mode.*</strong>
+<em>Configuration of special applications modes.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-mode.interactive">
+<code class="sig-name descname">mode.interactive</code><a class="headerlink" href="#confval-mode.interactive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Defines if application interaction is allowed.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-mode.fullscreen">
+<code class="sig-name descname">mode.fullscreen</code><a class="headerlink" href="#confval-mode.fullscreen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Defines if the application should be launched in fullscreen
+mode hiding title bar, main menu and status bar.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-picker.filters">
+<code class="sig-name descname">picker.filters</code><a class="headerlink" href="#confval-picker.filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Configures the default filters selectable in manual picker.
+The entry with a leading “&#64;” is selected as default filter.
+Default is <code class="docutils literal notranslate"><span class="pre">&quot;BP</span> <span class="pre">0.1</span> <span class="pre">-</span> <span class="pre">1</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW(3,0.1,1)&quot;,&quot;BP</span> <span class="pre">0.1</span> <span class="pre">-</span> <span class="pre">2</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW(3,0.1,2)&quot;,&quot;BP</span> <span class="pre">0.4</span> <span class="pre">-</span> <span class="pre">1</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW(3,0.4,1)&quot;,&quot;&#64;BP</span> <span class="pre">0.7</span> <span class="pre">-</span> <span class="pre">2</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW(3,0.7,2)&quot;&quot;BP</span> <span class="pre">1</span> <span class="pre">-</span> <span class="pre">3</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW(3,1.0,3)&quot;,&quot;BP</span> <span class="pre">2</span> <span class="pre">-</span> <span class="pre">4</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW(3,2.0,4)&quot;,&quot;BP</span> <span class="pre">3</span> <span class="pre">-</span> <span class="pre">6</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW(3,3.0,6)&quot;,&quot;BP</span> <span class="pre">4</span> <span class="pre">-</span> <span class="pre">8</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW(3,4.0,8)&quot;,&quot;BP</span> <span class="pre">1</span> <span class="pre">-</span> <span class="pre">5</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW(3,1.0,5)&quot;,&quot;HP</span> <span class="pre">3</span> <span class="pre">Hz</span>&#160; <span class="pre">3rd</span> <span class="pre">order;BW_HP(3,3)&quot;,&quot;BP</span> <span class="pre">0.7</span> <span class="pre">-</span> <span class="pre">2</span> <span class="pre">Hz</span> <span class="pre">+</span> <span class="pre">STA/LTA(1,50);RMHP(10)-&gt;ITAPER(30)-&gt;BW(3,0.7,2)-&gt;STALTA(1,50)&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.visibleColumns">
+<code class="sig-name descname">eventlist.visibleColumns</code><a class="headerlink" href="#confval-eventlist.visibleColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Configure the columns of the event list that are visible initially.
+The first column containing the origin time is always visible and cannot
+be hidden. Possible values are: Type, M, TP, Phases, Lat, Lon, Depth, DType, Stat, AzGap, FM, Origins, Agency, Author, Region, ID.
+Default is <code class="docutils literal notranslate"><span class="pre">M,</span> <span class="pre">TP,</span> <span class="pre">Phases,</span> <span class="pre">RMS,</span> <span class="pre">Lat,</span> <span class="pre">Lon,</span> <span class="pre">Depth,</span> <span class="pre">Stat,</span> <span class="pre">Agency,</span> <span class="pre">Region,</span> <span class="pre">ID</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.regions">
+<code class="sig-name descname">eventlist.regions</code><a class="headerlink" href="#confval-eventlist.regions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Configured a list of regions that can be used as filter of
+the result set.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.customColumn">
+<code class="sig-name descname">eventlist.customColumn</code><a class="headerlink" href="#confval-eventlist.customColumn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Name of an additional custom column which displays the value
+of certain origin and event comments.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.customColumn.originCommentID">
+<code class="sig-name descname">eventlist.customColumn.originCommentID</code><a class="headerlink" href="#confval-eventlist.customColumn.originCommentID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>ID of the origin comment to look up.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.customColumn.eventCommentID">
+<code class="sig-name descname">eventlist.customColumn.eventCommentID</code><a class="headerlink" href="#confval-eventlist.customColumn.eventCommentID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>ID of the event comment to look up.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.customColumn.pos">
+<code class="sig-name descname">eventlist.customColumn.pos</code><a class="headerlink" href="#confval-eventlist.customColumn.pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Position of the column. If the configured position is less than 0 or if it
+exceeds the total number of columns then the column is appended to the right.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.customColumn.default">
+<code class="sig-name descname">eventlist.customColumn.default</code><a class="headerlink" href="#confval-eventlist.customColumn.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Default value to display if the specified origin or event comment id was not found.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.customColumn.colors">
+<code class="sig-name descname">eventlist.customColumn.colors</code><a class="headerlink" href="#confval-eventlist.customColumn.colors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Mapping of comment values to colors used as text color. E.g. “foo:#000,bar:red”.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>eventlist.region.$name.*</strong>
+<em>Defines a rectangular region that can be used as a result</em>
+<em>set filter on client side.</em>
+$name is a placeholder for the name to be used and needs to be added to <a class="reference internal" href="#confval-eventlist.regions"><code class="xref std std-confval docutils literal notranslate"><span class="pre">eventlist.regions</span></code></a> to become active.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>eventlist.regions <span class="o">=</span> a,b
+eventlist.region.a.value1 <span class="o">=</span> ...
+eventlist.region.b.value1 <span class="o">=</span> ...
+<span class="c1"># c is not active because it has not been added</span>
+<span class="c1"># to the list of eventlist.regions</span>
+eventlist.region.c.value1 <span class="o">=</span> ...
+</pre></div>
+</div>
+</div>
+<dl class="confval">
+<dt id="confval-eventlist.region.$name.name">
+<code class="sig-name descname">eventlist.region.$name.name</code><a class="headerlink" href="#confval-eventlist.region.$name.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the name of the region that shows up in the
+listbox.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.region.$name.rect">
+<code class="sig-name descname">eventlist.region.$name.rect</code><a class="headerlink" href="#confval-eventlist.region.$name.rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:double</em></p>
+<p>Defines a rectangular region with a list of 4 values:
+latmin, lonmin, latmax, lonmax.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.agencies.label">
+<code class="sig-name descname">eventlist.filter.agencies.label</code><a class="headerlink" href="#confval-eventlist.filter.agencies.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the text of the option “Show only own events”.
+Use double quotes ‘”’ around the string if it contains spaces.
+Default is <code class="docutils literal notranslate"><span class="pre">Show</span> <span class="pre">only</span> <span class="pre">own</span> <span class="pre">events</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.agencies.whitelist">
+<code class="sig-name descname">eventlist.filter.agencies.whitelist</code><a class="headerlink" href="#confval-eventlist.filter.agencies.whitelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Sets a list of preferred agencies. Events from preferred
+agencies are defined as “own” events.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.agencies.type">
+<code class="sig-name descname">eventlist.filter.agencies.type</code><a class="headerlink" href="#confval-eventlist.filter.agencies.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Sets the type of the filter. If type is “events” the agency
+of the preferred origin of the event is checked.
+If type is “origins” the agency of all origins of
+an event is checked and if at least one origins agency is part
+of the whitelist it will pass the filter. Or in other words,
+the event is hidden if no origin is from a preferred agency.
+Default is <code class="docutils literal notranslate"><span class="pre">events</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.agencies.enabled">
+<code class="sig-name descname">eventlist.filter.agencies.enabled</code><a class="headerlink" href="#confval-eventlist.filter.agencies.enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Sets the default state of the “Show only own events”
+option.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.types.label">
+<code class="sig-name descname">eventlist.filter.types.label</code><a class="headerlink" href="#confval-eventlist.filter.types.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Defines the text of the option “Hide other/fake events”.
+Use double quotes ‘”’ around the string if it contains spaces.
+Default is <code class="docutils literal notranslate"><span class="pre">Hide</span> <span class="pre">other/fake</span> <span class="pre">events</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.types.blacklist">
+<code class="sig-name descname">eventlist.filter.types.blacklist</code><a class="headerlink" href="#confval-eventlist.filter.types.blacklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>List of event type to be hidden if the “Hide other/fake events”
+option is ticked.
+Use double quotes ‘”’ around the string if it contains spaces.
+Default is <code class="docutils literal notranslate"><span class="pre">&quot;not</span> <span class="pre">existing&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.types.enabled">
+<code class="sig-name descname">eventlist.filter.types.enabled</code><a class="headerlink" href="#confval-eventlist.filter.types.enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Sets the default state of the “Hide other/fake events”
+option.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.regions.enabled">
+<code class="sig-name descname">eventlist.filter.regions.enabled</code><a class="headerlink" href="#confval-eventlist.filter.regions.enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Sets the default state of the “Hide events outside”
+option.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>eventlist.filter.database.*</strong>
+<em>Pre-set options to filter an event list request.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-eventlist.filter.database.minlat">
+<code class="sig-name descname">eventlist.filter.database.minlat</code><a class="headerlink" href="#confval-eventlist.filter.database.minlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>deg</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.database.maxlat">
+<code class="sig-name descname">eventlist.filter.database.maxlat</code><a class="headerlink" href="#confval-eventlist.filter.database.maxlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>deg</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.database.minlon">
+<code class="sig-name descname">eventlist.filter.database.minlon</code><a class="headerlink" href="#confval-eventlist.filter.database.minlon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>deg</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.database.maxlon">
+<code class="sig-name descname">eventlist.filter.database.maxlon</code><a class="headerlink" href="#confval-eventlist.filter.database.maxlon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>deg</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.database.mindepth">
+<code class="sig-name descname">eventlist.filter.database.mindepth</code><a class="headerlink" href="#confval-eventlist.filter.database.mindepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>km</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.database.maxdepth">
+<code class="sig-name descname">eventlist.filter.database.maxdepth</code><a class="headerlink" href="#confval-eventlist.filter.database.maxdepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p>Unit: <em>km</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.database.minmag">
+<code class="sig-name descname">eventlist.filter.database.minmag</code><a class="headerlink" href="#confval-eventlist.filter.database.minmag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.filter.database.maxmag">
+<code class="sig-name descname">eventlist.filter.database.maxmag</code><a class="headerlink" href="#confval-eventlist.filter.database.maxmag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>double</em></p>
+<p><em>No description available</em></p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.scripts.columns">
+<code class="sig-name descname">eventlist.scripts.columns</code><a class="headerlink" href="#confval-eventlist.scripts.columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Registration of custom event list columns.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>eventlist.scripts.column.*</strong>
+<em>Definition of custom event list column whose values are filled by external scripts.</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>eventlist.scripts.column.$name.*</strong>
+$name is a placeholder for the name to be used.</p>
+</div>
+<dl class="confval">
+<dt id="confval-eventlist.scripts.column.$name.script">
+<code class="sig-name descname">eventlist.scripts.column.$name.script</code><a class="headerlink" href="#confval-eventlist.scripts.column.$name.script" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>path</em></p>
+<p>External script to invoke for each event list entry. The object represented by the
+list entry is serialized to XML and passed to the script on stdin. If the return
+code of the script is 0 (‘success’) then the script result is read from stdout and
+displayed in the corresponding event list cell.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.scripts.column.$name.pos">
+<code class="sig-name descname">eventlist.scripts.column.$name.pos</code><a class="headerlink" href="#confval-eventlist.scripts.column.$name.pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Position of the column. If the configured position is less than 0 or if it
+exceeds the total number of columns then the column is appended to the right.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.scripts.column.$name.label">
+<code class="sig-name descname">eventlist.scripts.column.$name.label</code><a class="headerlink" href="#confval-eventlist.scripts.column.$name.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Column name shown in header of event list table.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventlist.scripts.column.$name.types">
+<code class="sig-name descname">eventlist.scripts.column.$name.types</code><a class="headerlink" href="#confval-eventlist.scripts.column.$name.types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Object types this script should be invoked for. Supported values are ‘Event’ and ‘Origin’.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventedit.origin.visibleColumns">
+<code class="sig-name descname">eventedit.origin.visibleColumns</code><a class="headerlink" href="#confval-eventedit.origin.visibleColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Configure the columns of the event edit origin table
+that are visible initially.
+Possible values are: Phases, Lat, Lon, Depth, DType, RMS, Stat,
+Method, Agency, Author, Region
+Default is <code class="docutils literal notranslate"><span class="pre">Phases,</span> <span class="pre">Lat,</span> <span class="pre">Lon,</span> <span class="pre">Depth,</span> <span class="pre">DType,</span> <span class="pre">RMS,</span> <span class="pre">Stat,</span> <span class="pre">Method,</span> <span class="pre">Agency,</span> <span class="pre">Author,</span> <span class="pre">Region</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventedit.fm.visibleColumns">
+<code class="sig-name descname">eventedit.fm.visibleColumns</code><a class="headerlink" href="#confval-eventedit.fm.visibleColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Configure the columns of the event edit focal mechanism
+tab that are visible initially.
+Possible values are: Depth, M, Count, Misfit, STDR,
+AzGap, Stat, DC, CLVD, ISO, S1,
+D1, R1, S2, D2, R2, Agency, Author
+Default is <code class="docutils literal notranslate"><span class="pre">Depth,</span> <span class="pre">M,</span> <span class="pre">Count,</span> <span class="pre">Misfit,</span> <span class="pre">STDR,</span> <span class="pre">AzGap,</span> <span class="pre">Stat,</span> <span class="pre">DC,</span> <span class="pre">CLVD,</span> <span class="pre">ISO,</span> <span class="pre">S1,</span> <span class="pre">D1,</span> <span class="pre">R1,</span> <span class="pre">S2,</span> <span class="pre">D2,</span> <span class="pre">R2,</span> <span class="pre">Agency,</span> <span class="pre">Author</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>eventsummary.*</strong>
+<em>Parameters controlling the event summary view used e.g. in scolv.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-eventsummary.alertTimer.commentId">
+<code class="sig-name descname">eventsummary.alertTimer.commentId</code><a class="headerlink" href="#confval-eventsummary.alertTimer.commentId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Set an alert for every event comment that ID matches
+the specified regular expression, e.g. “<a href="#id2"><span class="problematic" id="id3">alert_</span></a>.*”.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventsummary.alertTimer.commentBlacklist">
+<code class="sig-name descname">eventsummary.alertTimer.commentBlacklist</code><a class="headerlink" href="#confval-eventsummary.alertTimer.commentBlacklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>List of comments to ignore, e.g. “nil”.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventsummary.alertTimer.alertGradient">
+<code class="sig-name descname">eventsummary.alertTimer.alertGradient</code><a class="headerlink" href="#confval-eventsummary.alertTimer.alertGradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>Unit: <em>s:color</em></p>
+<p>Discrete mapping of time values in seconds to colors used as
+text color in case of an active alert. E.g. “0:00FF00,900:FF0000”.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-eventsummary.alertTimer.textSize">
+<code class="sig-name descname">eventsummary.alertTimer.textSize</code><a class="headerlink" href="#confval-eventsummary.alertTimer.textSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>pt</em></p>
+<p>The text size of the time ago label in case of an active alert.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">GUI</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#styling">Styling</a></li>
+<li><a class="reference internal" href="#configuration-syntax">Configuration syntax</a><ul>
+<li><a class="reference internal" href="#colors">Colors</a></li>
+<li><a class="reference internal" href="#color-gradients">Color gradients</a></li>
+<li><a class="reference internal" href="#fonts">Fonts</a></li>
+<li><a class="reference internal" href="#pens">Pens</a></li>
+<li><a class="reference internal" href="#brushes">Brushes</a></li>
+<li><a class="reference internal" href="#symbols">Symbols</a></li>
+<li><a class="reference internal" href="#legends">Legends</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#map-layers">Map Layers</a><ul>
+<li><a class="reference internal" href="#vector-layers">Vector layers</a><ul>
+<li><a class="reference internal" href="#layer-configuration">Layer configuration</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#other-layers">Other Layers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="global_locext.html"
+                        title="previous chapter">LocExt</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="global_recordstream.html"
+                        title="next chapter">RecordStream</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/global_gui.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

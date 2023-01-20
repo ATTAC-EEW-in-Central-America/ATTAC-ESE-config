@@ -1,0 +1,194 @@
+<!doctype html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Introduction &#8212; QuakeLink: Earthquake Distribution Server  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/gempa.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/gempa.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/quakelink.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Glossary" href="glossary.html" />
+    <link rel="prev" title="QuakeLink documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <img class="background" src="../_static/icon.png"/>
+        <div class="content">
+           <span class="title">QuakeLink: Earthquake Distribution Server </span>
+           <span class="version">2022.192#cea9050e2</span></h1>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="glossary.html" title="Glossary"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="../index.html" title="QuakeLink documentation"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="introduction">
+<span id="sec-quakelink-intro"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>QuakeLink was developed to exchange event data and metadata where security,
+performance and reliability are a primary focus.</p>
+<p>The <strong>QuakeLink package is used for:</strong></p>
+<ul class="simple">
+<li><p>Exchanging event data and metadata between 2 or more
+<span id="id1"></span> systems.</p></li>
+<li><p>Providing fast and secure access to event data via a web interface to external
+clients.</p></li>
+<li><p>Importing event parameters from external or local SeisComP systems, QuakeLink server
+or FDSNWS in a local SeisComP system or QuakeLink server in real time.</p></li>
+</ul>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="../_images/quakelink_3systems.png"><img alt="../_images/quakelink_3systems.png" src="../_images/quakelink_3systems.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-text">Figure 8: Secure parameter exchange between 3 SeisComP systems. The description is given in <a class="reference internal" href="examples.html#quakelink-examples"><span class="std std-ref">Examples</span></a>.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p>QuakeLink includes the following features:</p>
+<ul class="simple">
+<li><p>Exchange of SeisComP objects is triggered by event updates. No messages
+will be exchanged until the exporting SeisComP system has produced an event.</p></li>
+<li><p>Complete event parameter exchange including Events, Origins, Amplitudes, Picks
+and FocalMechanisms.</p></li>
+<li><p>Secure protocol solves security issues:</p>
+<ul>
+<li><p>No access to local SeisComP by system foreigners.</p></li>
+<li><p>User/password authentication including SSL.</p></li>
+<li><p>Fined-grained access control lists including IP addresses, SeisComP object
+subsets and many more.</p></li>
+</ul>
+</li>
+<li><p>Fast event access even to large databases.</p></li>
+<li><p>SQLite database for event indexing.</p></li>
+<li><p>No events are missed on downtime.</p></li>
+<li><p>Reduced bandwidth consumption through server-side filters.</p></li>
+<li><p>Fast event and inventory exchange in real-time or time window based.</p></li>
+<li><p>Full event log (replacement of scevtlog).</p></li>
+<li><p>Event archive file structure: <code class="docutils literal notranslate"><span class="pre">2014/09/09/eventid/eventid.(N).xml.gz</span></code>.</p></li>
+<li><p>QuakeLink protocol with telnet interface.</p></li>
+<li><p>HTTP interface similar to FDSNWS (GET + POST).</p></li>
+<li><p>QuakeLink can be configured using <span id="id2"><em>scconfig</em> [<a class="reference internal" href="references.html#id202" title="scconfig. SeisComP module. URL: https://docs.gempa.de/seiscomp/current/apps/scconfig.html.">2</a>]</span>.</p></li>
+<li><p>QuakeLink provides earthquake parameters to <strong class="program">EQInfo</strong>, an
+Android-based gempa App for customized earthquake information world-wide.
+EQInfo is freely available e.g. from <a class="reference external" href="https://play.google.com/store/apps/details?id=de.gempa.android.eqinfo">Google Play</a> <a class="footnote-reference brackets" href="#id5" id="id6">1</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="architecture">
+<span id="quakelink-architecture-intro"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+<p>QuakeLink provides quakelink, a <a class="reference internal" href="../apps/quakelink.html#quakelink"><span class="std std-ref">server</span></a> that collects data from
+SeisComP systems using <a class="reference internal" href="plugins.html#sec-ql-plugins"><span class="std std-ref">QuakeLink plugins</span></a>.
+The data is stored in the database and provided to clients. The clients may be
+other SeisComP systems, web browsers or other applications such as EQInfo.
+<a class="reference internal" href="plugins.html#sec-ql-plugins"><span class="std std-ref">Frontend applications</span></a> allow direct user-interaction with
+the server and the database.</p>
+<div class="figure align-center" id="id4">
+<span id="fig-intro-architecture"></span><a class="reference internal image-reference" href="../_images/quakelink1.png"><img alt="../_images/quakelink1.png" src="../_images/quakelink1.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Figure 9: QuakeLink architecture.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="downloads">
+<h2>Downloads<a class="headerlink" href="#downloads" title="Permalink to this headline">¶</a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id6">1</a></span></dt>
+<dd><p><a class="reference external" href="https://play.google.com/store/apps/details?id=de.gempa.android.eqinfo">https://play.google.com/store/apps/details?id=de.gempa.android.eqinfo</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#architecture">Architecture</a></li>
+<li><a class="reference internal" href="#downloads">Downloads</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter"><cite>QuakeLink</cite> documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="glossary.html"
+                        title="next chapter">Glossary</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base/introduction.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="content">
+        Release <b></b> version <b>2022.192#cea9050e2</b>
+          <div class="copyright">
+            &copy; Copyright <a href="https://www.gempa.de">2013, gempa GmbH.</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

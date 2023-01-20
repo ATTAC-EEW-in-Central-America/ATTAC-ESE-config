@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Getting Started with SeisComP &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="System management" href="management.html" />
+    <link rel="prev" title="SeisComP Installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="management.html" title="System management"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="installation.html" title="SeisComP Installation"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="getting-started-with-scname">
+<span id="getting-started"></span><h1>Getting Started with <cite>SeisComP</cite><a class="headerlink" href="#getting-started-with-scname" title="Permalink to this headline">¶</a></h1>
+<p>Once the Linux system is installed the <cite>SeisComP</cite> modules need to be configured including
+the <a class="reference internal" href="#getting-started-initial"><span class="std std-ref">initial configuration and the connection to the database</span></a>.
+The central tool to configure and control the system is <strong class="program">seiscomp</strong> which
+is explained more deeply in the <a class="reference internal" href="management.html#system-management"><span class="std std-ref">next chapter</span></a>. A user-friendly
+graphical frontend to <strong class="program">seiscomp</strong> is <a class="reference internal" href="../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a>.</p>
+<div class="section" id="database-configuration">
+<span id="getting-started-initial"></span><h2>Database Configuration<a class="headerlink" href="#database-configuration" title="Permalink to this headline">¶</a></h2>
+<p>Once the database server is defined and optimized as described in the section
+<a class="reference internal" href="installation.html#database-configuration"><span class="std std-ref">Database Server Configuration</span></a> you may configure <cite>SeisComP</cite> with the database.
+Initially execute the steps listed in this section. You will need to consider
+differences in databases:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#getting-started-mysql"><span class="std std-ref">MySQL</span></a> (not recommended),</p></li>
+<li><p><a class="reference internal" href="#getting-started-mariadb"><span class="std std-ref">MariaDB</span></a>,</p></li>
+<li><p><a class="reference internal" href="#getting-started-postgresql"><span class="std std-ref">PostgreSQL</span></a>.</p></li>
+</ul>
+<div class="section" id="mysql">
+<span id="getting-started-mysql"></span><h3>MySQL<a class="headerlink" href="#mysql" title="Permalink to this headline">¶</a></h3>
+<p>The initial configuration by the <strong class="program">seiscomp</strong> script or the
+wizard of <a class="reference internal" href="../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a> allows to create and configure the MySQL database
+for <cite>SeisComP</cite>. If you want to use MySQL continue with the
+<a class="reference internal" href="#getting-started-setup"><span class="std std-ref">general setup</span></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul>
+<li><p>Using MySQL is currently not recommended. Preferably use MariaDB instead of MySQL
+as MariaDB is the default SQL flavor of most supported Linux systems!</p></li>
+<li><p>As of MySQL 8.0 the password encryption and policy has changed resulting in
+errors when connecting to a MySQL server. In 04/2021 this
+does not seem to be fully supported in <strong>Ubuntu 20.04</strong>. Therefore, you need
+to use a native password on the MySQL server.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ sudo mysql -u root -p
+
+  ALTER USER <span class="s1">&#39;sysop&#39;</span>@<span class="s1">&#39;%%&#39;</span> IDENTIFIED WITH mysql_native_password BY <span class="s1">&#39;my_super_secret_password_matching_the_mysql_password_validation_policy&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="mariadb">
+<span id="getting-started-mariadb"></span><h3>MariaDB<a class="headerlink" href="#mariadb" title="Permalink to this headline">¶</a></h3>
+<p>The initial configuration by the <strong class="program">seiscomp</strong> script or the
+wizard of <a class="reference internal" href="../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a> allows to create and configure the MySQL database
+for <cite>SeisComP</cite>.</p>
+<p>For setting up the database manually with MariaDB follow the instructions
+below.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>With <strong>Ubuntu 16.04</strong> MariaDB has become the standard flavor of MySQL in
+Ubuntu and either MariaDB or MySQL can be installed. The implementation
+of MariaDB in Ubuntu requires additional steps. They must be taken
+<strong>before</strong> the initial configuration in order to allow <cite>SeisComP</cite> to make
+use of MariaDB. Previously, the <a class="reference internal" href="../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a> wizard and
+<strong class="command">seiscomp setup</strong> could not be used to set up the MariaDB database.
+<strong>The option “Create database” had to be unchecked or answered with “no”</strong>.
+The issue is resolved in this release and both, <a class="reference internal" href="../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a> wizard and
+<strong class="command">seiscomp setup</strong> are now fully capable of the required actions.</p>
+</div>
+<p>The full procedure to create the seiscomp database:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ sudo mysql -u root -p
+     CREATE DATABASE seiscomp CHARACTER SET utf8 COLLATE utf8_bin<span class="p">;</span>
+     grant usage on seiscomp.* to sysop@localhost identified by <span class="s1">&#39;sysop&#39;</span><span class="p">;</span>
+     grant all privileges on seiscomp.* to sysop@localhost<span class="p">;</span>
+     grant usage on seiscomp.* to sysop@<span class="s1">&#39;%&#39;</span> identified by <span class="s1">&#39;sysop&#39;</span><span class="p">;</span>
+     grant all privileges on seiscomp.* to sysop@<span class="s1">&#39;%&#39;</span><span class="p">;</span>
+     flush privileges<span class="p">;</span>
+     quit
+
+user@host:~$ mysql -u sysop -p seiscomp &lt; ~/seiscomp/share/db/mysql.sql
+</pre></div>
+</div>
+</div>
+<div class="section" id="postgresql">
+<span id="getting-started-postgresql"></span><h3>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h3>
+<p>The initial configuration allows configuring the PostgreSQL database parameters
+for <cite>SeisComP</cite>.
+It also allows <a class="reference internal" href="installation.html#database-configuration-postgresql"><span class="std std-ref">creating the database</span></a>
+and the database tables.</p>
+<p>For a manual setup of the PostgreSQL database first <a class="reference internal" href="installation.html#database-configuration-postgresql"><span class="std std-ref">setup the database
+server</span></a>, then create the user, the database
+and the tables.</p>
+<ol class="arabic">
+<li><p>Create the user and the database</p>
+<p><strong class="program">CentOS</strong>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo@host:~$ sudo su
+root@host:~$ sudo -i -u postgres
+postgres@host:~$ psql
+
+   <span class="nv">postgres</span><span class="o">=</span><span class="c1"># create database seiscomp;</span>
+   <span class="nv">postgres</span><span class="o">=</span><span class="c1"># create user sysop with encrypted password &#39;sysop&#39;;</span>
+   <span class="nv">postgres</span><span class="o">=</span><span class="c1"># grant all privileges on database seiscomp to sysop;</span>
+   <span class="nv">postgres</span><span class="o">=</span><span class="c1"># alter database seiscomp owner to sysop;</span>
+   <span class="nv">postgres</span><span class="o">=</span><span class="c1"># exit</span>
+
+root@host:~$ <span class="nb">exit</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create the database tables</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ psql -f ~/seiscomp/share/db/postgres.sql -t seiscomp -U sysop
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Continue with the <a class="reference internal" href="#getting-started-setup"><span class="std std-ref">general setup</span></a> considering the
+created database but <strong>do not create the database again</strong>.</p>
+</div>
+</div>
+<div class="section" id="general-scname-setup">
+<span id="getting-started-setup"></span><h2>General <cite>SeisComP</cite> Setup<a class="headerlink" href="#general-scname-setup" title="Permalink to this headline">¶</a></h2>
+<p>Use <strong class="command">seiscomp setup</strong> or the wizard from within <a class="reference internal" href="../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a> (<kbd class="kbd docutils literal notranslate">Ctrl+N</kbd>) for the
+initial configuration including the database parameters. <strong class="command">seiscomp setup</strong> is the
+successor of the former <strong class="program">./setup</strong> script.</p>
+<p>In <strong class="command">seiscomp setup</strong> default values are given in brackets []:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp setup
+
+====================================================================
+seiscomp setup
+====================================================================
+
+This initializes the configuration of your installation.
+If you already made adjustments to the configuration files
+be warned that this setup will overwrite existing parameters
+with default values. This is not a configurator for all
+options of your setup but helps to setup initial standard values.
+
+--------------------------------------------------------------------
+Hint: Entered values starting with a dot (.) are handled
+      as commands. Available commands are:
+
+      quit: Quit setup without modification to your configuration.
+      back: Go back to the previous parameter.
+      help: Show help about the current parameter (if available).
+
+      If you need to enter a value with a leading dot, escape it
+      with backslash, e.g. &quot;\.value&quot;.
+--------------------------------------------------------------------
+</pre></div>
+</div>
+<p>This will ask for initial settings as database (if package trunk is installed)
+parameters and the logging backend.</p>
+<hr class="docutils" />
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Organization name []:
+</pre></div>
+</div>
+<p>Sets the organisation name printed e.g. when you say <em>hello</em> to Seedlink
+or Arclink.</p>
+<hr class="docutils" />
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Enable database storage [yes]:
+</pre></div>
+</div>
+<p>Enables or disables the database for the system. This option should be left
+enabled unless all modules should connect to remote processing machine which
+is already available. The database is required to store inventory information
+as well as processing results. The database is the central storage for all
+trunk modules and the default request handler of Arclink.</p>
+<hr class="docutils" />
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> 0) mysql
+      MySQL server.
+ 1) postgresql
+      PostgreSQL server. There is currently no support in setup to create the
+      database for you. You have to setup the database and user accounts on
+      your own. The database schema is installed under share/db/postgresql.sql.
+Database backend [0]:
+</pre></div>
+</div>
+<p>If the database is enable the database backend can be selected. <cite>SeisComP</cite>
+supports two main backends: MySQL and PostgreSQL. Select the backend to be used
+here but be prepared that only for the MySQL backend the setup can help to
+create the database and tables for you. If you are using PostgreSQL you have
+to provide a working database with the correct schema. The schema files are
+part of the distribution and can be found in <code class="file docutils literal notranslate"><span class="pre">seiscomp/share/db/postgresql.sql</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As of PostgreSQL version 9 the default output encoding has changed to hex.
+In order to fix issues with seiscomp log in to your database and run the
+following command.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="n">seiscomp</span> <span class="k">SET</span> <span class="n">bytea_output</span> <span class="k">TO</span> <span class="s1">&#39;escape&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Create database [yes]:
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If MySQL is selected it is possible to let <strong class="command">seiscomp setup</strong> to create
+the database and all tables for you. Otherwise currently not and you need to set up the
+database manually following the <a class="reference internal" href="#getting-started-mysql"><span class="std std-ref">given instructions</span></a>.
+If the database has been created already, answer ‘no’ here.</p>
+</div>
+<hr class="docutils" />
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>MYSQL root password (input not echoed) []:
+</pre></div>
+</div>
+<p>Give the MySQL root password for your database server to create the database
+tables. This is only required if the last question has been answered with ‘yes’.</p>
+<hr class="docutils" />
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Drop existing database [no]:
+</pre></div>
+</div>
+<p>If a database with the same name (to be selected later) exists already and the
+database should be created for you, an error is raised. To delete an existing
+database with the same name, say ‘yes’ here.</p>
+<hr class="docutils" />
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Database name [seiscomp]:
+Database hostname [localhost]:
+Database read-write user [sysop]:
+Database read-write password [sysop]:
+Database public hostname [localhost]:
+Database read-only user [sysop]:
+Database read-only password [sysop]:
+</pre></div>
+</div>
+<p>Setup the various database options valid for all database backends. Give
+<strong class="command">help</strong> for more information.</p>
+<hr class="docutils" />
+<p>If all question have been answered the final choice needs to be made to either
+create the initial configuration, go back to the last question or to quit
+without doing anything.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Finished setup
+--------------
+
+P) Proceed to apply configuration
+B) Back to last parameter
+Q) Quit without changes
+Command? [P]:
+</pre></div>
+</div>
+</div>
+<div class="section" id="environment-variables">
+<h2>Environment variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h2>
+<p>Commands can be used along with the <strong class="program">seiscomp</strong> script located in <em>seiscomp/bin/seiscomp</em>.
+Read the section <a class="reference internal" href="management.html#sec-management-commands"><span class="std std-ref">seiscomp Commands</span></a> for more details on <strong class="program">seiscomp</strong>.
+E.g. <cite>SeisComP</cite> modules can be executed like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp exec scrttv
+</pre></div>
+</div>
+<p>Calling <strong class="program">seiscomp</strong> with its full path, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp <span class="o">[</span>command<span class="o">]</span>
+</pre></div>
+</div>
+<p>will load the full <cite>SeisComP</cite> environment.
+Providing the full path allows starting other <cite>SeisComP</cite> modules in a specific
+<cite>SeisComP</cite> environment. Thus, multiple SeisComP installations can be maintained
+and referred to on the same machine.</p>
+<p><strong class="program">seiscomp</strong> can also be used for printing the considered <cite>SeisComP</cite> environment</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp print env
+</pre></div>
+</div>
+<p>resulting in</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">SEISCOMP_ROOT</span><span class="o">=</span><span class="s2">&quot;/home/sysop/seiscomp&quot;</span>
+<span class="n">export</span> <span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;/home/sysop/seiscomp/bin:$PATH&quot;</span>
+<span class="n">export</span> <span class="n">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/home/sysop/seiscomp/lib:$LD_LIBRARY_PATH&quot;</span>
+<span class="n">export</span> <span class="n">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;/home/sysop/seiscomp/lib/python:$PYTHONPATH&quot;</span>
+<span class="n">export</span> <span class="n">MANPATH</span><span class="o">=</span><span class="s2">&quot;/home/sysop/seiscomp/share/man:$MANPATH&quot;</span>
+<span class="n">source</span> <span class="s2">&quot;/home/sysop/seiscomp/share/shell-completion/seiscomp.bash&quot;</span>
+</pre></div>
+</div>
+<p>For convenience, the default <cite>SeisComP</cite> installation can be referred to, when defining
+the required system variables, e.g. in <code class="file docutils literal notranslate"><span class="pre">~/.bashrc</span></code>. Then, the <cite>SeisComP</cite> environment
+is known to the logged in user and <cite>SeisComP</cite> modules can be
+executed without the <strong class="program">seiscomp</strong> script.</p>
+<p>For setting the environment</p>
+<ol class="arabic">
+<li><p>Use the <strong class="program">seiscomp</strong> script itself to generate the parameters and write
+the parameters to <code class="file docutils literal notranslate"><span class="pre">~/.bashrc</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp print env &gt;&gt; ~/.bashrc
+</pre></div>
+</div>
+</li>
+<li><p>Load the environment or log out and in again</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>user@host:~$ source ~/.bashrc
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Thereafter, modules can be executed by their names without involving <strong class="program">seiscomp</strong>,
+e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>user@host:~$ scrttv
+</pre></div>
+</div>
+</div>
+<div class="section" id="activate-enable-modules">
+<h2>Activate/Enable Modules<a class="headerlink" href="#activate-enable-modules" title="Permalink to this headline">¶</a></h2>
+<p>After the installation all module are disabled for auto start. If <strong class="command">seiscomp start</strong>
+is called, nothing will happen until modules are enabled. To enable a set of modules,
+<strong class="command">seiscomp enable</strong> needs to be called with a list of modules.
+For example, for a processing system with SeedLink for data acquisition,
+you may use:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp <span class="nb">enable</span> seedlink slarchive scautopick scautoloc scamp scmag scevent
+enabled seedlink
+enabled slarchive
+enabled scautopick
+enabled scautoloc
+enabled scamp
+enabled scmag
+enabled scevent
+</pre></div>
+</div>
+<p>A successive call of <strong class="command">seiscomp start</strong> will then start all enabled
+modules. This is also required to restart enabled modules with <strong class="command">seiscomp check</strong>.</p>
+<p>Alternatively, <a class="reference internal" href="../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a> can be used to enable/disable
+and to start/stop/restart modules.</p>
+<p>However, before starting seiscomp, station information (metadata) need to
+be provided and the configuration needs to be updated.</p>
+</div>
+<div class="section" id="supply-station-metadata">
+<h2>Supply Station Metadata<a class="headerlink" href="#supply-station-metadata" title="Permalink to this headline">¶</a></h2>
+<p><cite>SeisComP</cite> requires the metadata from seismic network and stations including full responses
+for data acquisition
+and processing. The metadata can be obtained from network operators or
+various other sources in different formats. The metadata include, e.g.:</p>
+<ul class="simple">
+<li><p>Network association</p></li>
+<li><p>Operation times</p></li>
+<li><p>Location</p></li>
+<li><p>Sensor and data logger specifications with full response information</p></li>
+<li><p>Data stream specifications</p></li>
+</ul>
+<p><cite>SeisComP</cite> comes with various importers to add metadata
+for networks and stations including full response information.</p>
+<p><a class="reference internal" href="../apps/import_inv.html#import-inv"><span class="std std-ref">import_inv</span></a> is the tool to import inventory data into <cite>SeisComP</cite>.
+Alternatively can be used.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp <span class="nb">exec</span> import_inv dlsv inventory.dataless
+</pre></div>
+</div>
+<p>This will import a dataless SEED volume into <cite>etc/inventory/inventory.dataless.xml</cite>.</p>
+<p>Repeat this step for all inventory data you want to import.</p>
+</div>
+<div class="section" id="configure-station-bindings">
+<h2>Configure Station Bindings<a class="headerlink" href="#configure-station-bindings" title="Permalink to this headline">¶</a></h2>
+<p>The configuration of modules and bindings is explained in <a class="reference internal" href="../apps/global.html#global"><span class="std std-ref">Global parameters</span></a>. To
+add bindings in a more convenient way, start <a class="reference internal" href="../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp <span class="nb">exec</span> scconfig
+</pre></div>
+</div>
+<p>Typical binding profiles or station bindings involve bindings configurations for
+data acquisition and processing modules:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../apps/seedlink.html#seedlink"><span class="std std-ref">seedlink</span></a>: Configure the plugin for the real-time data acquisition.</p></li>
+<li><p><a class="reference internal" href="../apps/slarchive.html#slarchive"><span class="std std-ref">slarchive</span></a>: Configure the data archiving.</p></li>
+<li><p><a class="reference internal" href="../apps/global.html#global"><span class="std std-ref">global</span></a>: Configure <a class="reference internal" href="../apps/global.html#confval-detecStream"><code class="xref std std-confval docutils literal notranslate"><span class="pre">detecStream</span></code></a> and <a class="reference internal" href="../apps/global.html#confval-detecLocid"><code class="xref std std-confval docutils literal notranslate"><span class="pre">detecLocid</span></code></a> to determine the
+default streams for phase detection and for showing stations and streams in GUIs
+like <a class="reference internal" href="../apps/scmv.html#scmv"><span class="std std-ref">scmv</span></a>, <a class="reference internal" href="../apps/scrttv.html#scrttv"><span class="std std-ref">scrttv</span></a> or <a class="reference internal" href="../apps/scolv.html#scolv"><span class="std std-ref">scolv</span></a>.</p></li>
+<li><p><a class="reference internal" href="../apps/scautopick.html#scautopick"><span class="std std-ref">scautopick</span></a>: Configure the automatic phase detection. You may overwrite global
+binding parameters.</p></li>
+</ul>
+</div>
+<div class="section" id="update-configuration-start-everything">
+<h2>Update Configuration, Start Everything<a class="headerlink" href="#update-configuration-start-everything" title="Permalink to this headline">¶</a></h2>
+<p>To update the configuration when new stations have been added or modified,
+<strong class="command">seiscomp update-config</strong> needs to be run. This creates configuration
+files of modules that do not use the configuration directly, writes the trunk
+bindings to the database and synchronizes the inventory with the database.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp update-config
+<span class="o">[</span>output<span class="o">]</span>
+</pre></div>
+</div>
+<p>After the configuration has been updated and the inventory has been synchronized,
+call <strong class="command">seiscomp start</strong> to start all enabled modules:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp start
+starting seedlink
+starting slarchive
+starting scautopick
+starting scautoloc
+starting scamp
+starting scmag
+starting scevent
+</pre></div>
+</div>
+<p>Now the system should run. To check everything again, <strong class="command">seiscomp check</strong>
+can be run which should print <em>is running</em> for all started modules.
+If everything is working, the analysis tools can be started, e.g. MapView.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>user@host:~$ seiscomp/bin/seiscomp <span class="nb">exec</span> scmv
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started with <cite>SeisComP</cite></a><ul>
+<li><a class="reference internal" href="#database-configuration">Database Configuration</a><ul>
+<li><a class="reference internal" href="#mysql">MySQL</a></li>
+<li><a class="reference internal" href="#mariadb">MariaDB</a></li>
+<li><a class="reference internal" href="#postgresql">PostgreSQL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#general-scname-setup">General <cite>SeisComP</cite> Setup</a></li>
+<li><a class="reference internal" href="#environment-variables">Environment variables</a></li>
+<li><a class="reference internal" href="#activate-enable-modules">Activate/Enable Modules</a></li>
+<li><a class="reference internal" href="#supply-station-metadata">Supply Station Metadata</a></li>
+<li><a class="reference internal" href="#configure-station-bindings">Configure Station Bindings</a></li>
+<li><a class="reference internal" href="#update-configuration-start-everything">Update Configuration, Start Everything</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter"><cite>SeisComP</cite> Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="management.html"
+                        title="next chapter">System management</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base/getting-started.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

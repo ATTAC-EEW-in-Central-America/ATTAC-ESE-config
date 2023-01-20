@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Unit Testing &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Coding Conventions" href="coding-conventions.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="coding-conventions.html" title="Coding Conventions"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="unit-testing">
+<span id="unittests"></span><h1>Unit Testing<a class="headerlink" href="#unit-testing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>From Wikipedia:</p>
+<blockquote>
+<div><p>In computer programming, unit testing is a software testing method by which
+individual units of source code, sets of one or more computer program modules
+together with associated control data, usage procedures, and operating
+procedures, are tested to determine whether they are fit for use. <a class="footnote-reference brackets" href="#wput" id="id1">1</a></p>
+</div></blockquote>
+<p>This chapter targets programmers, either ones contributing to <cite>SeisComP</cite> or
+adding their extended set of modules / libraries.</p>
+<p>Since most of the <cite>SeisComP</cite> code is written in C++, this chapter focuses on
+C++ unit tests. For C++, we have evaluated three unit test frameworks:</p>
+<ul class="simple">
+<li><p>CppUnit</p></li>
+<li><p>Google Test</p></li>
+<li><p>Boost Test</p></li>
+</ul>
+<p>We found that Boost Test is the most appropriate, flexible and easy to
+understand unit test framework. Another important fact was the availability of
+Boost Test on all major Linux distributions via their package managers. That
+<cite>SeisComP</cite> makes already use of other Boost libraries was the icing on the cake.</p>
+<p>So this chapter is about integrating unit tests into <cite>SeisComP</cite> with the Boost Test
+library.</p>
+<p>Apart from the availability of the Boost test libraries, cmake with version
+2.8.0 or greater is also required.</p>
+</div>
+<div class="section" id="preparations">
+<h2>Preparations<a class="headerlink" href="#preparations" title="Permalink to this headline">¶</a></h2>
+<p>With CMake it is easy to setup arbitrary tests. To make it even easier, we
+added a shortcut to the CMake macro <code class="code docutils literal notranslate"><span class="pre">SC_ADD_LIBRARY</span></code>. It collects all .cpp
+files in the directory <code class="code docutils literal notranslate"><span class="pre">${CMAKE_CURRENT_SOURCE_DIR}/test/{libraryname}</span></code>
+and creates tests from them.</p>
+<p>An example is the <cite>SeisComP</cite> core library. It is located at
+<code class="code docutils literal notranslate"><span class="pre">src/base/common/libs/seiscomp</span></code>. Following the above rule, the test files
+shall be located in <code class="code docutils literal notranslate"><span class="pre">src/base/common/libs/seiscomp/test/core/*.cpp</span></code>. For each
+found source file, the macro will create a test with the same name and link
+its executable against the library the tests are built for.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The recommend test file naming is <code class="code docutils literal notranslate"><span class="pre">{class}_{function}.cpp</span></code>.</p>
+</div>
+</div>
+<div class="section" id="execution">
+<h2>Execution<a class="headerlink" href="#execution" title="Permalink to this headline">¶</a></h2>
+<p>Compiling and running tests is as easy as running</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>make <span class="nb">test</span>
+</pre></div>
+</div>
+<p>in the build directory. Thats it.</p>
+</div>
+<div class="section" id="test-implementation">
+<h2>Test implementation<a class="headerlink" href="#test-implementation" title="Permalink to this headline">¶</a></h2>
+<p>The following section shows an example of a simple but in many cases sufficient
+test module. This example can be used as a template for an <cite>SeisComP</cite> unit test.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#define SEISCOMP_TEST_MODULE [TestModuleName]</span>
+<span class="cp">#include</span> <span class="cpf">&lt;seiscomp/unittest/unittests.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;seiscomp/core/datetime.h&gt;</span><span class="cp"></span>
+
+<span class="n">BOOST_AUTO_TEST_SUITE</span><span class="p">([</span><span class="n">domain</span><span class="p">]</span><span class="n">_</span><span class="p">[</span><span class="k">namespace</span><span class="p">]</span><span class="n">_</span><span class="p">[</span><span class="n">module</span><span class="p">])</span>
+
+<span class="n">BOOST_AUTO_TEST_CASE</span><span class="p">(</span><span class="n">addition</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Seiscomp</span><span class="o">::</span><span class="n">Core</span><span class="o">::</span><span class="n">TimeSpan</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+    <span class="n">BOOST_CHECK</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">l</span>  <span class="o">==</span> <span class="n">Seiscomp</span><span class="o">::</span><span class="n">Core</span><span class="o">::</span><span class="n">TimeSpan</span><span class="p">(</span><span class="mi">12</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">BOOST_AUTO_TEST_CASE</span><span class="p">(</span><span class="n">dummy_warning</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Seiscomp</span><span class="o">::</span><span class="n">Core</span><span class="o">::</span><span class="n">Time</span> <span class="n">tNegativeUsec</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="o">-</span><span class="mi">789</span><span class="p">);</span>
+    <span class="n">BOOST_WARN_EQUAL</span><span class="p">(</span><span class="n">tNegativeUsec</span><span class="p">.</span><span class="n">seconds</span><span class="p">(),</span> <span class="mi">3000</span><span class="p">);</span>
+    <span class="n">BOOST_WARN_EQUAL</span><span class="p">(</span><span class="n">tNegativeUsec</span><span class="p">.</span><span class="n">microseconds</span><span class="p">(),</span> <span class="o">-</span><span class="mi">789</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">BOOST_AUTO_TEXT_SUITE_END</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That was simple, wasn’t it? For more complex examples and usages, visit the
+Boost Unit Test Framework documentation <a class="footnote-reference brackets" href="#b1" id="id2">2</a>. Furthermore you have to link
+your test executable against <code class="code docutils literal notranslate"><span class="pre">${Boost_unit_test_framework_LIBRARY}</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">seiscomp_unittest</span></code>. A simple CMakeLists.txt file looks as follows:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">ADD_EXECUTABLE</span><span class="p">(</span><span class="s">test_mylib_myfeature</span> <span class="s">feature.cpp</span><span class="p">)</span>
+<span class="nb">SC_LINK_LIBRARIES_INTERNAL</span><span class="p">(</span><span class="s">test_mylib_myfeature</span> <span class="s">unittest</span><span class="p">)</span>
+<span class="nb">SC_LINK_LIBRARIES</span><span class="p">(</span><span class="s">test_mylib_myfeature</span> <span class="o">${</span><span class="nv">Boost_unit_test_framework_LIBRARY</span><span class="o">}</span><span class="p">)</span>
+
+<span class="nb">ADD_TEST</span><span class="p">(</span>
+    <span class="s">NAME</span> <span class="s">test_mylib_myfeature</span>
+    <span class="s">WORKING_DIRECTORY</span> <span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span>
+    <span class="s">COMMAND</span> <span class="s">test_mylib_myfeature</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="warning-levels">
+<h3>Warning levels<a class="headerlink" href="#warning-levels" title="Permalink to this headline">¶</a></h3>
+<p>In Boost Test there are <strong>3 different levels</strong> to handle the results.</p>
+<ul class="simple">
+<li><p>Warning: WARN <a class="footnote-reference brackets" href="#b2" id="id3">3</a>
+The error is printed and the error counter <strong>is not</strong> increased.
+The test execution will not be interrupted and will continue to execute other
+test cases.</p></li>
+<li><p>Error: CHECK
+The error is printed and the error counter <strong>is</strong> increased.
+The test execution will not be interrupted and will continue to execute other
+test cases.</p></li>
+<li><p>Fatal error: REQUIRE
+The error is printed and the error counter <strong>is</strong> increased.
+The test execution will be aborted.</p></li>
+</ul>
+</div>
+<div class="section" id="tools">
+<h3>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 23%" />
+<col style="width: 31%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Tool</p></th>
+<th class="head"><p>what it do (short info)</p></th>
+<th class="head"><p>example</p></th>
+<th class="head"><p>return value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>BOOST_&lt;LEVEL&gt;_EQUAL(left, right)</p></td>
+<td><p>left == right</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;_EQUAL(4,5)</p></td>
+<td><p>true or false</p></td>
+</tr>
+<tr class="row-odd"><td><p>BOOST_&lt;LEVEL&gt;(predicate)</p></td>
+<td><p>predicate is true</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;(4+5 == 3+3+3)</p></td>
+<td><p>if false, both results show</p></td>
+</tr>
+<tr class="row-even"><td><p>BOOST_&lt;LEVEL&gt;_EXCEPTION(expression, exception, predicate)</p></td>
+<td><p>is exception equal to throw
+exception of expression</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;_EXCEPTION(myVector(-5), out_of_range, true)</p></td>
+<td><dl class="simple">
+<dt>if false, show the exactly</dt><dd><p>exception</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td><p>BOOST_&lt;LEVEL&gt;_CLOSE(left, right, tolerance)</p></td>
+<td><p>(left - right) &lt;= tolerance
+tolerance in percentage</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;_CLOSE(5.3, 5.29,0.1)</p></td>
+<td><dl class="simple">
+<dt>if false, the exactly</dt><dd><p>tolerance is show</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td><p>BOOST_&lt;LEVEL&gt;_LT(left, right)</p></td>
+<td><p>left &lt; right</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;_LT(6,8)</p></td>
+<td><p>true or false</p></td>
+</tr>
+<tr class="row-odd"><td><p>BOOST_&lt;LEVEL&gt;_GT(left, right)</p></td>
+<td><p>left &gt; right</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;_GT(78,90)</p></td>
+<td><p>true or false</p></td>
+</tr>
+<tr class="row-even"><td><p>BOOST_&lt;LEVEL&gt;_GE(left, right)</p></td>
+<td><p>left &gt;= right</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;_GE(54,10)</p></td>
+<td><p>true or false</p></td>
+</tr>
+<tr class="row-odd"><td><p>BOOST_&lt;LEVEL&gt;_LE(left, right)</p></td>
+<td><p>left &lt;= right</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;_LE(10,2)</p></td>
+<td><p>true or false</p></td>
+</tr>
+<tr class="row-even"><td><p>BOOST_&lt;LEVEL&gt;_NE(left, right)</p></td>
+<td><p>left != right</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;_NE(1,0)</p></td>
+<td><p>true or false</p></td>
+</tr>
+<tr class="row-odd"><td><p>BOOST_ERROR(“message”)</p></td>
+<td><p>increasing error counter and show message</p></td>
+<td><p>BOOST_ERROR(“There was a problem”)</p></td>
+<td><p>message</p></td>
+</tr>
+<tr class="row-even"><td><p>BOOST_TEST_MESSAGE(“message”) <a class="footnote-reference brackets" href="#b3" id="id4">4</a></p></td>
+<td><p>show message</p></td>
+<td><p>BOOST_TEST_MESSAGE(“Your ad can be placed here”)</p></td>
+<td><p>message</p></td>
+</tr>
+<tr class="row-odd"><td><p>BOOST_&lt;LEVEL&gt;_THROW(expression,exception)</p></td>
+<td><p>perform an exception perception check</p></td>
+<td><p>BOOST_&lt;LEVEL&gt;_THROW(myVector(-2),out_of_range)</p></td>
+<td><p>true or false</p></td>
+</tr>
+</tbody>
+</table>
+<p>For more tools and information about the Boost unit test tools see <a class="footnote-reference brackets" href="#b4" id="id5">5</a>.</p>
+</div>
+</div>
+<div class="section" id="test-output">
+<h2>Test output<a class="headerlink" href="#test-output" title="Permalink to this headline">¶</a></h2>
+<p>The test binary will exit with an error code of 0 if no errors were detected
+and the tests finished successfully. Any other result code represents failed
+tests.</p>
+<p>An example output looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Running</span> <span class="n">tests</span><span class="o">...</span>
+<span class="n">Test</span> <span class="n">project</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">sysop</span><span class="o">/</span><span class="n">seiscomp</span><span class="o">/</span><span class="n">build</span>
+    <span class="n">Start</span> <span class="mi">1</span><span class="p">:</span> <span class="n">stringtoxml</span>
+<span class="mi">1</span><span class="o">/</span><span class="mi">4</span> <span class="n">Test</span> <span class="c1">#1: stringtoxml ......................***Failed    0.03 sec</span>
+    <span class="n">Start</span> <span class="mi">2</span><span class="p">:</span> <span class="n">datetime_time</span>
+<span class="mi">2</span><span class="o">/</span><span class="mi">4</span> <span class="n">Test</span> <span class="c1">#2: datetime_time ....................   Passed    0.03 sec</span>
+    <span class="n">Start</span> <span class="mi">3</span><span class="p">:</span> <span class="n">xml_test</span>
+<span class="mi">3</span><span class="o">/</span><span class="mi">4</span> <span class="n">Test</span> <span class="c1">#3: xml_test .........................   Passed    0.03 sec</span>
+    <span class="n">Start</span> <span class="mi">4</span><span class="p">:</span> <span class="n">datetime_timespan</span>
+<span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">Test</span> <span class="c1">#4: datetime_timespan ................   Passed    0.03 sec</span>
+
+<span class="mi">75</span><span class="o">%</span> <span class="n">tests</span> <span class="n">passed</span><span class="p">,</span> <span class="mi">1</span> <span class="n">tests</span> <span class="n">failed</span> <span class="n">out</span> <span class="n">of</span> <span class="mi">4</span>
+
+<span class="n">Total</span> <span class="n">Test</span> <span class="n">time</span> <span class="p">(</span><span class="n">real</span><span class="p">)</span> <span class="o">=</span>   <span class="mf">0.17</span> <span class="n">sec</span>
+
+<span class="n">The</span> <span class="n">following</span> <span class="n">tests</span> <span class="n">FAILED</span><span class="p">:</span>
+          <span class="mi">1</span> <span class="o">-</span> <span class="n">stringtoxml</span> <span class="p">(</span><span class="n">Failed</span><span class="p">)</span>
+<span class="n">Errors</span> <span class="k">while</span> <span class="n">running</span> <span class="n">CTest</span>
+<span class="n">Makefile</span><span class="p">:</span><span class="mi">61</span><span class="p">:</span> <span class="n">recipe</span> <span class="k">for</span> <span class="n">target</span> <span class="s1">&#39;test&#39;</span> <span class="n">failed</span>
+<span class="n">make</span><span class="p">:</span> <span class="o">***</span> <span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="n">Error</span> <span class="mi">8</span>
+</pre></div>
+</div>
+<dl class="footnote brackets">
+<dt class="label" id="wput"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Unit_testing">https://en.wikipedia.org/wiki/Unit_testing</a></p>
+</dd>
+<dt class="label" id="b1"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>As of Boost version 1.46, it is located at <a class="reference external" href="http://www.boost.org/doc/libs/1_46_0/libs/test/doc/html/index.html">http://www.boost.org/doc/libs/1_46_0/libs/test/doc/html/index.html</a></p>
+</dd>
+<dt class="label" id="b2"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p><em>to see the warnings use the instruction:</em> <strong>boost::unit_test::unit_test_log.set_threshold_level(boost::unit_test::log_warnings);</strong></p>
+</dd>
+<dt class="label" id="b3"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
+<dd><p><em>to see the messages use the instruction:</em> <strong>boost::unit_test::unit_test_log.set_threshold_level(boost::unit_test::log_messages);</strong></p>
+</dd>
+<dt class="label" id="b4"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
+<dd><p>As of Boost version 1.46, it is located at <a class="reference external" href="http://www.boost.org/doc/libs/1_46_0/libs/test/doc/html/utf.html">http://www.boost.org/doc/libs/1_46_0/libs/test/doc/html/utf.html</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Unit Testing</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#preparations">Preparations</a></li>
+<li><a class="reference internal" href="#execution">Execution</a></li>
+<li><a class="reference internal" href="#test-implementation">Test implementation</a><ul>
+<li><a class="reference internal" href="#warning-levels">Warning levels</a></li>
+<li><a class="reference internal" href="#tools">Tools</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#test-output">Test output</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="coding-conventions.html"
+                        title="previous chapter">Coding Conventions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base/tests.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

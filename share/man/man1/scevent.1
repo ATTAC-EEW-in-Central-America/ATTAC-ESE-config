@@ -1,0 +1,1122 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "SCEVENT" "1" "Jun 01, 2022" "4.10.0" "SeisComP"
+.SH NAME
+scevent \- SeisComP Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+\fBAssociates an Origin to an Event or forms a new Event if no match is found.
+Selects the preferred origin, magnitude and focal mechanism.\fP
+.SH DESCRIPTION
+.sp
+As a consequence of a real\-time system the \fISeisComP\fP modules creates several
+origins (results of localization processes) for one earthquake
+or other seismic events because as time
+goes by more seismic phases are available. scevent receives these origins and
+associates the origins to events\&. It is also possible to import
+and associate origins from other agencies.
+.sp
+The main tasks of scevent are:
+.INDENT 0.0
+.IP \(bu 2
+\fI\%Associate origins\fP to events.
+.IP \(bu 2
+Set the \fI\%ID of events\fP\&.
+.IP \(bu 2
+Set the \fI\%preferred origin\fP from all available origins.
+.IP \(bu 2
+Set the \fI\%preferred magnitude\fP from all available magnitudes.
+.IP \(bu 2
+Set the \fI\%preferred focal mechanism\fP from all available focal mechanisms.
+.IP \(bu 2
+\fIOptional:\fP Set the event type of automatic origins based on the plugin
+evrc and the hypocenter location of the preferred
+origin. This requires the configuration of the evrc
+plugin and of regions by BNA polygons\&.
+.UNINDENT
+.SH ORIGIN ASSOCIATION
+.sp
+scevent associates origins to events by searching for the best match of the new
+(incoming) origin to other origins for existing events:
+.INDENT 0.0
+.IP \(bu 2
+Associate origins belonging to belonging to \fBthe same seismic event\fP
+to the same event object in \fISeisComP\fP\&.
+.IP \(bu 2
+Associate origins belonging to \fBdifferent seismic events\fP
+to different event objects in \fISeisComP\fP\&.
+.UNINDENT
+.sp
+If a match is not found, a new event can be formed.
+.SS Origin match
+.sp
+The new origin is matched to existing origins by comparing differences in epicenter,
+origin time, and arrivals (associated picks).
+The new origin is matched to an existing origin which has the highest rank in
+the following three groups (1, 2, 3):
+.INDENT 0.0
+.IP 1. 3
+Location and Time (lowest)
+.sp
+The difference in horizontal location is less than
+\fI\%eventAssociation.maximumDistance\fP (degrees)
+and the difference in origin times is less than
+\fI\%eventAssociation.maximumTimeSpan\fP\&.
+.IP 2. 3
+Picks
+.sp
+The two origins have more than \fI\%eventAssociation.minimumMatchingArrivals\fP
+matching picks. Picks are matched either by ID or by time depending
+on \fI\%eventAssociation.maximumMatchingArrivalTimeDiff\fP\&.
+.IP 3. 3
+Picks and Location and Time (highest)
+.sp
+This is the best match, for which both the location\-and\-time and picks
+criteria above are satisfied.
+.UNINDENT
+.sp
+If more than one origin is found in the highest ranking class, then the first
+one of them is chosen.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+For efficiency events in the cache are scanned first and if no matches are found,
+the database is scanned for the time window \fI\%eventAssociation.eventTimeBefore\fP \-
+\fI\%eventAssociation.eventTimeAfter\fP
+around the incoming Origin time. The cached events are ordered by eventID and
+thus in time.
+.UNINDENT
+.UNINDENT
+.SS No origin match
+.sp
+If no event with an origin that matches the incoming origin is found, then a
+new event is formed and the origin is associated to that event. The following
+criteria are applied to allow the creation of the new event:
+.INDENT 0.0
+.IP \(bu 2
+The agency for the origin is not black listed (\fBprocessing.blacklist.agencies\fP).
+.IP \(bu 2
+The origin is automatic and it has more than \fI\%eventAssociation.minimumDefiningPhases\fP
+arrivals (associated picks).
+.UNINDENT
+.INDENT 0.0
+.INDENT 2.5
+[image: alternate association of an origin by matching picks.]
+[image]
+Association of an origin to an event by matching picks..UNINDENT
+.UNINDENT
+.SH PREFERRED ORIGIN
+.sp
+The preferred origin is set by ranking of all associated origins. The ranking
+is controlled by \fI\%eventAssociation.priorities\fP and related configuration
+parameters.
+.SH PREFERRED MAGNITUDE
+.sp
+The preferred magnitude is set by ranking of the
+summary magnitude and all network magnitudes
+of the preferred origin. The ranking is mainly controlled by
+\fI\%eventAssociation.magTypes\fP and \fI\%eventAssociation.minimumMagnitudes\fP
+and related configuration parameters.
+.SH PREFERRED FOCAL MECHANISM
+.sp
+The most recent manual focal mechanism or, if no manual ones are unavailable, the
+most recent automatic focal mechnisms becomes preferred.
+.SH ID OF EVENTS
+.sp
+The ID of an event or eventID uniquely identifies an event. The ID is derived from
+the time of occurrence of the event within a year. As configured by \fI\%eventIDPattern\fP
+it typically consists of a prefix configured by \fI\%eventIDPrefix\fP and a
+string containing the year and a set of characters or numbers defining the time.
+.SH JOURNALS
+.sp
+scevent can be commanded by journals to do a certain action. Journal entries are being
+received via the messaging bus to any of the subscribed groups. A journal entry
+contains an action, a subject (a publicID of an object) and optional parameters.
+Journals can be interactively sent to the messaging by scsendjournal\&.
+.sp
+If scevent has handled an action, it will send a reply journal entry with
+an action formed from the origin action name plus \fBOK\fP or \fBFailed\fP\&. The
+parameters of the journal entry contain a possible reason.
+.sp
+The following actions are supported by scevent:
+.INDENT 0.0
+.TP
+.B EvGrabOrg(objectID, parameters)
+Grabs an origin and associates it to the given event. If the origin is
+already associated with another event then its reference to this event
+will be removed.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- The ID of the origin to be grabbed
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvMerge(objectID, parameters)
+Merges an event (source) into another event (target). After successful
+completion the source event will be deleted.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event (target)
+.IP \(bu 2
+\fBparameters\fP \-\- The ID of an existing event (source)
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvName(objectID, parameters)
+Adds or updates the event description with type "earthquake name".
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- An event name
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvNewEvent(objectID, parameters)
+Creates a new event based on a given origin. The origin must not yet be
+associated with another event.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The origin publicID of the origin which will be used to
+create the new event.
+.IP \(bu 2
+\fBparameters\fP \-\- Unused
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvOpComment(objectID, parameters)
+Adds or updates the event comment text with id "Operator".
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- The comment text
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvPrefFocMecID(objectID, parameters)
+Sets the preferred focal mechanism ID of an event. If a focal mechanism ID
+is passed then it will be fixed as preferred solution for this event and
+any subsequent focal mechanism associations will not cause a change of the
+preferred focal mechanism.
+.sp
+If an empty focal mechanism ID is passed then this is considered as "unfix"
+and scevent will switch back to automatic preferred selection mode.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- The focal mechanism ID which will become preferred or empty.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvPrefMagType(objectID, parameters)
+Set the preferred magnitude of the event matching the requested magnitude
+type.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- The desired preferred magnitude type
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvPrefMw(objectID, parameters)
+Sets the moment magnitude (Mw) of the preferred focal mechanism as
+preferred magnitude of the event.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- Boolean flag, either "true" or "false"
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvPrefOrgAutomatic(objectID, parameters)
+Releases the fixed origin constraint. This call is equal to \fBEvPrefOrgID(eventID, \(aq\(aq)\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- Unused
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvPrefOrgEvalMode(objectID, parameters)
+Sets the preferred origin based on an evaluation mode. The configured
+priorities are still valid. If an empty evaluation mode is passed then
+scevent releases this constraint.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- The evaluation mode ("automatic", "manual") or empty
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvPrefOrgID(objectID, parameters)
+Sets the preferred origin ID of an event. If an origin ID is passed then
+it will be fixed as preferred solution for this event and any subsequent
+origin associations will not cause a change of the preferred origin.
+.sp
+If an empty origin ID is passed then this is considered as "unfix" and
+scevent will switch back to automatic preferred selection mode.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- The origin ID which will become preferred or empty.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvRefresh(objectID, parameters)
+Refreshes the event information. This operation can be useful if the
+configured fep region files have changed on disc and scevent should
+update the region information. Changed plugin parameters can be another
+reason to refresh the event status.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- Unused
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvSplitOrg(objectID, parameters)
+Remove an origin reference from an event and create a new event for
+this origin.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event holding a reference to the
+given origin ID.
+.IP \(bu 2
+\fBparameters\fP \-\- The ID of the origin to be split
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvType(objectID, parameters)
+Sets the event type to the passed value.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- The event type
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B EvTypeCertainty(objectID, parameters)
+Sets the event type certainty to the passed value.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBobjectID\fP \-\- The ID of an existing event
+.IP \(bu 2
+\fBparameters\fP \-\- The event type certainty
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH PLUGINS
+.INDENT 0.0
+.IP \(bu 2
+RegionCheck
+.sp
+evrc plugin for scevent
+.UNINDENT
+.SH CONFIGURATION
+.nf
+\fBetc/defaults/global.cfg\fP
+\fBetc/defaults/scevent.cfg\fP
+\fBetc/global.cfg\fP
+\fBetc/scevent.cfg\fP
+\fB~/.seiscomp/global.cfg\fP
+\fB~/.seiscomp/scevent.cfg\fP
+.fi
+.sp
+.sp
+scevent inherits global options\&.
+.INDENT 0.0
+.TP
+.B eventIDPrefix
+Type: \fIstring\fP
+.sp
+Prefix for all Event IDs
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventIDPattern
+Type: \fIstring\fP
+.sp
+Defines the pattern to generate an event ID.
+.sp
+%p : prefix
+.sp
+%Y : year
+.sp
+%[w]c: alpha character
+.sp
+%[w]C: upper case alpha character
+.sp
+%[w]d: decimal
+.sp
+%[w]x: hexadecimal
+.sp
+%[w]X: upper case hexadecimal
+.sp
+[w] is an optional width parameter.
+Default is \fB%p%Y%04c\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B processing.blacklist.eventIDs
+Type: \fIlist:string\fP
+.sp
+Defines a blacklist of event ids. The items of this list
+are only matches against %c, %C, %d, %x and %X of the
+eventIDPattern description. Year (%Y) and prefix (%p) are
+not matched. The match is case\-sensitive, so blacklisting
+e.g. abcd would only match in combination with %c. If %C
+is used ABCD has to be blacklisted.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBeventAssociation.*\fP
+\fICriteria defining if Origins are associated to an event\fP
+\fIand which Origins and magnitudes become preferred.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.minimumDefiningPhases
+Type: \fIint\fP
+.sp
+Minimum number of Picks for an Origin that is automatic and cannot be
+associated with an Event to be allowed to form an new Event.
+Default is \fB10\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.minimumScore
+Type: \fIdouble\fP
+.sp
+Minimum score of an automatic Origin to be allowed to
+form an new Event. This requires an activated score
+plugin and a score processor. Configure "score"
+for defining the score processor and the score processor
+parameters. If minimumScore is defined, "minimumDefiningPhases"
+has no effect on association as this phase check will be
+superseded by the score check. It is the task of the score
+processor to evaluate a proper score for all input Origins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.ignoreFMDerivedOrigins
+Type: \fIboolean\fP
+.sp
+Ignore and do not associate Origins derived
+from CMT/MT inversions.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.eventTimeBefore
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Time range before the Origin time of an incoming Origin to search for
+matching events.
+Default is \fB1800\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.eventTimeAfter
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Time range after the Origin time of an incoming Origin to search for
+matching events.
+Default is \fB1800\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.minimumMatchingArrivals
+Type: \fIint\fP
+.sp
+Minimum number of matching picks between two Origins to be associated
+to the same event.
+Default is \fB3\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.maximumMatchingArrivalTimeDiff
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Negative time window: compare only pickIDs to find
+matching arrivals. A non negative
+value (including 0) compares pick times regardless
+of the pickID. Pass: |pick1.time \- pick2.time| <= threshold
+Default is \fB\-1\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.compareAllArrivalTimes
+Type: \fIboolean\fP
+.sp
+This parameter is only used in conjunction with
+eventAssociation.maximumMatchingArrivalTimeDiff.
+If a station has multiple associated arrivals for a
+particular event, this flag defines if the time distance
+of a new pick to all arrivals must be within
+eventAssociation.maximumMatchingArrivalTimeDiff
+or if one matching arrival is enough.
+Default is \fBtrue\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.allowLooseAssociatedArrivals
+Type: \fIboolean\fP
+.sp
+Allows to match picks that are associated with weight 0.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.maximumTimeSpan
+Type: \fIdouble\fP
+.sp
+Unit: \fIs\fP
+.sp
+Associates an Origin with an existing event  if the Origin
+time differs not more than 60 seconds unless the
+minimumMatchingArrivals criteria matches.
+Default is \fB60\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.maximumDistance
+Type: \fIdouble\fP
+.sp
+Unit: \fIdegrees\fP
+.sp
+Allowed location difference between an incoming Origin compared with
+preferred Origins to get associated.
+Default is \fB5\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.magTypes
+Type: \fIlist:string\fP
+.sp
+Magnitude type priority list for becoming a preferred magnitude for an
+event.
+.sp
+Example:
+.sp
+M, mBc, Mw(mB), Mwp, ML, MLh, MLv, mb
+Default is \fBM\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.enableFallbackMagnitude
+Type: \fIboolean\fP
+.sp
+If true, one magnitude will be preferred even if magnitude criteria are
+not fullfilled.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.minimumMagnitudes
+Type: \fIint\fP
+.sp
+Minimum number of station magnitudes referenced to a network magnitude
+to become a preferred magnitude.
+Default is \fB4\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.minMwCount
+Type: \fIint\fP
+.sp
+Minimum number of station magnitudes required for Mw(mB) to be considered as
+preferred magnitude.
+Default is \fB8\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.mbOverMwCount
+Type: \fIint\fP
+.sp
+Minimum number of station magnitudes which ensures that Mw(mB) will be
+preferred and not mb.
+Default is \fB30\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.mbOverMwValue
+Type: \fIdouble\fP
+.sp
+Average between mb and Mw(mB) which must be exceeded to become Mw(mB)
+preferred.
+Default is \fB6\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.magPriorityOverStationCount
+Type: \fIboolean\fP
+.sp
+If false then the station count rules out the magnitude priority
+which is only taken into account if two magnitudes have the
+same station count.
+.sp
+If true then the priority rules out the station count
+which is only taken into account if two magnitudes have the
+same priority.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.priorities
+Type: \fIlist:string\fP
+.sp
+The general priority list to decide if an Origin becomes preferred.
+The priority decreases in the order of the parameters.
+This list is not used unless this parameter is activated.
+.sp
+Empty priority list: scevent replicates the default hard wired behaviour:
+AGENCY, STATUS, PHASES_AUTOMATIC, TIME_AUTOMATIC
+.sp
+Each item in the list corresponds to a check that is performed.
+Each check computes a score of the incoming Origin (s1) and the
+current preferred Origin (s2). If the s1 is lower than s2,
+the incoming Origin is rejected and does not become preferred.
+All subsequent checks are ignored.
+If s1 is equal to s2, the next check in the list is performed.
+If s1 is larger than s2, the Origin becomes preferred and
+all subsequent checks are ignored.
+.sp
+Available tokens:
+.sp
+AGENCY: check based on agency priorities
+.sp
+AUTHOR: check based on author priorities
+.sp
+MODE: evaluation mode priority: 0 = unset, 1 = automatic, 2 = manual, manual over\-rules automatic
+.sp
+STATUS: priority combined from evaluation status and evaluation mode:
+\-100 = status is rejected, \-1 = status is reported,
+0 = status is preliminary or status is unset and mode is automatic,
+1 = status is confirmed or status is unset and mode is manual,
+2 = status is reviewed, 3 = status is final,
+.sp
+METHOD: check based on the method priorities
+.sp
+PHASES: higher phase count = higher priority
+.sp
+PHASES_AUTOMATIC: only checks phase priorities for incoming automatic Origins
+.sp
+RMS: lower rms = higher priority
+.sp
+RMS_AUTOMATIC: only check RMS on incoming automatic Origins
+.sp
+TIME: more recent Origins (creationTime) have higher priorities
+.sp
+TIME_AUTOMATIC: only check creationTime priority on incoming automatic Origins
+.sp
+SCORE: evaluates the score according to a configured ScoreProcessor and
+prefers the Origin/Focalmechanism with the highest score.
+Default is \fBAGENCY, STATUS, PHASES_AUTOMATIC, TIME_AUTOMATIC\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.agencies
+Type: \fIlist:string\fP
+.sp
+The agencyID priority list. When the eventtool comes to the point to
+select a preferred Origin based on AGENCY it orders all Origins by its agency priority and
+selects then the best one among the highest priority agency. It also defines the
+agency priority for custom priority checks
+(eventAssociation.priorities).
+.sp
+The parameter is only considered when defined in "priorities".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.authors
+Type: \fIlist:string\fP
+.sp
+The author priority list. When the eventtool comes to the point to
+select a preferred Origin based on AUTHOR it orders all Origins by its author priority and
+selects then the best one among the highest priority author. It also defines the
+author priority for custom priority checks (eventAssociation.priorities).
+.sp
+The parameter is only considered when defined in "priorities".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.methods
+Type: \fIlist:string\fP
+.sp
+The method priority list. When the eventtool comes to the point to
+select a preferred Origin based on METHOD it orders all Origins by its methodID priority and
+selects then the best one among the highest priority method. It also defines the
+method priority for custom priority checks (eventAssociation.priorities).
+A defined method string must match exactly the string in Origin.methodID.
+.sp
+The parameter is only considered when defined in "priorities".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.score
+Type: \fIstring\fP
+.sp
+Defines the ScoreProcessor interface to be used along
+with priority "SCORE".
+.sp
+The parameter is only considered when defined in "priorities".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.declareFakeEventForRejectedOrigin
+Type: \fIboolean\fP
+.sp
+If the preferred Origin has evaluation status \(aqrejected\(aq, the
+Event type will be set to \(aqnot existing\(aq unless the Event
+type has been fixed by an operator or the preferred Origin
+has been fixed.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.delayTimeSpan
+Type: \fIint\fP
+.sp
+Unit: \fIs\fP
+.sp
+Configures a timespan to delay Event creation. If a new Origin arrives
+which cannot be associated to an existing Event, delay the Event creation for a certain
+timespan.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.region.rect
+Type: \fIstring\fP
+.sp
+Region in which scevent is allowed to create Events.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.region.minDepth
+Type: \fIdouble\fP
+.sp
+Unit: \fIkm\fP
+.sp
+Minimum depth for which scevent is allowed to create Events.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.region.maxDepth
+Type: \fIdouble\fP
+.sp
+Unit: \fIkm\fP
+.sp
+Maximum depth for which scevent is allowed to create Events.
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBeventAssociation.delayFilter.*\fP
+\fIThe delayFilter group configures an Origin filter to activate the delay feature for\fP
+\fIthis Origin. If more than one filter is given they are combined with AND.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.delayFilter.agencyID
+Type: \fIstring\fP
+.sp
+The agencyID of the Origin to be delayed.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.delayFilter.author
+Type: \fIstring\fP
+.sp
+The author of the Origin to be delayed.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B eventAssociation.delayFilter.evaluationMode
+Type: \fIstring\fP
+.sp
+The evaluation mode of the Origin to be delayed. Can be either "manual"
+or "automatic".
+.UNINDENT
+.SS RegionCheck extension
+.sp
+evrc plugin for scevent
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+\fBrc.*\fP
+\fITest if events lie within or outside a region.\fP
+\fIEvents within a region are flagged as positive, outside as negative.\fP
+\fIThe event type is set accordingly.\fP
+\fIAdd the plugin "evrc" to the  plugins\fP
+\fIparameter to make this feature available.\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rc.regions
+Type: \fIlist:string\fP
+.sp
+The list of closed BNA polygon names defining regions for
+flagging event as positive or negative.
+A polygon name defines a positive region but names with prefix !  (exclamation mark)
+define negative regions. Evaluation is done in the order of the
+polygons. The last matching criteria applies and the event type
+is set accordingly.
+.sp
+Default: If events are not positive or are negative regions the
+event type is set to "outside of network interest".
+Default: "!reject", use "accecpt" to overwrite the default.
+.sp
+Examples:
+.sp
+Events are flagged positive within the polygon "germany":
+.sp
+germany
+.sp
+All events are flagged positive but events within the polygon "quarries" are negative:
+.sp
+accept,!quarries
+.sp
+Events within the polygon "germany" are flagged positive but
+all other events and events within the polygon "quarries" are negaitve:
+.sp
+germany,!quarries
+.sp
+All events are flagged positive but events within the polygon "germany"
+are negative and all events within the polygon "saxony" are positive:
+.sp
+accept,!germany,saxony
+Default is \fB!reject\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rc.readEventTypeFromBNA
+Type: \fIboolean\fP
+.sp
+Read the event type, minDepth and maxDepth from the BNA polygon header. The header may contain
+the values, e.g. header of a polygon with name "quarry":
+.sp
+"quarry","rank 1","eventType: quarry blast, minDepth: \-5, maxDepth: 10",13
+.sp
+When eventType is set, it supersedes eventTypePositive and eventTypeNegative.
+When not set, eventTypePositive and eventTypeNegative are considered.
+Default is \fBfalse\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rc.eventTypePositive
+Type: \fIstring\fP
+.sp
+New type of an event which is flagged positive. Ignored
+if readEventTypeFromBNA is active.
+.sp
+Empty: Do not set type
+.UNINDENT
+.INDENT 0.0
+.TP
+.B rc.eventTypeNegative
+Type: \fIstring\fP
+.sp
+New type of an event which is flagged negative. Ignored
+if readEventTypeFromBNA is active.
+.sp
+Empty means default: "outside of network interest"
+Default is \fB"outside of network interest"\fP\&.
+.UNINDENT
+.SH COMMAND-LINE
+.SS Generic
+.INDENT 0.0
+.TP
+.B \-h, \-\-help
+show help message.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-V, \-\-version
+show version information
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-file arg
+Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick \-> scautopick2.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plugins arg
+Load given plugins.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-D, \-\-daemon
+Run as daemon. This means the application will fork itself and
+doesn\(aqt need to be started with &.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-auto\-shutdown arg
+Enable/disable self\-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with \-\-start\-stop\-msg for the master module).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-module arg
+Sets the name of the master\-module used for auto\-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-shutdown\-master\-username arg
+Sets the name of the master\-username of the messaging used for
+auto\-shutdown. If "shutdown\-master\-module" is given as well this
+parameter is ignored.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-x, \-\-expiry time
+Time span in hours after which objects expire.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-O, \-\-origin\-id publicID
+OriginID to be associated. When given no messages are sent.
+Only the status of the association is written to stdout.
+.UNINDENT
+.SS Verbosity
+.INDENT 0.0
+.TP
+.B \-\-verbosity arg
+Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-v, \-\-v
+Increase verbosity level (may be repeated, eg. \-vv)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-q, \-\-quiet
+Quiet mode: no logging output
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-component arg
+Limits the logging to a certain component. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-s, \-\-syslog
+Use syslog logging back end. The output usually goes to /var/lib/messages.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-l, \-\-lockfile arg
+Path to lock file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-console arg
+Send log output to stdout.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-debug
+Debug mode: \-\-verbosity=4 \-\-console=1
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-log\-file arg
+Use alternative log file.
+.UNINDENT
+.SS Messaging
+.INDENT 0.0
+.TP
+.B \-u, \-\-user arg
+Overrides configuration parameter \fBconnection.username\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-H, \-\-host arg
+Overrides configuration parameter \fBconnection.server\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-t, \-\-timeout arg
+Overrides configuration parameter \fBconnection.timeout\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-g, \-\-primary\-group arg
+Overrides configuration parameter \fBconnection.primaryGroup\fP\&.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-S, \-\-subscribe\-group arg
+A group to subscribe to. This option can be given more than once.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-start\-stop\-msg arg
+Sets sending of a start\- and a stop message.
+.UNINDENT
+.SS Database
+.INDENT 0.0
+.TP
+.B \-\-db\-driver\-list
+List all supported database drivers.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-d, \-\-database arg
+The database connection string, format: \fI\%service://user:pwd@host/database\fP\&.
+"service" is the name of the database driver which can be
+queried with "\-\-db\-driver\-list".
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-config\-module arg
+The configmodule to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-inventory\-db arg
+Load the inventory from the given database or file, format: [\fI\%service://]location\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-db\-disable
+Do not use the database at all
+.UNINDENT
+.SH AUTHOR
+gempa GmbH, GFZ Potsdam
+.SH COPYRIGHT
+gempa GmbH, GFZ Potsdam
+.\" Generated by docutils manpage writer.
+.

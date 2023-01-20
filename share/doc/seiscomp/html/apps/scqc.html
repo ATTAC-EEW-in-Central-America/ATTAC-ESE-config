@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scqc &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="screloc" href="screloc.html" />
+    <link rel="prev" title="scmag" href="scmag.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="screloc.html" title="screloc"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="scmag.html" title="scmag"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/processing.html" accesskey="U">Processing</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="scqc">
+<span id="id1"></span><h1>scqc<a class="headerlink" href="#scqc" title="Permalink to this headline">¶</a></h1>
+<p><strong>Derives quality control (QC) parameters from waveforms.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>scqc determines waveform quality control (QC) parameters of data streams. The
+output parameters are time averaged in terms of waveform quality messages.
+In regular intervals report messages are sent containing the short term average
+representation of the specific QC parameter for a given time span. Alarm messages
+are generated if the short term average (e.g. 90 s) of a QC parameter differs from
+the long term average (e.g. 3600 s) by more than a defined threshold.
+To avoid an excessive load, QC messages are sent distributed over time. Storing
+QC parameters into the database should be avoided by configuring, e.g.,
+<a class="reference internal" href="#confval-plugins.default.archive.interval"><code class="xref std std-confval docutils literal notranslate"><span class="pre">plugins.default.archive.interval</span></code></a> as otherwise the database grows
+quickly.</p>
+<p>The QC parameters can be interactively observed using <a class="reference internal" href="scqcv.html#scqcv"><span class="std std-ref">scqcv</span></a> or <a class="reference internal" href="scmm.html#scmm"><span class="std std-ref">scmm</span></a>.</p>
+</div>
+<div class="section" id="technology">
+<h2>Technology<a class="headerlink" href="#technology" title="Permalink to this headline">¶</a></h2>
+<p>scqc uses <a class="reference internal" href="../base/glossary.html#term-plugin"><span class="xref std std-term">plugins</span></a> to compute the waveform quality control (QC)
+parameters. The plugins can be found in &#64;DATADIR&#64;/plugins/qc. They are loaded
+by default or selected by <a class="reference internal" href="#scqc-setup"><span class="std std-ref">configuration setup</span></a>.</p>
+</div>
+<div class="section" id="qc-parameters">
+<h2>QC parameters<a class="headerlink" href="#qc-parameters" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center" id="id3">
+<span id="scqc-fig-times"></span><a class="reference internal image-reference" href="../_images/times.png"><img alt="../_images/times.png" src="../_images/times.png" style="width: 16cm;" /></a>
+<p class="caption"><span class="caption-text">Times describing the data records, e.g., for calculating
+<a class="reference internal" href="#scqc-delay"><span class="std std-ref">delay</span></a> or <a class="reference internal" href="#scqc-latency"><span class="std std-ref">latency</span></a>.
+<img class="math" src="../_images/math/1f50c891e31cbac3d86762eed95535d46fedfbb7.png" alt="t_{now}"/> may be measured differently depending on the QC parameter.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>The following QC parameters are determined when the corresponding plugin is
+loaded:</p>
+<dl id="scqc-availability">
+<dt>availability [%]</dt><dd><p><strong>Plugin:</strong> qcplugin_availability</p>
+<p><strong>Description:</strong> Availability of data in the configured time span.</p>
+</dd>
+</dl>
+<dl id="scqc-delay">
+<dt>delay [s]</dt><dd><p><strong>Plugin:</strong> qcplugin_delay</p>
+<p><strong>Description:</strong> Time difference between current time, <img class="math" src="../_images/math/1f50c891e31cbac3d86762eed95535d46fedfbb7.png" alt="t_{now}"/>, and
+time of the last record in the <cite>SeisComP</cite> system (see <a class="reference internal" href="#scqc-fig-times"><span class="std std-ref">Figure</span></a>):</p>
+<div class="math">
+<p><img src="../_images/math/a00f908f87fb188a574cbfcdc84d27eb048638d3.png" alt="delay = t_{now} - t_{2}."/></p>
+</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Current time is measured during reception of a record and updated in the
+report intervals configured for delay.</p>
+</div>
+</dd>
+</dl>
+<dl id="scqc-gaps">
+<dt>gaps (count [counts], interval [s], length [s])</dt><dd><p><strong>Plugin:</strong> qcplugin_gap</p>
+<p><strong>Description:</strong> In case of a data gap between two consecutive records this
+parameter delivers the gap interval time (interval), the mean length of the gaps
+(length) and the number of the gaps (count) over the configured time interval.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>gaps interval = 0 for gaps count = 1 but gaps interval &gt; 0
+for gaps count &gt; 1. This may be important when evaluating the intervals.</p>
+</div>
+</dd>
+</dl>
+<dl id="scqc-latency">
+<dt>latency [s]</dt><dd><p><strong>Plugin:</strong> qcplugin_latency</p>
+<p><strong>Description:</strong> Time difference between current time, <img class="math" src="../_images/math/1f50c891e31cbac3d86762eed95535d46fedfbb7.png" alt="t_{now}"/>, and
+arrival time of the last record (see <a class="reference internal" href="#scqc-fig-times"><span class="std std-ref">Figure</span></a>):</p>
+<div class="math">
+<p><img src="../_images/math/7bf45885e062034318f53c011608395ed5c38808.png" alt="latency = t_{now} - t_{arr}."/></p>
+</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Current time is measured during reception of a record and updated in the
+report intervals configured for latency.</p>
+</div>
+</dd>
+</dl>
+<dl id="scqc-offset">
+<dt>offset [counts]</dt><dd><p><strong>Plugin:</strong> qcplugin_offset</p>
+<p><strong>Description:</strong> Average value of all samples of a record.</p>
+</dd>
+</dl>
+<dl id="scqc-outage">
+<dt>outage [time string]</dt><dd><p><strong>Plugin:</strong> qcplugin_outage</p>
+<p><strong>Description:</strong> Delivers the start and the end time of a data outage (gap).</p>
+</dd>
+</dl>
+<dl id="scqc-overlap">
+<dt>overlaps (count [counts], interval [s], length [s])</dt><dd><p><strong>Plugin:</strong> qcplugin_overlap</p>
+<p><strong>Description:</strong> In case of overlaps between two consecutive records this parameter
+delivers the overlaps interval time (interval), the mean length (length) of the
+overlaps and the number of the overlaps (count) over the configured time interval.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>overlaps interval = 0 for overlaps count = 1 but overlaps interval &gt; 0
+for overlaps count &gt; 1. This may be important when evaluating the intervals.</p>
+</div>
+</dd>
+</dl>
+<dl id="scqc-rms">
+<dt>rms [counts]</dt><dd><p><strong>Plugin:</strong> qcplugin_rms</p>
+<p><strong>Description:</strong> Offset corrected root mean square (RMS) value of a record.</p>
+</dd>
+</dl>
+<dl id="scqc-spike">
+<dt>spikes (count [counts], interval [s], amplitude [counts])</dt><dd><p><strong>Plugin:</strong> qcplugin_spike</p>
+<p><strong>Description:</strong> In case of the occurrence of a spike in a record this parameter
+delivers the time interval between consecutive spikes (interval), the mean
+amplitude of the spike (amplitude) and the number of the spikes (count) over the
+configured time interval. Internally a list of spikes is stored (spike time,
+spike amplitude); the spike finder algorithm is still preliminary.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>spikes interval = 0 for spikes count = 1 but spikes interval &gt; 0
+for spikes count &gt; 1. This may be important when evaluating the intervals.</p>
+</div>
+</dd>
+</dl>
+<dl id="scqc-timing">
+<dt>timing [%]</dt><dd><p><strong>Plugin:</strong> qcplugin_timing</p>
+<p><strong>Description:</strong> miniSEED record timing quality (0 - 100 %) as written into the
+miniSEED records by the digitizer.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="setup">
+<span id="scqc-setup"></span><h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p>The configuration can be adjusted in the module configuration (<code class="file docutils literal notranslate"><span class="pre">scqc.cfg</span></code>).</p>
+<ol class="arabic">
+<li><p>Select the streams for which to compute the QC parameters. Be default, only
+streams defined global bindings are considered:</p>
+<ul>
+<li><p><a class="reference internal" href="#confval-use3Components"><code class="xref std std-confval docutils literal notranslate"><span class="pre">use3Components</span></code></a>: Select to consider the 3 components related to
+the stream defined by global bingings. Reguires to <strong>select</strong>
+<a class="reference internal" href="#confval-useConfiguredStreams"><code class="xref std std-confval docutils literal notranslate"><span class="pre">useConfiguredStreams</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="#confval-streamMask"><code class="xref std std-confval docutils literal notranslate"><span class="pre">streamMask</span></code></a>: Freely choose any available stream to compute the QC
+parameters for. This requires to <strong>unselect</strong> <a class="reference internal" href="#confval-useConfiguredStreams"><code class="xref std std-confval docutils literal notranslate"><span class="pre">useConfiguredStreams</span></code></a>.
+Regular expressions may be used, e.g.:</p>
+<ul>
+<li><p>Consider BHZ streams from all networks, stations and locations:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>streamMask = &quot;&quot;(.+)\.(.+)\.(.*)\.(BHZ)$&quot;
+</pre></div>
+</div>
+</li>
+<li><p>Consider any component from BH, LH and HH streams:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>streamMask = &quot;(.+)\.(.+)\.(.*)\.((BH)|(LH)|(HH))?$&quot;
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Load the QC and other plugins, e.g. for data acquisition.
+The QC plugins loaded by default are <code class="code docutils literal notranslate"><span class="pre">qcplugin_availability</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">qcplugin_delay</span></code>, <code class="code docutils literal notranslate"><span class="pre">qcplugin_gap</span></code>, <code class="code docutils literal notranslate"><span class="pre">qcplugin_latency</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">qcplugin_offset</span></code>, <code class="code docutils literal notranslate"><span class="pre">qcplugin_outage</span></code>, <code class="code docutils literal notranslate"><span class="pre">qcplugin_overlap</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">qcplugin_rms</span></code>, <code class="code docutils literal notranslate"><span class="pre">qcplugin_spike</span></code> and <code class="code docutils literal notranslate"><span class="pre">qcplugin_timing</span></code>.</p>
+<p>Adjust <a class="reference internal" href="global.html#confval-plugins"><code class="xref std std-confval docutils literal notranslate"><span class="pre">plugins</span></code></a> for setting plugins explicitly and to exclude the other
+ones, e.g.</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>plugins = qcplugin_availability, qcplugin_spike
+</pre></div>
+</div>
+<p>Further <a class="reference internal" href="../base/glossary.html#term-recordstream"><span class="xref std std-term">RecordStream</span></a> plugins for reading data may be considered.</p>
+</li>
+<li><p>Configure the plugin parameters: Each plugin considers specific parameters
+which can be configured separately or the default section.</p></li>
+</ol>
+</div>
+<div class="section" id="configuration">
+<span id="scqc-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/scqc.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/scqc.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/scqc.cfg</span></code></div>
+</div>
+<p>scqc inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+<dl class="confval">
+<dt id="confval-CreatorId">
+<code class="sig-name descname">CreatorId</code><a class="headerlink" href="#confval-CreatorId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>ID of QC message creator
+Default is <code class="docutils literal notranslate"><span class="pre">smi://de.gfz-potsdam/QcTool_0.3.1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-useConfiguredStreams">
+<code class="sig-name descname">useConfiguredStreams</code><a class="headerlink" href="#confval-useConfiguredStreams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Limit QC determination to processed data streams which are
+defined in global bindings with detecLocid and detecStream.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-use3Components">
+<code class="sig-name descname">use3Components</code><a class="headerlink" href="#confval-use3Components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>If useConfiguredStreams is true then this parameter decides whether
+to use only the vertical component (default) or all three
+components. The 3 components are collected from the inventory
+according to channel orientation. If that is not possible
+then the fixed components N and E will be used.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-streamMask">
+<code class="sig-name descname">streamMask</code><a class="headerlink" href="#confval-streamMask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>If useConfiguredStreams is false, then
+load (from inventory) only those streams, matching the streamMask</p>
+<p>RegEx e.g. “^(NET1|NET2).(STA1|STA2|STA3).(LOC).((BH)|(LH)|(HH))Z$”</p>
+<p>RegEx e.g. “^(.+).(.+).(.*).(.+)Z$”</p>
+<p>streamMask = “^(.+).(.+).(.*).(BHZ)$”</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-dbLookBack">
+<code class="sig-name descname">dbLookBack</code><a class="headerlink" href="#confval-dbLookBack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>days</em></p>
+<p>Database look up for past entries not older than x days
+(to determine the last QC parameter calculated).
+Default is <code class="docutils literal notranslate"><span class="pre">7</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.*</strong>
+<em>Control parameters for individual QC plugins.</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.default.*</strong>
+<em>Default configuration parameters for the plugins.</em>
+<em>Can be overwritten by the individual plugin configurations.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.default.realTimeOnly">
+<code class="sig-name descname">plugins.default.realTimeOnly</code><a class="headerlink" href="#confval-plugins.default.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.default.filter">
+<code class="sig-name descname">plugins.default.filter</code><a class="headerlink" href="#confval-plugins.default.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.default.buffer">
+<code class="sig-name descname">plugins.default.buffer</code><a class="headerlink" href="#confval-plugins.default.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.default.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.default.report.interval">
+<code class="sig-name descname">plugins.default.report.interval</code><a class="headerlink" href="#confval-plugins.default.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.default.report.buffer">
+<code class="sig-name descname">plugins.default.report.buffer</code><a class="headerlink" href="#confval-plugins.default.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.default.report.timeout">
+<code class="sig-name descname">plugins.default.report.timeout</code><a class="headerlink" href="#confval-plugins.default.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.default.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.default.archive.interval">
+<code class="sig-name descname">plugins.default.archive.interval</code><a class="headerlink" href="#confval-plugins.default.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.default.archive.buffer">
+<code class="sig-name descname">plugins.default.archive.buffer</code><a class="headerlink" href="#confval-plugins.default.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.default.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.default.alert.interval">
+<code class="sig-name descname">plugins.default.alert.interval</code><a class="headerlink" href="#confval-plugins.default.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.default.alert.buffer">
+<code class="sig-name descname">plugins.default.alert.buffer</code><a class="headerlink" href="#confval-plugins.default.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.default.alert.thresholds">
+<code class="sig-name descname">plugins.default.alert.thresholds</code><a class="headerlink" href="#confval-plugins.default.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcLatency.*</strong>
+<em>Configuration parameters for the plugin qcplugin_latency. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.realTimeOnly">
+<code class="sig-name descname">plugins.QcLatency.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcLatency.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.filter">
+<code class="sig-name descname">plugins.QcLatency.filter</code><a class="headerlink" href="#confval-plugins.QcLatency.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.buffer">
+<code class="sig-name descname">plugins.QcLatency.buffer</code><a class="headerlink" href="#confval-plugins.QcLatency.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcLatency.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.report.interval">
+<code class="sig-name descname">plugins.QcLatency.report.interval</code><a class="headerlink" href="#confval-plugins.QcLatency.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which, e.g.,
+can be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.report.buffer">
+<code class="sig-name descname">plugins.QcLatency.report.buffer</code><a class="headerlink" href="#confval-plugins.QcLatency.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.report.timeout">
+<code class="sig-name descname">plugins.QcLatency.report.timeout</code><a class="headerlink" href="#confval-plugins.QcLatency.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcLatency.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.archive.interval">
+<code class="sig-name descname">plugins.QcLatency.archive.interval</code><a class="headerlink" href="#confval-plugins.QcLatency.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.archive.buffer">
+<code class="sig-name descname">plugins.QcLatency.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcLatency.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcLatency.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.alert.interval">
+<code class="sig-name descname">plugins.QcLatency.alert.interval</code><a class="headerlink" href="#confval-plugins.QcLatency.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.alert.buffer">
+<code class="sig-name descname">plugins.QcLatency.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcLatency.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcLatency.alert.thresholds">
+<code class="sig-name descname">plugins.QcLatency.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcLatency.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcDelay.*</strong>
+<em>Configuration parameters for the plugin qcplugin_delay. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.realTimeOnly">
+<code class="sig-name descname">plugins.QcDelay.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcDelay.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to processd data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.filter">
+<code class="sig-name descname">plugins.QcDelay.filter</code><a class="headerlink" href="#confval-plugins.QcDelay.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.buffer">
+<code class="sig-name descname">plugins.QcDelay.buffer</code><a class="headerlink" href="#confval-plugins.QcDelay.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcDelay.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.report.interval">
+<code class="sig-name descname">plugins.QcDelay.report.interval</code><a class="headerlink" href="#confval-plugins.QcDelay.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.report.buffer">
+<code class="sig-name descname">plugins.QcDelay.report.buffer</code><a class="headerlink" href="#confval-plugins.QcDelay.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.report.timeout">
+<code class="sig-name descname">plugins.QcDelay.report.timeout</code><a class="headerlink" href="#confval-plugins.QcDelay.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcDelay.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.archive.interval">
+<code class="sig-name descname">plugins.QcDelay.archive.interval</code><a class="headerlink" href="#confval-plugins.QcDelay.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.archive.buffer">
+<code class="sig-name descname">plugins.QcDelay.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcDelay.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcDelay.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.alert.interval">
+<code class="sig-name descname">plugins.QcDelay.alert.interval</code><a class="headerlink" href="#confval-plugins.QcDelay.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.alert.buffer">
+<code class="sig-name descname">plugins.QcDelay.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcDelay.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcDelay.alert.thresholds">
+<code class="sig-name descname">plugins.QcDelay.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcDelay.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcGap.*</strong>
+<em>Configuration parameters for the plugin qcplugin_gap. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcGap.realTimeOnly">
+<code class="sig-name descname">plugins.QcGap.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcGap.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcGap.filter">
+<code class="sig-name descname">plugins.QcGap.filter</code><a class="headerlink" href="#confval-plugins.QcGap.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcGap.buffer">
+<code class="sig-name descname">plugins.QcGap.buffer</code><a class="headerlink" href="#confval-plugins.QcGap.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcGap.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcGap.report.interval">
+<code class="sig-name descname">plugins.QcGap.report.interval</code><a class="headerlink" href="#confval-plugins.QcGap.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcGap.report.buffer">
+<code class="sig-name descname">plugins.QcGap.report.buffer</code><a class="headerlink" href="#confval-plugins.QcGap.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcGap.report.timeout">
+<code class="sig-name descname">plugins.QcGap.report.timeout</code><a class="headerlink" href="#confval-plugins.QcGap.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcGap.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcGap.archive.interval">
+<code class="sig-name descname">plugins.QcGap.archive.interval</code><a class="headerlink" href="#confval-plugins.QcGap.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcGap.archive.buffer">
+<code class="sig-name descname">plugins.QcGap.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcGap.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcGap.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcGap.alert.interval">
+<code class="sig-name descname">plugins.QcGap.alert.interval</code><a class="headerlink" href="#confval-plugins.QcGap.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcGap.alert.buffer">
+<code class="sig-name descname">plugins.QcGap.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcGap.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcGap.alert.thresholds">
+<code class="sig-name descname">plugins.QcGap.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcGap.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOffset.*</strong>
+<em>Configuration parameters for the plugin qcplugin_offset. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.realTimeOnly">
+<code class="sig-name descname">plugins.QcOffset.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcOffset.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.filter">
+<code class="sig-name descname">plugins.QcOffset.filter</code><a class="headerlink" href="#confval-plugins.QcOffset.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.buffer">
+<code class="sig-name descname">plugins.QcOffset.buffer</code><a class="headerlink" href="#confval-plugins.QcOffset.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOffset.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.report.interval">
+<code class="sig-name descname">plugins.QcOffset.report.interval</code><a class="headerlink" href="#confval-plugins.QcOffset.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.report.buffer">
+<code class="sig-name descname">plugins.QcOffset.report.buffer</code><a class="headerlink" href="#confval-plugins.QcOffset.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.report.timeout">
+<code class="sig-name descname">plugins.QcOffset.report.timeout</code><a class="headerlink" href="#confval-plugins.QcOffset.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOffset.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.archive.interval">
+<code class="sig-name descname">plugins.QcOffset.archive.interval</code><a class="headerlink" href="#confval-plugins.QcOffset.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.archive.buffer">
+<code class="sig-name descname">plugins.QcOffset.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcOffset.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOffset.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.alert.interval">
+<code class="sig-name descname">plugins.QcOffset.alert.interval</code><a class="headerlink" href="#confval-plugins.QcOffset.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.alert.buffer">
+<code class="sig-name descname">plugins.QcOffset.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcOffset.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOffset.alert.thresholds">
+<code class="sig-name descname">plugins.QcOffset.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcOffset.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOverlap.*</strong>
+<em>Configuration parameters for the plugin qcplugin_overlap. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.realTimeOnly">
+<code class="sig-name descname">plugins.QcOverlap.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcOverlap.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.filter">
+<code class="sig-name descname">plugins.QcOverlap.filter</code><a class="headerlink" href="#confval-plugins.QcOverlap.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.buffer">
+<code class="sig-name descname">plugins.QcOverlap.buffer</code><a class="headerlink" href="#confval-plugins.QcOverlap.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOverlap.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.report.interval">
+<code class="sig-name descname">plugins.QcOverlap.report.interval</code><a class="headerlink" href="#confval-plugins.QcOverlap.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.report.buffer">
+<code class="sig-name descname">plugins.QcOverlap.report.buffer</code><a class="headerlink" href="#confval-plugins.QcOverlap.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.report.timeout">
+<code class="sig-name descname">plugins.QcOverlap.report.timeout</code><a class="headerlink" href="#confval-plugins.QcOverlap.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOverlap.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.archive.interval">
+<code class="sig-name descname">plugins.QcOverlap.archive.interval</code><a class="headerlink" href="#confval-plugins.QcOverlap.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.archive.buffer">
+<code class="sig-name descname">plugins.QcOverlap.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcOverlap.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOverlap.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.alert.interval">
+<code class="sig-name descname">plugins.QcOverlap.alert.interval</code><a class="headerlink" href="#confval-plugins.QcOverlap.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.alert.buffer">
+<code class="sig-name descname">plugins.QcOverlap.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcOverlap.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOverlap.alert.thresholds">
+<code class="sig-name descname">plugins.QcOverlap.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcOverlap.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcRms.*</strong>
+<em>Configuration parameters for the plugin qcplugin_rms. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcRms.realTimeOnly">
+<code class="sig-name descname">plugins.QcRms.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcRms.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcRms.filter">
+<code class="sig-name descname">plugins.QcRms.filter</code><a class="headerlink" href="#confval-plugins.QcRms.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcRms.buffer">
+<code class="sig-name descname">plugins.QcRms.buffer</code><a class="headerlink" href="#confval-plugins.QcRms.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcRms.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcRms.report.interval">
+<code class="sig-name descname">plugins.QcRms.report.interval</code><a class="headerlink" href="#confval-plugins.QcRms.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcRms.report.buffer">
+<code class="sig-name descname">plugins.QcRms.report.buffer</code><a class="headerlink" href="#confval-plugins.QcRms.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcRms.report.timeout">
+<code class="sig-name descname">plugins.QcRms.report.timeout</code><a class="headerlink" href="#confval-plugins.QcRms.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcRms.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcRms.archive.interval">
+<code class="sig-name descname">plugins.QcRms.archive.interval</code><a class="headerlink" href="#confval-plugins.QcRms.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcRms.archive.buffer">
+<code class="sig-name descname">plugins.QcRms.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcRms.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcRms.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcRms.alert.interval">
+<code class="sig-name descname">plugins.QcRms.alert.interval</code><a class="headerlink" href="#confval-plugins.QcRms.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcRms.alert.buffer">
+<code class="sig-name descname">plugins.QcRms.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcRms.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcRms.alert.thresholds">
+<code class="sig-name descname">plugins.QcRms.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcRms.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcSpike.*</strong>
+<em>Configuration parameters for the plugin qcplugin_spike. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.realTimeOnly">
+<code class="sig-name descname">plugins.QcSpike.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcSpike.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.filter">
+<code class="sig-name descname">plugins.QcSpike.filter</code><a class="headerlink" href="#confval-plugins.QcSpike.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.buffer">
+<code class="sig-name descname">plugins.QcSpike.buffer</code><a class="headerlink" href="#confval-plugins.QcSpike.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcSpike.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.report.interval">
+<code class="sig-name descname">plugins.QcSpike.report.interval</code><a class="headerlink" href="#confval-plugins.QcSpike.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.report.buffer">
+<code class="sig-name descname">plugins.QcSpike.report.buffer</code><a class="headerlink" href="#confval-plugins.QcSpike.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.report.timeout">
+<code class="sig-name descname">plugins.QcSpike.report.timeout</code><a class="headerlink" href="#confval-plugins.QcSpike.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcSpike.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.archive.interval">
+<code class="sig-name descname">plugins.QcSpike.archive.interval</code><a class="headerlink" href="#confval-plugins.QcSpike.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.archive.buffer">
+<code class="sig-name descname">plugins.QcSpike.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcSpike.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcSpike.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.alert.interval">
+<code class="sig-name descname">plugins.QcSpike.alert.interval</code><a class="headerlink" href="#confval-plugins.QcSpike.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.alert.buffer">
+<code class="sig-name descname">plugins.QcSpike.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcSpike.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcSpike.alert.thresholds">
+<code class="sig-name descname">plugins.QcSpike.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcSpike.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcTiming.*</strong>
+<em>Configuration parameters for the plugin qcplugin_timing. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.realTimeOnly">
+<code class="sig-name descname">plugins.QcTiming.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcTiming.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.filter">
+<code class="sig-name descname">plugins.QcTiming.filter</code><a class="headerlink" href="#confval-plugins.QcTiming.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.buffer">
+<code class="sig-name descname">plugins.QcTiming.buffer</code><a class="headerlink" href="#confval-plugins.QcTiming.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcTiming.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.report.interval">
+<code class="sig-name descname">plugins.QcTiming.report.interval</code><a class="headerlink" href="#confval-plugins.QcTiming.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.report.buffer">
+<code class="sig-name descname">plugins.QcTiming.report.buffer</code><a class="headerlink" href="#confval-plugins.QcTiming.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.report.timeout">
+<code class="sig-name descname">plugins.QcTiming.report.timeout</code><a class="headerlink" href="#confval-plugins.QcTiming.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcTiming.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.archive.interval">
+<code class="sig-name descname">plugins.QcTiming.archive.interval</code><a class="headerlink" href="#confval-plugins.QcTiming.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.archive.buffer">
+<code class="sig-name descname">plugins.QcTiming.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcTiming.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcTiming.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.alert.interval">
+<code class="sig-name descname">plugins.QcTiming.alert.interval</code><a class="headerlink" href="#confval-plugins.QcTiming.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.alert.buffer">
+<code class="sig-name descname">plugins.QcTiming.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcTiming.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcTiming.alert.thresholds">
+<code class="sig-name descname">plugins.QcTiming.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcTiming.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcAvailability.*</strong>
+<em>Configuration parameters for the plugin qcplugin_availability. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.realTimeOnly">
+<code class="sig-name descname">plugins.QcAvailability.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcAvailability.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.filter">
+<code class="sig-name descname">plugins.QcAvailability.filter</code><a class="headerlink" href="#confval-plugins.QcAvailability.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.buffer">
+<code class="sig-name descname">plugins.QcAvailability.buffer</code><a class="headerlink" href="#confval-plugins.QcAvailability.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcAvailability.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.report.interval">
+<code class="sig-name descname">plugins.QcAvailability.report.interval</code><a class="headerlink" href="#confval-plugins.QcAvailability.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.report.buffer">
+<code class="sig-name descname">plugins.QcAvailability.report.buffer</code><a class="headerlink" href="#confval-plugins.QcAvailability.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.report.timeout">
+<code class="sig-name descname">plugins.QcAvailability.report.timeout</code><a class="headerlink" href="#confval-plugins.QcAvailability.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcAvailability.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.archive.interval">
+<code class="sig-name descname">plugins.QcAvailability.archive.interval</code><a class="headerlink" href="#confval-plugins.QcAvailability.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.archive.buffer">
+<code class="sig-name descname">plugins.QcAvailability.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcAvailability.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcAvailability.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.alert.interval">
+<code class="sig-name descname">plugins.QcAvailability.alert.interval</code><a class="headerlink" href="#confval-plugins.QcAvailability.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.alert.buffer">
+<code class="sig-name descname">plugins.QcAvailability.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcAvailability.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcAvailability.alert.thresholds">
+<code class="sig-name descname">plugins.QcAvailability.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcAvailability.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOutage.*</strong>
+<em>Configuration parameters for the plugin qcplugin_outage. Overwrites the parameters from the default section.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.realTimeOnly">
+<code class="sig-name descname">plugins.QcOutage.realTimeOnly</code><a class="headerlink" href="#confval-plugins.QcOutage.realTimeOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Enable to use this plugin only for realtime processing.</p>
+<p>Default [disable]: plugin is able to process archived data AND realtime data streams.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.filter">
+<code class="sig-name descname">plugins.QcOutage.filter</code><a class="headerlink" href="#confval-plugins.QcOutage.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Filter string used to filter waveforms before processing.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.buffer">
+<code class="sig-name descname">plugins.QcOutage.buffer</code><a class="headerlink" href="#confval-plugins.QcOutage.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Qc-Buffer Length [s] (aka LTA-Buffer). Must be &gt;= plugins.*.bufferLength.
+Default is <code class="docutils literal notranslate"><span class="pre">4000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.notifyDB">
+<code class="sig-name descname">plugins.QcOutage.notifyDB</code><a class="headerlink" href="#confval-plugins.QcOutage.notifyDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>If there is a gap of more than notifyDB [s], write an OUTAGE entry into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOutage.report.*</strong>
+<em>Control interactions with the messaging system.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.report.interval">
+<code class="sig-name descname">plugins.QcOutage.report.interval</code><a class="headerlink" href="#confval-plugins.QcOutage.report.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for sending report messages which e.g.
+will be  may be displayed by scqcv.
+Default is <code class="docutils literal notranslate"><span class="pre">60</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.report.buffer">
+<code class="sig-name descname">plugins.QcOutage.report.buffer</code><a class="headerlink" href="#confval-plugins.QcOutage.report.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">600</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.report.timeout">
+<code class="sig-name descname">plugins.QcOutage.report.timeout</code><a class="headerlink" href="#confval-plugins.QcOutage.report.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Report messages are generated in case no data
+is received since timeout. Only in real-time processing.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOutage.archive.*</strong>
+<em>Control sending QC reports as notifier to the messaging where</em>
+<em>scmaster will write them to the database.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.archive.interval">
+<code class="sig-name descname">plugins.QcOutage.archive.interval</code><a class="headerlink" href="#confval-plugins.QcOutage.archive.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval to send the QC reports.</p>
+<p>Default [-1]: Do not send any QC report. This will prevent writing
+QC reports into the database.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.archive.buffer">
+<code class="sig-name descname">plugins.QcOutage.archive.buffer</code><a class="headerlink" href="#confval-plugins.QcOutage.archive.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">3600</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>plugins.QcOutage.alert.*</strong>
+<em>Control for sending alerts based on QC reports.</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.alert.interval">
+<code class="sig-name descname">plugins.QcOutage.alert.interval</code><a class="headerlink" href="#confval-plugins.QcOutage.alert.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Interval for checking and sending alert thresholds.
+-1 disables threshold checking.
+Default is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.alert.buffer">
+<code class="sig-name descname">plugins.QcOutage.alert.buffer</code><a class="headerlink" href="#confval-plugins.QcOutage.alert.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Unit: <em>s</em></p>
+<p>Time window for calculating QC reports.
+Default is <code class="docutils literal notranslate"><span class="pre">1800</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-plugins.QcOutage.alert.thresholds">
+<code class="sig-name descname">plugins.QcOutage.alert.thresholds</code><a class="headerlink" href="#confval-plugins.QcOutage.alert.thresholds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>List of thresholds for sending QC reports. Use comma to separate values.
+Default is <code class="docutils literal notranslate"><span class="pre">150</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scqc-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scqc-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scqc-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--daemon</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scqc-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run as daemon. This means the application will fork itself and
+doesn’t need to be started with &amp;.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-auto-shutdown">
+<code class="sig-name descname">--auto-shutdown</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-auto-shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable/disable self-shutdown because a master module shutdown. This only
+works when messaging is enabled and the master module sends a shutdown
+message (enabled with –start-stop-msg for the master module).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-shutdown-master-module">
+<code class="sig-name descname">--shutdown-master-module</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-shutdown-master-module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the master-module used for auto-shutdown. This
+is the application name of the module actually started. If symlinks
+are used then it is the name of the symlinked application.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-shutdown-master-username">
+<code class="sig-name descname">--shutdown-master-username</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-shutdown-master-username" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the master-username of the messaging used for
+auto-shutdown. If “shutdown-master-module” is given as well this
+parameter is ignored.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scqc-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id2">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scqc-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scqc-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scqc-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="messaging">
+<h3>Messaging<a class="headerlink" href="#messaging" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scqc-u">
+<code class="sig-name descname">-u</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--user</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.username"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.username</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-host">
+<code class="sig-name descname">-H</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--host</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.server"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.server</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-t">
+<code class="sig-name descname">-t</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--timeout</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.timeout"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.timeout</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-g">
+<code class="sig-name descname">-g</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--primary-group</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-g" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.primaryGroup"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.primaryGroup</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-subscribe-group">
+<code class="sig-name descname">-S</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--subscribe-group</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-subscribe-group" title="Permalink to this definition">¶</a></dt>
+<dd><p>A group to subscribe to. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-content-type">
+<code class="sig-name descname">--content-type</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-content-type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="global.html#confval-connection.contentType"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.contentType</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-start-stop-msg">
+<code class="sig-name descname">--start-stop-msg</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-start-stop-msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets sending of a start- and a stop message.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="database">
+<h3>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scqc-db-driver-list">
+<code class="sig-name descname">--db-driver-list</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scqc-db-driver-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all supported database drivers.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-database">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--database</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-database" title="Permalink to this definition">¶</a></dt>
+<dd><p>The database connection string, format: <a class="reference external" href="service://user:pwd&#64;host/database">service://user:pwd&#64;host/database</a>.
+“service” is the name of the database driver which can be
+queried with “–db-driver-list”.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-config-module">
+<code class="sig-name descname">--config-module</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-config-module" title="Permalink to this definition">¶</a></dt>
+<dd><p>The configmodule to use.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-inventory-db">
+<code class="sig-name descname">--inventory-db</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-inventory-db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the inventory from the given database or file, format: [<a class="reference external" href="service://]location">service://]location</a></p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-db-disable">
+<code class="sig-name descname">--db-disable</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scqc-db-disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not use the database at all</p>
+</dd></dl>
+
+</div>
+<div class="section" id="records">
+<h3>Records<a class="headerlink" href="#records" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scqc-record-driver-list">
+<code class="sig-name descname">--record-driver-list</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scqc-record-driver-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all supported record stream drivers</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-i">
+<code class="sig-name descname">-I</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--record-url</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>The recordstream source URL, format: [<a class="reference external" href="service://">service://</a>]location[#type].
+“service” is the name of the recordstream driver which can be
+queried with “–record-driver-list”. If “service”
+is not given “<a class="reference external" href="file://">file://</a>” is used.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-record-file">
+<code class="sig-name descname">--record-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-record-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify a file as record source.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scqc-record-type">
+<code class="sig-name descname">--record-type</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scqc-record-type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify a type for the records being read.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scqc</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#technology">Technology</a></li>
+<li><a class="reference internal" href="#qc-parameters">QC parameters</a></li>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#messaging">Messaging</a></li>
+<li><a class="reference internal" href="#database">Database</a></li>
+<li><a class="reference internal" href="#records">Records</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scmag.html"
+                        title="previous chapter">scmag</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="screloc.html"
+                        title="next chapter">screloc</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scqc.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

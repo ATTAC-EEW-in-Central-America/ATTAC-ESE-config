@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Coding Conventions &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Unit Testing" href="tests.html" />
+    <link rel="prev" title="Style Guide for Documentation" href="style-guide.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="tests.html" title="Unit Testing"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="style-guide.html" title="Style Guide for Documentation"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="coding-conventions">
+<span id="id1"></span><h1>Coding Conventions<a class="headerlink" href="#coding-conventions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="code-style">
+<h2>Code Style<a class="headerlink" href="#code-style" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="formatting">
+<h3>Formatting<a class="headerlink" href="#formatting" title="Permalink to this headline">¶</a></h3>
+<p>For C++ always use tab indentation. In case of line break white spaces have to be
+used to fill the space. The recommended tab width is 4 characters.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// Tabs are visualized with &#39;&gt;&#39; and spaces with &#39;.&#39;</span>
+<span class="kt">int</span> <span class="nf">myFunction</span><span class="p">()</span> <span class="p">{</span>
+<span class="o">&gt;</span>   <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="o">&gt;</span>   <span class="k">if</span> <span class="p">(</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="p">)</span> <span class="p">{</span>
+<span class="o">&gt;</span>   <span class="o">&gt;</span>   <span class="n">SEISCOMP_DEBUG</span><span class="p">(</span><span class="s">&quot;A is greater than 5. Its current value is %d&quot;</span><span class="p">,</span>
+<span class="o">&gt;</span>   <span class="o">&gt;</span>   <span class="p">...............</span><span class="n">a</span><span class="p">);</span>
+<span class="o">&gt;</span>   <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>C++ code is (or should be) written with the following code style:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/***************************************************************************</span>
+<span class="cm"> * Copyright (C) ...                                                       *</span>
+<span class="cm"> *                                                                         *</span>
+<span class="cm"> * All rights reserved.                                                    *</span>
+<span class="cm"> * Contact: &lt;contact&gt;                                                      *</span>
+<span class="cm"> *                                                                         *</span>
+<span class="cm"> * Author: &lt;name&gt;                                                          *</span>
+<span class="cm"> * Email: &lt;email&gt;                                                          *</span>
+<span class="cm"> *                                                                         *</span>
+<span class="cm"> * GNU Affero General Public License Usage                                 *</span>
+<span class="cm"> * This file may be used under the terms of the GNU Affero                 *</span>
+<span class="cm"> * Public License version 3.0 as published by the Free Software Foundation *</span>
+<span class="cm"> * and appearing in the file LICENSE included in the packaging of this     *</span>
+<span class="cm"> * file. Please review the following information to ensure the GNU Affero  *</span>
+<span class="cm"> * Public License version 3.0 requirements will be met:                    *</span>
+<span class="cm"> * https://www.gnu.org/licenses/agpl-3.0.html.                             *</span>
+<span class="cm"> *                                                                         *</span>
+<span class="cm"> * Other Usage                                                             *</span>
+<span class="cm"> * Alternatively, this file may be used in accordance with the terms and   *</span>
+<span class="cm"> * conditions contained in a signed written agreement between you and      *</span>
+<span class="cm"> * gempa GmbH.                                                             *</span>
+<span class="cm"> ***************************************************************************/</span>
+
+<span class="cp">#ifndef NAMESPACE_LIB_FILENAME_H</span>
+<span class="cp">#define NAMESPACE_LIB_FILENAME_H</span>
+
+
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">Complex</span> <span class="p">{</span>
+   <span class="k">public</span><span class="o">:</span>
+      <span class="n">Complex</span><span class="p">(</span><span class="kt">double</span> <span class="n">re</span><span class="p">,</span> <span class="kt">double</span> <span class="n">im</span><span class="p">)</span>
+      <span class="o">:</span> <span class="n">_re</span><span class="p">(</span><span class="n">re</span><span class="p">),</span> <span class="n">_im</span><span class="p">(</span><span class="n">im</span><span class="p">)</span> <span class="p">{}</span>
+
+      <span class="kt">double</span> <span class="n">modulus</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">_re</span> <span class="o">*</span> <span class="n">_re</span> <span class="o">+</span> <span class="n">_im</span> <span class="o">*</span> <span class="n">_im</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="o">&lt;</span><span class="k">template</span> <span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+      <span class="kt">void</span> <span class="n">set</span><span class="p">(</span><span class="n">T</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">_re</span> <span class="o">=</span> <span class="n">r</span><span class="p">;</span>
+          <span class="n">_im</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+      <span class="p">}</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">double</span> <span class="n">_re</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">_im</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="kt">void</span> <span class="nf">bar</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">counter</span> <span class="o">+=</span> <span class="n">i</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="k">namespace</span> <span class="n">Foo</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">Bar</span> <span class="p">{</span>
+
+
+<span class="kt">void</span> <span class="n">foo</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span>  <span class="n">i</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="p">)</span>
+            <span class="n">bar</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="n">bar</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+            <span class="n">bar</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="p">}</span> <span class="c1">// namespace Bar</span>
+<span class="p">}</span> <span class="c1">// namespace Foo</span>
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="file-layout">
+<h3>File layout<a class="headerlink" href="#file-layout" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>See above header example</p></li>
+<li><p><strong>Trailing newline</strong>: use a newline at the end of each source file.</p></li>
+<li><p><strong>Include guards</strong>: Use include guards in your header files instead of #pragma once:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef NAMESPACE_LIB_FILENAME_H</span>
+<span class="cp">#define NAMESPACE_LIB_FILENAME_H</span>
+<span class="p">...</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="name-layout">
+<h3>Name layout<a class="headerlink" href="#name-layout" title="Permalink to this headline">¶</a></h3>
+<p>Use descriptive names and camel capping. That means the name of the element
+starts with the case given in the following table. Every concatenated word
+starts with an uppercase letter (e.g. myDescriptiveElementName).</p>
+<p>For straight enumerations where values start with 0 a quantity name should be
+defined that describes the upper bound for all valid enumeration values. Its
+name should be prepended by two letters describing the enumeration name and an
+underscore.</p>
+<p>Look at the class example above for guidance.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 25%" />
+<col style="width: 43%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Case of first letter</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>variable</p></td>
+<td><p>lowercase</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>function</p></td>
+<td><p>lowercase</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>structure</p></td>
+<td><p>uppercase</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>class</p></td>
+<td><p>uppercase</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td colspan="3"><p>member variables:</p></td>
+</tr>
+<tr class="row-odd"><td><p>- public</p></td>
+<td><p>lowercase</p></td>
+<td><p>starts without underscore</p></td>
+</tr>
+<tr class="row-even"><td><p>- protected</p></td>
+<td><p>lowercase</p></td>
+<td><p>starts with underscore</p></td>
+</tr>
+<tr class="row-odd"><td><p>- private</p></td>
+<td><p>lowercase</p></td>
+<td><p>starts with underscore</p></td>
+</tr>
+<tr class="row-even"><td><p>methods</p></td>
+<td><p>lowercase</p></td>
+<td><p>no</p></td>
+</tr>
+<tr class="row-odd"><td><p>static methods</p></td>
+<td><p>uppercase</p></td>
+<td><p>no</p></td>
+</tr>
+<tr class="row-even"><td><p>inline methods and
+templates</p></td>
+<td><p>lowercase</p></td>
+<td><p>sourced out into separate .ipp file
+with same name as the header file</p></td>
+</tr>
+<tr class="row-odd"><td><p>enumeration</p></td>
+<td><p>uppercase</p></td>
+<td><p>elements are written all uppercase</p></td>
+</tr>
+<tr class="row-even"><td><p>documentation and
+comments</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>use Doxygen</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="file-naming">
+<h3>File naming<a class="headerlink" href="#file-naming" title="Permalink to this headline">¶</a></h3>
+<p>All source and header files are named with lowercase letters. The suffix of a
+source file is “.cpp” while for a header file it is “.h”. The name of files
+that contain a class has to correspond with the class name. For other files,
+a descriptive name has to be provided (e.g. protocol.h instead of pro.h).</p>
+</div>
+</div>
+<div class="section" id="programming-guidelines">
+<h2>Programming Guidelines<a class="headerlink" href="#programming-guidelines" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="return-values">
+<h3>Return values<a class="headerlink" href="#return-values" title="Permalink to this headline">¶</a></h3>
+<p>While designing methods or functions these rules about return values should be kept in mind:</p>
+<ul>
+<li><p>Functions returning an int or related types as status: 0 means success;
+everything else is an error <a class="footnote-reference brackets" href="#id6" id="id2">1</a></p></li>
+<li><p>Functions returning a pointer:
+0 (or <code class="code docutils literal notranslate"><span class="pre">nullptr</span></code>) means an error and of course an
+invalid pointer <a class="footnote-reference brackets" href="#id6" id="id3">1</a></p></li>
+<li><p>Functions returning a class object can throw an exception in case of an error.
+This is not obligatory and should be used with care.</p>
+<p><strong>Example</strong>: std::string myMethod();</p>
+</li>
+</ul>
+</div>
+<div class="section" id="exception-specifications">
+<h3>Exception specifications<a class="headerlink" href="#exception-specifications" title="Permalink to this headline">¶</a></h3>
+<p>According to <a class="footnote-reference brackets" href="#id7" id="id4">2</a> dynamic exception specifications are considered or proposed
+as deprecated feature and not recommended <a class="footnote-reference brackets" href="#id8" id="id5">3</a>. Don’t use them in declaring a function prototype.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// Don&#39;t use that</span>
+<span class="kt">int</span> <span class="nf">foo</span><span class="p">()</span> <span class="k">throw</span><span class="p">(</span><span class="n">ValueException</span><span class="p">);</span>
+
+<span class="c1">// Just declare it without an exception specification</span>
+<span class="kt">int</span> <span class="nf">foo</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="null-pointer">
+<h3>Null pointer<a class="headerlink" href="#null-pointer" title="Permalink to this headline">¶</a></h3>
+<p>Use either 0 or the <code class="code docutils literal notranslate"><span class="pre">nullptr</span></code> keyword of C++11.
+Check a null pointer with implicit boolean conversion.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">ptr</span> <span class="p">)</span>
+    <span class="n">do_something</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>rather than</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span> <span class="n">ptr</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span>
+    <span class="n">do_something</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span> <span class="n">ptr</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">do_something</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="virtual-functions">
+<h3>Virtual Functions<a class="headerlink" href="#virtual-functions" title="Permalink to this headline">¶</a></h3>
+<p>Virtual functions are a fundamental concept of polymorphic classes. Virtual
+functions will be overwritten in derived classes to implement specific
+behaviour. It can happen that the signature of the virtual function in the
+base class changes but derived classes do not follow this change.</p>
+<p>This causes in erroneous behaviour as the derived virtual function will not
+be called as desired. What is even worse is that this mismatch of signatures
+is hard to find and to debug.</p>
+<p>Fortunately C++11 introduces the long awaited override keyword which declares
+that a virtual function of a derived class intends to override the virtual
+function with the same name of the base class. If both signatures do not match,
+the compiler will throw an error.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">print</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Base class&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Derived</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">print</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Derived class&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If we change the signature of print to take an additional parameter then
+the derived method will not be called anymore.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">os</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Base class&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Adding the override keyword will force the compiler to check both signatures
+for equality.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Derived</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="n">print</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Derived class&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This code above will throw an error during compilation and one has to adapt
+the signature of the function.</p>
+<p>Use the override keyword whenever you implement a virtual function in derived
+classes.</p>
+<dl class="footnote brackets">
+<dt class="label" id="id6"><span class="brackets">1</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id3">2</a>)</span></dt>
+<dd><p><a class="reference external" href="http://www.stroustrup.com/bs_faq2.html#null">http://www.stroustrup.com/bs_faq2.html#null</a></p>
+</dd>
+<dt class="label" id="id7"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dd><p><a class="reference external" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3051.html">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3051.html</a></p>
+</dd>
+<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
+<dd><p><a class="reference external" href="http://www.gotw.ca/publications/mill22.htm">http://www.gotw.ca/publications/mill22.htm</a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Coding Conventions</a><ul>
+<li><a class="reference internal" href="#code-style">Code Style</a><ul>
+<li><a class="reference internal" href="#formatting">Formatting</a></li>
+<li><a class="reference internal" href="#file-layout">File layout</a></li>
+<li><a class="reference internal" href="#name-layout">Name layout</a></li>
+<li><a class="reference internal" href="#file-naming">File naming</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#programming-guidelines">Programming Guidelines</a><ul>
+<li><a class="reference internal" href="#return-values">Return values</a></li>
+<li><a class="reference internal" href="#exception-specifications">Exception specifications</a></li>
+<li><a class="reference internal" href="#null-pointer">Null pointer</a></li>
+<li><a class="reference internal" href="#virtual-functions">Virtual Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="style-guide.html"
+                        title="previous chapter">Style Guide for Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tests.html"
+                        title="next chapter">Unit Testing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base/coding-conventions.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

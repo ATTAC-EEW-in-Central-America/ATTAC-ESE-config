@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>dlsv2inv &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="fdsnxml2inv" href="fdsnxml2inv.html" />
+    <link rel="prev" title="Inventory" href="../toc/inventory.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="fdsnxml2inv.html" title="fdsnxml2inv"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="../toc/inventory.html" title="Inventory"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/inventory.html" accesskey="U">Inventory</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="dlsv2inv">
+<span id="id1"></span><h1>dlsv2inv<a class="headerlink" href="#dlsv2inv" title="Permalink to this headline">¶</a></h1>
+<p><strong>Converts dataless SEED to SeisComP inventory XML.</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>dlsv2inv converts dataless <a class="reference external" href="http://www.iris.edu/data/dataless.htm">SEED</a> to
+SeisComP XML (<a class="reference internal" href="../base/glossary.html#term-scml"><span class="xref std std-term">SCML</span></a>). Due to the limitations of dataless SEED dlsv2inv allows to set
+attributes which are not available in dataless such as network type, network
+description and so on.</p>
+<p>It takes basically two important parameters:</p>
+<ol class="arabic simple">
+<li><p>input file</p></li>
+<li><p>output file</p></li>
+</ol>
+<p>whereas the output file defaults to stdout if not given.</p>
+<p>The SeisComP inventory network and station objects have the attribute archive
+which should contain the local datacenter where the information comes from.</p>
+<p>While importing the attribute <a class="reference internal" href="global.html#confval-datacenterID"><code class="xref std std-confval docutils literal notranslate"><span class="pre">datacenterID</span></code></a> is read and written into
+the archive attribute of all networks and stations available in the dataless.
+The datacenterID can be overridden with the <code class="docutils literal notranslate"><span class="pre">--dcid</span></code> command-line option.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Conversion of inventory in <cite>SeisComP</cite> XML to dataless SEED is provided by <a class="reference internal" href="inv2dlsv.html#inv2dlsv"><span class="std std-ref">inv2dlsv</span></a>.</p>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Convert a given dataless SEED file to SeisComP XML.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>dlsv2inv GE.dataless GE.xml
+</pre></div>
+</div>
+</li>
+<li><p>Override the datacenterID and leave it blank in the output.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>dlsv2inv --dcid <span class="s2">&quot;&quot;</span> GE.dataless GE.xml
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="configuration">
+<span id="dlsv2inv-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/dlsv2inv.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/dlsv2inv.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/dlsv2inv.cfg</span></code></div>
+</div>
+<p>dlsv2inv inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">dlsv2inv [OPTIONS] input [output=stdout]</strong></p>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--daemon</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run as daemon. This means the application will fork itself and
+doesn’t need to be started with &amp;.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id2">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="arclink">
+<h3>ArcLink<a class="headerlink" href="#arclink" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-dcid">
+<code class="sig-name descname">--dcid</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-dcid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides the datacenter ID which is read from the datacenterID
+configuration parameter and written to the network and
+station archive attribute.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-net-description">
+<code class="sig-name descname">--net-description</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-net-description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the network description. It supports the following
+placeholders: ${code}, ${start}, ${end}, ${class} and ${archive}.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-net-start">
+<code class="sig-name descname">--net-start</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-net-start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set network start time. Format is %Y-%m-%d.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-net-end">
+<code class="sig-name descname">--net-end</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-net-end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set network end time. Format is %Y-%m-%d.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-net-type">
+<code class="sig-name descname">--net-type</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-dlsv2inv-net-type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the network type (VBB, SM, etc.).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-temporary">
+<code class="sig-name descname">--temporary</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-temporary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the network temporary flag to true.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-restricted">
+<code class="sig-name descname">--restricted</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-restricted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the network restricted flag to true.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-private">
+<code class="sig-name descname">--private</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-private" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the network private flag to true.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="convert">
+<h3>Convert<a class="headerlink" href="#convert" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-dlsv2inv-f">
+<code class="sig-name descname">-f</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--formatted</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-dlsv2inv-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables formatted XML output.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">dlsv2inv</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#arclink">ArcLink</a></li>
+<li><a class="reference internal" href="#convert">Convert</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../toc/inventory.html"
+                        title="previous chapter">Inventory</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fdsnxml2inv.html"
+                        title="next chapter">fdsnxml2inv</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/dlsv2inv.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

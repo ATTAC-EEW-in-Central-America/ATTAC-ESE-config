@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>iLoc &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MN" href="global_mn.html" />
+    <link rel="prev" title="MLr" href="global_mlr.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_mn.html" title="MN"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_mlr.html" title="MLr"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../toc/extensions.html" >Extensions</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/extensions/global.html" accesskey="U">global</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="iloc">
+<span id="global-iloc"></span><h1>iLoc<a class="headerlink" href="#iloc" title="Permalink to this headline">¶</a></h1>
+<p>Locator in SeisComP implemented by the plugin lociloc.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>iLoc is a locator developed by István Bondár which has been integrated into
+<cite>SeisComP</cite> by <span id="id1"><em>gempa GmbH</em> [<a class="reference internal" href="../base/references.html#id101" title="gempa GmbH. The SeisComP development and maintenance company. URL: https://www.gempa.de/.">8</a>]</span>. It is invoked by the wrapper plugin <em>lociloc</em> - the
+interface between <cite>SeisComP</cite> and iLoc.
+Read the sections <a class="reference internal" href="#iloc-setup"><span class="std std-ref">Setup in SeisComP</span></a> and <a class="reference internal" href="#iloc-application"><span class="std std-ref">Application in SeisComP</span></a> for
+configuring and using iLoc in <cite>SeisComP</cite>.</p>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>iLoc is a locator tool for locating seismic, hydroacoustic and
+infrasound sources
+based on <a class="reference internal" href="../base/glossary.html#term-pick"><span class="xref std std-term">phase picks</span></a>. iLoc is based on the location
+algorithm developed by <span id="id2">Bondár and McLaughlin [<a class="reference internal" href="../base/references.html#id11" title="I. Bondár and K.L. McLaughlin. A new ground truth data set for seismic studies. Seismol. Res. Lett., 3:465 - 472, 2009. doi:10.1785/gssrl.80.3.465.">10</a>]</span> and implemented at the
+International Seismological Center, (<span id="id3"><em>ISC</em> [<a class="reference internal" href="../base/references.html#id114" title="ISC. Seismicity record. URL: http://www.isc.ac.uk/.">4</a>]</span>, <span id="id4">Bondár <em>et al.</em> [<a class="reference internal" href="../base/references.html#id15" title="I. Bondár, P. Mónus, C. Czanik, M. Kiszely, Z. Gráczer, Z. Wéber, and the AlpArrayWorking Group. Relocation of Seismicity in the Pannonian Basin Using a Global 3D Velocity Model. Seismol. Res. Lett., 6:2284 – 2293, 2018. doi:10.1785/0220180143.">12</a>]</span>)
+with numerous new features added (<span id="id5">Bondár <em>et al.</em> [<a class="reference internal" href="../base/references.html#id15" title="I. Bondár, P. Mónus, C. Czanik, M. Kiszely, Z. Gráczer, Z. Wéber, and the AlpArrayWorking Group. Relocation of Seismicity in the Pannonian Basin Using a Global 3D Velocity Model. Seismol. Res. Lett., 6:2284 – 2293, 2018. doi:10.1785/0220180143.">12</a>]</span>).
+The stand-alone iLoc code can be downloaded from the <span id="id6"><em>IRIS SeisCode</em> [<a class="reference internal" href="../base/references.html#id115" title="IRIS SeisCode. IRIS. URL: https://seiscode.iris.washington.edu/projects/iloc.">3</a>]</span>
+software repository.</p>
+<p>Among the major advantages of using iLoc is that it can</p>
+<ul class="simple">
+<li><p>Use any phases with valid travel-time predictions;</p></li>
+<li><p>Use seismic, hydroacoustic and infrasound arrival time, slowness and azimuth
+observations in location;</p></li>
+<li><p>Use travel-time predictions from a global 3D upper mantle velocity model;</p></li>
+<li><p>Use a local 1D velocity model;</p></li>
+<li><p>Account for the correlated travel-time prediction error structure due to
+unmodeled 3D velocity heterogeneities;</p></li>
+<li><p>Check if the data has sufficient resolution to determine the
+hypocenter depth;</p></li>
+<li><p>Identify ground truth (GT5) candidate events.</p></li>
+</ul>
+</div>
+<div class="section" id="history">
+<h3>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Originally developed for U.S. Air Force Research Laboratory, today the standard
+at the International Seismological Centre (ISC) replacing previous routines</p></li>
+<li><p>Open source, download website: <span id="id7"><em>IRIS SeisCode</em> [<a class="reference internal" href="../base/references.html#id115" title="IRIS SeisCode. IRIS. URL: https://seiscode.iris.washington.edu/projects/iloc.">3</a>]</span></p></li>
+<li><p>Integrated first in SeisComP3 in 2019</p></li>
+<li><p>Basis of the EMSC crowd-source locator, CsLoc since 2019</p></li>
+<li><p>EMSC standard as of 2022</p></li>
+</ul>
+</div>
+<div class="section" id="iloc-in-a-nutshell">
+<h3>iLoc in a nutshell<a class="headerlink" href="#iloc-in-a-nutshell" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Accounts for correlated travel-time prediction errors</p></li>
+<li><p>Initial hypocenter guess from Neighborhood Algorithm search</p></li>
+<li><p>Linearised inversion using a priori estimate of the full data covariance matrix
+Attempts for free-depth solution only if there is depth resolution</p></li>
+<li><p>Default depth is derived from historical seismicity</p></li>
+<li><p>Seismic, hydroacoustic and infrasound observations</p></li>
+<li><p>Arrival time, slowness and azimuth measurements</p></li>
+<li><p>Uses most ak135 or iasp91 Earth model phases in locating</p></li>
+<li><p>Integrated RSTT travel-time predictions</p></li>
+<li><p>RSTT is default for Pn/Sn and Pg/Lg</p></li>
+<li><p>Local velocity model and local phase TT predictions for Pg/Sg/Lg, Pb/Sb, Pn/Sn.</p></li>
+</ul>
+</div>
+<div class="section" id="algorithms">
+<h3>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this headline">¶</a></h3>
+<p>This section describes some of the principles. The full description of the applied
+algorithms can be found in the iLoc documentation provided along with the package
+on the <span id="id8"><em>IRIS SeisCode</em> [<a class="reference internal" href="../base/references.html#id115" title="IRIS SeisCode. IRIS. URL: https://seiscode.iris.washington.edu/projects/iloc.">3</a>]</span> website.</p>
+<div class="section" id="neighbourhood-algorithm">
+<h4>Neighbourhood algorithm<a class="headerlink" href="#neighbourhood-algorithm" title="Permalink to this headline">¶</a></h4>
+<p>Linearized inversion algorithms are quite sensitive to the initial guess. In order
+to find an initial hypocenter guess for the linearized inversion the Neigbourhood
+Algorithm (<span id="id9">Sambridge [<a class="reference internal" href="../base/references.html#id60" title="M. Sambridge. Geophysical inversion with a neighbourhood algorithm. I. Searching the parameter space. Geophys. J. Int., 2:479 – 494, 1999. doi:10.1046/j.1365-246X.1999.00876.x.">27</a>]</span>; <span id="id10">Sambridge and Kennett [<a class="reference internal" href="../base/references.html#id61" title="M. Sambridge and B.L.N. Kennett. Seismic event location: non-linear inversion using a neighbourhood algorithm. Pure and Applied Geophysics, 151(1):241 – 257, 2001. doi:10.1007/PL00001158.">28</a>]</span>) is performed
+around the starting hypocentre if <a class="reference internal" href="#confval-iLoc.profile.$name.DoGridSearch"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.DoGridSearch</span></code></a> is active.</p>
+<p>During the NA search, we identify the phases with respect to each trial hypocenter
+and calculate the misfit of the trial hypocenter. The misfit is defined as the sum
+of the <a class="reference internal" href="#confval-iLoc.profile.$name.NAlpNorm"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.NAlpNorm</span></code></a> residual and a penalty factor that
+penalizes against freakish local minima provided by just a few phases. In the first
+iteration <a class="reference internal" href="#confval-iLoc.profile.$name.NAinitialSample"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.NAinitialSample</span></code></a> hypocenter hypotheses are tested,
+while the subsequent iterations consider the best <a class="reference internal" href="#confval-iLoc.profile.$name.NAcells"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.NAcells</span></code></a>
+solutions and resample the search space around them with
+<a class="reference internal" href="#confval-iLoc.profile.$name.NAnextSample"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.NAnextSample</span></code></a> hypocenter hypotheses. The solution with
+the lowest misfit after <a class="reference internal" href="#confval-iLoc.profile.$name.NAiterMax"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.NAiterMax</span></code></a> iteration is taken
+as the initial hypocenter for the linearized least squares inversion.</p>
+<p>A grid search can be performed to obtain a better initial hypocenter
+guess. The search is performed around the starting hypocenter.
+For a very exhaustive search one can increase <a class="reference internal" href="#confval-iLoc.profile.$name.NAinitialSample"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.NAinitialSample</span></code></a>,
+<a class="reference internal" href="#confval-iLoc.profile.$name.NAnextSample"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.NAnextSample</span></code></a> and <a class="reference internal" href="#confval-iLoc.profile.$name.NAcells"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.NAcells</span></code></a>
+values. Note that the maximum value for <a class="reference internal" href="#confval-iLoc.profile.$name.NAinitialSample"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.NAinitialSample</span></code></a>
+is around 3500 before hitting memory limits.</p>
+<p>An exhaustive search will
+considerably slow iLoc down, especially when RSTT predictions are
+enabled (<a class="reference internal" href="#confval-iLoc.profile.$name.UseRSTT"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.UseRSTT</span></code></a>, <a class="reference internal" href="#confval-iLoc.profile.$name.UseRSTTPnSn"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.UseRSTTPnSn</span></code></a>,
+<a class="reference internal" href="#confval-iLoc.profile.$name.UseRSTTPgLg"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.UseRSTTPgLg</span></code></a>).</p>
+</div>
+<div class="section" id="depth-resolution">
+<h4>Depth resolution<a class="headerlink" href="#depth-resolution" title="Permalink to this headline">¶</a></h4>
+<p>Depth resolution can be provided by a local network, depth phases, core reflections
+and to a lesser extent near-regional secondary phases. iLoc attempts for a free-depth
+solution if the set of :term:arrivals meets at least one of the following conditions:</p>
+<ul class="simple">
+<li><p>Number of pairs of defining P and depth phases
+<img class="math" src="../_images/math/cd836da15c805704a25218271107e7935265b89e.png" alt="\le"/> <a class="reference internal" href="#confval-iLoc.profile.$name.MinDepthPhases"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.MinDepthPhases</span></code></a></p></li>
+<li><p>Number of pairs of defining P and core phases
+<img class="math" src="../_images/math/cd836da15c805704a25218271107e7935265b89e.png" alt="\le"/> <a class="reference internal" href="#confval-iLoc.profile.$name.MinCorePhases"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.MinCorePhases</span></code></a></p></li>
+<li><p>Number of pairs of defining P and S phases
+<img class="math" src="../_images/math/cd836da15c805704a25218271107e7935265b89e.png" alt="\le"/> <a class="reference internal" href="#confval-iLoc.profile.$name.MinSPpairs"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.MinSPpairs</span></code></a>
+within a regional distance of <a class="reference internal" href="#confval-iLoc.profile.$name.MaxLocalDistDeg"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.MaxLocalDistDeg</span></code></a>
+degree</p></li>
+<li><p>Number of defining P phases
+<img class="math" src="../_images/math/cd836da15c805704a25218271107e7935265b89e.png" alt="\le"/> <a class="reference internal" href="#confval-iLoc.profile.$name.MinLocalStations"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.MinLocalStations</span></code></a>
+within a local distance of <a class="reference internal" href="#confval-iLoc.profile.$name.MinLocalStations"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.MinLocalStations</span></code></a>
+degree.</p></li>
+</ul>
+<p>If there is insufficient depth resolution provided by the data, or the depth uncertainty
+for a free-depth solution exceeds a threshold, the hypocentre depth is set to the depth
+from the default depth grid if a grid point for the epicentre location exists; otherwise
+it is set to a depth <span id="id11">Bolton <em>et al.</em> [<a class="reference internal" href="../base/references.html#id8" title="M.K. Bolton, D.A. Storchak, and J. Harris. Updating default depth in the isc bulletin. Phys. Earth Planet. Int., 1:27 - 45, 2006. doi:10.1016/j.pepi.2006.03.004.">9</a>]</span> assigned to
+the corresponding Flinn-Engdahl geographic
+region (<span id="id12">Young <em>et al.</em> [<a class="reference internal" href="../base/references.html#id70" title="J.B. Young, B.W. Presgrave, H. Aichele, D.A. Wiens, and E.A. Flinn. The Flinn-Engdahl Regionalisation Scheme: The 1995 revision. Phys. Earth Planet. Int., 96:223 - 297, 1996. doi:10.1016/0031-9201(96)03141-X.">32</a>]</span>). The default depth grid (<span id="id13">Bondár and Storchak [<a class="reference internal" href="../base/references.html#id13" title="I. Bondár and D. Storchak. Improved location procedures at the International Seismological Centre. Geophys. J. Int., 3:1220 – 1244, 2011. doi:10.1111/j.1365-246X.2011.05107.x.">13</a>]</span>)
+is defined on a 0.5º x 0.5º grid as the median of all depths in the cell, provided
+that there were at least five events in the cell, and the 75–25 percent quartile
+range was less than 100 km. The latter constraint is imposed to avoid regions with
+both shallow and deep seismicity. Anthropogenic events are fixed to the surface.
+Finally, the user can fix the depth to the initial depth.</p>
+<p>iLoc reports back how the depth was determined in the FixedDepthType parameter:</p>
+<ul class="simple">
+<li><p>0 - free depth solution</p></li>
+<li><p>1 - airquake/deepquake, depth fixed to surface/MaxHypocenterDepth</p></li>
+<li><p>2 - depth fixed to depth reported by an agency (not used in <cite>SeisComP</cite>)</p></li>
+<li><p>3 - depth fixed to depth-phase depth</p></li>
+<li><p>4 - anthropogenic event, depth fixed to surface</p></li>
+<li><p>5 - depth fixed to default depth grid depth</p></li>
+<li><p>6 - no default depth grid point exists, fixed to median reported depth</p></li>
+<li><p>7 - no default depth grid point exists, fixed to GRN-dependent depth</p></li>
+<li><p>8 - depth fixed by user provided value</p></li>
+</ul>
+</div>
+<div class="section" id="linearized-inversion">
+<h4>Linearized inversion<a class="headerlink" href="#linearized-inversion" title="Permalink to this headline">¶</a></h4>
+<p>Once the Neighbourhood search get close to the global optimum, iloc switches
+to an iterative linearized least-squares inversion of travel-time, azimuth and
+slowness observations (<span id="id14">Bondár and McLaughlin [<a class="reference internal" href="../base/references.html#id12" title="I. Bondár and K.L. McLaughlin. Seismic location bias and uncertainty in the presence of correlated and non-gaussian travel-time errors. Bull. Seismol. Soc. Am., 1:172 – 193, 2009. doi:10.1785/0120080922.">11</a>]</span>; <span id="id15">Bondár and Storchak [<a class="reference internal" href="../base/references.html#id13" title="I. Bondár and D. Storchak. Improved location procedures at the International Seismological Centre. Geophys. J. Int., 3:1220 – 1244, 2011. doi:10.1111/j.1365-246X.2011.05107.x.">13</a>]</span>) to obtain the final solution
+for the hypocenter.</p>
+<p>The convergence test after (<span id="id16">Paige and Saunders [<a class="reference internal" href="../base/references.html#id49" title="C. Paige and M. Saunders. Lsqr: an algorithm for sparse linear equations and sparse least squares. ACM Transactions on Mathematical Software, 1:43 - 71, 1982. doi:10.1145/355984.355989.">23</a>]</span>) is
+applied after every iteration. Once a convergent solution is obtained, the location
+uncertainty is defined by the a posteriori model covariance matrix. The model
+covariance matrix yields the four-dimensional error ellipsoid whose projections
+provide the two-dimensional error ellipse and one-dimensional errors for depth
+and origin time. These uncertainties are scaled to the 90% confidence level
+(<span id="id17">Jordan and Sverdrup [<a class="reference internal" href="../base/references.html#id37" title="T.H. Jordan and K.A. Sverdrup. Teleseismic location techniques and their application to earthquake clusters in the south-central pacific. Bull. Seismol. Soc. Am., 4:1105 – 1130, 1981. doi:10.1785/BSSA0710041105.">18</a>]</span>).</p>
+<p>The final hypocentre is tested against the
+ground truth selection criteria (<span id="id18">Bondár and McLaughlin [<a class="reference internal" href="../base/references.html#id11" title="I. Bondár and K.L. McLaughlin. A new ground truth data set for seismic studies. Seismol. Res. Lett., 3:465 - 472, 2009. doi:10.1785/gssrl.80.3.465.">10</a>]</span>),
+and it is reported as
+a GT5candidate if the solution meets the GT5 criteria.</p>
+<p>Some important parameters are:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#confval-iLoc.profile.$name.SigmaThreshold"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.SigmaThreshold</span></code></a>: Residuals that exceed
+<img class="math" src="../_images/math/07995ff78d6ae4e3ecb50d9c0740eb0addf47d94.png" alt="abs(Sigmathreshold * PriorMeasError)"/> are made non-defining.</p></li>
+<li><p><a class="reference internal" href="#confval-iLoc.profile.$name.MinNdefPhases"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.MinNdefPhases</span></code></a>: Minimum number of observations
+required to attempt for a solution.</p></li>
+</ul>
+<p>If the number of defining arrival times exceed
+<a class="reference internal" href="#confval-iLoc.profile.$name.MinNdefPhases"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.MinNdefPhases</span></code></a>, then slowness observations will not
+be used in the location.</p>
+</div>
+</div>
+<div class="section" id="integration-into-scname">
+<h3>Integration into <cite>SeisComP</cite><a class="headerlink" href="#integration-into-scname" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Integration of iLoc into <cite>SeisComP</cite> is provided by an external library of
+routines (<span id="id19"><em>IRIS SeisCode</em> [<a class="reference internal" href="../base/references.html#id115" title="IRIS SeisCode. IRIS. URL: https://seiscode.iris.washington.edu/projects/iloc.">3</a>]</span>).</p></li>
+<li><p><cite>SeisComP</cite> modules call iLoc routines by passing the objects via the plugin
+<em>lociloc</em> installed in <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/plugins/lociloc.so</span></code>.</p></li>
+<li><p>iLoc returns objects to <cite>SeisComP</cite> for integration.</p></li>
+<li><p>The iLoc implementation in <cite>SeisComP</cite> retains all original iLoc functionalities.</p></li>
+</ul>
+<p>Read the section <a class="reference internal" href="#iloc-setup"><span class="std std-ref">Setup in SeisComP</span></a> for the installation of the iLoc library and
+the configuration in <cite>SeisComP</cite>.</p>
+</div>
+<div class="section" id="velocity-models">
+<h3>Velocity models<a class="headerlink" href="#velocity-models" title="Permalink to this headline">¶</a></h3>
+<p>iLoc ships with the global models <em>iasp91</em> and <em>ak135</em> as well as with regional
+seismic travel-time tables, RSTT, which, if activated by configuration, replaces
+the global models in areas where they are defined.</p>
+<div class="section" id="global-models">
+<span id="iloc-velocity-global"></span><h4>Global models<a class="headerlink" href="#global-models" title="Permalink to this headline">¶</a></h4>
+<p>The global models <em>iasp91</em> and <em>ak135</em> and RSTT are available by default without
+further configuration.</p>
+</div>
+<div class="section" id="rstt">
+<span id="iloc-velocity-rstt"></span><h4>RSTT<a class="headerlink" href="#rstt" title="Permalink to this headline">¶</a></h4>
+<p>RSTT are available in <code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/iloc/RSTTmodels/pdu202009Du.geotess</span></code>.
+Custom RSTT can be integrated into iLoc and provided to <cite>SeisComP</cite>.
+For adding custom RSTT to iLoc read the original iLoc documentation from the
+<span id="id20"><em>IRIS SeisCode</em> [<a class="reference internal" href="../base/references.html#id115" title="IRIS SeisCode. IRIS. URL: https://seiscode.iris.washington.edu/projects/iloc.">3</a>]</span> software repository.</p>
+<p>The usage of RSTT is controlled per iLoc profile by global configuration
+parameters</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#confval-iLoc.profile.$name.UseRSTT"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.UseRSTT</span></code></a></p></li>
+<li><p><a class="reference internal" href="#confval-iLoc.profile.$name.UseRSTTPnSn"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.UseRSTTPnSn</span></code></a></p></li>
+<li><p><a class="reference internal" href="#confval-iLoc.profile.$name.UseRSTTPgLg"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.UseRSTTPgLg</span></code></a></p></li>
+</ul>
+</div>
+<div class="section" id="local-velocity-models">
+<span id="iloc-velocity-local"></span><h4>Local velocity models<a class="headerlink" href="#local-velocity-models" title="Permalink to this headline">¶</a></h4>
+<p>Custom local velocity models can be provided by a file in
+<code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/iloc/localmodels</span></code>. Example file
+<code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/iloc/localmodels/test.localmodel.dat</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+<span class="c1"># test</span>
+<span class="c1">#</span>
+<span class="c1"># number of layers</span>
+<span class="mi">4</span>
+     <span class="mf">0.000</span>    <span class="mf">5.8000</span>    <span class="mf">3.4600</span> <span class="n">x</span>
+    <span class="mf">20.000</span>    <span class="mf">6.5000</span>    <span class="mf">3.8500</span> <span class="n">CONRAD</span>
+    <span class="mf">45.000</span>    <span class="mf">8.0400</span>    <span class="mf">4.4800</span> <span class="n">MOHO</span>
+    <span class="mf">77.500</span>    <span class="mf">8.0400</span>    <span class="mf">4.4800</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Once added, the velocity can be configured in <cite>SeisComP</cite> as set out in section
+<a class="reference internal" href="#iloc-setup"><span class="std std-ref">Setup in SeisComP</span></a>.</p>
+</div>
+</div>
+<div class="section" id="station-elevation">
+<h3>Station elevation<a class="headerlink" href="#station-elevation" title="Permalink to this headline">¶</a></h3>
+<p>iLoc considers station elevation. It calculates the elevation correction,
+<em>elevationCorrection</em>, for a station as</p>
+<div class="math">
+<p><img src="../_images/math/5f9c3c10facedc7a9d6e72dcdc5f421acb20e77c.png" alt="elevationCorrection = \frac{\sqrt{1 - (surfVel * p)^2} * elev}{surfVel}"/></p>
+</div><p>where</p>
+<ul class="simple">
+<li><p><em>elev</em>: elevation of the station</p></li>
+<li><p><em>p</em>: the ray parameter (horizontal slowness)</p></li>
+<li><p><em>surfVel</em>: layer P or S velocity of at the surface depending on the last lag
+of the phase name.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>iLoc does not allow airquakes or source locations above datum (0 km). If the
+depth of an origin becomes negative, iLoc
+fixes the depth to 0 km and the depth type of the origin will be “operator
+assigned”.</p>
+</div>
+</div>
+<div class="section" id="resources">
+<span id="sec-iloc-references"></span><h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h3>
+<p>iLoc has taken advantage of many publications or has been cited therein.
+Read the section <a class="reference internal" href="../base/references.html#sec-references"><span class="std std-ref">References</span></a> for a list.</p>
+</div>
+</div>
+<div class="section" id="setup-in-scname">
+<span id="iloc-setup"></span><h2>Setup in <cite>SeisComP</cite><a class="headerlink" href="#setup-in-scname" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Add the plugin <em>lociloc</em> to the global configuration, e.g. in
+<code class="file docutils literal notranslate"><span class="pre">&#64;SYSTEMCONFIGDIR&#64;/global.cfg</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>plugins = ${plugins}, lociloc
+</pre></div>
+</div>
+</li>
+<li><p>Download iLoc from the iLoc website, extract the travel-time tables and model
+files. Then, install the required files and directories in
+<code class="file docutils literal notranslate"><span class="pre">&#64;DATADIR&#64;/iloc</span></code>, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir $SEISCOMP_ROOT/share/iloc
+wget -O /tmp/iLocAuxDir.tgz &quot;http://iloc.geochem.hu/data/iLocAuxDir.tgz&quot;
+tar xvf /tmp/iLocAuxDir.tgz -C /tmp/
+cp -r /tmp/iLocAuxDir $SEISCOMP_ROOT/share/iloc/auxdata
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Check the <span id="id21"><em>IRIS SeisCode</em> [<a class="reference internal" href="../base/references.html#id115" title="IRIS SeisCode. IRIS. URL: https://seiscode.iris.washington.edu/projects/iloc.">3</a>]</span> website for updates before downloading.</p></li>
+<li><p>Instead of copying the <code class="file docutils literal notranslate"><span class="pre">auxdata</span></code> directory, you can also create a
+symbolic link and maintain always the same iLoc version in <cite>SeisComP</cite> and
+externally.</p></li>
+</ul>
+</div>
+</li>
+<li><p>Add and configure iLoc profiles for the velocity models. The global models
+<em>iasp91</em> and <em>ak135</em> are considered by default with default configuration
+parameters even without setting up <em>iasp91</em>/<em>ak135</em> profiles. You may,
+however, create these profiles for their customization.</p>
+<p>Create new profiles or consider existing ones for adjusting their
+configuration:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#confval-iLoc.profile.$name.globalModel"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.globalModel</span></code></a>: The name of the
+<a class="reference internal" href="#iloc-velocity-global"><span class="std std-ref">global model</span></a>, e.g. <em>iasp91</em> or <em>ak135</em>.</p></li>
+<li><p>Consider the <a class="reference internal" href="#iloc-velocity-rstt"><span class="std std-ref">RSTT parameters</span></a>.</p></li>
+<li><p><a class="reference internal" href="#confval-iLoc.profile.$name.LocalVmodel"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.LocalVmodel</span></code></a>: The name of the file containing
+the <a class="reference internal" href="#iloc-velocity-local"><span class="std std-ref">local velocity model</span></a>.</p></li>
+<li><p><a class="reference internal" href="#confval-iLoc.profile.$name.DoNotRenamePhases"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profile.$name.DoNotRenamePhases</span></code></a>: Renaming seismic phases
+automatically
+impacts the usability of the origins with other locators and locator profiles.
+Activate the parameter to avoid phase renaming.</p></li>
+<li><p>Consider the remaining parameters.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Creating the profiles allows using the same global velocity model along
+with different local models or RSTT settings in separate profiles.</p>
+</div>
+</li>
+<li><p>Test the locator using <a class="reference internal" href="scolv.html#scolv"><span class="std std-ref">scolv</span></a> or configure with <a class="reference internal" href="screloc.html#screloc"><span class="std std-ref">screloc</span></a> or other
+locator modules.</p></li>
+</ol>
+</div>
+<div class="section" id="application-in-scname">
+<span id="iloc-application"></span><h2>Application in <cite>SeisComP</cite><a class="headerlink" href="#application-in-scname" title="Permalink to this headline">¶</a></h2>
+<p>Once the <em>lociloc</em> plugin is configured, the iLoc locator can be applied</p>
+<ul class="simple">
+<li><p>Automatically e.g. in <a class="reference internal" href="screloc.html#screloc"><span class="std std-ref">screloc</span></a> or</p></li>
+<li><p>Interactively in <a class="reference internal" href="scolv.html#scolv"><span class="std std-ref">scolv</span></a>.</p></li>
+</ul>
+<p>For using iLoc in <a class="reference internal" href="scolv.html#scolv"><span class="std std-ref">scolv</span></a> select it in the locator menu of the Location tab</p>
+<div class="figure align-center" id="id22">
+<img alt="../_images/scolv-iloc-locator.png" src="../_images/scolv-iloc-locator.png" />
+<p class="caption"><span class="caption-text">Select iLoc locator</span><a class="headerlink" href="#id22" title="Permalink to this image">¶</a></p>
+</div>
+<p>along with a profile:</p>
+<div class="figure align-center" id="id23">
+<img alt="../_images/scolv-iloc-profile.png" src="../_images/scolv-iloc-profile.png" />
+<p class="caption"><span class="caption-text">Select iLoc profile</span><a class="headerlink" href="#id23" title="Permalink to this image">¶</a></p>
+</div>
+<p>The parameters for iLoc can be adjusted by pressing the wrench button next to the
+locator selection combo box</p>
+<div class="figure align-center" id="id24">
+<img alt="../_images/scolv-iloc-change.png" src="../_images/scolv-iloc-change.png" />
+<p class="caption"><span class="caption-text">Start the settings dialog</span><a class="headerlink" href="#id24" title="Permalink to this image">¶</a></p>
+</div>
+<p>which opens the iLoc settings dialog:</p>
+<div class="figure align-center" id="id25">
+<img alt="../_images/scolv-iloc-settings.png" src="../_images/scolv-iloc-settings.png" />
+<p class="caption"><span class="caption-text">Adjust the settings and click OK to confirm</span><a class="headerlink" href="#id25" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>By default, automatic phase renaming by iLoc is active. The renaming may
+change the phase names, e.g. from P to Pn.</p>
+<p>Renaming seismic phases automatically will later impact the usability of
+the new origins with other locators and locator
+profiles. Deactivate <em>DoNotRenamePhases</em> to avoid phase renaming.</p>
+<p>However,
+when deactivating, iLoc may not provide results if the initial phases do not
+exist in the phase table for the given source depth and epicentral distance.
+Example: For great source depth and small epicentral distance, the first arrival
+phase is p or Pn and not P but <cite>SeisComP</cite> provides P.</p>
+</div>
+<p>After relocating, the iLoc locator and the selected profile are shown in the
+<a class="reference internal" href="scolv.html#scolv"><span class="std std-ref">scolv</span></a> Location tab as Method and Earth model, respectively:</p>
+<div class="figure align-center" id="id26">
+<img alt="../_images/scolv-iloc-info.png" src="../_images/scolv-iloc-info.png" />
+<p class="caption"><span class="caption-text">Information in scolv Locator tab</span><a class="headerlink" href="#id26" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="global-iloc-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>iLoc.*</strong>
+<em>Locator parameters: iLoc</em></p>
+</div>
+<dl class="confval">
+<dt id="confval-iLoc.profiles">
+<code class="sig-name descname">iLoc.profiles</code><a class="headerlink" href="#confval-iLoc.profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>list:string</em></p>
+<p>iLoc profile name.
+Multiples names may be set separated by comma.
+Each profile can have different velocity or parameters.
+Default is <code class="docutils literal notranslate"><span class="pre">iasp91,ak135</span></code>.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>iLoc.profile.*</strong>
+<em>Profiles containing the specific locator parameters. For</em>
+<em>the global models, iasp91 and ak135, profiles are</em>
+<em>automatically considered with defaults.</em>
+<em>To adjust the profile parameters the corresponding profile</em>
+<em>must be created.</em></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>iLoc.profile.$name.*</strong>
+$name is a placeholder for the name to be used and needs to be added to <a class="reference internal" href="#confval-iLoc.profiles"><code class="xref std std-confval docutils literal notranslate"><span class="pre">iLoc.profiles</span></code></a> to become active.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>iLoc.profiles <span class="o">=</span> a,b
+iLoc.profile.a.value1 <span class="o">=</span> ...
+iLoc.profile.b.value1 <span class="o">=</span> ...
+<span class="c1"># c is not active because it has not been added</span>
+<span class="c1"># to the list of iLoc.profiles</span>
+iLoc.profile.c.value1 <span class="o">=</span> ...
+</pre></div>
+</div>
+</div>
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.Verbose">
+<code class="sig-name descname">iLoc.profile.$name.Verbose</code><a class="headerlink" href="#confval-iLoc.profile.$name.Verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.globalModel">
+<code class="sig-name descname">iLoc.profile.$name.globalModel</code><a class="headerlink" href="#confval-iLoc.profile.$name.globalModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Name of globally applied velocity model
+into which RSTT or the local model is integrated. If
+unset, the name of the profile is considered instead.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.UseRSTT">
+<code class="sig-name descname">iLoc.profile.$name.UseRSTT</code><a class="headerlink" href="#confval-iLoc.profile.$name.UseRSTT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Use regional seismic travel-time tables
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.UseRSTTPnSn">
+<code class="sig-name descname">iLoc.profile.$name.UseRSTTPnSn</code><a class="headerlink" href="#confval-iLoc.profile.$name.UseRSTTPnSn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Use regional seismic travel-time tables for Pn and Sn
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.UseRSTTPgLg">
+<code class="sig-name descname">iLoc.profile.$name.UseRSTTPgLg</code><a class="headerlink" href="#confval-iLoc.profile.$name.UseRSTTPgLg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Use regional seismic travel-time tables for Pg and Lg
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.LocalVmodel">
+<code class="sig-name descname">iLoc.profile.$name.LocalVmodel</code><a class="headerlink" href="#confval-iLoc.profile.$name.LocalVmodel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Full path to a file containing the local velocity model.
+Requires: UseLocalTT = true. Empty string or unset
+disables using a local model in this profile.</p>
+<p>Example:</p>
+<p>&#64;DATADIR&#64;/iloc/localmodels/model.localmodel.dat.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.DoGridSearch">
+<code class="sig-name descname">iLoc.profile.$name.DoGridSearch</code><a class="headerlink" href="#confval-iLoc.profile.$name.DoGridSearch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Perform neighbourhood algorithm
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.NAsearchRadius">
+<code class="sig-name descname">iLoc.profile.$name.NAsearchRadius</code><a class="headerlink" href="#confval-iLoc.profile.$name.NAsearchRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Neighbourhood Algorithm: Search radius around initial
+epicentre
+Default is <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.NAsearchDepth">
+<code class="sig-name descname">iLoc.profile.$name.NAsearchDepth</code><a class="headerlink" href="#confval-iLoc.profile.$name.NAsearchDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km</em></p>
+<p>Neighbourhood Algorithm: Search radius around initial
+depth
+Default is <code class="docutils literal notranslate"><span class="pre">300</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.NAsearchOT">
+<code class="sig-name descname">iLoc.profile.$name.NAsearchOT</code><a class="headerlink" href="#confval-iLoc.profile.$name.NAsearchOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Neighbourhood Algorithm: Search radius around initial
+origin time
+Default is <code class="docutils literal notranslate"><span class="pre">30</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.NAlpNorm">
+<code class="sig-name descname">iLoc.profile.$name.NAlpNorm</code><a class="headerlink" href="#confval-iLoc.profile.$name.NAlpNorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Neighbourhood Algorithm: p-value for norm to compute
+misfit [1,2]
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.NAiterMax">
+<code class="sig-name descname">iLoc.profile.$name.NAiterMax</code><a class="headerlink" href="#confval-iLoc.profile.$name.NAiterMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Neighbourhood Algorithm: Maximum number of iterations
+Default is <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.NAcells">
+<code class="sig-name descname">iLoc.profile.$name.NAcells</code><a class="headerlink" href="#confval-iLoc.profile.$name.NAcells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Neighbourhood Algorithm: Number of cells to be resampled
+at each iteration
+Default is <code class="docutils literal notranslate"><span class="pre">25</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.NAinitialSample">
+<code class="sig-name descname">iLoc.profile.$name.NAinitialSample</code><a class="headerlink" href="#confval-iLoc.profile.$name.NAinitialSample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Neighbourhood Algorithm: Size of initial sample
+Default is <code class="docutils literal notranslate"><span class="pre">1000</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.NAnextSample">
+<code class="sig-name descname">iLoc.profile.$name.NAnextSample</code><a class="headerlink" href="#confval-iLoc.profile.$name.NAnextSample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Neighbourhood Algorithm: Size of subsequent samples
+Default is <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MinDepthPhases">
+<code class="sig-name descname">iLoc.profile.$name.MinDepthPhases</code><a class="headerlink" href="#confval-iLoc.profile.$name.MinDepthPhases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Depth resolution: Minimum number of depth phases for depdp
+Default is <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MaxLocalDistDeg">
+<code class="sig-name descname">iLoc.profile.$name.MaxLocalDistDeg</code><a class="headerlink" href="#confval-iLoc.profile.$name.MaxLocalDistDeg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Depth resolution: Maximum local distance
+Default is <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MinLocalStations">
+<code class="sig-name descname">iLoc.profile.$name.MinLocalStations</code><a class="headerlink" href="#confval-iLoc.profile.$name.MinLocalStations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Depth resolution: Minimum number of local defining stations
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MaxSPDistDeg">
+<code class="sig-name descname">iLoc.profile.$name.MaxSPDistDeg</code><a class="headerlink" href="#confval-iLoc.profile.$name.MaxSPDistDeg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>deg</em></p>
+<p>Depth resolution: Maximum distance for using S-P travel-time differences.
+Default is <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MinSPpairs">
+<code class="sig-name descname">iLoc.profile.$name.MinSPpairs</code><a class="headerlink" href="#confval-iLoc.profile.$name.MinSPpairs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Depth resolution: Minimum number of defining S-P phase pairs
+Default is <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MinCorePhases">
+<code class="sig-name descname">iLoc.profile.$name.MinCorePhases</code><a class="headerlink" href="#confval-iLoc.profile.$name.MinCorePhases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Depth resolution: Minimum number of defining core reflection phases
+Default is <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MaxShallowDepthError">
+<code class="sig-name descname">iLoc.profile.$name.MaxShallowDepthError</code><a class="headerlink" href="#confval-iLoc.profile.$name.MaxShallowDepthError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km</em></p>
+<p>Depth resolution: Maximum depth error for crustal free-depth
+Default is <code class="docutils literal notranslate"><span class="pre">30.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MaxDeepDepthError">
+<code class="sig-name descname">iLoc.profile.$name.MaxDeepDepthError</code><a class="headerlink" href="#confval-iLoc.profile.$name.MaxDeepDepthError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>km</em></p>
+<p>Depth resolution: Maximum depth error for deep free-depth
+Default is <code class="docutils literal notranslate"><span class="pre">60.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.DoCorrelatedErrors">
+<code class="sig-name descname">iLoc.profile.$name.DoCorrelatedErrors</code><a class="headerlink" href="#confval-iLoc.profile.$name.DoCorrelatedErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Linearized inversion: Account for correlated errors
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.SigmaThreshold">
+<code class="sig-name descname">iLoc.profile.$name.SigmaThreshold</code><a class="headerlink" href="#confval-iLoc.profile.$name.SigmaThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Unit: <em>s</em></p>
+<p>Linearized inversion: Used to exclude big residuals from solution
+Default is <code class="docutils literal notranslate"><span class="pre">6.0</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.AllowDamping">
+<code class="sig-name descname">iLoc.profile.$name.AllowDamping</code><a class="headerlink" href="#confval-iLoc.profile.$name.AllowDamping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Linearized inversion: Allow damping of model vector
+Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MinIterations">
+<code class="sig-name descname">iLoc.profile.$name.MinIterations</code><a class="headerlink" href="#confval-iLoc.profile.$name.MinIterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Linearized inversion: Minimum number of iterations
+Default is <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MaxIterations">
+<code class="sig-name descname">iLoc.profile.$name.MaxIterations</code><a class="headerlink" href="#confval-iLoc.profile.$name.MaxIterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Linearized inversion: Maximum number of iterations
+Default is <code class="docutils literal notranslate"><span class="pre">20</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.MinNdefPhases">
+<code class="sig-name descname">iLoc.profile.$name.MinNdefPhases</code><a class="headerlink" href="#confval-iLoc.profile.$name.MinNdefPhases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>integer</em></p>
+<p>Linearized inversion: Minimum number of defining phases
+Default is <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-iLoc.profile.$name.DoNotRenamePhases">
+<code class="sig-name descname">iLoc.profile.$name.DoNotRenamePhases</code><a class="headerlink" href="#confval-iLoc.profile.$name.DoNotRenamePhases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>boolean</em></p>
+<p>Linearized inversion: Do not rename phases. Deactivating
+allows to rename the phases automatically for this
+profile.
+Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">iLoc</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
+<li><a class="reference internal" href="#background">Background</a></li>
+<li><a class="reference internal" href="#history">History</a></li>
+<li><a class="reference internal" href="#iloc-in-a-nutshell">iLoc in a nutshell</a></li>
+<li><a class="reference internal" href="#algorithms">Algorithms</a><ul>
+<li><a class="reference internal" href="#neighbourhood-algorithm">Neighbourhood algorithm</a></li>
+<li><a class="reference internal" href="#depth-resolution">Depth resolution</a></li>
+<li><a class="reference internal" href="#linearized-inversion">Linearized inversion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#integration-into-scname">Integration into <cite>SeisComP</cite></a></li>
+<li><a class="reference internal" href="#velocity-models">Velocity models</a><ul>
+<li><a class="reference internal" href="#global-models">Global models</a></li>
+<li><a class="reference internal" href="#rstt">RSTT</a></li>
+<li><a class="reference internal" href="#local-velocity-models">Local velocity models</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#station-elevation">Station elevation</a></li>
+<li><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#setup-in-scname">Setup in <cite>SeisComP</cite></a></li>
+<li><a class="reference internal" href="#application-in-scname">Application in <cite>SeisComP</cite></a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="global_mlr.html"
+                        title="previous chapter">MLr</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="global_mn.html"
+                        title="next chapter">MN</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/global_iloc.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

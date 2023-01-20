@@ -1,0 +1,78 @@
+#!/bin/bash
+
+_create_binding_(){
+
+	#for STAT in APG GCGT
+	for STAT in $1
+	do
+		INFO=$(slinktool -Q ${SLINK} |grep $STAT|awk '$0~/Z D/{print $0}' )
+		echo $INFO
+		if [[ -z ${INFO} ]]
+		then
+			echo "${NET}_${STAT} no info found"
+			echo "${NET},${STAT} no info found" >> no-info.log
+			#### VOY A VER SI LO  DEJO O LO QUITO
+			rm $SEISCOMP_ROOT/etc/key/station_${NET}_${STAT}
+		else
+			LOC=$(echo $INFO |awk '$0~/Z D/{print $3}'|head -1)
+			CHAN=$(echo $INFO |awk '$0~/Z D/{print $4}'|head -1)
+
+			if [[ $CHAN == "D" ]]
+			then
+				CHAN=$LOC
+				LOC=""
+			fi
+
+			echo "CHANNEL  -->> $CHAN"
+			echo "LOCATION -->> $LOC"
+
+			if [[ ! $CHAN == *"Z" ]]
+			then
+				echo "CHANNEL NOT NECESARY"
+				echo "${STAT},${CHAN}, not necesary" >> no-channel.log
+
+			else
+
+				if [[ `find $SEISCOMP_ROOT/etc/key/global -iname profile_${CHAN}_${LOC}` ]]
+				then
+					echo "binding found"
+					find $SEISCOMP_ROOT/etc/key/global -iname profile_${CHAN}_${LOC}
+					cp -v STATION ${SEISCOMP_ROOT}/etc/key/station_${NET}_$STAT
+					sed -i s/GLOBAL/${CHAN}_${LOC}/g ${SEISCOMP_ROOT}/etc/key/station_${NET}_$STAT
+				else
+					echo "creating binding"
+					if [[ -n $LOC ]]
+						then
+						cp -v CHAN_${LOC} $SEISCOMP_ROOT/etc/key/global/profile_${CHAN}_${LOC}
+					else
+						cp -v CHAN_ $SEISCOMP_ROOT/etc/key/global/profile_${CHAN}_
+					fi
+					sed -i s/CHAN/${CHAN}/g $SEISCOMP_ROOT/etc/key/global/profile_${CHAN}_${LOC}
+					cp -v STATION ${SEISCOMP_ROOT}/etc/key/station_${NET}_$STAT
+					sed -i s/GLOBAL/${CHAN}_${LOC}/g ${SEISCOMP_ROOT}/etc/key/station_${NET}_$STAT
+				fi
+
+
+			fi
+		fi
+	done
+}
+
+if [ ! -e ${HOME}/.seiscomp.bash ]
+then
+	echo "no env var"
+else
+	source ${HOME}/.seiscomp.bash
+	TOP_DIR=${SEISCOMP_ROOT}/share/sc-customize-scripts/binding
+	cd $TOP_DIR
+	SLINK=10.10.10.27
+	rm -f no-info.log
+	ls ${SEISCOMP_ROOT}/etc/key/station_GI_* > binding.tmp
+	while read L
+	do
+		echo ""
+		NET=$(echo $L |awk -F"_" '{print $2}')
+		STAT=$(echo $L |awk -F"_" '{print $3}')
+		_create_binding_ $STAT
+	done < binding.tmp
+fi

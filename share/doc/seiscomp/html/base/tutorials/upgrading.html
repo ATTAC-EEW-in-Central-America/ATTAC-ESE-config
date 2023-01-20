@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Upgrading SeisComP &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script type="text/javascript" src="../../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Add a new station" href="addstation.html" />
+    <link rel="prev" title="Installation on Ubuntu" href="postinstall.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="addstation.html" title="Add a new station"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="postinstall.html" title="Installation on Ubuntu"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../tutorials.html" accesskey="U">Tutorials</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="upgrading-seiscomp">
+<span id="tutorials-upgrade"></span><h1>Upgrading SeisComP<a class="headerlink" href="#upgrading-seiscomp" title="Permalink to this headline">¶</a></h1>
+<p>You will …</p>
+<ul class="simple">
+<li><p>Upgrade a SeisComP system</p></li>
+<li><p>Migrate a SeisComP3 system to a newer SeisComP version</p></li>
+</ul>
+<p>Pre-requisites for this tutorial:</p>
+<ul class="simple">
+<li><p>Tutorial on <a class="reference internal" href="postinstall.html#tutorials-postinstall"><span class="std std-ref">installation</span></a> and SeisComP previously installed</p></li>
+</ul>
+<p>Afterwards/Results/Outcomes:</p>
+<ul class="simple">
+<li><p>Upgraded SeisComP</p></li>
+</ul>
+<p>Time range estimate:</p>
+<ul class="simple">
+<li><p>60 minutes</p></li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="seiscomp-versions">
+<h3>SeisComP versions<a class="headerlink" href="#seiscomp-versions" title="Permalink to this headline">¶</a></h3>
+<p>SeisComP has <a class="reference internal" href="../history.html#history"><span class="std std-ref">developed over time</span></a>. The versions can be distinguished
+by the name of the release:</p>
+<ul>
+<li><p><strong>SeisComP since version 4.0.0</strong> uses release version numbers</p></li>
+<li><p><strong>SeisComP3</strong> uses release versions, names, numbers and patch numbers.</p>
+<p>Full example:  <em>SeisComP3-jakarta-2020.330.02</em></p>
+<ul class="simple">
+<li><p>3: release version</p></li>
+<li><p>jakarta: release name</p></li>
+<li><p>2020.330: release number</p></li>
+<li><p>02: patch number</p></li>
+</ul>
+<p>Names are adjusted depending on changes in source code:</p>
+<ul class="simple">
+<li><p><strong>Release version:</strong> major changes in module groups, functionality, concepts, data model.
+Example: SeisComp3 is SeisComP in version 3.0
+in comparison to version 2.5 the GUIs were introduced.</p></li>
+<li><p><strong>Release name:</strong> major changes in functionality, concepts, data model.
+Example: with SeisComP3-Seattle the new user friendly configuration GUI <a class="reference internal" href="../../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a>
+was introduced.</p></li>
+<li><p><strong>Release number:</strong> changes in data model version and/or major changes in applications and optimizations.
+The numbers include the year and the day of the year of the software release.
+Example: Jakarta-2018.327</p></li>
+<li><p><strong>Patch number:</strong> optimizations of applications without changes in the data model version.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="upgrade-seiscomp-on-multiple-machines">
+<h3>Upgrade SeisComP on multiple machines<a class="headerlink" href="#upgrade-seiscomp-on-multiple-machines" title="Permalink to this headline">¶</a></h3>
+<p>Applications can only connect to a messaging system that runs with a database
+in an equal or lower data model version. Therefore, the SeisComP system which
+operates the messaging system is always updated last.</p>
+<p><strong>Example:</strong> A distributed system
+includes a processing system with the messaging system and database and a GUI work
+station connected to the processing system:</p>
+<ol class="arabic simple">
+<li><p>Upgrade the GUI work station</p></li>
+<li><p>Upgrade the processing system, take actions to
+<a class="reference internal" href="#tutorials-upgrade-number"><span class="std std-ref">upgrade the database version</span></a>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Always stop all SeisComP modules before upgrading:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp stop
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="package-download">
+<span id="tutorials-upgrade-changelog"></span><h2>Package download<a class="headerlink" href="#package-download" title="Permalink to this headline">¶</a></h2>
+<p>Get the latest or older SeisComP release packages from gempa GmbH or from the
+<a class="reference external" href="https://www.seiscomp.de/downloader/">SeisComP package downloader</a> <a class="footnote-reference brackets" href="#id6" id="id7">3</a>.</p>
+</div>
+<div class="section" id="documentation-of-changes">
+<h2>Documentation of changes<a class="headerlink" href="#documentation-of-changes" title="Permalink to this headline">¶</a></h2>
+<p>The important novelties, optimizations and changes that are available after upgrading
+are documented in the change log.
+It is recommend to read the change log before taking further actions. The details
+can be found in the file</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">$SEISCOMP_ROOT</span>/share/doc/seiscomp/CHANGELOG
+</pre></div>
+</div>
+<p>The change log can be directly accessed from the <cite>SeisComP</cite> <a class="reference internal" href="../changelog.html#sc-changelog"><span class="std std-ref">documentation</span></a>
+or from the <em>Docs</em> panel in <a class="reference internal" href="../../apps/scconfig.html#scconfig"><span class="std std-ref">scconfig</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>New features are regularly advertised and described in detail on the
+<a class="reference external" href="https://www.gempa.de/news/">News website of gempa GmbH</a> <a class="footnote-reference brackets" href="#id2" id="id3">1</a> and on the <a class="reference external" href="https://forum.seiscomp.de/">SeisComP forum</a> <a class="footnote-reference brackets" href="#id4" id="id5">2</a>.</p>
+</div>
+</div>
+<div class="section" id="upgrade-to-a-higher-release-number">
+<span id="tutorials-upgrade-number"></span><h2>Upgrade to a higher release number<a class="headerlink" href="#upgrade-to-a-higher-release-number" title="Permalink to this headline">¶</a></h2>
+<p>Installing a new SeisComP release or version is typically simple. <strong>More actions</strong> are
+required when</p>
+<ul class="simple">
+<li><p>Upgrading <a class="reference internal" href="#tutorials-upgrade-v4"><span class="std std-ref">from SeisComP3 to SeisComP in version 4 or higher</span></a>.</p></li>
+<li><p>Upgrading <a class="reference internal" href="#tutorials-upgrade-seedlink"><span class="std std-ref">from SeisComP3 Jakarta-2018.327 or older to Jakarta-2020.330 or
+SeisComP in version 4 or higher</span></a>.</p></li>
+</ul>
+<p>The normal upgrade takes only a few steps:</p>
+<ol class="arabic">
+<li><p>Download the SeisComP package</p></li>
+<li><p>Stop all SeisComP modules:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seiscomp</span> <span class="n">stop</span>
+</pre></div>
+</div>
+</li>
+<li><p>Install the new packages</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Users of external, e.g. <cite>gempa</cite> modules must ensure that the gempa modules
+match the SeisComP release version if they depend on SeisComP libraries.</p>
+</div>
+</li>
+<li><p>When installing a new SeisComP release, upgrading the database may be required.
+The database version will be tested and the required actions will be shown when executing:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp update-config
+</pre></div>
+</div>
+<p>or when pressing the Update Configuration button in scconfig.
+An upgrade from version SeisComP3 jakarta-2017.334 to SeisComP in version 4.1.0
+will give, e.g.:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp update-config
+* starting kernel modules
+starting scmaster
+* configure kernel
+* configure scmaster
+INFO: checking DB schema version of queue: production
+  * check database write access ... OK
+  * database schema version is <span class="m">0</span>.10
+  * last migration version is <span class="m">0</span>.11
+  * migration to the current version is required. apply the following
+    scripts in exactly the given order:
+    * /home/sysop/seiscomp/share/db/migrations/mysql/0_10_to_0_11.sql
+error: updating configuration <span class="k">for</span> scmaster failed
+</pre></div>
+</div>
+<p>The shown migration scripts can be used directly with the database command for upgrading:</p>
+<ul>
+<li><p>MySQL / MariaDB:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span> <span class="n">sysop</span> <span class="o">-</span><span class="n">p</span> <span class="o">-</span><span class="n">D</span> <span class="n">seiscomp</span> <span class="o">-</span><span class="n">h</span> <span class="n">localhost</span> <span class="o">&lt;</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">sysop</span><span class="o">/</span><span class="n">seiscomp</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">db</span><span class="o">/</span><span class="n">migrations</span><span class="o">/</span><span class="n">mysql</span><span class="o">/</span><span class="mi">0_10</span><span class="n">_to_0_11</span><span class="o">.</span><span class="n">sql</span>
+</pre></div>
+</div>
+</li>
+<li><p>PostgreSQL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">psql</span> <span class="o">-</span><span class="n">U</span> <span class="n">sysop</span> <span class="o">-</span><span class="n">d</span> <span class="n">seiscomp</span> <span class="o">-</span><span class="n">h</span> <span class="n">localhost</span> <span class="o">-</span><span class="n">W</span> <span class="o">-</span><span class="n">f</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">sysop</span><span class="o">/</span><span class="n">seiscomp</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">db</span><span class="o">/</span><span class="n">migrations</span><span class="o">/</span><span class="n">postgresql</span><span class="o">/</span><span class="mi">0_10</span><span class="n">_to_0_11</span><span class="o">.</span><span class="n">sql</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Using the migration scripts provides a more user friendly way than copying the
+lines of MySQL code from the changelog. In future versions we might add the option
+to automatically run the migrations.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Upgrading the database make take some time. Do no interrupt the process!
+During this time, the <cite>SeisComP</cite> messaging system is unavailable causing a downtime of the system.</p>
+</div>
+<p>After applying the migration scripts the database should be at the correct version.
+Test again with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seiscomp</span> <span class="n">update</span><span class="o">-</span><span class="n">config</span>
+</pre></div>
+</div>
+</li>
+<li><p>After a successful upgrade, start all modules again and observe the status:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seiscomp</span> <span class="n">start</span>
+<span class="n">seiscomp</span> <span class="n">status</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="migrate-from-seiscomp3-to-version-4">
+<span id="tutorials-upgrade-v4"></span><h2>Migrate from SeisComP3 to version &gt;=4<a class="headerlink" href="#migrate-from-seiscomp3-to-version-4" title="Permalink to this headline">¶</a></h2>
+<p>SeisComP in version 4 has some major differences to SeisComP3 which require adjustments.
+The main differences are in the <a class="reference internal" href="#sec-tutorials-upgrading-path"><span class="std std-ref">directories of the SeisComP installation</span></a>
+and the <a class="reference internal" href="#sec-tutorials-upgrading-messaging"><span class="std std-ref">messaging system</span></a>.
+The changes and the required actions are explained below. They must be considered
+in addition to the steps set out in section <a class="reference internal" href="#tutorials-upgrade-number"><span class="std std-ref">Upgrade to a higher release number</span></a>.</p>
+<div class="section" id="files-and-directories">
+<span id="sec-tutorials-upgrading-path"></span><h3>Files and directories<a class="headerlink" href="#files-and-directories" title="Permalink to this headline">¶</a></h3>
+<p>With <strong>SeisComP3</strong> all the default installation typically required all modules and configurations
+in the directories</p>
+<ul class="simple">
+<li><p>seiscomp3/ , typically $HOME/seiscomp3 or /opt/seiscomp3/</p></li>
+<li><p>$HOME/.seiscomp3/</p></li>
+</ul>
+<p>As of <strong>SeisComP in version 4</strong> the directories are:</p>
+<ul class="simple">
+<li><p>seiscomp/ , typically $HOME/seiscomp/ or /opt/seiscomp/</p></li>
+<li><p>$HOME/.seiscomp/</p></li>
+</ul>
+<p><strong>All configuration files</strong> must be migrated to the new structures. This
+includes:</p>
+<ul>
+<li><p>Configurations and inventory in seiscomp3/:</p>
+<ul class="simple">
+<li><p>seiscomp3/etc/*.cfg</p></li>
+<li><p>seiscomp3/etc/inventory/</p></li>
+<li><p>seiscomp3/etc/keys/</p></li>
+</ul>
+</li>
+<li><p>Configurations in $HOME/.seiscomp3/</p></li>
+<li><p>Logs in $HOME/.seiscomp3/log (optional)</p></li>
+<li><p>All user-defined files and directories in seiscomp3/share/</p></li>
+<li><p>All user-defined <a class="reference internal" href="../../apps/seedlink.html#seedlink"><span class="std std-ref">seedlink</span></a> and other templates in seiscomp3/share/templates/</p></li>
+<li><p>The waveform archive and other archives typically in seiscomp3/var/lib/</p></li>
+<li><p>User-defined files and directories in other places.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Some configuration default and description files have changed. Spread, arclink
+and arclinkproxy are not part of <cite>SeisComP</cite> anymore. <strong>Therefore, do not migrate:</strong></p>
+<ul>
+<li><p>any default configuration, description and init files. Better enable the desired
+daemon modules again:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp/bin/seiscomp <span class="nb">enable</span> <span class="o">[</span>module<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>any file related to spread or the arclink and arclinkproxy servers.</p></li>
+</ul>
+</div>
+</li>
+</ul>
+<p>Configurations containing absolute paths, e.g. <code class="file docutils literal notranslate"><span class="pre">/home/sysop/seiscomp3/share/scautoloc/grid_custom.conf</span></code>,
+must be adjusted. Better use <a class="reference internal" href="../concepts/configuration.html#concepts-configuration-variables"><span class="std std-ref">internal SeisComP variables</span></a>
+such as <em>&#64;DATADIR&#64;</em> instead of <em>seiscomp3/share</em> or <em>seiscomp/share</em>.</p>
+</div>
+<div class="section" id="software-dependencies">
+<h3>Software dependencies<a class="headerlink" href="#software-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>The software dependencies may have changed.
+<a class="reference internal" href="../installation.html#software-dependencies"><span class="std std-ref">Install the missing ones</span></a>.</p>
+</div>
+<div class="section" id="system-variables">
+<h3>System variables<a class="headerlink" href="#system-variables" title="Permalink to this headline">¶</a></h3>
+<p>The system environment variables must be updated, e.g. in <code class="file docutils literal notranslate"><span class="pre">$HOME/.bashrc</span></code>.
+Remove or uncomment the lines  <code class="file docutils literal notranslate"><span class="pre">$HOME/.bashrc</span></code> referring to the depreciated SeisComP3
+version. Then execute</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp/bin/seiscomp print env &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+<span class="nb">source</span> <span class="nv">$HOME</span>/.bashrc
+</pre></div>
+</div>
+</div>
+<div class="section" id="pipelines">
+<h3>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h3>
+<p>When using pipelines or alias modules, create and enable the alias module names again, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>seiscomp <span class="nb">alias</span> create <span class="o">[</span>alias<span class="o">]</span> <span class="o">[</span>module<span class="o">]</span>
+seiscomp <span class="nb">enable</span> <span class="o">[</span>alias<span class="o">]</span>
+</pre></div>
+</div>
+<p>Migrate the module and bindings configurations of the alias modules including all related additional files which are referred to
+in the configurations.</p>
+</div>
+<div class="section" id="messaging-system">
+<span id="sec-tutorials-upgrading-messaging"></span><h3>Messaging system<a class="headerlink" href="#messaging-system" title="Permalink to this headline">¶</a></h3>
+<p>One of the main changes SeisComP3 to SeisComP in version 4.0 is the <a class="reference internal" href="../concepts/messaging.html#concepts-messaging"><span class="std std-ref">messaging system</span></a>.
+Spread does not exist anymore and only <a class="reference internal" href="../../apps/scmaster.html#scmaster"><span class="std std-ref">scmaster</span></a> is started initially for
+the messaging system. <a class="reference internal" href="../../apps/scmaster.html#scmaster"><span class="std std-ref">scmaster</span></a> allows to operate several queues in parallel with
+different databases. This flexibility comes with additional parameters which require
+configuration. Migrate the legacy database parameters and configure the new one:</p>
+<ol class="arabic">
+<li><p>Remove or comment the obsolete <em>dbplugin</em> plugin manually from
+<code class="file docutils literal notranslate"><span class="pre">scmaster.cfg</span></code> and <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># plugins = dbplugin</span>
+</pre></div>
+</div>
+</li>
+<li><p>Set up the messaging queues in the configuration of <a class="reference internal" href="../../apps/scmaster.html#scmaster"><span class="std std-ref">scmaster</span></a> in
+<code class="file docutils literal notranslate"><span class="pre">scmaster.cfg</span></code>.</p>
+<ul>
+<li><p>Add and configure a new queue or stay with the default ones.</p>
+<ul class="simple">
+<li><p><em>production</em> considers a database by default.</p></li>
+<li><p><em>playback</em> considers no database by default. Here, parameters can be
+exchanged through the messaging without storing in the database.</p></li>
+</ul>
+<p>In the following examples, the <em>production</em> queue shall be assumed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <em>production</em> queue is used by default by all modules connected
+to the messaging system. When removing this queue and a database shall be
+used, another queue must exist
+and the queue name must be configured for all modules in the global
+<a class="reference internal" href="../../apps/global.html#confval-connection.server"><code class="xref std std-confval docutils literal notranslate"><span class="pre">connection.server</span></code></a> parameter. See below for an example.</p>
+</div>
+<ul>
+<li><p>Add the required plugins per queue. Currently only <em>dbstore</em> is supported.
+Example for the <em>production</em> queue:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>queues.production.plugins <span class="o">=</span> dbstore
+</pre></div>
+</div>
+</li>
+<li><p>Add non-default message groups, e.g. <em>L1PICK</em> and <em>L1LOCATION</em> to the list
+of groups <strong>in one of the ways</strong>:</p>
+<ul>
+<li><p>Set <a class="reference internal" href="../../apps/scmaster.html#confval-defaultGroups"><code class="xref std std-confval docutils literal notranslate"><span class="pre">defaultGroups</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">defaultGroups</span> <span class="o">=</span> <span class="n">L1PICK</span><span class="p">,</span> <span class="n">L1LOCATION</span><span class="p">,</span> <span class="n">AMPLITUDE</span><span class="p">,</span><span class="n">PICK</span><span class="p">,</span><span class="n">LOCATION</span><span class="p">,</span><span class="n">MAGNITUDE</span><span class="p">,</span><span class="n">FOCMECH</span><span class="p">,</span><span class="n">EVENT</span><span class="p">,</span><span class="n">QC</span><span class="p">,</span><span class="n">PUBLICATION</span><span class="p">,</span><span class="n">GUI</span><span class="p">,</span><span class="n">INVENTORY</span><span class="p">,</span><span class="n">ROUTING</span><span class="p">,</span><span class="n">CONFIG</span><span class="p">,</span><span class="n">LOGGING</span><span class="p">,</span><span class="n">IMPORT_GROUP</span><span class="p">,</span><span class="n">SERVICE_REQUEST</span><span class="p">,</span><span class="n">SERVICE_PROVIDE</span>
+</pre></div>
+</div>
+</li>
+<li><p>Set groups per queue in <a class="reference internal" href="../../apps/scmaster.html#confval-queues.$name.groups"><code class="xref std std-confval docutils literal notranslate"><span class="pre">queues.$name.groups</span></code></a>,
+ignoring groups in <a class="reference internal" href="../../apps/scmaster.html#confval-defaultGroups"><code class="xref std std-confval docutils literal notranslate"><span class="pre">defaultGroups</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">queues</span><span class="o">.</span><span class="n">production</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">L1PICK</span><span class="p">,</span> <span class="n">L1LOCATION</span><span class="p">,</span> <span class="n">AMPLITUDE</span><span class="p">,</span><span class="n">PICK</span><span class="p">,</span><span class="n">LOCATION</span><span class="p">,</span><span class="n">MAGNITUDE</span><span class="p">,</span><span class="n">FOCMECH</span><span class="p">,</span><span class="n">EVENT</span><span class="p">,</span><span class="n">QC</span><span class="p">,</span><span class="n">PUBLICATION</span><span class="p">,</span><span class="n">GUI</span><span class="p">,</span><span class="n">INVENTORY</span><span class="p">,</span><span class="n">ROUTING</span><span class="p">,</span><span class="n">CONFIG</span><span class="p">,</span><span class="n">LOGGING</span><span class="p">,</span><span class="n">IMPORT_GROUP</span><span class="p">,</span><span class="n">SERVICE_REQUEST</span><span class="p">,</span><span class="n">SERVICE_PROVIDE</span>
+</pre></div>
+</div>
+</li>
+<li><p>Add groups per queues to defaults in <a class="reference internal" href="../../apps/scmaster.html#confval-queues.$name.groups"><code class="xref std std-confval docutils literal notranslate"><span class="pre">queues.$name.groups</span></code></a>, e.g.
+for the <em>production</em> group.
+This convenient configuration per queue
+considers the default groups in <a class="reference internal" href="../../apps/scmaster.html#confval-defaultGroups"><code class="xref std std-confval docutils literal notranslate"><span class="pre">defaultGroups</span></code></a> and simply adds
+new groups in the configuration of queues</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>queues.production.groups = ${defaultGroups}, L1PICK, L1LOCATION
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When setting groups in the queues all groups configured in
+<a class="reference internal" href="../../apps/scmaster.html#confval-defaultGroups"><code class="xref std std-confval docutils literal notranslate"><span class="pre">defaultGroups</span></code></a> will be ignored unless <cite>${defaultGroups}</cite> is used.
+Add all groups from <a class="reference internal" href="../../apps/scmaster.html#confval-defaultGroups"><code class="xref std std-confval docutils literal notranslate"><span class="pre">defaultGroups</span></code></a> to the queues to keep the
+default groups.</p>
+</div>
+</li>
+<li><p>Add the interface name, currently only <em>dbstore</em> is supported. Example for
+a queue names <em>production</em></p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>queues.production.processors.messages <span class="o">=</span> dbstore
+</pre></div>
+</div>
+</li>
+<li><p>Add the database parameters which can be used from the legacy configuration</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>queues.production.processors.messages.dbstore.driver <span class="o">=</span> mysql
+queues.production.processors.messages.dbstore.read <span class="o">=</span> sysop:sysop@localhost/seiscomp3
+queues.production.processors.messages.dbstore.write <span class="o">=</span> sysop:sysop@localhost/seiscomp3
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The name of the database can be freely chosen. The example assumes that
+the database named <em>seiscomp3</em> exists already and that it shall be continued
+to be used with the new SeisComP in version 4.x.x.</p>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Add one or more of the queues to the <a class="reference internal" href="../../apps/scmaster.html#confval-queues"><code class="xref std std-confval docutils literal notranslate"><span class="pre">queues</span></code></a> parameter to register
+them by their names</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">queues</span> <span class="o">=</span> <span class="n">production</span><span class="p">,</span> <span class="n">playback</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Configure the connection parameters of all modules connecting to the messaging
+system in the global configuration, e.g. in <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code>.
+As in SeisComP3 the connection server is
+localhost. The queue name is added to the host by “/”. The default queue
+is <em>production</em>, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>connection.server <span class="o">=</span> localhost/production
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <em>production</em> shall be used, then no additional configuration is required.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="database">
+<h3>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h3>
+<p>After adjusting the structure, variables and configuration parameters, check if the
+<a class="reference internal" href="#tutorials-upgrade-number"><span class="std std-ref">database requires an upgrade</span></a> as well.</p>
+</div>
+<div class="section" id="seedlink">
+<h3>Seedlink<a class="headerlink" href="#seedlink" title="Permalink to this headline">¶</a></h3>
+<p>When upgrading from SeisComp3 Jakrata-2018.327 or older and using <a class="reference internal" href="../../apps/seedlink.html#seedlink"><span class="std std-ref">seedlink</span></a>,
+consider the sections <a class="reference internal" href="#tutorials-upgrade-seedlink"><span class="std std-ref">SeedLink buffer</span></a> and
+<a class="reference internal" href="#tutorials-proc-seedlink"><span class="std std-ref">SeedLink stream processor</span></a>.</p>
+</div>
+<div class="section" id="automatic-module-check">
+<h3>Automatic module check<a class="headerlink" href="#automatic-module-check" title="Permalink to this headline">¶</a></h3>
+<p>If applied, adjust the settings for automatic module status check, e.g. crontab entries.
+For crontab use:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>crontab -e
+</pre></div>
+</div>
+</div>
+<div class="section" id="system-daemon">
+<h3>System daemon<a class="headerlink" href="#system-daemon" title="Permalink to this headline">¶</a></h3>
+<p>If <cite>SeisComP</cite> is controlled by the system daemon, e.g. to start enabled <cite>SeisComP</cite>
+modules automatically during computer startup, then the startup script must be
+adjusted.</p>
+</div>
+</div>
+<div class="section" id="upgrade-from-seiscomp3-jakarta-2018-327-or-before">
+<h2>Upgrade from SeisComP3 Jakarta-2018.327 or before<a class="headerlink" href="#upgrade-from-seiscomp3-jakarta-2018-327-or-before" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="seedlink-buffer">
+<span id="tutorials-upgrade-seedlink"></span><h3>SeedLink buffer<a class="headerlink" href="#seedlink-buffer" title="Permalink to this headline">¶</a></h3>
+<p>In SeisComP3 prior to Jakarta-2020.330 two stations with the same
+station but different network code were mixed in one buffer directory.
+As of  Jakarta-2020.330 and SeisComP in version 4 the buffer directories are now
+unique!
+Before upgrading <a class="reference internal" href="../../apps/seedlink.html#seedlink"><span class="std std-ref">seedlink</span></a>, you should therefore rename the buffer directories
+accordingly.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You may discover data gaps if you do not rename the buffer directories.</p>
+</div>
+<p><strong>Example:</strong></p>
+<ol class="arabic">
+<li><p>Check the current situation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sysop@host:~/seiscomp3/var/lib/seedlink/buffer$ ls
+PB02
+</pre></div>
+</div>
+</li>
+<li><p>Rename the directories properly:</p>
+<ol class="arabic">
+<li><p>Stop seedlink:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sysop</span><span class="nd">@host</span><span class="p">:</span><span class="n">seiscomp</span> <span class="n">stop</span> <span class="n">seedlink</span>
+</pre></div>
+</div>
+</li>
+<li><p>Upgrade to SeisComP3-jakarta-2020.330 or SeisComP in version 4 or higher.</p></li>
+<li><p>Rename all seedlink buffer directories to NET.STA, e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sysop@host:~/seiscomp3/var/lib/seedlink/buffer$ mv PB02 CX.PB02
+sysop@host:~/seiscomp3/var/lib/seedlink/buffer$ ls
+CX.PB02
+</pre></div>
+</div>
+</li>
+<li><p>Update configuration:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sysop</span><span class="nd">@host</span><span class="p">:</span><span class="n">seiscomp</span> <span class="n">update</span><span class="o">-</span><span class="n">config</span>
+</pre></div>
+</div>
+</li>
+<li><p>Start SeedLink</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sysop</span><span class="nd">@host</span><span class="p">:</span><span class="n">seiscomp</span> <span class="n">start</span> <span class="n">seedlink</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+<p id="seedlink-buffer-script">Script for renaming the seedlink buffer directories:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="k">if</span> <span class="o">[</span> -z <span class="si">${</span><span class="nv">SEISCOMP_ROOT</span><span class="p">+x</span><span class="si">}</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="nb">echo</span> <span class="s2">&quot;Environment variable SEISCOMP_ROOT is not set.&quot;</span>
+        <span class="nb">echo</span> <span class="s2">&quot;Either use &#39;seiscomp exec [script]&#39; or set SEISCOMP_ROOT to the installation &quot;</span>
+     <span class="nb">exit</span> <span class="m">1</span>
+     <span class="nb">echo</span> <span class="s2">&quot;path of your SeisComP installation.&quot;</span>
+<span class="k">fi</span>
+
+grep -A <span class="m">2</span> ^station <span class="nv">$SEISCOMP_ROOT</span>/var/lib/seedlink/seedlink.ini <span class="p">|</span> <span class="k">while</span> <span class="nb">read</span> a b c<span class="p">;</span> <span class="k">do</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;</span><span class="nv">$a</span><span class="s2">&quot;</span> <span class="o">=</span> station -a <span class="s2">&quot;</span><span class="nv">$b</span><span class="s2">&quot;</span> !<span class="o">=</span> .dummy <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+             <span class="nv">id</span><span class="o">=</span><span class="nv">$b</span>
+             <span class="nv">sta</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+             <span class="nv">net</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+             <span class="k">while</span> <span class="nb">read</span> a b c<span class="p">;</span> <span class="k">do</span>
+                     <span class="k">case</span> <span class="nv">$a</span> in
+                             --<span class="o">)</span> break<span class="p">;;</span>
+                             name<span class="o">)</span> <span class="nb">eval</span> <span class="nv">sta</span><span class="o">=</span><span class="nv">$c</span><span class="p">;;</span>
+                             network<span class="o">)</span> <span class="nb">eval</span> <span class="nv">net</span><span class="o">=</span><span class="nv">$c</span><span class="p">;;</span>
+                     <span class="k">esac</span>
+             <span class="k">done</span>
+             <span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="nv">$id</span><span class="s2">&quot;</span> -o -z <span class="s2">&quot;</span><span class="nv">$sta</span><span class="s2">&quot;</span> -o -z <span class="s2">&quot;</span><span class="nv">$net</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+                     <span class="nb">echo</span> <span class="s2">&quot;Error parsing seedlink.ini&quot;</span>
+                     <span class="nb">break</span>
+             <span class="k">fi</span>
+
+             <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;</span><span class="nv">$id</span><span class="s2">&quot;</span> !<span class="o">=</span> <span class="s2">&quot;</span><span class="nv">$net</span><span class="s2">.</span><span class="nv">$sta</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+                     mv -v <span class="s2">&quot;</span><span class="nv">$SEISCOMP_ROOT</span><span class="s2">/var/lib/seedlink/buffer/</span><span class="nv">$id</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="nv">$SEISCOMP_ROOT</span><span class="s2">/var/lib/seedlink/buffer/</span><span class="nv">$net</span><span class="s2">.</span><span class="nv">$sta</span><span class="s2">&quot;</span>
+             <span class="k">else</span>
+                     <span class="nb">echo</span> <span class="s2">&quot;</span><span class="nv">$id</span><span class="s2">: No renaming required&quot;</span>
+             <span class="k">fi</span>
+     <span class="k">fi</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="seedlink-stream-processor">
+<span id="tutorials-proc-seedlink"></span><h3>SeedLink stream processor<a class="headerlink" href="#seedlink-stream-processor" title="Permalink to this headline">¶</a></h3>
+<p>Since SeisComP3 in version Jakarta-2020.030 and SeisComP in version 4.0.0,
+SeedLink stream processors (<code class="docutils literal notranslate"><span class="pre">proc</span></code> parameter) can be attached to both, stations
+and plugin instances. In order to distinguish between the two cases, either
+<code class="docutils literal notranslate"><span class="pre">proc</span></code> (attach to station) or <code class="docutils literal notranslate"><span class="pre">sources.*.proc</span></code> (attach to plugin instance)
+parameter (or both) can be used in SeedLink bindings.</p>
+<div class="section" id="chain-plugin">
+<h4>chain plugin<a class="headerlink" href="#chain-plugin" title="Permalink to this headline">¶</a></h4>
+<p>In case of <code class="docutils literal notranslate"><span class="pre">chain_plugin</span></code>, there is normally just one instance, so stream
+processors attached to this instance apply to all stations. <strong>This is normally
+not what we want.</strong> Therefore the chain_plugin does not support the
+<code class="docutils literal notranslate"><span class="pre">sources.*.proc</span></code> option.</p>
+<p>Before SeisComP3 in version Jakarta-2020.030 and SeisComP in version 4.0.0,
+stream processors were always attached to stations, even when <code class="docutils literal notranslate"><span class="pre">sources.*.proc</span></code>
+was used. This means when upgrading:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sources.chain.proc</span></code> must be renamed to <code class="docutils literal notranslate"><span class="pre">proc</span></code></p></li>
+<li><p>streams_*.tpl templates must be moved one level up, from
+<code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/seiscomp/share/templates/seedlink/chain/</span></code> to
+<code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/seiscomp/share/templates/seedlink/</span></code>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using a stream processor with chain_plugin makes only sense when raw
+data is generated (<a class="reference internal" href="../../apps/seedlink.html#confval-sources.chain.channels.unpack"><code class="xref std std-confval docutils literal notranslate"><span class="pre">sources.chain.channels.unpack</span></code></a>).</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h4>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<p>A stream processor is an object defined in XML, which is used to create MiniSEED
+from raw data and optionally downsample the data. What is the difference between
+attaching a stream processor to station and plugin instance?</p>
+<p>Let’s take a look at the following stream processor definition in
+<code class="file docutils literal notranslate"><span class="pre">$SEISCOMP_ROOT/share/templates/seedlink/streams_stream100.tpl</span></code>:</p>
+<div class="highlight-XML notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;proc</span> <span class="na">name=</span><span class="s">&quot;stream100&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;tree&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;Z&quot;</span> <span class="na">channel=</span><span class="s">&quot;Z&quot;</span> <span class="na">location=</span><span class="s">&quot;&quot;</span> <span class="na">rate=</span><span class="s">&quot;100&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;N&quot;</span> <span class="na">channel=</span><span class="s">&quot;N&quot;</span> <span class="na">location=</span><span class="s">&quot;&quot;</span> <span class="na">rate=</span><span class="s">&quot;100&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;E&quot;</span> <span class="na">channel=</span><span class="s">&quot;E&quot;</span> <span class="na">location=</span><span class="s">&quot;&quot;</span> <span class="na">rate=</span><span class="s">&quot;100&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;node</span> <span class="na">filter=</span><span class="s">&quot;FS2D5&quot;</span> <span class="na">stream=</span><span class="s">&quot;BH&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;node</span> <span class="na">filter=</span><span class="s">&quot;F96C&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;node</span> <span class="na">filter=</span><span class="s">&quot;ULP&quot;</span> <span class="na">stream=</span><span class="s">&quot;LH&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;node</span> <span class="na">filter=</span><span class="s">&quot;VLP&quot;</span> <span class="na">stream=</span><span class="s">&quot;VH&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/node&gt;</span>
+      <span class="nt">&lt;/node&gt;</span>
+    <span class="nt">&lt;/node&gt;</span>
+  <span class="nt">&lt;/tree&gt;</span>
+<span class="nt">&lt;/proc&gt;</span>
+</pre></div>
+</div>
+<p>This creates 20Hz BH*, 1Hz LH* and 0.1Hz VH* streams from 100Hz Z, N, E raw
+data. If one plugin instance is used for the station, it does not make a
+difference whether this is attached to station or plugin instance. But suppose
+the station is using two plugin instances—one for broad-band and the other for
+strong-motion data—, both sending Z, N and E channels. Now if the stream processor
+is attached to station, data from both plugin instances would mixed up. We must
+attach a different stream processor to each plugin instance—one producing BH*,
+LH* and VH* and the other one producing BN* and so on.</p>
+</div>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dd><p><a class="reference external" href="https://www.gempa.de/news/">https://www.gempa.de/news/</a></p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id5">2</a></span></dt>
+<dd><p><a class="reference external" href="https://forum.seiscomp.de/">https://forum.seiscomp.de/</a></p>
+</dd>
+<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id7">3</a></span></dt>
+<dd><p><a class="reference external" href="https://www.seiscomp.de/downloader/">https://www.seiscomp.de/downloader/</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Upgrading SeisComP</a><ul>
+<li><a class="reference internal" href="#background">Background</a><ul>
+<li><a class="reference internal" href="#seiscomp-versions">SeisComP versions</a></li>
+<li><a class="reference internal" href="#upgrade-seiscomp-on-multiple-machines">Upgrade SeisComP on multiple machines</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#package-download">Package download</a></li>
+<li><a class="reference internal" href="#documentation-of-changes">Documentation of changes</a></li>
+<li><a class="reference internal" href="#upgrade-to-a-higher-release-number">Upgrade to a higher release number</a></li>
+<li><a class="reference internal" href="#migrate-from-seiscomp3-to-version-4">Migrate from SeisComP3 to version &gt;=4</a><ul>
+<li><a class="reference internal" href="#files-and-directories">Files and directories</a></li>
+<li><a class="reference internal" href="#software-dependencies">Software dependencies</a></li>
+<li><a class="reference internal" href="#system-variables">System variables</a></li>
+<li><a class="reference internal" href="#pipelines">Pipelines</a></li>
+<li><a class="reference internal" href="#messaging-system">Messaging system</a></li>
+<li><a class="reference internal" href="#database">Database</a></li>
+<li><a class="reference internal" href="#seedlink">Seedlink</a></li>
+<li><a class="reference internal" href="#automatic-module-check">Automatic module check</a></li>
+<li><a class="reference internal" href="#system-daemon">System daemon</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#upgrade-from-seiscomp3-jakarta-2018-327-or-before">Upgrade from SeisComP3 Jakarta-2018.327 or before</a><ul>
+<li><a class="reference internal" href="#seedlink-buffer">SeedLink buffer</a></li>
+<li><a class="reference internal" href="#seedlink-stream-processor">SeedLink stream processor</a><ul>
+<li><a class="reference internal" href="#chain-plugin">chain plugin</a></li>
+<li><a class="reference internal" href="#id1">Background</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="postinstall.html"
+                        title="previous chapter">Installation on Ubuntu</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="addstation.html"
+                        title="next chapter">Add a new station</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/base/tutorials/upgrading.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

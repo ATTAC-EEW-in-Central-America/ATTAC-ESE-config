@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>Md &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MLr" href="global_mlr.html" />
+    <link rel="prev" title="Hypo71" href="global_hypo71.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_mlr.html" title="MLr"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="global_hypo71.html" title="Hypo71"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../toc/extensions.html" >Extensions</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/extensions/global.html" accesskey="U">global</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="md">
+<span id="global-md"></span><h1>Md<a class="headerlink" href="#md" title="Permalink to this headline">¶</a></h1>
+<p>Duration magnitude plugin</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The duration magnitude is based on coda duration measurement.
+It’s usually valid for small earthquakes up to magnitude 4 to 5.</p>
+<p>First used in 1972 by Lee et al., Duration magnitude (Md) or Coda duration
+magnitude plugin estimates Richter magnitude of local earthquakes by using
+signal duration on vertical components of seismographs.</p>
+<p>Estimations are quite stable for local earthquakes ranging from magnitude
+Md 0.0 to 5.0.</p>
+<div class="section" id="amplitude-processing">
+<h3>Amplitude processing<a class="headerlink" href="#amplitude-processing" title="Permalink to this headline">¶</a></h3>
+<p>Duration magnitude is usually computed on short period seismometers by searching
+the time at which the amplitude of the signal is close to pre-earthquake amplitude.</p>
+<p>Since it’s mainly used for small earthquake whose signal is at rather high frequency,
+it’s usefull to highpass filter broadband seismomters (select sismo type 6 and a
+Butterworth filter “3,1.5”).
+Or a better solution is to deconvolve the signals and reconvolve with a widely used
+short-period instrument : the 1Hz eigen-frequency L4C (select sismo type 9).
+If you have the full responses in your inventory and have activated them
+(amplitudes.enableResponses set to true), you will be able to use also accelerometers.</p>
+<p>The plugin then searches for the maximum amplitude of the signal, which should be
+the S-wave and then computed mean amplitude of one-second time windows.
+As soon as a one-second time window mean amplitude vs pre-earthquake amplitude
+reaches the configured SNR ratio, the process is stopped.
+The middle of the one-second time window is assumed to be the end of the Coda and
+the time difference between Coda time and P arrival time is stored as Coda duration.</p>
+</div>
+<div class="section" id="magnitude-processing">
+<h3>Magnitude processing<a class="headerlink" href="#magnitude-processing" title="Permalink to this headline">¶</a></h3>
+<p>Once amplitudes calculated by the AmplitudeProcessor and a Coda has been found,
+the generic formula is applied and the duration magnitude is computed
+for a given station, if it fits the criteria (max depth, max distance).</p>
+<div class="math">
+<p><img src="../_images/math/a3010f147479b84f14b15be9438d4940ab36bca0.png" alt="mag = FMA + FMB \times \log10(period) + (FMF \times period) + (FMD \times epidistkm) + (FMZ \times depth) + STACOR"/></p>
+</div></div>
+</div>
+<div class="section" id="plugin">
+<h2>Plugin<a class="headerlink" href="#plugin" title="Permalink to this headline">¶</a></h2>
+<p>The Coda duration magnitude plugin (Md) is installed under <code class="file docutils literal notranslate"><span class="pre">share/plugins/md.so</span></code>.
+It provides a new implementations of AmplitudeProcessor and MagnitudeProcessor.</p>
+<p>To add the plugin to a module add it to the modules configuration, either
+<code class="file docutils literal notranslate"><span class="pre">modulename.cfg</span></code> or <code class="file docutils literal notranslate"><span class="pre">global.cfg</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">plugins</span> <span class="o">=</span> <span class="si">${</span><span class="nv">plugins</span><span class="si">}</span>, md
+</pre></div>
+</div>
+<p>Basically it can be used by modules: <a class="reference internal" href="scamp.html#scamp"><span class="std std-ref">scamp</span></a>, <a class="reference internal" href="scmag.html#scmag"><span class="std std-ref">scmag</span></a>, <a class="reference internal" href="scolv.html#scolv"><span class="std std-ref">scolv</span></a>.</p>
+<div class="section" id="more-information">
+<h3>More information<a class="headerlink" href="#more-information" title="Permalink to this headline">¶</a></h3>
+<p>Description of the formula can be found in Hypo2000 manual from USGS website.
+<a class="reference external" href="http://earthquake.usgs.gov/research/software/#HYPOINVERSE">http://earthquake.usgs.gov/research/software/#HYPOINVERSE</a></p>
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Md</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
+<li><a class="reference internal" href="#amplitude-processing">Amplitude processing</a></li>
+<li><a class="reference internal" href="#magnitude-processing">Magnitude processing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#plugin">Plugin</a><ul>
+<li><a class="reference internal" href="#more-information">More information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="global_hypo71.html"
+                        title="previous chapter">Hypo71</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="global_mlr.html"
+                        title="next chapter">MLr</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/global_md.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

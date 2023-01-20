@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html >
+  <head>
+    <meta charset="utf-8" />
+    <title>scardac &#8212; SeisComP Release documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/seiscomp.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" src="../_static/seiscomp.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="scwfas" href="scwfas.html" />
+    <link rel="prev" title="msrtsimul" href="msrtsimul.html" /> 
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="../_static/brands/seiscomp/text/white.svg"/>
+           <!-- span class="title">SeisComP Release</span -->
+          <span class="version">4.10.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="container">
+        <div class="content"><a class="pull-right" id="sidebar-toggle">TOC</a>
+          
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">
+            index
+          </a>
+        </li>
+        <li class="right">
+          <a href="scwfas.html" title="scwfas"
+             accesskey="N">
+            next
+          </a>
+        </li>
+        <li class="right">
+          <a href="msrtsimul.html" title="msrtsimul"
+             accesskey="P">
+            previous
+          </a>
+        </li>
+        <li class="nav-item nav-item-0">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="nav-item nav-item-1">
+          <a href="../modules.html" >Modules</a>
+        </li>
+        <li class="nav-item nav-item-2">
+          <a href="../toc/acquisition.html" accesskey="U">Acquisition</a>
+        </li> 
+      </ul>
+    </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="fitted content" id="anchors-container">
+        <div class="body" role="main">
+          
+  <div class="section" id="scardac">
+<span id="id1"></span><h1>scardac<a class="headerlink" href="#scardac" title="Permalink to this headline">¶</a></h1>
+<p><strong>Waveform archive data availability collector</strong></p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>scardac scans an <a class="reference internal" href="../base/glossary.html#term-sds"><span class="xref std std-term">SDS waveform archive</span></a> , e.g.,
+created by <a class="reference internal" href="slarchive.html#slarchive"><span class="std std-ref">slarchive</span></a> or <a class="reference internal" href="scart.html#scart"><span class="std std-ref">scart</span></a> for
+available <a class="reference external" href="http://www.iris.edu/data/miniseed.htm">miniSEED</a> data. It will
+collect information about</p>
+<ul class="simple">
+<li><p>data extents - the absolute earliest and latest times data is available of a
+particular channel</p></li>
+<li><p>data segments - continuous data segments sharing the same quality and sampling
+rate attributes</p></li>
+</ul>
+<p>scardac is intended to be executed periodically, e.g., as a cronjob.</p>
+<p>The data availability information is stored in the SeisComP database under the
+root element <a class="reference internal" href="../base/api-python.html#api-datamodel-python"><span class="std std-ref">DataAvailability</span></a>. Access to the data
+availability is provided by the <a class="reference internal" href="fdsnws.html#fdsnws"><span class="std std-ref">fdsnws</span></a> module via the services:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="fdsnws.html#sec-station"><span class="std std-ref">/fdsnws/station</span></a> (extent information only, see
+<code class="docutils literal notranslate"><span class="pre">matchtimeseries</span></code> and <code class="docutils literal notranslate"><span class="pre">includeavailability</span></code> request parameters).</p></li>
+<li><p><a class="reference internal" href="fdsnws.html#sec-avail"><span class="std std-ref">/fdsnws/ext/availability</span></a> (extent and segment information
+provided in different formats)</p></li>
+</ul>
+<div class="section" id="workflow">
+<h3>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Read existing <code class="docutils literal notranslate"><span class="pre">Extents</span></code> from database</p></li>
+<li><p>Scan the SDS archive for new channel IDs and create new <code class="docutils literal notranslate"><span class="pre">Extents</span></code></p></li>
+<li><p>Subsequently process the <code class="docutils literal notranslate"><span class="pre">Extents</span></code> using <code class="docutils literal notranslate"><span class="pre">threads</span></code> number of parallel
+threads. For each <code class="docutils literal notranslate"><span class="pre">Extent</span></code>:</p>
+<ol class="arabic simple">
+<li><p>Find all available daily data files</p></li>
+<li><p>Sort the file list according date</p></li>
+<li><p>For each data file</p>
+<ul class="simple">
+<li><p>remove <code class="docutils literal notranslate"><span class="pre">DataSegments</span></code> that do longer exists</p></li>
+<li><p>update or create <code class="docutils literal notranslate"><span class="pre">DataSegments</span></code> that changed or are new</p></li>
+<li><p>a segment is split if</p>
+<ul>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">jitter</span></code> (difference between previous records end time and
+current records start time) is exceeded</p></li>
+<li><p>the quality or sampling rate changed</p></li>
+</ul>
+</li>
+<li><p>merge segment information into <code class="docutils literal notranslate"><span class="pre">DataAttributeExtents</span></code> (<code class="docutils literal notranslate"><span class="pre">Extents</span></code>
+sharing the same quality and sample rate information)</p></li>
+<li><p>merge segment start and end time into overall <code class="docutils literal notranslate"><span class="pre">Extent</span></code></p></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p>Get command line help or execute scardac with default parameters and informative
+debug output:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scardac -h
+scardac --debug
+</pre></div>
+</div>
+</li>
+<li><p>Update the availability of waveform data files existing in the standard
+<a class="reference internal" href="../base/glossary.html#term-sds"><span class="xref std std-term">SDS</span></a> archive to the seiscomp database and create an XML file using
+<a class="reference internal" href="scxmldump.html#scxmldump"><span class="std std-ref">scxmldump</span></a>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scardac -d mysql://sysop:sysop@localhost/seiscomp -a <span class="nv">$SEISCOMP_ROOT</span>/var/lib/archive --debug
+scxmldump -Yf -d mysql://sysop:sysop@localhost/seiscomp -o availability.xml
+</pre></div>
+</div>
+</li>
+<li><p>Update the availability of waveform data files existing in the standard
+<a class="reference internal" href="../base/glossary.html#term-sds"><span class="xref std std-term">SDS</span></a> archive to the seiscomp database. Use <a class="reference internal" href="fdsnws.html#fdsnws"><span class="std std-ref">fdsnws</span></a> to fetch a flat file containing a list
+of periods of available data from stations of the CX network sharing the same
+quality and sampling rate attributes:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scardac -d mysql://sysop:sysop@localhost/seiscomp -a <span class="nv">$SEISCOMP_ROOT</span>/var/lib/archive
+wget -O availability.txt <span class="s1">&#39;http://localhost:8080/fdsnws/ext/availability/1/query?network=CX&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The SeisComP module <a class="reference internal" href="fdsnws.html#fdsnws"><span class="std std-ref">fdsnws</span></a> must be running for executing this example.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="scardac-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/defaults/scardac.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">etc/scardac.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/global.cfg</span></code></div>
+<div class="line"><code class="file docutils literal notranslate"><span class="pre">~/.seiscomp/scardac.cfg</span></code></div>
+</div>
+<p>scardac inherits <a class="reference internal" href="global.html#global-configuration"><span class="std std-ref">global options</span></a>.</p>
+<dl class="confval">
+<dt id="confval-archive">
+<code class="sig-name descname">archive</code><a class="headerlink" href="#confval-archive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>string</em></p>
+<p>Path to MiniSeed waveform archive where all data is stored. The SDS archive
+structure is defined as
+YEAR/NET/STA/CHA/NET.STA.LOC.CHA.YEAR.DATEOFYEAR, e.g.
+2018/GE/APE/BHZ.D/GE.APE..BHZ.D.2018.125
+Default is <code class="docutils literal notranslate"><span class="pre">&#64;SEISCOMP_ROOT&#64;/var/lib/archive</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-threads">
+<code class="sig-name descname">threads</code><a class="headerlink" href="#confval-threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Number of threads scanning the archive in parallel
+Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-batchSize">
+<code class="sig-name descname">batchSize</code><a class="headerlink" href="#confval-batchSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Batch size of database transactions used when updating data
+availability segments. Allowed range: [1,1000]
+Default is <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-jitter">
+<code class="sig-name descname">jitter</code><a class="headerlink" href="#confval-jitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>float</em></p>
+<p>Acceptable derivation of end time and start time of successive
+records in multiples of sample time.
+Default is <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</dd></dl>
+
+<dl class="confval">
+<dt id="confval-maxSegments">
+<code class="sig-name descname">maxSegments</code><a class="headerlink" href="#confval-maxSegments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <em>int</em></p>
+<p>Maximum number of segments per stream. If the limit is reached
+no more segments are added to the database and the corresponding
+extent is flagged as to fragmented. Use a negative value to
+disable any limit.
+Default is <code class="docutils literal notranslate"><span class="pre">1000000</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="command-line">
+<h2>Command-line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">scardac [OPTION]...</strong></p>
+<div class="section" id="generic">
+<h3>Generic<a class="headerlink" href="#generic" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scardac-h">
+<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scardac-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show help message.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-v">
+<code class="sig-name descname">-V</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scardac-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>show version information</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-config-file">
+<code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-config-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative configuration file. When this option is used
+the loading of all stages is disabled. Only the given configuration
+file is parsed and used. To use another name for the configuration
+create a symbolic link of the application or copy it, eg scautopick -&gt; scautopick2.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-plugins">
+<code class="sig-name descname">--plugins</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load given plugins.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-d">
+<code class="sig-name descname">-D</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--daemon</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scardac-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run as daemon. This means the application will fork itself and
+doesn’t need to be started with &amp;.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="verbosity">
+<h3>Verbosity<a class="headerlink" href="#verbosity" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scardac-verbosity">
+<code class="sig-name descname">--verbosity</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verbosity level [0..4]. 0:quiet, 1:error, 2:warning, 3:info, 4:debug</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="id2">
+<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--v</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase verbosity level (may be repeated, eg. -vv)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--quiet</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scardac-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet mode: no logging output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-print-component">
+<code class="sig-name descname">--print-component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-print-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each log entry print the component right after the
+log level. By default the component output is enabled
+for file output but disabled for console output.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-component">
+<code class="sig-name descname">--component</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits the logging to a certain component. This option can be given more than once.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-s">
+<code class="sig-name descname">-s</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--syslog</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scardac-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use syslog logging back end. The output usually goes to /var/lib/messages.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--lockfile</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to lock file.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-console">
+<code class="sig-name descname">--console</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-console" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send log output to stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-debug">
+<code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scardac-debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug mode: –verbosity=4 –console=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-trace">
+<code class="sig-name descname">--trace</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-scardac-trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trace mode: –verbosity=4 –console=1 –print-component=1 –print-context=1</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-log-file">
+<code class="sig-name descname">--log-file</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-log-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use alternative log file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="collector">
+<h3>Collector<a class="headerlink" href="#collector" title="Permalink to this headline">¶</a></h3>
+<dl class="option">
+<dt id="cmdoption-scardac-a">
+<code class="sig-name descname">-a</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--archive</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="slarchive.html#confval-archive"><code class="xref std std-confval docutils literal notranslate"><span class="pre">archive</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-threads">
+<code class="sig-name descname">--threads</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="#confval-threads"><code class="xref std std-confval docutils literal notranslate"><span class="pre">threads</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-b">
+<code class="sig-name descname">-b</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--batch-size</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <code class="xref std std-confval docutils literal notranslate"><span class="pre">batchsize</span></code>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-j">
+<code class="sig-name descname">-j</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--jitter</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-j" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overrides configuration parameter <a class="reference internal" href="#confval-jitter"><code class="xref std std-confval docutils literal notranslate"><span class="pre">jitter</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-scardac-generate-test-data">
+<code class="sig-name descname">--generate-test-data</code><code class="sig-prename descclassname"> arg</code><a class="headerlink" href="#cmdoption-scardac-generate-test-data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not scan the archive but generate test data for each
+stream in the inventory. Format:
+days,gaps,gapslen,overlaps,overlaplen. E.g. the following
+parameter list would generate test data for 100 days
+(starting from now()-100) which includes 150 gaps with a
+length of 2.5s followed by 50 overlaps with an overlap of
+5s: –generate-test-data=100,150,2.5,50,5</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          <div id="anchors-bottom"></div>
+        </div>
+        
+      <div class="sidebar" role="navigation" aria-label="main navigation">
+        <div id="anchors-top"></div>
+        <div id="anchors" class="content">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scardac</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
+<li><a class="reference internal" href="#workflow">Workflow</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#command-line">Command-line</a><ul>
+<li><a class="reference internal" href="#generic">Generic</a></li>
+<li><a class="reference internal" href="#verbosity">Verbosity</a></li>
+<li><a class="reference internal" href="#collector">Collector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="msrtsimul.html"
+                        title="previous chapter">msrtsimul</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scwfas.html"
+                        title="next chapter">scwfas</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apps/scardac.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="horizontal layout content">
+        <a class="fade-in" href="https://www.gempa.de" target="_blank">
+          <img class="brand" src="../_static/brands/gempa.svg"/>
+        </a>
+        <div class="stretched align-center fitted content">
+          <div>
+		  Version <b>4.10.0</b> Release
+          </div>
+            <div class="copyright">
+              Copyright &copy; gempa GmbH, GFZ Potsdam.
+            </div>
+        </div>
+        <a class="fade-in" href="https://www.gfz-potsdam.de" target="_blank">
+          <img class="brand" src="../_static/brands/gfz.svg"/>
+        </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
