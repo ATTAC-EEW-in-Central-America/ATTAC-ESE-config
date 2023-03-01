@@ -48,10 +48,11 @@ from seiscomp import system
 import configparser
 from copy import deepcopy
 
+ei = system.Environment.Instance()
 
 external_stylesheets=[dbc.themes.BOOTSTRAP]
 config = configparser.RawConfigParser()
-config.read("/opt/seiscomp/share/sceewv/apps.cfg")
+config.read(ei.shareDir()+"/sceewv/apps.cfg")
 cfg = dict(config.items('event'))
 mapbox_access_token = open(cfg['mapboxtoken']).read()
 eventsJsonPath = cfg['jsonpath']
@@ -80,7 +81,6 @@ fmt = '%Y-%m-%d %H:%M:%S'
 
 distint = 100
 tabsVect = []
-ei = system.Environment.Instance()
 
 def roman(num):
    res = ""
@@ -270,22 +270,25 @@ def prepare_data(eventID):
 										likelihood = round(float(commentText),2)
 							if data["prefMag"] == data["origins"][iOri]["mags"][iMag]["ID"]:
 								magPref = data["origins"][iOri]["mags"][iMag]["value"]
-								magPrefType = data["origins"][iOri]["mags"][iMag]["type"]
+								magPrefType = data["origins"][iOri]["mags"][iMag]["type"].split(' ')[0]
+								magPrefAuth = data["origins"][iOri]["mags"][iMag]["type"].split(' ')[1]
 								magTime = data["origins"][iOri]["mags"][iMag]["CreationTime"]
 								inten = ipe_allen2012_hyp2(distint,magPref)
-								dpref = {"type":magPrefType,"value":magPref,"magTime":magTime, "lat":latOri, "lon":lonOri, "staCount":magStaNum, "intensity":inten, "like":likelihood}
+								dpref = {"author":magPrefAuth,"type":magPrefType,"value":magPref,"magTime":magTime, "lat":latOri, "lon":lonOri, "staCount":magStaNum, "intensity":inten, "like":likelihood}
 								# dMag.append(d)
 							if data["origins"][iOri]["EvaluationMode"] == 1:
 								magTime = data["origins"][iOri]["mags"][iMag]["CreationTime"]
-								magType = data["origins"][iOri]["mags"][iMag]["type"]
+								magType = data["origins"][iOri]["mags"][iMag]["type"].split(' ')[0]
+								magAuth = data["origins"][iOri]["mags"][iMag]["type"].split(' ')[1]
 								magVal = data["origins"][iOri]["mags"][iMag]["value"]
 								inten = ipe_allen2012_hyp2(distint,magVal)
 								OriTime = data["origins"][iOri]["OriginTime"]
-								d = {"type":magType,"value":magVal,"magTime":magTime, "lat":latOri, "lon":lonOri, "staCount":magStaNum, "intensity":inten, "like":likelihood}
+								d = {"author":magAuth, "type":magType,"value":magVal,"magTime":magTime, "lat":latOri, "lon":lonOri, "staCount":magStaNum, "intensity":inten, "like":likelihood}
 								# if d["type"] in magtypes or d["type"] == magPrefType:
-								if d["type"] in magtypes:
+								if d["type"].split(' ')[0] in magtypes:
 									dMag.append(d)
-								if magType in magtypes and not plot:
+								#	magtypes.append(d["type"])
+								if magType.split(' ')[0] in magtypes and not plot:
 									vectOri.append({"lat":float(latOri), "lon":float(lonOri), "oTime":OriTime, "magVal":magVal})
 									plot = True
 					except:
@@ -808,7 +811,7 @@ def update_table(start_date, end_date, magValue):
 def create_time_series(df,x,y):
 	df.sort_values(by='difTime',inplace=True)
 #	fig = px.area(df, x='difTime', y='value', color='type')
-	fig = px.scatter(df, x=x, y=y, color='type')
+	fig = px.scatter(df, x=x, y=y, color='author')
 	fig.update_traces(mode='lines+markers')
 	return fig
 

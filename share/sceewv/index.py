@@ -16,19 +16,22 @@ Author of the Software: Camilo Munoz
 """
 
 from dash import Dash, dcc, html, Input, Output, callback
+from seiscomp import system
 import dash_bootstrap_components as dbc
 #try:
 import events_dash
 import event_dash
 #except:
-#    print('No event(s) dashboards')
-
+#	print('No event(s) dashboards')
 import sys
 import configparser
 
+ei = system.Environment.Instance()
+
+
 external_stylesheets=[dbc.themes.BOOTSTRAP]
 config = configparser.RawConfigParser()
-config.read("/opt/seiscomp/share/sceewv/apps.cfg")
+config.read(ei.shareDir()+"/sceewv/apps.cfg")
 cfg = dict(config.items('index'))
 alert = cfg['alert']
 alert = False if alert == 'False' else alert

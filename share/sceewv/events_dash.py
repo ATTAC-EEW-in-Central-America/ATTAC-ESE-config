@@ -30,15 +30,17 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 import plotly.io as pio
 import numpy as np
+from seiscomp import system
 from obspy import read_events
 from obspy.clients.fdsn import Client
 from obspy import UTCDateTime
 import configparser
 
+ei = system.Environment.Instance()
 
 external_stylesheets=[dbc.themes.BOOTSTRAP]
 config = configparser.RawConfigParser()
-config.read("/opt/seiscomp/share/sceewv/apps.cfg")
+config.read(ei.shareDir()+"/sceewv/apps.cfg")
 cfg = dict(config.items('events'))
 mapbox_access_token = open(cfg['mapboxtoken']).read()
 extQuery = cfg['extquery']
@@ -50,10 +52,14 @@ agencia = cfg['agency']
 deltaMin = int(cfg['deltatime'])
 deltaDist = int(cfg['deltadist'])
 validMagTypes = cfg['magtypes'].split(",")
-lat_min = float(cfg['latmin'])
-lat_max = float(cfg['latmax'])
-lon_min = float(cfg['lonmin'])
-lon_max = float(cfg['lonmax'])
+latg_min = float(cfg['latmin'])
+latg_max = float(cfg['latmax'])
+long_min = float(cfg['lonmin'])
+long_max = float(cfg['lonmax'])
+latr_min = float(cfg['latrmin'])
+latr_max = float(cfg['latrmax'])
+lonr_min = float(cfg['lonrmin'])
+lonr_max = float(cfg['lonrmax'])
 json_path = cfg['jsonpath']
 distInt = int(cfg['distint'])
 fpStatus = cfg['fpstatus']
@@ -142,7 +148,7 @@ def roman(num):
       res == None
    return res
 
-def prepare_data(startTime, endTime, magValue):
+def prepare_data(startTime, endTime, magValue, reg_check):
 #	dictMag = []
 	dictPref = []
 	dictPlot = []
@@ -150,6 +156,16 @@ def prepare_data(startTime, endTime, magValue):
 	Fp_vect = []
 	Fn_vect = []
 	fmt = '%Y-%m-%d %H:%M:%S'
+	if reg_check == ['reg']:
+		lat_min=latr_min
+		lat_max=latr_max
+		lon_min=lonr_min
+		lon_max=lonr_max
+	else:
+		lat_min=latg_min
+		lat_max=latg_max
+		lon_min=long_min
+		lon_max=long_max
 	if extQuery:
 		try:
 			extCat = externalQuery(startTime,endTime,magValue,lat_min,lat_max,lon_min,lon_max)
@@ -189,13 +205,14 @@ def prepare_data(startTime, endTime, magValue):
 				tpAdd = []
 				eewGMS = ""
 				likelihoods = ""
+				eewChecks = ""
 				earlyMag = ""
 				earlyDelay = ""
 				delayEww = ""
 				delayPtime = ""
 				prefOriTime = None
 				prefOriDepth = None
-				data = json.loads(f.read())
+				data = json.load(f)
 	#			dictMag.append(data)
 				for iOri in range(len(data["origins"])):
 					creTime.append(data["origins"][iOri]["CreationTime"])
@@ -215,6 +232,16 @@ def prepare_data(startTime, endTime, magValue):
 						data["origins"][iOri]["eventID"] = data["eventID"]
 						prefOri = data["origins"][iOri]
 	#					dictPref.append(data["origins"][iOri])
+						try:
+							for iPick in range(len(data["origins"][iOri]["picks"])):
+								pickID = data["origins"][iOri]["picks"][iPick]["ID"]
+								pCreaTime = data["origins"][iOri]["picks"][iPick]["CreationTime"]
+								pTime = data["origins"][iOri]["picks"][iPick]["time"]
+								dPick.append({"pickID":pickID,"pCreaTime":pCreaTime,"pTime":pTime})
+						except:
+							pass
+#							print("No pick in file %s origin %s" % (f,data["origins"][iOri]["ID"]))
+
 					try:
 						lat = data["origins"][iOri]["latitude"]
 						lon = data["origins"][iOri]["longitude"]
@@ -222,7 +249,7 @@ def prepare_data(startTime, endTime, magValue):
 							likelihood = 0
 							eewCheck = 0
 							magTime = data["origins"][iOri]["mags"][iMag]["CreationTime"]
-							magType = data["origins"][iOri]["mags"][iMag]["type"]
+							magType = data["origins"][iOri]["mags"][iMag]["type"].split(' ')[0]
 							magVal = data["origins"][iOri]["mags"][iMag]["value"]
 							if magType in validMagTypes:
 								EvalMag = 0
@@ -240,21 +267,12 @@ def prepare_data(startTime, endTime, magValue):
 								if mag < magValue[0] or mag > magValue[1]:
 									magEval = 1
 									break
-								prefMagType = magType
+								prefMagType = magType.split(' ')[0]
 								prefMagVal = round(mag,2)
-##									dictPref[len(dictPref)-1]["Magnitude"] = "%s %s"%(magType,round(mag,2))
-					except Exception as e:
-						pass
-#						print("No mag in file %s origin %s" % (fil,data["origins"][iOri]["ID"]))
-					try:
-						for iPick in range(len(data["origins"][iOri]["picks"])):
-							pickID = data["origins"][iOri]["picks"][iPick]["ID"]
-							pCreaTime = data["origins"][iOri]["picks"][iPick]["CreationTime"]
-							pTime = data["origins"][iOri]["picks"][iPick]["time"]
-							dPick.append({"pickID":pickID,"pCreaTime":pCreaTime,"pTime":pTime})
+	#								dictPref[len(dictPref)-1]["Magnitude"] = "%s %s"%(magType,round(mag,2))
 					except:
 						pass
-#						print("No pick in file %s origin %s" % (f,data["origins"][iOri]["ID"]))
+#						print("No mag in file %s origin %s" % (fil,data["origins"][iOri]["ID"]))
 
 				if regEval == 1 or magEval ==1 or (prefMagType == None and prefMagVal == None):
 					continue
@@ -275,10 +293,7 @@ def prepare_data(startTime, endTime, magValue):
 					status = None
 					Fn_vect.append(prefOriTime)
 				elif EvalOri == 1 and EvalMag == 1:
-					EvalEve = "Fn"
-					status = None
-					Fn_vect.append(prefOriTime)
-#					continue
+					continue
 
 				dictPref.append(prefOri)
 				dictPref[len(dictPref)-1]["Magnitude"] = "%s %s"%(prefMagType,prefMagVal)
@@ -330,54 +345,79 @@ def prepare_data(startTime, endTime, magValue):
 					dictPref[len(dictPref)-1]["Likelihood"]="None"
 					dictPref[len(dictPref)-1]["EEW"]= "None"
 				else:
+					tpDict = {}
 					for i in range(len(dMag)):
 						mTime = datetime.datetime.strptime(dMag[i]["magTime"], fmt)
 						difMagTime = (mTime-oTime).total_seconds()
 						dMag[i]["difMagTime"] = difMagTime
+						tp = dMag[i]["magType"]
+						if tp in tpDict:
+							tpDict[tp].append(dMag[i]["eewCheck"])
+						else:
+							tpDict[tp] = [dMag[i]["eewCheck"]]
 					dMagSort = sorted(dMag, key=itemgetter("difMagTime"))
 					for i in range(len(dMagSort)):
 						tp = dMagSort[i]["magType"]
 						difTime = dMagSort[i]["difMagTime"]
 						magVal = dMagSort[i]["magVal"]
+						cond = 0
 						if tp not in tpAdd and tp in validMagTypes:
-							if earlyMag != "":
-								earlyMag += "\n"
-								delayEww += "\n"
-								delayPtime += "\n"
-								eewGMS += "\n"
-								likelihoods += "\n"
-							tpAdd.append(tp)
-							eewGM = ipe_allen2012_hyp((max([0.01, (difMagTime*3.3)**2-prefOriDepth**2]))**.5,magVal)
-							if eewGM > 0:
-								eewGM = roman(round(eewGM))
+							if 1 in tpDict[tp]:
+								if dMagSort[i]["eewCheck"] == 1:
+									cond = 1
 							else:
-								eewGM = roman(round(0))
-							eewTime = difTime-Ptime
-							if status:
-								d = {"type":tp,"difTime":eewTime,"prefOriTime":prefOriTime, "MMI":eewGM}
-								dictPlot.append(d)
-							likelihood = str(round(float(dMagSort[i]["likelihood"]),2))
-							earlyMag += tp+" "+str(round(magVal,2))
-							delayEww += str(eewTime)
-							delayPtime += str(Ptime)
-							eewGMS += str(eewGM)
-							likelihoods += likelihood
-							eewCheck = dMagSort[i]["eewCheck"]
-							if eewCheck == 1:
-								eewCheck = "✅"
-							else:
-								eewCheck = "❌"
-							locPref = np.array((float(prefOri["latitude"]),float(prefOri["longitude"])))
-							locOri = np.array((float(dMagSort[i]["lat"]),float(dMagSort[i]["lon"])))
-							locErr = str(int(np.linalg.norm(locPref-locOri)*111.1))
-#							r=10 # Ojo distancia utilizada para calcular EEW-GM
+								cond = 1
+							if cond == 1:
+								if earlyMag != "":
+									earlyMag += "\n"
+									delayEww += "\n"
+									delayPtime += "\n"
+									eewGMS += "\n"
+									likelihoods += "\n"
+									eewChecks += "\n"
+								tpAdd.append(tp)
+								#eewGM = ipe_allen2012_hyp((max([0.01, (difMagTime*3.3)**2-prefOriDepth**2]))**.5,magVal)
+								eewGM = ipe_allen2012_hyp(distInt,magVal)
+								if eewGM > 0:
+									eewGM = roman(round(eewGM))
+								else:
+									eewGM = roman(round(0))
+								if difTime < 0:
+									eewTime = difTime
+								else:
+									try:
+ 										eewTime = difTime-Ptime
+									except:
+										eewTime = difTime
+								if status:
+									d = {"type":tp,"difTime":eewTime,"prefOriTime":prefOriTime, "MMI":eewGM}
+									dictPlot.append(d)
+								likelihood = str(round(float(dMagSort[i]["likelihood"]),2))
+								earlyMag += tp+" "+str(round(magVal,2))
+								delayEww += str(eewTime)
+								try:
+									delayPtime += str(Ptime)
+								except:
+									delayPtime += "None"
+								eewGMS += str(eewGM)
+								likelihoods += likelihood
+								eewCheck = dMagSort[i]["eewCheck"]
+								if eewCheck == 1:
+									eewCheck = "✅"
+								else:
+									eewCheck = "❌"
+								eewChecks += eewCheck
+								locPref = np.array((float(prefOri["latitude"]),float(prefOri["longitude"])))
+								locOri = np.array((float(dMagSort[i]["lat"]),float(dMagSort[i]["lon"])))
+								locErr = str(int(np.linalg.norm(locPref-locOri)*111.1))
+#								r=10 # Ojo distancia utilizada para calcular EEW-GM
 					dictPref[len(dictPref)-1]["Early mag"]=earlyMag
 					dictPref[len(dictPref)-1]["Loc error [km]"]=locErr
 					dictPref[len(dictPref)-1]["EEW-GM MMI"]=eewGMS
 					dictPref[len(dictPref)-1]["Delay 4th P [s]"]=delayPtime
 					dictPref[len(dictPref)-1]["Delay EEW [s]"]=delayEww
 					dictPref[len(dictPref)-1]["Likelihood"]=likelihoods
-					dictPref[len(dictPref)-1]["EEW"]=eewCheck
+					dictPref[len(dictPref)-1]["EEW"]=eewChecks
 
 #	data_origins = json_normalize(dicts, record_path=['origins'],meta=['eventID'])
 #	dataMag = json_normalize(dictMag, record_path=['origins','mags'],meta=['eventID', ['origins','CreationTime'],['origins','longitude'],['origins','latitude'],['origins','OriginTime'],['origins','ID']])
@@ -401,8 +441,9 @@ today = date.today()
 endTime = today
 startTime = endTime - timedelta(days=deltaDays)
 magValue = [minMag, maxMag]
+reg_check = []
 
-dataPref,dataPlot,Fp_vect,Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue)
+dataPref,dataPlot,Fp_vect,Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue, reg_check)
 
 initial_active_cell = {"row": 0, "column": 0, "column_id": "origins.ID"}
 colors = ["royalblue","crimson","lightseagreen","orange","lightgrey"]
@@ -444,7 +485,7 @@ layout = html.Div(
 						html.H4('Select Time Range'),html.H6('Please use calendar to select period of time'),
 						dcc.DatePickerRange(
 							id='date-range',
-							minimum_nights=5,
+							minimum_nights=1,
 							clearable=True,
 							with_portal=True,
 							start_date=startTime,
@@ -452,7 +493,7 @@ layout = html.Div(
 #							min_date_allowed=date(1995, 8, 5),
 #							max_date_allowed=date(2017, 9, 19),
 #							initial_visible_month=date(2017, 8, 5),
-							style={'width': '80%', 'display': 'inline-block'}
+							style={'width': '100%', 'display': 'inline-block'}
 						),
 					]),
 					dbc.Col([
@@ -464,6 +505,16 @@ layout = html.Div(
 #							step=1,
 							value=magValue,
 							tooltip={"placement": "bottom", "always_visible": True}
+						)
+					]),
+					dbc.Col([
+						html.H4('Region'),html.H6('Check the box to filter by network region'),
+						dcc.Checklist(
+							options={
+								'reg': ' Region '+agencia,
+								},
+							value = [],
+							id='reg-check'
 						)
 					]),
 				],className="g-0"),
@@ -583,20 +634,36 @@ def select_row(active_cell):
           },
     ]
 
+@callback(
+    Output('tbl', 'active_cell'),
+    Input("map", "clickData"),
+    Input('tbl', 'derived_virtual_data')
+    )
+def update_table(clickData, tblData):
+	try:
+		idSelected = clickData['points'][0]['hovertext']
+		for i in range(len(tblData)):
+			if tblData[i]["eventID"] == idSelected:
+				active_cell = {'row':i,'column':0,'column_id':'OriginTime','row_id':idSelected}
+				return active_cell
+	except:
+		active_cell = {'row':0,'column':0,'column_id':'OriginTime','row_id':tblData[0]["eventID"]}
+		return active_cell
 
 @callback(
     Output('tbl', 'data'),
     Input("date-range", 'start_date'),
     Input('date-range', 'end_date'),
-    Input("mag-range", 'value')
+    Input("mag-range", 'value'),
+    Input("reg-check", "value"),
     )
-def update_table(start_date, end_date, magValue):
+def update_table(start_date, end_date, magValue, reg_check):
 	startTime = datetime.datetime.strptime(start_date, '%Y-%m-%d')
 	startTime = startTime.date()
 	endTime = datetime.datetime.strptime(end_date, '%Y-%m-%d')
 	endTime = endTime.date()
 	try:
-		dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue)
+		dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue, reg_check)
 	except:
 		print("No data in selected period")
 	data = dataPref.drop(['longitude','latitude'], axis='columns')
@@ -615,9 +682,10 @@ def update_table(start_date, end_date, magValue):
     Input("mag-range", 'value'),
     Input("tbl", "derived_virtual_row_ids"),
 #    Input("tbl", "derivedselected_row_ids"),
-    Input("tbl", "active_cell"))
+    Input("tbl", "active_cell"),
+    Input("reg-check", "value"))
 #    Input('year-slider', 'value'))
-def update_graph(start_date, end_date, magValue, row_ids, active_cell):
+def update_graph(start_date, end_date, magValue, row_ids, active_cell, reg_check):
 ##    dff = df[df['year'] == year_value]
     mapText="<b>Events chronological and geographical distribution from %s to %s </b><br> Agency: <b>%s</b>. Reference agency: <b>%s</b> and <b>%s</b>. <br> Dashboard creation time:%s"%(start_date,end_date,agencia,agencia,fdsnwsName,today)
     startTime = datetime.datetime.strptime(start_date, '%Y-%m-%d')
@@ -625,7 +693,7 @@ def update_graph(start_date, end_date, magValue, row_ids, active_cell):
     endTime = datetime.datetime.strptime(end_date, '%Y-%m-%d')
     endTime = endTime.date()
     try:
-        dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue)
+        dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue, reg_check)
     except:
         print("No data in selected period")
 #    row = dataPref.index[active_cell["row"]]
@@ -634,28 +702,34 @@ def update_graph(start_date, end_date, magValue, row_ids, active_cell):
     for i in range(len(dataPref['Magnitude'])):
        mag = dataPref['Magnitude'][i].split(" ")
        mag = abs(float(mag[1]))
+       evalEve = dataPref['EvalEve'][i]
        if 'row_id' in active_cell:
           if dataPref['eventID'][i] == active_cell['row_id']:
-             size.append(500)
-             colors.append('crimson')
+             size.append(750)
+             # colors.append('crimson')
           elif math.isnan(mag):
              size.append(10)
-             colors.append('orangered')
           else:
              size.append(mag*40)
-             colors.append('orangered')
        else:
           if i == 0:
-             size.append(500)
-             colors.append('crimson')
+             size.append(750)
           elif math.isnan(mag):
              size.append(10)
-             colors.append('orangered')
           else:
              size.append(mag*40)
-             colors.append('orangered')
+       if evalEve == "Fn":
+             # colors.append('#ff9c9c')
+             colors.append('crimson')
+       elif evalEve == "Fp":
+             # colors.append('#fadc9b')
+             colors.append('#FFD100')
+       elif evalEve == "Tp":
+#             colors.append('orangered')
+             colors.append('black')
     lon = dataPref['longitude'].tolist()
     lat = dataPref['latitude'].tolist()
+    ids = dataPref['eventID'].tolist()
     fig = go.Figure(
         data = [
 #        go.Scattergeo(
@@ -665,6 +739,7 @@ def update_graph(start_date, end_date, magValue, row_ids, active_cell):
         lat = lat,
         mode = 'markers',
 #        zoom=3,
+        hovertext = ids,
         marker = dict(
             opacity=0.5,
             color = colors,
@@ -890,14 +965,15 @@ def create_histo(dataPlot):
     Input("date-range", 'start_date'),
     Input('date-range', 'end_date'),
     Input("mag-range", 'value'),
+    Input("reg-check", "value")
     )
-def update_graph(start_date, end_date, magValue):
+def update_graph(start_date, end_date, magValue, reg_check):
     startTime = datetime.datetime.strptime(start_date, '%Y-%m-%d')
     startTime = startTime.date()
     endTime = datetime.datetime.strptime(end_date, '%Y-%m-%d')
     endTime = endTime.date()
     try:
-        dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue)
+        dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue, reg_check)
     except:
         print("No data in selected period")
     return create_histo(dataPlot)
@@ -919,14 +995,15 @@ def create_pie(Tp_vect,Fp_vect,Fn_vect):
     Input("date-range", 'start_date'),
     Input('date-range', 'end_date'),
     Input("mag-range", 'value'),
+    Input("reg-check", "value"),
     )
-def update_graph(clickData, start_date, end_date, magValue):
+def update_graph(clickData, start_date, end_date, magValue, reg_check):
     startTime = datetime.datetime.strptime(start_date, '%Y-%m-%d')
     startTime = startTime.date()
     endTime = datetime.datetime.strptime(end_date, '%Y-%m-%d')
     endTime = endTime.date()
     try:
-        dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue)
+        dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue, reg_check)
     except:
         print("No data in selected period")
     return create_pie(Tp_vect, Fp_vect, Fn_vect)
@@ -938,8 +1015,9 @@ def update_graph(clickData, start_date, end_date, magValue):
     Input("date-range", 'start_date'),
     Input('date-range', 'end_date'),
     Input("mag-range", 'value'),
+    Input("reg-check", "value"),
     )
-def update_graph(clickData, start_date, end_date, magValue):
+def update_graph(clickData, start_date, end_date, magValue, reg_check):
 #    print(clickData)
 #    index = clickData['points'][0]['pointIndex']
 #    #print(index)
@@ -955,7 +1033,7 @@ def update_graph(clickData, start_date, end_date, magValue):
     endTime = datetime.datetime.strptime(end_date, '%Y-%m-%d')
     endTime = endTime.date()
     try:
-        dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue)
+        dataPref, dataPlot, Fp_vect, Fn_vect,Tp_vect = prepare_data(startTime, endTime, magValue, reg_check)
     except:
         print("No data in selected period")
     title = '<b>TimeSpan</b>'

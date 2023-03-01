@@ -9,6 +9,7 @@
 				<description>
 					Interval in minutes to compute envelopes and update events JSON database
 				</description>
+			</parameter>
 			<parameter name="APPSpath" type="path" default="@DATADIR@/sceewv/">
 				<description>
 					Path to save/update config for all apps
@@ -102,6 +103,26 @@
 			<parameter name="lonmax" type="double" default="-81.5">
 				<description>
 					Maximum longitude allowed to show in events dashboard (value used in external catalog queries)
+				</description>
+			</parameter>
+			<parameter name="latrmin" type="double" default="10.5">
+				<description>
+					Minimum latitude network region allowed to show in events dashboard (value used in external catalog queries)
+				</description>
+			</parameter>
+			<parameter name="latrmax" type="double" default="14.6">
+				<description>
+					Maximum latitude network region allowed to show in events dashboard (value used in external catalog queries)
+				</description>
+			</parameter>
+			<parameter name="lonrmin" type="double" default="-90.5">
+				<description>
+					Minimum longitude network region allowed to show in events dashboard (value used in external catalog queries)
+				</description>
+			</parameter>
+			<parameter name="lonrmax" type="double" default="-87.1">
+				<description>
+					Maximum longitude network region allowed to show in events dashboard (value used in external catalog queries)
 				</description>
 			</parameter>
 			<parameter name="jsonpath" type="path" default="@DATADIR@/sceewv/events/">

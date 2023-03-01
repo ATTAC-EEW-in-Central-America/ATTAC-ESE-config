@@ -1,13 +1,18 @@
-Dash is running on http://0.0.0.0:8050/
-
- * Serving Flask app 'index'
- * Debug mode: off
 /usr/lib/python3/dist-packages/requests/__init__.py:91: RequestsDependencyWarning: urllib3 (1.26.12) or chardet (3.0.4) doesn't match a supported version!
   RequestsDependencyWarning)
-/opt/seiscomp/share/scqcalert/utils/dashboard.py:64: FutureWarning: pandas.io.json.json_normalize is deprecated, use pandas.json_normalize instead
-  input_data = json_normalize(dicts, record_path='alerts',meta=['mseedid','jday','net'])
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:8050
- * Running on http://172.20.11.28:8050
-Press CTRL+C to quit
+Traceback (most recent call last):
+  File "/usr/lib/python3.7/configparser.py", line 845, in items
+    d.update(self._sections[section])
+KeyError: 'events'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/seiscomp/share/sceewv/index.py", line 22, in <module>
+    import events_dash
+  File "/opt/seiscomp/share/sceewv/events_dash.py", line 44, in <module>
+    cfg = dict(config.items('events'))
+  File "/usr/lib/python3.7/configparser.py", line 848, in items
+    raise NoSectionError(section)
+configparser.NoSectionError: No section: 'events'
+malloc_consolidate(): invalid chunk size
