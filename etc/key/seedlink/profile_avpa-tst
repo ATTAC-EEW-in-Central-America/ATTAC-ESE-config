@@ -1,5 +1,0 @@
-# Activated plugins for category sources
-sources = tst:chain
-
-# Hostname or IP of the Seedlink server.
-sources.tst.address = 10.10.10.13

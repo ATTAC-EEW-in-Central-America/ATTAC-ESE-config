@@ -1,5 +1,0 @@
-# Activated plugins for category sources
-sources = INSIVUMEH-LOCAL:chain
-
-# Hostname or IP of the Seedlink server.
-sources.INSIVUMEH-LOCAL.address = 172.20.0.200
