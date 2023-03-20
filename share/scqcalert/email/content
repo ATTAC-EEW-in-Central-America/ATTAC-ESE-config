@@ -1,0 +1,172 @@
+Connected to server EW-SYSTEM 
+Alerts stored during the period from 2023-03-18 20:01:07.212000 to 2023-03-19 20:01:07.212000
+Sorted by number of alerting stations same network and number of types of alerts by station
++---------------+-------------------------------------------+
+|    mseedid    | Alerts                                    |
++---------------+-------------------------------------------+
+| GI TUGP 00 EH | delay ≥ 993 s (345 alerts),               |
+|   864 alerts  | latency ≥ 1816 s (267 alerts),            |
+|               | spikes interval ≥ 131 s (249 alerts),     |
+|               | offset ≥ 15879 cnt (2 alerts),            |
+|               | triggers = 269 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+|  GI AVCS  HN  | delay ≥ 347 s (885 alerts),               |
+|  1784 alerts  | latency ≥ 538 s (883 alerts),             |
+|               | gaps interval ≥ 2032 s (2 alerts),        |
+|               | gaps length ≥ 567 s (1 alerts),           |
+|               | offset ≥ -149681 cnt (13 alerts)          |
++---------------+-------------------------------------------+
+|  GI GUVC  HN  | delay ≥ 246 s (213 alerts),               |
+|   445 alerts  | latency ≥ 353 s (213 alerts),             |
+|               | offset ≥ -87735 cnt (11 alerts),          |
+|               | timing quality ≤ 90 % (7 alerts),         |
+|               | gaps interval ≥ 2767 s (1 alerts)         |
++---------------+-------------------------------------------+
+|  GI GUVC  HH  | delay ≥ 382 s (528 alerts),               |
+|  1057 alerts  | latency ≥ 378 s (527 alerts),             |
+|               | offset ≥ 1304 cnt (1 alerts),             |
+|               | timing quality ≤ 50 % (1 alerts)          |
++---------------+-------------------------------------------+
+| GI HUHU 00 HN | latency ≥ 187 s (813 alerts),             |
+|  1617 alerts  | delay ≥ 597 s (801 alerts),               |
+|               | offset ≥ 29766 cnt (3 alerts)             |
++---------------+-------------------------------------------+
+|  GI FG8 00 EH | spikes interval ≥ 2005 s (174 alerts),    |
+|   189 alerts  | delay ≥ 641 s (14 alerts),                |
+|               | triggers = 314 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+|  GI AVCS  HH  | delay ≥ 613 s (890 alerts),               |
+|  1807 alerts  | latency ≥ 599 s (889 alerts),             |
+|               | gaps interval ≥ 1827 s (28 alerts)        |
++---------------+-------------------------------------------+
+| GI TUJJ 00 EH | latency ≥ 282 s (8 alerts),               |
+|   15 alerts   | delay ≥ 433 s (6 alerts),                 |
+|               | triggers = 276 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+| GI TUZC 00 EH | delay ≥ 324 s (257 alerts),               |
+|   515 alerts  | latency ≥ 316 s (257 alerts),             |
+|               | triggers = 522 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+|  GI JAMO  HH  | spikes interval ≥ 2234 s (8 alerts),      |
+|   420 alerts  | spikes amplitude ≥ 371 cnt (412 alerts)   |
++---------------+-------------------------------------------+
+| GI CQES 00 HN | delay ≥ 656 s (276 alerts),               |
+|   382 alerts  | latency ≥ 88 s (106 alerts)               |
++---------------+-------------------------------------------+
+| GI TUZZ 00 EH | spikes interval ≥ 349 s (83 alerts),      |
+|   84 alerts   | triggers = 183 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+| GI JUMO 00 HN | spikes interval ≥ 1841 s (18 alerts),     |
+|   109 alerts  | delay ≥ 410 s (91 alerts)                 |
++---------------+-------------------------------------------+
+| GI TUAL 00 EH | spikes interval ≥ 2234 s (84 alerts),     |
+|   85 alerts   | triggers = 466 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+| GI TUZG 00 EH | spikes interval ≥ 338 s (33 alerts),      |
+|   34 alerts   | triggers = 258 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+| GI QTQT 00 HN | spikes interval ≥ 1324 s (1734 alerts),   |
+|  1756 alerts  | spikes amplitude ≥ -12358 cnt (22 alerts) |
++---------------+-------------------------------------------+
+| GI TUBR 00 EH | spikes interval ≥ 493 s (5 alerts),       |
+|    6 alerts   | triggers = 352 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+| GI TUGR 00 EH | spikes interval ≥ 2917 s (8 alerts),      |
+|    9 alerts   | triggers = 256 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+| GI TUZL 00 EH | delay ≥ 343 s (409 alerts),               |
+|   818 alerts  | latency ≥ 339 s (409 alerts)              |
++---------------+-------------------------------------------+
+|  GI QCCJ  HN  | delay ≥ 493 s (270 alerts),               |
+|   512 alerts  | latency ≥ 190 s (242 alerts)              |
++---------------+-------------------------------------------+
+|  GI QCCJ  HH  | delay ≥ 403 s (265 alerts),               |
+|   526 alerts  | latency ≥ 112 s (261 alerts)              |
++---------------+-------------------------------------------+
+|  GI FG0 00 EH | spikes interval ≥ 1360 s (8 alerts),      |
+|    9 alerts   | triggers = 249 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+|  GI SROR  HH  | spikes interval ≥ 199 s (426 alerts)      |
+|   426 alerts  |                                           |
++---------------+-------------------------------------------+
+| GI RERE 00 HN | delay ≥ 1092 s (55 alerts)                |
+|   55 alerts   |                                           |
++---------------+-------------------------------------------+
+|  GI GGU06  HN | spikes interval ≥ 3433 s (1 alerts)       |
+|    1 alerts   |                                           |
++---------------+-------------------------------------------+
+| GI TUCH 00 EH | spikes interval ≥ 1917 s (3 alerts)       |
+|    3 alerts   |                                           |
++---------------+-------------------------------------------+
+| GI IZPB 00 HN | delay ≥ 1023 s (4 alerts)                 |
+|    4 alerts   |                                           |
++---------------+-------------------------------------------+
+|  GI QCIX  HH  | spikes interval ≥ 173 s (10 alerts)       |
+|   10 alerts   |                                           |
++---------------+-------------------------------------------+
+|  GI QCIX  HN  | spikes interval ≥ 727 s (313 alerts)      |
+|   313 alerts  |                                           |
++---------------+-------------------------------------------+
+|  GI CMSM  HH  | triggers = 271 cnt/day (trigOn = default) |
+|    1 alerts   |                                           |
++---------------+-------------------------------------------+
+| GI JUT6 00 EH | triggers = 320 cnt/day (trigOn = default) |
+|    1 alerts   |                                           |
++---------------+-------------------------------------------+
+|  SV NUBE  HH  | spikes interval ≥ 73 s (443 alerts),      |
+|   998 alerts  | delay ≥ 348 s (277 alerts),               |
+|               | latency ≥ 345 s (278 alerts)              |
++---------------+-------------------------------------------+
+| SV JAYA 00 HN | delay ≥ 192 s (275 alerts),               |
+|   590 alerts  | latency ≥ 191 s (276 alerts),             |
+|               | offset ≥ 193150 cnt (39 alerts)           |
++---------------+-------------------------------------------+
+|  SV CNRM  HN  | delay ≥ 371 s (173 alerts),               |
+|   342 alerts  | latency ≥ 367 s (169 alerts)              |
++---------------+-------------------------------------------+
+|  SV CEDA  HH  | delay ≥ 192 s (304 alerts),               |
+|   607 alerts  | latency ≥ 189 s (303 alerts)              |
++---------------+-------------------------------------------+
+|  SV LOAL  HN  | delay ≥ 459 s (285 alerts),               |
+|   562 alerts  | latency ≥ 453 s (277 alerts)              |
++---------------+-------------------------------------------+
+|  SV JAYA  HH  | delay ≥ 173 s (277 alerts),               |
+|   555 alerts  | latency ≥ 171 s (278 alerts)              |
++---------------+-------------------------------------------+
+|  SV RBDL  HN  | delay ≥ 348 s (277 alerts),               |
+|   601 alerts  | latency ≥ 3 s (324 alerts)                |
++---------------+-------------------------------------------+
+|  SV MTO3  HH  | delay ≥ 187 s (276 alerts),               |
+|   553 alerts  | latency ≥ 184 s (277 alerts)              |
++---------------+-------------------------------------------+
+|  SV UDBS  HN  | spikes interval ≥ 1949 s (18 alerts)      |
+|   18 alerts   |                                           |
++---------------+-------------------------------------------+
+|  SV LCNA  HN  | triggers = 325 cnt/day (trigOn = default) |
+|    1 alerts   |                                           |
++---------------+-------------------------------------------+
+| NU BLUN 10 HH | spikes interval ≥ 1181 s (537 alerts),    |
+|  1870 alerts  | delay ≥ 335 s (635 alerts),               |
+|               | latency ≥ 3 s (698 alerts)                |
++---------------+-------------------------------------------+
+| NU RIBN 10 HH | spikes amplitude ≥ 1739 cnt (22 alerts),  |
+|   101 alerts  | spikes interval ≥ 201 s (79 alerts)       |
++---------------+-------------------------------------------+
+| NU STCN 00 HH | spikes amplitude ≥ 36 cnt (4 alerts),     |
+|    5 alerts   | triggers = 251 cnt/day (trigOn = default) |
++---------------+-------------------------------------------+
+|  NU SAPN  HH  | latency ≥ 260 s (98 alerts),              |
+|   194 alerts  | delay ≥ 620 s (96 alerts)                 |
++---------------+-------------------------------------------+
+|  NU APQN  HH  | spikes interval ≥ 946 s (338 alerts)      |
+|   338 alerts  |                                           |
++---------------+-------------------------------------------+
+|  NU NANN  HH  | gaps interval ≥ 577 s (59 alerts)         |
+|   59 alerts   |                                           |
++---------------+-------------------------------------------+
+| NU BILN 10 HH | spikes interval ≥ 637 s (1 alerts)        |
+|    1 alerts   |                                           |
++---------------+-------------------------------------------+
+| NU RCPN 00 EH | triggers = 417 cnt/day (trigOn = default) |
+|    1 alerts   |                                           |
++---------------+-------------------------------------------+
