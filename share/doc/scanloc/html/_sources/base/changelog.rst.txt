@@ -1,3 +1,0 @@
-.. _sec-changelog:
-
-.. mdinclude:: CHANGELOG.md
