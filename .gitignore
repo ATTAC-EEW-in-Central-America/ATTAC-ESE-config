@@ -1,0 +1,12 @@
+bin/
+etc/.scfdeewd.swp
+etc/defaults/
+etc/descriptions/
+etc/init/
+etc/inventory/
+gmt.history
+include/
+lib/
+sbin/
+share/
+var/
