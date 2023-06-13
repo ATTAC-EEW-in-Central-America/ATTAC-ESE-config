@@ -1,5 +1,10 @@
+etc/VS30-CAm.txt
+etc/VS30-CAm.txt.sorted
+etc/VS30-CAm.txtbu
 bin/
 etc/.scfdeewd.swp
+etc/global.cfg
+etc/sceewmail.cfg
 etc/defaults/
 etc/descriptions/
 etc/init/
