@@ -11,22 +11,79 @@ In order to simplify long term support of the ESE system from ATTAC, do not incl
 
 Con el fin de simplificar el soporte a largo plazo del sistema ESE de ATTAC, no incluya la configuración específica de su agencia en esta configuración del sistema, sino en la configuración de "usuario" o en la carpeta `~/.seiscomp/`. La configuración del sistema podría modificarse en coordinación con ETHZ-SED para que pueda sincronizarse en todos los sistemas ATTAC.
 
-## Get latest version of the configuration / Obtener la última versión de la configuración
+## Configuration
+### Get latest version of the configuration / Obtener la última versión de la configuración
 ```bash
-git pull
+git -C $SEISCOMP_ROOT pull
 ```
 
-## Add configuration changes only relevant for the local system / Añadir cambios de configuración relevantes para el sistema local
+### Add configuration changes only relevant for the local system / Añadir cambios de configuración relevantes para el sistema local
 Apply the required config changes in `~/.seiscomp/` or "user" configuration in `scconfig`.
 
 Aplique los cambios de configuración requeridos en la configuración `~/.seiscomp/` o "usuario" en `scconfig`.
 
-## Push configuration changes relevant for all ATTAC systems / Cambios de configuración push relevantes para todos los sistemas ATTAC
+### Push configuration changes relevant for all ATTAC systems / Cambios de configuración push relevantes para todos los sistemas ATTAC
 ```bash
-git add <file>
+git  add <file>
 git commit
 git push
 ```
 This requires write permission on the git remote origin.
 
 Esto requiere permiso de escritura en el git remote origin.
+
+### Comando de recordstream con varios sdsarchive;
+```bash
+recordstream = combined://slink/localhost:18000;combined/(combined/(sdsarchive//home/sysop/seiscomp/var/lib/archive/;sdsarchive//respaldos/??splitTime=2023-09-26T00:00:00Z);sdsarchive//respaldos2/1.INF-A.INF-AREA-SISMOLOGIA/BASE-SISMICA/DATA-Continua/??splitTime=2023-01-01T00:00:00Z)
+```
+
+### Git con el código hecho por Fred para actualizar la grilla utilizada por LOCSAT:
+`https://github.com/FMassin/SeisComP-Location-Grid-Tuning`
+
+#### Comando para ejecutar el código de la grilla de LOCSAT:
+```bash
+./grid4autoloc  picker_alias_name old_grid_file date > grid.conf
+```
+
+### EEWD
+#### Repositorio de EEWD:
+`https://github.com/SED-EEW/EEWD`
+
+### Dashboards
+#### Comando para correr el servicio web con los PSDs en el servidor 192.168.2.211:
+```bash
+python3 -m http.server 8060 --bind 0.0.0.0 --directory /home/sysop/PSD/PNG/ &
+```
+
+## Comandos para evaluar recursos del sistema:
+### Revisar chache:
+```bash
+free -h
+Liberar cache:
+sudo -s
+sync ; echo 3 > /proc/sys/vm/drop_caches
+exit
+```
+
+### Comando para ver tamaño de la base de datos:
+```sql
+SELECT TABLE_NAME AS `Table`,ROUND(((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024), 2) AS `Size (MB)`FROM information_schema.TABLES WHERE table_schema = "seiscomp" ORDER BY (data_length + index_length) DESC;
+```
+
+### Disk read speed:
+```bash
+sudo hdparm -Tt /dev/xvda1
+```
+with:
+`/dev/xvda1`: name of disk
+
+### Disk write speed:
+```bash
+ioping -S64M -L -s4k -W -c 10 .
+```
+
+### Ram speed:
+```bash
+mkdir -p ram; sudo mount -t tmpfs -o size=512M tmpfs ram; cd ram; ioping -S64M -L -s4k -W -c
+```
+
