@@ -50,6 +50,13 @@ recordstream = combined://slink/localhost:18000;combined/(combined/(sdsarchive//
 `https://github.com/SED-EEW/EEWD`
 
 ### Dashboards
+#### To restart the EEW dashboard
+First kill the python /opt/seiscomp/share/sceewv/index.py process PID and then:
+ ```bash
+00 00 * * * PYTHONPATH=/opt/seiscomp/lib/python LD_LIBRARY_PATH=/opt/seiscomp/lib python /opt/seiscomp/share/sceewv/index.py > /home/cam/logs/sceewv_dash.log 2>&1 &
+```
+This is also in crontab
+
 #### Comando para correr el servicio web con los PSDs en el servidor 192.168.2.211:
 ```bash
 python3 -m http.server 8060 --bind 0.0.0.0 --directory /home/sysop/PSD/PNG/ &
